@@ -1,0 +1,232 @@
+\begin{thebibliography}{10}
+
+\bibitem{alemi2017fixing}
+Alexander Alemi, Ben Poole, Ian Fischer, Joshua Dillon, Rif~A Saurous, and
+  Kevin Murphy.
+\newblock Fixing a broken {ELBO}.
+\newblock In {\em ICML}, pages 159--168, 2018.
+
+\bibitem{tsybakov2009}
+Alexandre B.~Tsybakov.
+\newblock Introduction to nonparametric estimation.
+\newblock 2009.
+
+\bibitem{ben2007analysis}
+Shai Ben-David, John Blitzer, Koby Crammer, and Fernando Pereira.
+\newblock Analysis of representations for domain adaptation.
+\newblock In {\em Advances in neural information processing systems}, pages
+  137--144, 2007.
+
+\bibitem{burda2015importance}
+Yuri Burda, Roger Grosse, and Ruslan Salakhutdinov.
+\newblock Importance weighted autoencoders.
+\newblock {\em arXiv preprint arXiv:1509.00519}, 2015.
+
+\bibitem{pmlr-v80-chen18k}
+Liqun Chen, Chenyang Tao, Ruiyi Zhang, Ricardo Henao, and Lawrence~Carin Duke.
+\newblock Variational inference and model selection with generalized evidence
+  bounds.
+\newblock In {\em ICML}, 2018.
+
+\bibitem{chen2018isolating}
+Tian~Qi Chen, Xuechen Li, Roger Grosse, and David Duvenaud.
+\newblock Isolating sources of disentanglement in variational autoencoders.
+\newblock {\em arXiv preprint arXiv:1802.04942}, 2018.
+
+\bibitem{csiszar2004information}
+Imre Csisz{\'a}r, Paul~C Shields, et~al.
+\newblock Information theory and statistics: A tutorial.
+\newblock {\em Foundations and Trends{\textregistered} in Communications and
+  Information Theory}, 1(4):417--528, 2004.
+
+\bibitem{dieng2018avoiding}
+Adji~B Dieng, Yoon Kim, Alexander~M Rush, and David~M Blei.
+\newblock Avoiding latent variable collapse with generative skip models.
+\newblock {\em arXiv preprint arXiv:1807.04863}, 2018.
+
+\bibitem{dieng2017variational}
+Adji~Bousso Dieng, Dustin Tran, Rajesh Ranganath, John Paisley, and David Blei.
+\newblock Variational inference via $\chi$ upper bound minimization.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  2732--2741, 2017.
+
+\bibitem{durrieu2012lower}
+J-L Durrieu, J-Ph Thiran, and Finnian Kelly.
+\newblock Lower and upper bounds for approximation of the kullback-leibler
+  divergence between gaussian mixture models.
+\newblock In {\em 2012 IEEE International Conference on Acoustics, Speech and
+  Signal Processing (ICASSP)}, pages 4833--4836. Ieee, 2012.
+
+\bibitem{ganin2016domain}
+Yaroslav Ganin, Evgeniya Ustinova, Hana Ajakan, Pascal Germain, Hugo
+  Larochelle, Fran{\c{c}}ois Laviolette, Mario Marchand, and Victor Lempitsky.
+\newblock Domain-adversarial training of neural networks.
+\newblock {\em The Journal of Machine Learning Research}, 17(1):2096--2030,
+  2016.
+
+\bibitem{goodfellow2014generative}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In {\em Advances in neural information processing systems}, pages
+  2672--2680, 2014.
+
+\bibitem{gretton2012kernel}
+Arthur Gretton, Karsten~M Borgwardt, Malte~J Rasch, Bernhard Sch{\"o}lkopf, and
+  Alexander Smola.
+\newblock A kernel two-sample test.
+\newblock {\em Journal of Machine Learning Research}, 13(Mar):723--773, 2012.
+
+\bibitem{hein05hilbertian}
+M.~Hein and O.~Bousquet.
+\newblock Hilbertian metrics and positive definite kernels on probability
+  measures.
+\newblock In {\em AISTATS}, 2005.
+
+\bibitem{heroma2001techrep}
+A.~O. Hero, B.~Ma, O.~Michel, and J.~Gorman.
+\newblock Alpha divergence for classification, indexing and retrieval.
+\newblock {\em Comm. and Sig. Proc. Lab. (CSPL), Dept. EECS, Univ. Michigan,
+  Ann Arbor, Tech. Rep. 328}, 2001.
+
+\bibitem{heroma2002ieee}
+A.~O. Hero, B.~Ma, O.~J.~J. Michel, and J.~Gorman.
+\newblock Applications of entropic spanning graphs.
+\newblock {\em IEEE Signal Processing Magazine}, 2002.
+
+\bibitem{hershey2007approximating}
+John~R Hershey and Peder~A Olsen.
+\newblock Approximating the kullback leibler divergence between gaussian
+  mixture models.
+\newblock In {\em 2007 IEEE International Conference on Acoustics, Speech and
+  Signal Processing-ICASSP'07}, volume~4, pages IV--317. IEEE, 2007.
+
+\bibitem{heusel2017gans}
+Martin Heusel, Hubert Ramsauer, Thomas Unterthiner, Bernhard Nessler, and Sepp
+  Hochreiter.
+\newblock {GAN}s trained by a two time-scale update rule converge to a local
+  nash equilibrium.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  6626--6637, 2017.
+
+\bibitem{hoffman2016elbo}
+Matthew~D Hoffman and Matthew~J Johnson.
+\newblock {ELBO} surgery: yet another way to carve up the variational evidence
+  lower bound.
+\newblock 2016.
+
+\bibitem{kanamori12ratio}
+T.~Kanamori, T.~Suzuki, and M.~Sugiyama.
+\newblock {f}-divergence estimation and two-sample homogeneity test under
+  semiparametric density-ratio models.
+\newblock {\em IEEE Transactions on Information Theory}, 58(2), 2012.
+
+\bibitem{kingma2013auto}
+Diederik~P Kingma and Max Welling.
+\newblock Auto-encoding variational bayes.
+\newblock {\em arXiv preprint arXiv:1312.6114}, 2013.
+
+\bibitem{krishnamurthy14icml}
+A.~Krishnamurthy, A.~Kandasamy, B.~Póczos, and L.~Wasserman.
+\newblock Nonparametric estimation of {R}{\'e}nyi divergence and friends.
+\newblock In {\em ICML}, 2014.
+
+\bibitem{li2016renyi}
+Yingzhen Li and Richard~E Turner.
+\newblock R{\'e}nyi divergence variational inference.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  1073--1081, 2016.
+
+\bibitem{liese2006divergences}
+Friedrich Liese and Igor Vajda.
+\newblock On divergences and informations in statistics and information theory.
+\newblock {\em IEEE Transactions on Information Theory}, 52(10):4394--4412,
+  2006.
+
+\bibitem{liu2015faceattributes}
+Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang.
+\newblock Deep learning face attributes in the wild.
+\newblock In {\em Proceedings of International Conference on Computer Vision
+  (ICCV)}, December 2015.
+
+\bibitem{moon14ensemble}
+K.~Moon and A.~Hero.
+\newblock Ensemble estimation of multivariate f-divergence.
+\newblock In {\em 2014 {IEEE} International Symposium on Information Theory},
+  pages 356--360, 2014.
+
+\bibitem{moon14followup}
+K.~Moon and A.~Hero.
+\newblock Multivariate f-divergence estimation with confidence.
+\newblock In {\em NeurIPS}, 2014.
+
+\bibitem{nguyen10ratio}
+XuanLong Nguyen, Martin~J. Wainwright, and Michael~I. Jordan.
+\newblock Estimating divergence functionals and the likelihood ratio by convex
+  risk minimization.
+\newblock {\em {IEEE} Trans. Information Theory}, 56(11):5847--5861, 2010.
+
+\bibitem{NielsenN14}
+Frank Nielsen and Richard Nock.
+\newblock On the chi square and higher-order chi distances for approximating
+  f-divergences.
+\newblock {\em {IEEE} Signal Process. Lett.}, 21(1):10--13, 2014.
+
+\bibitem{nowozin2016f}
+Sebastian Nowozin, Botond Cseke, and Ryota Tomioka.
+\newblock f-{GAN}: Training generative neural samplers using variational
+  divergence minimization.
+\newblock In {\em Advances in neural information processing systems}, pages
+  271--279, 2016.
+
+\bibitem{oord2018representation}
+Aaron van~den Oord, Yazhe Li, and Oriol Vinyals.
+\newblock Representation learning with contrastive predictive coding.
+\newblock {\em arXiv preprint arXiv:1807.03748}, 2018.
+
+\bibitem{osterreicher2003new}
+Ferdinand Osterreicher and Igor Vajda.
+\newblock A new class of metric divergences on probability spaces and its
+  applicability in statistics.
+\newblock {\em Annals of the Institute of Statistical Mathematics},
+  55(3):639--653, 2003.
+
+\bibitem{pardo2005statistical}
+Leandro Pardo.
+\newblock {\em Statistical inference based on divergence measures}.
+\newblock Chapman and Hall/CRC, 2005.
+
+\bibitem{perez08kl}
+F.~Perez-Cruz.
+\newblock Kullback-leibler divergence estimation of continuous distributions.
+\newblock In {\em IEEE International Symposium on Information Theory}, 2008.
+
+\bibitem{poczos11alpha}
+B.~Poczos and J.~Schneider.
+\newblock On the estimation of alpha-divergences.
+\newblock In {\em AISTATS}, 2011.
+
+\bibitem{poolevariational}
+Ben Poole, Sherjil Ozair, A{\"a}ron van~den Oord, Alexander~A Alemi, and George
+  Tucker.
+\newblock On variational lower bounds of mutual information.
+\newblock In {\em ICML}, 2018.
+
+\bibitem{singh14alpha}
+S.~Singh and B.~Poczos.
+\newblock Generalized exponential concentration inequality for {R}{\'e}nyi
+  divergence estimation.
+\newblock In {\em ICML}, 2014.
+
+\bibitem{tolstikhin2017wasserstein}
+Ilya Tolstikhin, Olivier Bousquet, Sylvain Gelly, and Bernhard Schoelkopf.
+\newblock Wasserstein auto-encoders.
+\newblock In {\em ICLR}, 2018.
+
+\bibitem{wang09kl}
+Q.~Wang, S.~R. Kulkarni, and S.~{Verd\'u}.
+\newblock Divergence estimation for multidimensional densities via
+  k-nearest-neighbor distances.
+\newblock {\em IEEE Transactions on Information Theory}, 55(5), 2009.
+
+\end{thebibliography}

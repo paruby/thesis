@@ -1,0 +1,137 @@
+\begin{thebibliography}{21}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Balian(1992)]{Balian}
+R.~Balian.
+\newblock \emph{From microphysics to macrophysics}.
+\newblock Springer, 1992.
+
+\bibitem[Bollen(2014)]{bollen2014structural}
+K.~A. Bollen.
+\newblock \emph{Structural equations with latent variables}.
+\newblock John Wiley \& Sons, 2014.
+
+\bibitem[Bongers et~al.(2016)Bongers, Peters, Sch{\"o}lkopf, and
+  Mooij]{bongers2016structural}
+S.~Bongers, J.~Peters, B.~Sch{\"o}lkopf, and J.~M. Mooij.
+\newblock Structural causal models: Cycles, marginalizations, exogenous
+  reparametrizations and reductions.
+\newblock \emph{arXiv preprint arXiv:1611.06221}, 2016.
+
+\bibitem[Chalupka et~al.(2015)Chalupka, Perona, and
+  Eberhardt]{chalupka2015visual}
+K.~Chalupka, P.~Perona, and F.~Eberhardt.
+\newblock Visual causal feature learning.
+\newblock In \emph{Proceedings of the Thirty-First Conference on Uncertainty in
+  Artificial Intelligence}, pages 181--190. AUAI Press, 2015.
+
+\bibitem[Chalupka et~al.(2016)Chalupka, Perona, and
+  Eberhardt]{chalupka2016multi}
+K.~Chalupka, P.~Perona, and F.~Eberhardt.
+\newblock Multi-level cause-effect systems.
+\newblock In \emph{The 19th International Conference on Artificial Intelligence
+  and Statistics.}, 2016.
+
+\bibitem[Dash and Druzdzel(2001)]{dash2001caveats}
+D.~Dash and M.~J. Druzdzel.
+\newblock Caveats for causal reasoning with equilibrium models.
+\newblock \emph{Lecture notes in computer science}, pages 192--203, 2001.
+
+\bibitem[Eberhardt(2016)]{eberhardt2016green}
+F.~Eberhardt.
+\newblock Green and grue causal variables.
+\newblock \emph{Synthese}, 193\penalty0 (4):\penalty0 1029--1046, 2016.
+
+\bibitem[Fisher(1970)]{fisher1970correspondence}
+F.~M. Fisher.
+\newblock A correspondence principle for simultaneous equation models.
+\newblock \emph{Econometrica: Journal of the Econometric Society}, pages
+  73--92, 1970.
+
+\bibitem[Hoel et~al.(2013)Hoel, Albantakis, and Tononi]{hoel2013quantifying}
+E.~P. Hoel, L.~Albantakis, and G.~Tononi.
+\newblock Quantifying causal emergence shows that macro can beat micro.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 110\penalty0
+  (49):\penalty0 19790--19795, 2013.
+
+\bibitem[Hyttinen et~al.(2012)Hyttinen, Eberhardt, and
+  Hoyer]{hyttinen2012learning}
+A.~Hyttinen, F.~Eberhardt, and P.~O. Hoyer.
+\newblock Learning linear cyclic causal models with latent variables.
+\newblock \emph{Journal of Machine Learning Research}, 13\penalty0
+  (Nov):\penalty0 3387--3439, 2012.
+
+\bibitem[Iwasaki and Simon(1994)]{iwasaki1994causality}
+Y.~Iwasaki and H.~A. Simon.
+\newblock Causality and model abstraction.
+\newblock \emph{Artificial Intelligence}, 67\penalty0 (1):\penalty0 143--194,
+  1994.
+
+\bibitem[Lacerda et~al.(2008)Lacerda, Spirtes, Ramsey, and
+  Hoyer]{lacerda2012discovering}
+G.~Lacerda, P.~L. Spirtes, J.~Ramsey, and P.~O. Hoyer.
+\newblock Discovering cyclic causal models by independent components analysis.
+\newblock In \emph{Proceedings of the Twenty-Fourth Conference Annual
+  Conference on Uncertainty in Artificial Intelligence}, 2008.
+
+\bibitem[Mooij and Heskes(2013)]{mooij2013cyclic}
+J.~M. Mooij and T.~Heskes.
+\newblock Cyclic causal discovery from continuous equilibrium data.
+\newblock In \emph{Proceedings of the Twenty-Ninth Conference Annual Conference
+  on Uncertainty in Artificial Intelligence}, 2013.
+
+\bibitem[Mooij et~al.(2011)Mooij, Janzing, Heskes, and
+  Sch{\"o}lkopf]{Mooij_et_al_NIPS_11}
+J.~M. Mooij, D.~Janzing, T.~Heskes, and B.~Sch{\"o}lkopf.
+\newblock On causal discovery with cyclic additive noise models.
+\newblock In J.~Shawe-Taylor, R.~Zemel, P.~Bartlett, F.~Pereira, and
+  K.~Weinberger, editors, \emph{{A}dvances in {N}eural {I}nformation
+  {P}rocessing {S}ystems 24 ({NIPS}*2011)}, pages 639--647, 2011.
+
+\bibitem[Mooij et~al.(2013)Mooij, Janzing, and Sch{\"o}lkopf]{mooij2013ode}
+J.~M. Mooij, D.~Janzing, and B.~Sch{\"o}lkopf.
+\newblock {From Ordinary Differential Equations to Structural Causal Models:
+  the deterministic case}.
+\newblock In \emph{Proceedings of the Twenty-Ninth Conference Annual Conference
+  on Uncertainty in Artificial Intelligence}, pages 440--448, 2013.
+
+\bibitem[Pearl(2009)]{pearl2009causality}
+J.~Pearl.
+\newblock \emph{Causality}.
+\newblock Cambridge University Press, 2009.
+
+\bibitem[Simon and Ando(1961)]{simon1961aggregation}
+H.~A. Simon and A.~Ando.
+\newblock Aggregation of variables in dynamic systems.
+\newblock \emph{Econometrica: journal of the Econometric Society}, pages
+  111--138, 1961.
+
+\bibitem[Spirtes and Scheines(2004)]{spirtes2004causal}
+P.~Spirtes and R.~Scheines.
+\newblock Causal inference of ambiguous manipulations.
+\newblock \emph{Philosophy of Science}, 71\penalty0 (5):\penalty0 833--845,
+  2004.
+
+\bibitem[Spirtes et~al.(2000)Spirtes, Glymour, and
+  Scheines]{spirtes2000causation}
+P.~Spirtes, C.~N. Glymour, and R.~Scheines.
+\newblock \emph{Causation, prediction, and search}.
+\newblock MIT press, 2000.
+
+\bibitem[Steinberg(2011)]{steinberg2011cholesterol}
+D.~Steinberg.
+\newblock \emph{The Cholesterol Wars: The Skeptics vs the Preponderance of
+  Evidence}.
+\newblock Academic Press, 2011.
+
+\bibitem[Truswell(2010)]{truswell2010cholesterol}
+A.~S. Truswell.
+\newblock \emph{Cholesterol and beyond: the research on diet and coronary heart
+  disease 1900-2000}.
+\newblock Springer Science \& Business Media, 2010.
+
+\end{thebibliography}

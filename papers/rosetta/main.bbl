@@ -1,0 +1,264 @@
+\begin{thebibliography}{10}
+
+\bibitem{allen2012uk}
+Naomi Allen, Cathie Sudlow, Paul Downey, Tim Peakman, John Danesh, Paul
+  Elliott, John Gallacher, Jane Green, Paul Matthews, Jill Pell, et~al.
+\newblock Uk biobank: Current status and what it means for epidemiology.
+\newblock {\em Health Policy and Technology}, 1(3):123--126, 2012.
+
+\bibitem{anandkumar2014tensor}
+Animashree Anandkumar, Rong Ge, Daniel Hsu, Sham~M Kakade, and Matus Telgarsky.
+\newblock Tensor decompositions for learning latent variable models.
+\newblock {\em The Journal of Machine Learning Research}, 15(1):2773--2832,
+  2014.
+
+\bibitem{andrew2013deep}
+Galen Andrew, Raman Arora, Jeff Bilmes, and Karen Livescu.
+\newblock Deep canonical correlation analysis.
+\newblock In {\em International conference on machine learning}, pages
+  1247--1255, 2013.
+
+\bibitem{bach2005probabilistic}
+Francis~R Bach and Michael~I Jordan.
+\newblock A probabilistic interpretation of canonical correlation analysis.
+\newblock 2005.
+
+\bibitem{bishop2006pattern}
+Christopher~M Bishop.
+\newblock {\em Pattern recognition and machine learning}.
+\newblock springer, 2006.
+
+\bibitem{cardoso2001three}
+Jean-Fran{\c{c}}ois Cardoso.
+\newblock The three easy routes to independent component analysis; contrasts
+  and geometry.
+\newblock In {\em Proc. ICA}, volume 2001, 2001.
+
+\bibitem{chen2015reduced}
+Po-Hsuan~Cameron Chen, Janice Chen, Yaara Yeshurun, Uri Hasson, James Haxby,
+  and Peter~J Ramadge.
+\newblock A reduced-dimension f{MRI} shared response model.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  460--468, 2015.
+
+\bibitem{chen2018neural}
+Tian~Qi Chen, Yulia Rubanova, Jesse Bettencourt, and David~K Duvenaud.
+\newblock Neural ordinary differential equations.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  6572--6583, 2018.
+
+\bibitem{comon1994independent}
+Pierre Comon.
+\newblock Independent component analysis, a new concept?
+\newblock {\em Signal processing}, 36(3):287--314, 1994.
+
+\bibitem{darmois1953analyse}
+George Darmois.
+\newblock Analyse g{\'e}n{\'e}rale des liaisons stochastiques: etude
+  particuli{\`e}re de l'analyse factorielle lin{\'e}aire.
+\newblock {\em Revue de l'Institut international de statistique}, pages 2--8,
+  1953.
+
+\bibitem{de2005spectral}
+Virginia~R De~Sa.
+\newblock Spectral clustering with two views.
+\newblock In {\em ICML workshop on learning with multiple views}, pages 20--27,
+  2005.
+
+\bibitem{friedman2001elements}
+Jerome Friedman, Trevor Hastie, and Robert Tibshirani.
+\newblock {\em The elements of statistical learning}, volume~1.
+\newblock Springer series in statistics New York, 2001.
+
+\bibitem{fukumizu2007statistical}
+Kenji Fukumizu, Francis~R Bach, and Arthur Gretton.
+\newblock Statistical consistency of kernel canonical correlation analysis.
+\newblock {\em Journal of Machine Learning Research}, 8(Feb):361--383, 2007.
+
+\bibitem{goodfellow2014generative}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In {\em Advances in neural information processing systems}, pages
+  2672--2680, 2014.
+
+\bibitem{gutmann2010noise}
+Michael Gutmann and Aapo Hyv{\"a}rinen.
+\newblock Noise-contrastive estimation: A new estimation principle for
+  unnormalized statistical models.
+\newblock In {\em Proceedings of the Thirteenth International Conference on
+  Artificial Intelligence and Statistics}, pages 297--304, 2010.
+
+\bibitem{haxby2011common}
+James~V Haxby, J~Swaroop Guntupalli, Andrew~C Connolly, Yaroslav~O Halchenko,
+  Bryan~R Conroy, M~Ida Gobbini, Michael Hanke, and Peter~J Ramadge.
+\newblock A common, high-dimensional model of the representational space in
+  human ventral temporal cortex.
+\newblock {\em Neuron}, 72(2):404--416, 2011.
+
+\bibitem{honkela2010wordica}
+Timo Honkela, Aapo Hyv{\"a}rinen, and Jaakko~J V{\"a}yrynen.
+\newblock Word{ICA}-emergence of linguistic representations for words by
+  independent component analysis.
+\newblock {\em Natural Language Engineering}, 16(3):277--308, 2010.
+
+\bibitem{hotelling1992relations}
+Harold Hotelling.
+\newblock Relations between two sets of variates.
+\newblock In {\em Breakthroughs in statistics}, pages 162--190. Springer, 1992.
+
+\bibitem{hyvarinen2016unsupervised}
+Aapo Hyvarinen and Hiroshi Morioka.
+\newblock Unsupervised feature extraction by time-contrastive learning and
+  nonlinear {ICA}.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  3765--3773, 2016.
+
+\bibitem{pmlr-v54-hyvarinen17a}
+Aapo Hyv{\"a}rinen and Hiroshi Morioka.
+\newblock {Nonlinear {ICA} of Temporally Dependent Stationary Sources}.
+\newblock In Aarti Singh and Jerry Zhu, editors, {\em Proceedings of the 20th
+  International Conference on Artificial Intelligence and Statistics},
+  volume~54 of {\em Proceedings of Machine Learning Research}, pages 460--469,
+  Fort Lauderdale, FL, USA, 20--22 Apr 2017. PMLR.
+
+\bibitem{hyvarinen2000independent}
+Aapo Hyv{\"a}rinen and Erkki Oja.
+\newblock Independent component analysis: algorithms and applications.
+\newblock {\em Neural networks}, 13(4-5):411--430, 2000.
+
+\bibitem{hyvarinen1999nonlinear}
+Aapo Hyv{\"a}rinen and Petteri Pajunen.
+\newblock Nonlinear independent component analysis: Existence and uniqueness
+  results.
+\newblock {\em Neural Networks}, 12(3):429--439, 1999.
+
+\bibitem{hyvarinen19a}
+Aapo Hyvarinen, Hiroaki Sasaki, and Richard Turner.
+\newblock Nonlinear {ICA} using auxiliary variables and generalized contrastive
+  learning.
+\newblock In Kamalika Chaudhuri and Masashi Sugiyama, editors, {\em Proceedings
+  of Machine Learning Research}, volume~89 of {\em Proceedings of Machine
+  Learning Research}, pages 859--868. PMLR, 16--18 Apr 2019.
+
+\bibitem{jacobsen_hal-01712808}
+J{\"o}rn-Henrik Jacobsen, Arnold Smeulders, and Edouard Oyallon.
+\newblock {i-RevNet: Deep Invertible Networks}.
+\newblock In {\em {ICLR 2018 - International Conference on Learning
+  Representations}}, Vancouver, Canada, April 2018.
+
+\bibitem{kumar2011co}
+Abhishek Kumar, Piyush Rai, and Hal Daume.
+\newblock Co-regularized multi-view spectral clustering.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1413--1421, 2011.
+
+\bibitem{lai2000kernel}
+Pei~Ling Lai and Colin Fyfe.
+\newblock Kernel and nonlinear canonical correlation analysis.
+\newblock {\em International Journal of Neural Systems}, 10(05):365--377, 2000.
+
+\bibitem{lederman2018learning}
+Roy~R Lederman and Ronen Talmon.
+\newblock Learning the geometry of common latent variables using
+  alternating-diffusion.
+\newblock {\em Applied and Computational Harmonic Analysis}, 44(3):509--536,
+  2018.
+
+\bibitem{mckeown1998independent}
+Martin~J McKeown and Terrence~J Sejnowski.
+\newblock Independent component analysis of f{MRI} data: examining the
+  assumptions.
+\newblock {\em Human brain mapping}, 6(5-6):368--372, 1998.
+
+\bibitem{michaeli2016nonparametric}
+Tomer Michaeli, Weiran Wang, and Karen Livescu.
+\newblock Nonparametric canonical correlation analysis.
+\newblock In {\em International Conference on Machine Learning}, pages
+  1967--1976, 2016.
+
+\bibitem{miller2016multimodal}
+Karla~L Miller, Fidel Alfaro-Almagro, Neal~K Bangerter, David~L Thomas, Essa
+  Yacoub, Junqian Xu, Andreas~J Bartsch, Saad Jbabdi, Stamatios~N Sotiropoulos,
+  Jesper~LR Andersson, et~al.
+\newblock Multimodal population brain imaging in the {UK} {B}iobank prospective
+  epidemiological study.
+\newblock {\em Nature neuroscience}, 19(11):1523, 2016.
+
+\bibitem{nuzillard2000blind}
+Danielle Nuzillard and Albert Bijaoui.
+\newblock Blind source separation and analysis of multispectral astronomical
+  images.
+\newblock {\em Astronomy and Astrophysics Supplement Series}, 147(1):129--138,
+  2000.
+
+\bibitem{oja2000independent}
+Erkki Oja, Kimmo Kiviluoto, and Simona Malaroiu.
+\newblock Independent component analysis for financial time series.
+\newblock In {\em Proceedings of the IEEE 2000 Adaptive Systems for Signal
+  Processing, Communications, and Control Symposium (Cat. No. 00EX373)}, pages
+  111--116. IEEE, 2000.
+
+\bibitem{rezende2015variational}
+Danilo Rezende and Shakir Mohamed.
+\newblock Variational inference with normalizing flows.
+\newblock In Francis Bach and David Blei, editors, {\em Proceedings of the 32nd
+  International Conference on Machine Learning}, volume~37 of {\em Proceedings
+  of Machine Learning Research}, pages 1530--1538, Lille, France, 07--09 Jul
+  2015. PMLR.
+
+\bibitem{sawada2003direction}
+Hiroshi Sawada, Ryo Mukai, and Shoji Makino.
+\newblock Direction of arrival estimation for multiple source signals using
+  independent component analysis.
+\newblock In {\em Seventh International Symposium on Signal Processing and Its
+  Applications, 2003. Proceedings.}, volume~2, pages 411--414. IEEE, 2003.
+
+\bibitem{scholkopf2016modeling}
+Bernhard Sch{\"o}lkopf, David~W Hogg, Dun Wang, Daniel Foreman-Mackey, Dominik
+  Janzing, Carl-Johann Simon-Gabriel, and Jonas Peters.
+\newblock Modeling confounding by half-sibling regression.
+\newblock {\em Proceedings of the National Academy of Sciences},
+  113(27):7391--7398, 2016.
+
+\bibitem{shafto2014cambridge}
+Meredith~A Shafto, Lorraine~K Tyler, Marie Dixon, Jason~R Taylor, James~B Rowe,
+  Rhodri Cusack, Andrew~J Calder, William~D Marslen-Wilson, John Duncan, Tim
+  Dalgleish, et~al.
+\newblock The cambridge centre for ageing and neuroscience ({C}am-{CAN}) study
+  protocol: a cross-sectional, lifespan, multidisciplinary examination of
+  healthy cognitive ageing.
+\newblock {\em BMC neurology}, 14(1):204, 2014.
+
+\bibitem{singer2008non}
+Amit Singer and Ronald~R Coifman.
+\newblock Non-linear independent component analysis with diffusion maps.
+\newblock {\em Applied and Computational Harmonic Analysis}, 25(2):226--239,
+  2008.
+
+\bibitem{skitovich1954linear}
+Viktor~Pavlovich Skitovich.
+\newblock Linear forms of independent random variables and the normal
+  distribution law.
+\newblock {\em Izvestiya Rossiiskoi Akademii Nauk. Seriya Matematicheskaya},
+  18(2):185--200, 1954.
+
+\bibitem{song2014nonparametric}
+Le~Song, Animashree Anandkumar, Bo~Dai, and Bo~Xie.
+\newblock Nonparametric estimation of multi-view latent variable models.
+\newblock In {\em International Conference on Machine Learning}, pages
+  640--648, 2014.
+
+\bibitem{taleb1999source}
+Anisse Taleb and Christian Jutten.
+\newblock Source separation in post-nonlinear mixtures.
+\newblock {\em IEEE Transactions on signal Processing}, 47(10):2807--2820,
+  1999.
+
+\bibitem{van2013wu}
+David~C Van~Essen, Stephen~M Smith, Deanna~M Barch, Timothy~EJ Behrens, Essa
+  Yacoub, Kamil Ugurbil, Wu-Minn~HCP Consortium, et~al.
+\newblock The {WU}-{M}inn human connectome project: an overview.
+\newblock {\em Neuroimage}, 80:62--79, 2013.
+
+\end{thebibliography}

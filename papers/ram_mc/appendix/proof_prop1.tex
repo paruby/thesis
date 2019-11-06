@@ -1,0 +1,46 @@
+\section{Proofs}\label{appendix:proofs}
+
+\subsection{Proof of Proposition \ref{prop:upper-bound}}\label{proof:prop1}
+
+\setcounter{proposition}{0}
+\begin{proposition}
+Let $M \leq N$ be integers. Then
+\begin{align*}
+    D_f(Q_Z \| P_Z) \ \leq 
+    \mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) \  \leq \ \mathbb{E}_{\mathbf{X}^M \sim Q_{X}^M} D_f( \hat{Q}_Z^M \| P_Z).
+\end{align*}
+\end{proposition}
+\begin{proof}
+Observe that $\mathbb{E}_{\mathbf{X}^N} \hat{Q}_Z^N = Q_Z$. Thus,
+\begin{align*}
+    D_f(Q_Z \| P_Z) &= \int f\left(\frac{\E_{\XN}\hat{q}_N(z)}{p(z)}\right) dP_Z(z) \\
+    &\leq \E_{\XN} \int f\left(\frac{\hat{q}_N(z)}{p(z)}\right) dP_Z(z)\\
+    &=\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z),
+\end{align*}
+where the inequality follows from convexity of $f$.
+
+To see that $\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) \leq \mathbb{E}_{\mathbf{X}^M \sim P_{X}^N} D_f( \hat{Q}_Z^M \| P_Z)$ for $N \geq M$,
+let $I \subseteq \{1, \ldots, N\}$, $|I| = M$ and write
+\begin{align*}
+    \hat{Q}_Z^I = \frac{1}{M} \sum_{i \in I} Q_{Z | X_i}.
+\end{align*}
+
+Letting $I$ be a random subset chosen uniformly \emph{without replacement},
+observe that for any fixed $I$, $\mathbf{X}^I \sim \mathbb{P}_X^M$ (with the randomness coming from $\mathbf{X}^N \sim \mathbb{P}_X^N$). Thus
+
+\begin{align*}
+    \hat{Q}_Z^N &= \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} \\
+    &= \mathbb{E}_I \frac{1}{M} \sum_{i \in I} Q_{Z|X_i} \\
+    &= \mathbb{E}_I \hat{Q}_Z^I
+\end{align*}
+
+and so again by convexity of $f$ we have that
+
+\begin{align}
+    \mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) &\leq  \mathbb{E}_{\mathbf{X}^N} \mathbb{E}_I D_f( \hat{Q}_Z^I \| P_Z) \\
+    &= \mathbb{E}_{\mathbf{X}^M} D_f(\hat{Q}_Z^M \| P_Z)
+\end{align}
+with the last line following from the observation that $\mathbf{X}^I \sim \mathbb{P}_X^M$.
+\end{proof}
+
+

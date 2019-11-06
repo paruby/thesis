@@ -1,0 +1,150 @@
+\subsection{Full statement and proof of Theorem \ref{thm:mc-variance}}\label{appendix:full-statment-proof-mc}
+
+The statement of Theorem~\ref{thm:mc-variance} in the main text was simplified for brevity. 
+Below is the full statement, followed by its proof.
+
+\setcounter{theorem}{3}
+
+\begin{theorem}
+For any $\pi$,
+\begin{align*}
+    \E_{\ZM, \XN} \bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr]
+    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z \| P_Z \right)\right].
+\end{align*}
+If either of the following conditions are satisfied:
+\begin{align*}
+&(i) \ \pi(z|\XN) = p(z),& 
+&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
+&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
+&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
+&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
+&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+\end{align*}
+then, denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
+\begin{align*}
+    \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)  \right] = 
+    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
+\end{align*}
+\end{theorem}
+
+In proving Theorem~\ref{thm:mc-variance} we will make use of the following lemma.
+
+\begin{lemma}\label{lemma:f0-x-convex}
+For any $f_0(x)$,
+the functions $f_0(x)^2$ and $\frac{f_0(x)^2}{x}$ are convex on $(0, \infty)$.
+\end{lemma}
+\begin{proof}
+To see that $f_0(x)^2$ is convex, observe that 
+\begin{align*}
+    \frac{d^2}{dx^2} f_0(x)^2 = 2\left( f_0(x) f_0''(x) + f_0'(x)^2 \right)
+\end{align*}
+All of these terms are postive for $x > 0$.
+Indeed, since $f_0(x)$ is convex for $x > 0$, $f_0''(x) \geq 0$.  
+By construction of $f_0$, $f_0(x) \geq 0$ for $x > 0$. 
+Thus $f_0(x)^2$ has non-negative derivative and is thus convex on $(0, \infty)$.
+
+To see that $\frac{f_0(x)^2}{x}$ is convex, observe that
+
+\begin{align*}
+    \frac{d^2}{dx^2} \frac{f_0(x)^2}{x} = \frac{2}{x}\left( f_0(x) f_0''(x) + \left(f_0'(x) - \frac{f_0(x)}{x}\right)^2 \right).
+\end{align*}
+By the same arguments above, this is positive for $x > 0$ and thus $\frac{f_0(x)^2}{x}$ is convex for $x>0$.
+\end{proof}
+
+\begin{proof}(Theorem \ref{thm:mc-variance})
+For the expectation, observe that
+
+\begin{align*}
+    \E_{\ZM, \XN} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)
+    &=\E_{\XN} \left[ \E_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z | \XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\right] \\
+    &= \E_{\XN} \left[ \E_{z \sim \pi(z | \XN)} f\left(\frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi(z|\XN)} \right] \\
+    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z \| P_Z \right)\right].
+\end{align*}
+
+For the variance, by the law of total variance we have that
+
+\begin{align*}
+    &\text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)  \right]  \\
+    &= \E_{\XN} \text{Var}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z) + \text{Var}_{\XN} \mathbb{E}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)
+    \\
+    &=\frac{1}{M} \underbrace{\E_{\XN} \text{Var}_{\pi(z|\XN)} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi\left(z|\XN\right)} \right]}_{(i)}  + \underbrace{\text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z \| P_Z \right)\right]}_{(ii)}.
+\end{align*}
+
+Consider term $(ii)$.
+The concentration results of Theorem \ref{thm:concentration} imply bounds on $(ii)$, since for a random variable $X$,
+\begin{align*}
+    \text{Var}X &= \mathbb{E} (X - EX)^2 \\
+    &= \int_0^\infty \mathbb{P}\left( (X - \mathbb{E} X)^2 > t \right) dt \\
+    &= \int_0^\infty \mathbb{P} \left( \left| X - \mathbb{E} X \right| > \sqrt{t} \right) dt.
+\end{align*}
+It follows therefore that
+\begin{align*}
+    \text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z \| P_Z \right)\right] 
+    &\leq \int_0^\infty 2 \exp\left( -\frac{k}{\psi(N)^2}t \right) dt\\
+    &= O\left(\psi(N)^2 \right)
+\end{align*}
+where $\psi(N)$ is given by Table~\ref{table:concentration}.
+
+Next we consider $(i)$ and show that it is bounded independent of $N$, and so the component of the variance due to this term is $O\left(\frac{1}{M}\right)$.
+In the case that $\pi(z|\XN) = p(z)$,
+\begin{align*}
+(i) &\leq \E_{\XN} \E_{p(z)} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right)^2\right]\\
+&= \E_{\XN} \E_{p(z)} \left[ \left( f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) + f'(1) \left( \frac{\hat{q}_N(z)}{p(z)} - 1 \right) \right)^2\right] \\
+&\leq \E_{\XN} \E_{p(z)} \left[  f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right)^2\right] 
++
+ f'(1)^2 \E_{\XN} \E_{p(z)} \left[  \left( \frac{\hat{q}_N(z)}{p(z)} - 1 \right)^2\right] \\
+ & \qquad + 2f'(1) \sqrt{\E_{\XN} \E_{p(z)} \left[  f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right)^2\right] } \times \sqrt{\E_{\XN} \E_{p(z)} \left[  \left( \frac{\hat{q}_N(z)}{p(z)} - 1 \right)^2\right]} \\
+&\leq \E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right] 
++
+ f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right] \\
+ & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right]} \\
+\end{align*}
+The penultimate inequality follows by application of Cauchy-Schwartz.
+The last inequality follows by Proposition \ref{prop:upper-bound} applied to $D_{f_0^2}$ and $D_{(x-1)^2}$, 
+using the fact that the functions $f_0^2(x)$ and $(x-1)^2$ are convex and are zero at $x=1$ (see Lemma \ref{lemma:f0-x-convex}).
+By assumption, $\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right] < \infty$. 
+Consider the other term:
+\begin{align*}
+    \E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right]
+    &= \E_{X} \E_{p(z)} \left[ \left( f\left( \frac{q(z|X)}{p(z)}\right) - f'(1) \left(\frac{q(z|X)}{p(z)} - 1 \right) \right)^2\right] \\
+    &\leq \E_{X} \E_{p(z)} \left[  f\left( \frac{q(z|X)}{p(z)} \right)^2\right] 
+    +
+    f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right] \\
+    & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f\left( \frac{q(z|X)}{p(z)} \right)^2\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right]} \\
+    & < \infty
+\end{align*}
+The inequality follows by Cauchy-Schwartz.
+All terms are finite by assumption.
+Thus $(i) \leq K < \infty$ for some $K$ independent of $N$.
+
+Now consider the case that $\pi(z|\XN) = \hat{q}_N(z)$. 
+Then, following similar (but algebraically more tedious) reasoning to the previous case, it can be shown that
+
+\begin{align*}
+(i)
+&\leq \E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right] 
++
+ f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \sqrt{\frac{q(z|X)}{p(z)}} - \sqrt{\frac{p(z)}{q(z|X)}} \right)^2\right] \\
+ & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \sqrt{\frac{q(z|X)}{p(z)}} - \sqrt{\frac{p(z)}{q(z|X)}} \right)^2\right]} \\
+\end{align*}
+where Proposition \ref{prop:upper-bound} is applied to $D_{\frac{f_0^2(x)}{x}}$ and $D_{(\sqrt{x}- \frac{1}{\sqrt{x}})^2}$, 
+using the fact that the functions $f_0^2(x)/x$ and $(\sqrt{x}- \frac{1}{\sqrt{x}})^2$ are convex and are zero at $x=1$ (see Lemma \ref{lemma:f0-x-convex}).
+Noting that
+\begin{align*}
+    \E_{X} \E_{p(z)} \left[  \left( \sqrt{\frac{q(z|X)}{p(z)}} - \sqrt{\frac{p(z)}{q(z|X)}} \right)^2\right]
+    &=\E_{X} \E_{p(z)} \left[ \frac{q(z|X)}{p(z)} + \frac{p(z)}{q(z|X)} - 2 \right] \\
+    &=\E_{X} \E_{p(z)} \left[ \frac{p(z)}{q(z|X)} - 1 \right] < \infty
+\end{align*}
+where the inequality holds by assumption, it follows that
+\begin{align*}
+    &\E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right]\\
+    &\leq \E_{X} \E_{p(z)} \left[  f\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right] 
+    +
+    f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \sqrt{\frac{q(z|X)}{p(z)}} - \sqrt{\frac{p(z)}{q(z|X)}} \right)^2\right] \\
+    & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \sqrt{\frac{q(z|X)}{p(z)}} - \sqrt{\frac{p(z)}{q(z|X)}} \right)^2\right]} \\
+    & < \infty.
+\end{align*}
+where the first inequality holds by the definition of $f_0$ and Cauchy-Schwartz. 
+
+Thus $(i) \leq K < \infty$ for some $K$ independent of $N$ in both cases of $\pi$.
+\end{proof}

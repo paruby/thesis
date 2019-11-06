@@ -1,0 +1,12 @@
+\section{Conclusion}\label{sec:conclusion}
+We introduced a practical estimator for the $\smash{f}$-divergence $D_f(Q_Z\|P_Z)$ where $Q_Z = \int Q_{Z|X}dQ_X$, samples from $Q_X$ are available, and $P_Z$ and $Q_{Z|X}$ have known density.
+The RAM estimator is based on approximating the true $Q_Z$ with data samples as a random mixture via $\smash{\hat{Q}^N_{Z}=\frac{1}{N}\sum_{n} Q_{Z|X_n}}$.
+We denote by RAM-MC the estimator version where $\smash{D_f(\hat{Q}^N_Z\|P_Z)}$ is estimated with MC sampling.
+We proved rates of convergence and concentration for both RAM and RAM-MC, in terms of sample size $N$ and MC samples $M$ under a variety of choices of $\smash{f}$.
+Synthetic and real-data experiments strongly support the validity of our proposal in practice, and our theoretical results provide guarantees for methods previously proposed heuristically in existing literature.
+
+Future work will investigate the use of our proposals for optimization loops, in contrast to pure estimation.
+When $\smash{Q^\theta_{Z|X}}$ depends on parameter $\theta$ and the goal is to minimize $\smash{D_f(Q_Z^\theta \| P_Z)}$ with respect to $\theta$, RAM-MC provides a practical surrogate loss that can be minimized using stochastic gradient methods.
+
+\subsection*{Acknowledgements}
+Thanks to Alessandro Ialongo, Niki Kilbertus, Luigi Gresele, Giambattista Parascandolo, Mateo Rojas-Carulla and the rest of Empirical Inference group at the MPI, and Ben Poole, Sylvain Gelly, Alexander Kolesnikov and the rest of the Brain Team in Zurich for stimulating discussions, support and advice.

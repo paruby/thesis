@@ -1,0 +1,216 @@
+\section{Random mixture estimator and convergence
+results}\label{sec:theory}
+In this section we introduce our $f$-divergence estimator, and present theoretical guarantees for it.
+We assume the existence of probability distributions
+${P_Z}$ and ${Q_Z}$ defined over $\Z$ with known density $p(z)$ and intractable density ${q(z) = \int q(z|x) q(x) dx}$ respectively,  where ${Q_{Z|X}}$ is known. $Q_X$ defined over $\X$ is unknown, however we have an i.i.d.\:sample ${\XN=\{X_1, \ldots, X_N\}}$ from it.
+Our ultimate goal is to estimate the intractable $f$-divergence $D_f(Q_Z \| P_Z)$ defined by:
+\begin{definition}[$f$-divergence]
+\label{def:fdiv}
+Let $f$ be a convex function on $(0, \infty)$ with $f(1) = 0$. 
+The $f$-divergence $D_f$ between distributions $Q_Z$ and $P_Z$ admitting densities $q(z)$ and $p(z)$ respectively is
+{\addtolength{\abovedisplayskip}{-0.5mm}
+\addtolength{\belowdisplayskip}{-0.5mm}
+\begin{align*}
+    D_f(Q_Z \| P_Z) := \int f \left( \frac{q(z)}{p(z)} \right) p(z) dz.
+\end{align*}}%
+\end{definition}
+Many commonly used divergences such as Kullback–Leibler and $\chi^2$ are $f$-divergences.
+All the divergences considered in this paper together with their corresponding $f$ can be found in Appendix~\ref{appendix:f-fns}. 
+Of them, possibly the least well-known in the machine learning literature are $f_\beta$-divergences \cite{osterreicher2003new}. 
+These symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$. Special cases include squared-Hellinger ($\mathrm{H}^2$) for ${\beta=\frac{1}{2}}$,  Jensen-Shannon (JS) for $\beta=1$, Total Variation (TV) for $\beta=\infty$. 
+
+In our setting $Q_Z$ is intractable and so is ${D_f(Q_Z \| P_Z)}$.
+Substituting $Q_Z$ with a sample-based finite mixture ${\hat{Q}_Z^N := \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i}}$ leads to our proposed 
+{\bf Random Mixture estimator (RAM)}:
+{\addtolength{\abovedisplayskip}{-1mm}
+\addtolength{\belowdisplayskip}{-1mm}
+\begin{equation}\textstyle
+    D_f\bigl(\hat{Q}_Z^N \| P_Z\bigr) := D_f\Big(\frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} \big\| P_Z\Big).  % \approx D_f(Q_Z \| P_Z).
+\end{equation}}%
+Although $\smash{\hat{Q}_Z^N}$ is a function of $\smash{\XN}$ we omit this dependence in notation for brevity. 
+In this section we identify sufficient conditions under which $\smash{D_f(\hat{Q}_Z^N \| P_Z)}$ is a ``good'' estimator of $\smash{D_f(Q_{Z} \| P_Z)}$.
+More formally, we establish conditions under which the estimator is asymptotically unbiased, concentrates to its expected value and can be practically estimated using Monte-Carlo sampling.
+
+\subsection{Convergence rates for the bias of RAM}
+The following proposition shows that $D_f(\hat{Q}_Z^N \| P_Z)$ upper bounds $D_f(Q_{Z} \| P_Z)$ in expectation for any finite $N$, and that the upper bound becomes tighter with increasing $N$:
+%
+\begin{proposition}\label{prop:upper-bound}
+Let $M \leq N$ be integers. Then
+\begin{align}
+\label{eq:our-estimate}
+    D_f(Q_Z \| P_Z) \ \leq 
+    \mathbb{E}_{\mathbf{X}^N} \bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr] \  \leq \ \mathbb{E}_{\mathbf{X}^M} \bigl[D_f(\hat{Q}_Z^M \| P_Z)\bigr].
+\end{align}
+\end{proposition}
+\begin{proof}[Proof sketch (full proof in Appendix \ref{proof:prop1})]
+The first inequality follows from Jensen's inequality, using the facts that $f$ is convex and ${Q_Z = \E_{\XN} [\hat{Q}_Z^N}]$.
+The second holds since a sample ${\XM}$ can be drawn by sub-sampling (without replacement) $M$ entries of ${\XN}$, and by applying Jensen again.
+\end{proof}
+As a function of $N$, the expectation is a decreasing sequence that is bounded below.
+By the monotone convergence theorem, the sequence converges.
+Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} in this section give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} \| P_Z)$ as $N\to\infty$ for a variety of $f$ and provide rates at which this happens, summarized in Table \ref{table:convergence}.
+The two theorems are proved using different techniques and assumptions. 
+These assumptions, along with those of existing methods (see Table~\ref{table:convergence-other}) are discussed at the end of this section.
+
+\renewcommand{\arraystretch}{1}
+\begin{table}
+ \caption{Rate of bias $\E_{\XN} D_f\big(\hat{Q}^N_{Z} \| P_Z\big) - D_f\left(Q_{Z} \| P_Z\right)$.}
+ \label{table:convergence}
+ \centering
+ \begin{tabular}{c c c c c c c c c } 
+ \toprule
+ \multirow{2}{*}{$f$-divergence} & \multirow{2}{*}{KL} & \multirow{2}{*}{TV} & \multirow{2}{*}{$\chi^2$} & \multirow{2}{*}{$\text{H}^2$} & \multirow{2}{*}{JS} & \multicolumn{2}{c}{\thead{$D_{f_\beta}$}}  & \thead{$D_{f_\alpha}$} \\ [-0.8ex]
+ & & & & & & $\scriptstyle{\frac{1}{2}<\beta<1}$ & $\scriptstyle{1<\beta<\infty}$ &
+$\scriptstyle{-1<\alpha<1}$ \\
+ \midrule
+ \thead{Theorem 1} & $\scriptstyle{N^{-1}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{4}}}$ & $\scriptstyle{N^{-\frac{1}{4}}}$ & $\scriptstyle{N^{-\frac{1}{4}}}$ & - \\ 
+ \thead{Theorem 2} & $\scriptstyle{N^{-\frac{1}{3}}\log N}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-1}}$ & $\scriptstyle{N^{-\frac{1}{5}}}$ & $\scriptstyle{N^{-\frac{1}{3}}\log N}$ & $\scriptstyle{N^{-\frac{1}{3}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{\alpha+1}{\alpha+5}}}$ \\
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[Rates of the bias]\label{thm:fast-KL-rate}
+If
+$\E_{X\sim Q_X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr]$ and
+$\KL\left( Q_{Z} \| P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
+\end{theorem}
+\begin{proof}[Proof sketch (full proof in Appendix \ref{appendix:subsec:thm1})]
+There are two key steps to the proof. 
+The first is to bound the bias by ${\E_{\XN}\big[D_f(\hat{Q}_Z^N, Q_Z)\big]}$. 
+For the KL this is an equality. 
+For ${D_{f_\beta}}$ this holds because for $\beta {\geq} 1/2$ it is a \emph{Hilbertian metric} and its square root satisfies the triangle inequality \citep{hein05hilbertian}.
+The second step is to bound ${\E_{\XN}\bigl[D_f(\hat{Q}_Z^N, Q_Z)\bigr]}$ in terms of ${\E_{\XN}\bigl[\chi^2(\hat{Q}_Z^N, Q_Z)\bigr]}$, which is the variance of the average of $N$ i.i.d.\:random variables and therefore decomposes as ${\E_{X\sim Q_X}\bigl[\chi^2(Q_{Z|X}, Q_Z)\bigr] / N}$.
+\end{proof}
+%
+\begin{theorem}[Rates of the bias]\label{thm:convergence-rate-general}
+If $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$ is finite then
+the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
+\end{theorem}
+\begin{proof}[Proof sketch (full proof in Appendix \ref{proof:thm2})]
+Denoting by $\hat{q}_N(z)$ the density of $\hat{Q}_Z^N$,
+the proof is based on the inequality
+$f\bigl(\hat{q}_N(z) / p(z)\bigr) - f\bigl(q(z) / p(z)\bigr)\leq \frac{\hat{q}_N(z) - q(z)}{p(z)} f'\bigl(\hat{q}_N(z) / p(z)\bigr)$ due to convexity of $f$, applied to the bias.
+The integral of this inequality is bounded by controlling $f'$, requiring subtle treatment when $f'$ diverges when the density ratio $\hat{q}_N(z)/p(z)$ approaches zero.
+\end{proof}
+
+\subsection{Tail bounds for RAM and practical estimation with RAM-MC}
+
+Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} describe the convergence of the  \emph{expectation} of RAM over $\XN$, which in practice may be intractable.
+Fortunately, the following shows that RAM rapidly concentrates to its expectation.
+
+
+\begin{table}
+ \caption{Rate $\psi(N)$ of high probability bounds for $D_f\big(\hat{Q}^N_{Z} \| P_Z\big)$ (Theorem 3).}
+ \label{table:concentration}
+ \centering
+ \begin{tabular}{c c c c c c c c c } 
+ \toprule
+ \multirow{2}{*}{$f$-divergence} & \multirow{2}{*}{KL} & \multirow{2}{*}{TV} & \multirow{2}{*}{$\chi^2$} & \multirow{2}{*}{$\text{H}^2$} & \multirow{2}{*}{JS} & \multicolumn{2}{c}{\thead{$D_{f_\beta}$}}  & \thead{$D_{f_\alpha}$} \\ [-0.8ex]
+ & & & & & & $\scriptstyle{\frac{1}{2}<\beta<1}$ & $\scriptstyle{1<\beta<\infty}$ &
+$\scriptstyle{\frac{1}{3}<\alpha<1}$ \\
+ \midrule
+ \thead{$\psi(N)$} &  $\scriptstyle{N^{-\frac{1}{6}}\log N}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & 
+ $\scriptstyle{N^{-\frac{1}{2}}}$ &
+ - & 
+ $\scriptstyle{N^{-\frac{1}{6}}\log N}$ &
+ $\scriptstyle{N^{-\frac{1}{6}}}$ &
+ $\scriptstyle{N^{-\frac{1}{2}}}$ &
+ $\scriptstyle{N^{\frac{1-3\alpha}{\alpha+5}}}$
+ \\ 
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[Tail bounds for RAM]\label{thm:concentration}
+Suppose that ${\chi^2\left(Q_{Z|x} \| P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
+Then, the RAM estimator ${D_f( \hat{Q}_Z^N \| P_Z)}$ concentrates to its mean in the following sense. 
+For $N>8$ and for any $\delta >0$, with probability at least $1-\delta$ it holds that
+\begin{align*}
+    \left| D_f( \hat{Q}_Z^N \| P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
+\end{align*}
+where $K$ is a constant and $\psi(N)$ is given in Table~\ref{table:concentration}.
+\end{theorem}
+\begin{proof}[Proof sketch (full proof in Appendix \ref{proof:thm3})]
+These results follow by applying McDiarmid's inequality.
+To apply it we need to show that RAM viewed as a function of $\XN$ has bounded differences.
+We show that when replacing $\smash{X_i\in\XN}$ with $\smash{X_i'}$ the value of $\smash{D_f( \hat{Q}_Z^N \| P_Z)}$ changes by at most $\smash{O(N^{-1/2}\psi(N))}$.
+Proof of this proceeds similarly to the one of Theorem \ref{thm:convergence-rate-general}.
+\end{proof}
+
+In practice it may not be possible to evaluate $\smash{D_f( \hat{Q}_Z^N \| P_Z)}$ analytically. 
+We propose to use Monte-Carlo (MC) estimation since both densities $\hat{q}_N(z)$ and $p(z)$ are assumed to be known.
+We consider importance sampling with proposal distribution ${\pi(z|\XN)}$, highlighting the fact that $\pi$ can depend on the sample $\XN$.
+If $\pi(z|\XN) = p(z)$ this reduces to normal MC sampling. 
+We arrive at the {\bf RAM-MC estimator} based on $M$ i.i.d.\:samples $\ZM:=\{Z_1,\dots,Z_M\}$ from $\pi(z|\XN)$:
+\begin{align}
+\label{eq:our-mc-estimate}
+    %\phi_\pi\left(\ZM, \XN\right) := 
+    \hat{D}^M_f( \hat{Q}_Z^N \| P_Z) :=
+    \frac{1}{M}\sum_{m=1}^M f\left( \frac{\hat{q}_N(Z_m)}{p(Z_m)} \right) \frac{p(Z_m)}{\pi\left(Z_m|\XN\right)}.
+\end{align}
+
+\begin{theorem}[RAM-MC is unbiased and consistent]\label{thm:mc-variance}
+$\E\bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr]
+=\E\bigl[D_f( \hat{Q}^N_{Z} \| P_Z )\bigr]$ for any proposal distribution $\pi$.
+If $\pi(z|\XN) = p(z)$ or $\pi(z | \XN) = \hat{q}_N(z)$ then under mild assumptions$^\star$ on the moments of $q(Z|X)/p(Z)$
+and denoting by ${\psi(N)}$ the rate given in Table~\ref{table:concentration}, we have
+\begin{align*}
+    \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr] = 
+    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
+\end{align*}
+\end{theorem}
+\begin{proof}[Proof sketch ($^\star$full statement and proof in Appendix \ref{appendix:full-statment-proof-mc})]
+By the law of total variance, 
+\begin{align*}
+    \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f\bigr] = 
+    \mathbb{E}_{\XN} \bigl[\text{Var}\bigl[\hat{D}^M_f\, | \XN\bigr]\bigr] + \text{Var}_{\XN} \bigl[D_f( \hat{Q}_Z^N \| P_Z )\bigr].
+\end{align*}
+The first of these terms is ${O( M^{-1})}$ by standard results on MC integration, subject to the assumptions on the moments.
+Using the fact that ${\text{Var}[Y] = \int_0^\infty\mathbb{P} ( |Y - \mathbb{E} Y| > \sqrt{t}) dt}$ for any random variable $Y$
+we bound the second term by integrating the exponential tail bound of Theorem~\ref{thm:concentration}.
+\end{proof}
+
+Through use of the Efron-Stein inequality---rather than integrating the tail bound provided by McDiarmid's inequality---it is possible for some choices of $f$ to weaken the assumptions under which the $O(\psi(N)^2)$ variance is achieved: from uniform boundedness of $\smash{\chi^2(Q_{Z|X}\|P_Z)}$ to boundedness in expectation.
+In general, a variance better than ${O(M^{-1})}$ is not possible using importance sampling. However, the constant and hence practical performance may vary significantly depending on the choice of $\pi$.
+We note in passing that through Chebyshev's inequality, it is possible to derive confidence bounds for RAM-MC of the form similar to Theorem~\ref{thm:concentration}, but with an additional dependence on $M$ and worse dependence on $\delta$. 
+For brevity we omit this.
+
+
+\renewcommand{\arraystretch}{1}
+\begin{table}
+ \caption{Rate of bias for other estimators of $D_f(P,Q)$.}
+ \label{table:convergence-other}
+ \centering
+ \begin{tabular}{c c c c c c c c c } 
+ \toprule
+ \multirow{2}{*}{$f$-divergence} & \multirow{2}{*}{KL} & \multirow{2}{*}{TV} & \multirow{2}{*}{$\chi^2$} & \multirow{2}{*}{$\text{H}^2$} & \multirow{2}{*}{JS} & \multicolumn{2}{c}{\thead{$D_{f_\beta}$}}  & \thead{$D_{f_\alpha}$} \\ [-0.8ex]
+ & & & & & & $\scriptstyle{\frac{1}{2}<\beta<1}$ & $\scriptstyle{1<\beta<\infty}$ &
+$\scriptstyle{-1<\alpha<1}$ \\
+ \midrule
+ \thead{Krishnamurthy et al. [22]} & - & - & - & - & - & - & - & $\scriptstyle{N^{-\frac{1}{2}} + N^{\frac{-3s}{2s + d}}}$ \\ 
+ \thead{Nguyen et al. [28]} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & - & - & - & - & - & - \\ 
+ \thead{Moon and Hero [26]} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ \\ 
+ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Discussion: assumptions and summary}\label{subsection:discussion-assumptions}
+All the rates in this section are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
+However the constants may exhibit some dependence on the dimension.
+Accordingly, for fixed $N$, the bias and variance may generally grow with the dimension.
+
+Although the data distribution $Q_X$ will generally be unknown, in some practical scenarios such as deep autoencoder models, $P_Z$ may be chosen by design and $Q_{Z|X}$ learned subject to architectural constraints.
+In such cases, the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} can be satisfied by making suitable restrictions (we conjecture also for Theorem~\ref{thm:fast-KL-rate}).
+For example, suppose that ${P_Z}$ is  ${\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}$ is  ${\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
+Then the assumptions hold if there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| < K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$ (see Appendix \ref{appendix:discussion-constraints}).
+In practice, numerical stability often requires the diagonal entries of $\Sigma$ to be lower bounded by a small number (e.g. $10^{-6}$).
+If $\mathcal{X}$ is compact (as for images) then such a $K$ is guaranteed to exist; if not, choosing $K$ very large yields an insignificant constraint.
+
+Table~\ref{table:convergence-other} summarizes the rates of bias for some existing methods.
+In contrast to our proposal, the assumptions of these estimators may in practice be difficult to verify.
+For the estimator of \cite{krishnamurthy14icml}, both densities $p$ and $q$ must belong to the H\"older class of smoothness $s$, be supported on $[0,1]^d$ and satisfy $0<\eta_1 < p, q < \eta_2<\infty$ on the support for known constants $\eta_1, \eta_2$.
+For that of \cite{nguyen10ratio}, the density ratio $p/q$ must satisfy $0<\eta_1 < p/q < \eta_2<\infty$ and belong to a function class $G$ whose \emph{bracketing entropy} (a measure of the complexity of a function class) is properly bounded. The condition on the bracketing entropy is quite strong and ensures that the density ratio is well behaved.
+For the estimator of \cite{moon14ensemble}, both $p$ and $q$ must have the same bounded support and satisfy $0<\eta_1 < p, q < \eta_2<\infty$ on the support. $p$ and $q$ must have \emph{continuous bounded} derivatives of order $d$ (which is stronger than assumptions of [22]), and $f$ must have derivatives of order at least $d$.
+
+In summary, the RAM estimator $D_f(\hat{Q}_Z^N \| P_Z)$ for $D_f(Q_Z \| P_Z)$ is \textbf{consistent} since it concentrates to its expectation $\E_{\XN}\bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr]$, which in turn converges to $D_f(Q_Z \| P_Z)$.
+It is also \textbf{practical} because it can be efficiently estimated with Monte-Carlo sampling via RAM-MC.

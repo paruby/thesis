@@ -1,0 +1,83 @@
+\begin{thebibliography}{12}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Arjovsky et~al.(2017)Arjovsky, Chintala, and Bottou]{AB17}
+Arjovsky, M., Chintala, S., and Bottou, L.
+\newblock Wasserstein {GAN}.
+\newblock \emph{arXiv:1701.07875}, 2017.
+
+\bibitem[Bengio et~al.(2013)Bengio, Courville, and
+  Vincent]{bengio2013representation}
+Bengio, Yoshua, Courville, Aaron, and Vincent, Pascal.
+\newblock Representation learning: A review and new perspectives.
+\newblock \emph{IEEE transactions on pattern analysis and machine
+  intelligence}, 35\penalty0 (8):\penalty0 1798--1828, 2013.
+
+\bibitem[Binkowski et~al.(2018)Binkowski, Sutherland, Arbel, and
+  Gretton]{BS+18}
+Binkowski, M., Sutherland, D.~J., Arbel, M., and Gretton, A.
+\newblock Demystifying {MMD} {GAN}s.
+\newblock In \emph{ICLR}, 2018.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{goodfellow2014generative}
+Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair,
+  S., Courville, A., and Bengio, Y.
+\newblock Generative adversarial nets.
+\newblock In \emph{NIPS}, pp.\  2672--2680, 2014.
+
+\bibitem[Heusel et~al.(2017)Heusel, Ramsauer, Unterthiner, Nessler, Klambauer,
+  and Hochreiter]{heusel2017gans}
+Heusel, Martin, Ramsauer, Hubert, Unterthiner, Thomas, Nessler, Bernhard,
+  Klambauer, G{\"u}nter, and Hochreiter, Sepp.
+\newblock {GAN}s trained by a two time-scale update rule converge to a nash
+  equilibrium.
+\newblock \emph{arXiv:1706.08500}, 2017.
+
+\bibitem[Higgins et~al.(2017)Higgins, Matthey, Pal, Burgess, Glorot, Botvinick,
+  Mohamed, and Lerchner]{HM+17}
+Higgins, I., Matthey, L., Pal, A., Burgess, C., Glorot, X., Botvinick, M.,
+  Mohamed, S., and Lerchner, A.
+\newblock Beta-vae: Learning basic visual concepts with a constrained
+  variational framework.
+\newblock In \emph{ICLR}, 2017.
+
+\bibitem[Kingma \& Welling(2014)Kingma and Welling]{KW14}
+Kingma, D.~P. and Welling, M.
+\newblock Auto-encoding variational {B}ayes.
+\newblock In \emph{ICLR}, 2014.
+
+\bibitem[Lake et~al.(2017)Lake, Ullman, Tenenbaum, and
+  Gershman]{lake2017building}
+Lake, Brenden~M, Ullman, Tomer~D, Tenenbaum, Joshua~B, and Gershman, Samuel~J.
+\newblock Building machines that learn and think like people.
+\newblock \emph{Behavioral and Brain Sciences}, 40, 2017.
+
+\bibitem[Makhzani et~al.(2016)Makhzani, Shlens, Jaitly, and Goodfellow]{MSJ+16}
+Makhzani, A., Shlens, J., Jaitly, N., and Goodfellow, I.
+\newblock Adversarial autoencoders.
+\newblock In \emph{ICLR}, 2016.
+
+\bibitem[Mescheder et~al.(2017)Mescheder, Nowozin, and Geiger]{MNG17}
+Mescheder, L., Nowozin, S., and Geiger, A.
+\newblock Adversarial variational bayes: Unifying variational autoencoders and
+  generative adversarial networks.
+\newblock \emph{arXiv:1701.04722}, 2017.
+
+\bibitem[Nowozin et~al.(2016)Nowozin, Cseke, and Tomioka]{nowozin2016f}
+Nowozin, Sebastian, Cseke, Botond, and Tomioka, Ryota.
+\newblock f-{GAN}: Training generative neural samplers using variational
+  divergence minimization.
+\newblock In \emph{NIPS}, 2016.
+
+\bibitem[Tolstikhin et~al.(2018)Tolstikhin, Bousquet, Gelly, and
+  Schoelkopf]{TBG+17}
+Tolstikhin, I., Bousquet, O., Gelly, S., and Schoelkopf, B.
+\newblock Wasserstein auto-encoders.
+\newblock In \emph{ICLR}, 2018.
+
+\end{thebibliography}

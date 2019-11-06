@@ -1,0 +1,71 @@
+\subsection{Proof of Theorem \ref{thm:fast-KL-rate}}\label{appendix:subsec:thm1}
+
+\begin{lemma}\label{lemma:hilbertian-triangle}
+Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
+Then for any $\lambda>0$,
+\begin{align*}
+    D_f\left(\hat{Q}^N_Z \| P_Z\right) - D_f\left(Q_{Z} \| P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z \| Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} \| P_Z \right)
+\end{align*}
+If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z \| Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
+for some $k>0$, 
+then
+\begin{align*}
+    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z \| P_Z\right) \right] - D_f\left(Q_{Z} \| P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
+\end{align*}
+\end{lemma}
+\begin{proof}
+The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $\hat{Q}^N_Z$ and $P_Z$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
+The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2}}$.
+\end{proof}
+
+
+\setcounter{theorem}{0}
+\begin{theorem}[Rates of the bias]
+If
+$\E_{X\sim Q_X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr]$ and
+$\KL\left( Q_{Z} \| P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
+\end{theorem}
+
+\begin{proof}
+To begin, observe that 
+\begin{align*}
+    \E_{\XN}\left[\chi^2\bigl(\hat{Q}^N_Z, Q_Z\bigr)\right]
+    &= \E_{\XN}\E_{Q_Z}\left[\left(\frac{\hat{q}_N(z)}{q(z)} - 1\right)^2 \right]\\
+    &=\E_{Q_Z} \V_{\XN} \left[ \frac{1}{N} \sum_{n=1}^N\frac{q(z|X_n)}{q(z)}\right] \\
+    &= \frac{1}{N} \E_{Q_Z}\V_X \left[ \frac{q(z|X)}{q(z)} \right]\\
+    &= \frac{1}{N}\E_{X}\left[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr) \right]
+\end{align*}
+
+where the introduction of the variance operator follows from the fact that $\E_{X_N}\left[ \frac{\hat{q}_N(z)}{q(z)} \right] = 1$.
+
+For the $\KL$-divergence, using the fact that $\KL \leq \chi^2$ (Lemma 2.7 of \cite{tsybakov2009}) yields
+
+\begin{align*}
+    \E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| P_Z\right)\right] - \KL\left( Q_{Z} \| P_Z\right) &=\E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| Q_Z\right)\right]\\
+    &\leq \E_{\XN}\left[\chi^2\bigl(\hat{Q}^N_Z, Q_Z\bigr) \right]\\
+    &= \frac{1}{N}\E_{X}\left[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\right]\\
+    &=O\left(\frac{1}{N}\right),
+\end{align*}
+where the first equality can be verified by using the definition of $\KL$ and the fact that $Q_Z = \E_{\XN}\hat{Q}^N_Z$.
+
+For Total Variation, we have
+\begin{align*}
+    \E_{\XN}\left[\TV\left( \hat{Q}^N_Z \| P_Z\right)\right] - \TV\left( Q_{Z} \| P_Z\right) &\leq\E_{\XN}\left[\TV\left( \hat{Q}^N_Z \| Q_Z\right)\right]\\
+    &\leq \frac{1}{\sqrt{2}} \sqrt{\E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| Q_Z\right) \right]}\\
+    &=O\left(\frac{1}{\sqrt{N}}\right),
+\end{align*}
+where the first inequality holds since $\TV$ is a metric and thus obeys the triangle inequality, and the second inequality follows by Pinsker's inequality combined with concavity of $\sqrt{x}$ (Lemma 2.5 of \cite{tsybakov2009}).
+
+For $D_{f_\beta}$ (including Jenson-Shannon) using the fact that $D_{f_\beta}^{1/2}$ satisfies the triangular inequality, we apply the second part of Lemma~\ref{lemma:hilbertian-triangle}
+in combination with the fact that
+$D_{f_\beta}\left(\hat{Q}^N_Z \| Q_Z\right) \leq \psi(\beta) \ \TV\left( \hat{Q}^N_Z \| Q_Z \right)$ for some scalar $\psi(\beta)$ (Theorem 2 of \cite{osterreicher2003new}) to obtain
+
+\begin{align*}
+    \E_{\XN}\left[D_{f_\beta}\left( \hat{Q}^N_Z \| P_Z\right)\right] - D_{f_\beta}\left( Q_{Z} \| P_Z\right) \leq O\left(\frac{1}{N^{1/4}}\right).
+\end{align*}
+
+Although the squared Hellinger divergence is a member of the $f_\beta$-divergence family, we can use the tighter bound $\Hsq\left( \hat{Q}^N_Z \| Q_Z\right) \leq KL\left( \hat{Q}^N_Z \| Q_Z\right)$ (Lemma 2.4 of \cite{tsybakov2009}) in combination with Lemma~\ref{lemma:hilbertian-triangle} to obtain
+\begin{align*}
+    \E_{\XN}\left[\Hsq\left( \hat{Q}^N_Z \| P_Z\right)\right] - \Hsq\left( Q_{Z} \| P_Z\right) \leq O\left(\frac{1}{\sqrt{N}}\right).
+\end{align*}
+\end{proof}

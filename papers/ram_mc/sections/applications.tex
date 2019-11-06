@@ -1,0 +1,40 @@
+\section{Applications: total correlation, entropy, and mutual information estimates}\label{sec:applications}
+In this section we describe in detail some direct consequences of our new estimator and its guarantees.
+Our theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
+\paragraph{Total correlation and entropy estimation.}
+The differential entropy, which is defined as $H(Q_Z)= -\int_{\mathcal{Z}} q(z) \log q(z)  dz$, is often a quantity of interest in machine learning.
+While this is intractable in general, straightforward computation shows that for \emph{any} $P_Z$
+{\addtolength{\abovedisplayskip}{-0.5mm}
+\addtolength{\belowdisplayskip}{-0.5mm}
+\begin{align*}
+    H(Q_Z) - \mathbb{E}_{\XN} H(\hat{Q}_Z^N) = \mathbb{E}_{\XN} \KL[\hat{Q}_Z^N \| P_Z] -  \KL[Q_Z \| P_Z].
+\end{align*}}%
+Therefore, our results provide sufficient conditions under which $\smash{H(\hat{Q}_Z^N)}$ converges to $\smash{H(Q_{Z})}$ and concentrates to its mean.
+We now examine some consequences for Variational Autoencoders (VAEs).
+
+Total Correlation is considered by \cite{chen2018isolating},
+$
+TC(Q_Z) := \KL[Q_Z \| \prod_{i=1}^{d_Z} Q_{Z_i}] =     \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
+$
+where $Q_{Z_i}$ is the $i$th marginal of $Q_Z$.
+This is added to the VAE loss function to encourage $Q_Z$ to be factorized, resulting in the $\beta$-TC-VAE algorithm.
+By the second equality above, estimation of TC can be reduced to estimation of $H(Q_Z)$ (only slight modifications are needed to treat $H(Q_{Z_i})$).
+
+Two methods are proposed in \cite{chen2018isolating} for estimating $\smash{H(Q_Z)}$, both of which assume a finite dataset of size $D$.
+One of these, named \emph{Minibatch Weighted Sample} (MWS), coincides with $\smash{H(\hat{Q}_Z^N) + \log D}$ estimated with a particular form of MC sampling.
+Our results therefore imply \emph{inconsistency} of the MWS method due to the constant $\log D$ offset. 
+In the context of \cite{chen2018isolating} this is not actually problematic since a constant offset does not affect gradient-based optimization techniques.
+Interestingly, although the derivations of \cite{chen2018isolating} suppose a data distribution of finite support, our results show that minor modifications result in an estimator suitable for both finite and infinite support data distributions.
+
+\paragraph{Mutual information estimation.}
+The mutual information (MI) between variables with joint distribution $\smash{Q_{Z,X}}$ is defined as $\smash{I(Z, X) := \KL\left[Q_{Z,X} \| Q_Z Q_X \right] = \E_{X} \KL\left[Q_{Z|X} \| Q_Z \right]}$.
+Several recent papers have estimated or optimized this quantity in the context of autoencoder architectures, coinciding with our setting \cite{dieng2018avoiding, hoffman2016elbo, alemi2017fixing, oord2018representation}. In particular, \cite{poolevariational} propose the following estimator based on replacing $Q_Z$ with $\smash{\hat{Q}_{Z}^N}$, proving it to be a lower bound on the true MI:
+{\addtolength{\abovedisplayskip}{-0.6mm}
+\addtolength{\belowdisplayskip}{-0.6mm}
+\begin{align*}\textstyle
+    I_{TCPC}^N(Z,X) = \mathbb{E}_{\XN}\Big[\frac{1}{N} \sum_{i=1}^N \KL[ Q_{Z|X_i} \| \hat{Q}_{Z}^N ]\Big] \leq I(Z,X).
+\end{align*}}%
+The gap can be written as
+$\smash{I(Z,X) - I_{TCPC}^N(Z,X) = \E_{\XN} \KL[ \hat{Q}_{Z}^N \| P_{Z} ] - \KL[ Q_{Z} \| P_Z ]}$
+where $P_Z$ is \emph{any} distribution. 
+Therefore, our results also provide sufficient conditions under which $\smash{I^N_{TCPC}}$ converges and concentrates to the true mutual information.

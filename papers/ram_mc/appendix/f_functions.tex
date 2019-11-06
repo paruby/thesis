@@ -1,0 +1,29 @@
+\section{$f$ for divergences considered in this paper}\label{appendix:f-fns}
+
+One of the useful properties of $f$-divergences that we make use of in the proofs of Theorems~\ref{thm:convergence-rate-general} and \ref{thm:concentration} is that for any constant $c$, replacing $f(x)$ by $f(x) + c(x-1)$ does not change the divergence $D_f$. 
+It is often convenient to work with $f_0(x) := f(x) - f'(1)(x-1)$ which is decreasing on $(0, 1)$ and increasing on $(1, \infty)$ and satisfies $f'_0(1)=0$.
+
+In Table \ref{table:f-fns} we list the forms of the function $f_0$ for each of the divergences considered in this paper.
+
+
+{
+\renewcommand{\arraystretch}{2}
+\begin{table}
+ \caption{$f$ corresponding to divergences referenced in this paper.}
+ \label{table:f-fns}
+ \centering
+ \begin{tabular}{c c} 
+ \toprule
+ $f$-divergence & $f_0(x)$ \\
+ \midrule
+ KL & $x \log x - x + 1$\\
+ TV & $\frac{1}{2}|1-x|$\\
+ $\chi^2$ & $x^2 - 2x$\\
+ $\text{H}^2$ & $2(1-\sqrt{x})$\\
+ JS & $(1+x)\log(\frac{2}{1+x}) + x\log x$\\
+ $D_{f_\beta}$, $\beta > 0,$ $\beta\not=\frac{1}{2}$ & $\frac{1}{1-\frac{1}{\beta}}\left[ (1+x^\beta)^{\frac{1}{\beta}} - 2^{\frac{1}{\beta}-1}(1+x) \right]$\\
+ $D_{f_\alpha}$, $-1<\alpha < 1$ & $\frac{4}{1-\alpha^2}\left( 1 - x^{\frac{1+\alpha}{2}} \right) - \frac{2(x-1)}{\alpha-1}$ \\
+ \bottomrule
+\end{tabular}
+\end{table}
+}
