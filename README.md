@@ -22,3 +22,9 @@ following command:
 ```
 make
 ```
+
+
+## How can I view the thesis without compiling it myself?
+
+Some versions of the thesis will be saved in `pdfs`, named according to the
+date of that version.
