@@ -16,8 +16,9 @@ sudo apt install latexmk
 sudo apt-get install texlive-science
 ```
 
-The tex is compiled by running the following command:
+The tex is compiled by `cd`ing to the `template` directory and running the 
+following command:
 
 ```
-latexmk -pdf thesis
+make
 ```
