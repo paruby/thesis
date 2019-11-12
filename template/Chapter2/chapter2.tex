@@ -14,11 +14,39 @@
 In this chapter we review the literature relevant to the thesis.
 
 \begin{itemize}
-\item The terms \emph{representation} and \emph{representation learning} in machine learning are somewhat ill-defined, with their precise meaning depending on the particular context or niche of research under consideration. Common to these subtly different meanings is the existence of a data space $\mathcal{X}$ of raw data and a function or \emph{feature extractor} $f:\mathcal{X} \to \mathcal{Z}$ mapping to another space $\mathcal{Z}$. In many cases, $\mathcal{X}$ may be high dimensional natural data such as image or audio, while $\mathcal{Z}$ is a lower dimensional vector space.
+
 \item This is a thesis about representations in a general sense, covering three different sub-fields of modern machine learning research. As such, in this literature review it is necessary to cover a lot of ground. The literature review begins with a broad overview of representation learning and the different ways that representations arise across machine learning.
 \item In the major part of the literature review, we cover the background of each of the three areas separately in detail.
 \item We give an introduction to causality and causal inference to set the stage of Chapter 3.
 \item ICA is covered next in order to introduce Chapter 4.
 \item Finally, we discuss generative modelling in order to set up Chapters 5 and 6.
 \item Each of the above named chapters additionally begins with a smaller literature review that is more focussed to the particular problem setting considered.
+\end{itemize}
+
+\paragraph{Representations and the learning thereof}
+
+\begin{itemize}
+\item The terms \emph{representation} and \emph{representation learning} in machine learning are somewhat ill-defined, with their precise meaning depending on the particular context or niche of research under consideration. Common to these subtly different meanings is the existence of a data space $\mathcal{X}$ of raw data and a function $f:\mathcal{X} \to \mathcal{Z}$ mapping to another space $\mathcal{Z}$. In many cases, $\mathcal{X}$ may be high dimensional natural data such as images or audio, while $\mathcal{Z}$ is a lower dimensional vector space.
+\item The function $f$ is often referred to as a \emph{feature extractor} and \emph{representations} as \emph{features}.
+\item The reasons that features may be preferred over raw data are myriad. The most basic reason is that most successful machine learning algorithms typically require vectors as inputs. For sequential discrete data such as text or genome data, the raw data must first be processed into a form that can be digested by these methods.
+\item Another is that even when data are vectorial, the performance of simple methods such as linear and logistic regression can be significantly improved by first appropriately featurising the raw data. Indeed, the famous class of techniques known as \emph{kernel methods} can be viewed as performing simple (e.g. linear) algorithms on top of features induced by the kernel of choice \citep{scholkopf2001learning, rasmussen2006gaussian}, while classification using neural networks can be viewed as performing logistic regression on top of learned features \citep{goodfellow2016deep}.
+\item 
+\end{itemize}
+
+Aspects of representations to cover:
+
+\begin{itemize}
+\item What do we mean by representations?
+\item What are representations used for, and in which diverse subfields of ML do they arise?
+\item History of representations in each of these diverse subfields.
+\item What are methods by which representations are learned / constructed?
+\item Brief discussion about representation learning for transfer, which is not discussed further in this thesis, though acknowledge that this is currently a very important area in academia and industrial research.
+\end{itemize}
+
+
+
+
+Papers to include:
+\begin{itemize}
+\item Review of representation learning: \cite{bengio2013representation}
 \end{itemize}
