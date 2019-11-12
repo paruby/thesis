@@ -45,6 +45,46 @@ Non-technical introduction that should be accessible to people who don't know ab
 This is the 'proper' introduction.
 
 \begin{itemize}
+\item A human looking at an image understands its content not in terms of the pixels that are directly observed, but at higher conceptual levels such as that objects exist and relate to one another. This understanding can fluidly shift between multiple scales, so that most objects can be decomposed into smaller objects in a hierarchical fashion. Different sensory streams can be merged into a single richer conscious experience, so that we perceive the world in three dimensions despite each of our eyes seeing only in two dimensions. 
+The fact that these happen is a consequence both of evolution as well as a life-time of experience.
+\item Machine learning models, in contrast, generally have neither of these from which to benefit. This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
+\end{itemize}
+
+Causality:
+
+\begin{itemize}
+\item The first of these comes from the field of \emph{causal inference}, the goal of which is to learn causal relations between random variables from either observational or experimental data. The asking of causal questions is ubiquitous in the social and natural sciences. Does smoking cause cancer? Does cutting corporation taxes cause economic growth? Will a sugar tax reduce the prevalence of obesity?
+\item It is troubling, however, that scientists often seek to discover causal relations that are ill-defined in the real world. For instance, do blood cholesterol levels causally influence the risk of heart disease? 
+\item For a long time, researchers investigated this question to find contradictory conclusions. Some found that raising cholesterol levels caused increased risk of heart disease, while others found the opposite. The resolution of these conflicting results came with the realisation that there are two types of blood cholesterol with opposite effects on heart disease risk. Thus, raising one type protects against heart disease, while raising the other raises its risk, yet both of these interventions would be registered as an increase to blood cholesterol levels.
+\item Even when the variables under investigation are well-defined, in many cases a non-trivial set of assumptions is implicitly made. Consider the link between smoking and prevalence of cancer. In reality, the human body is a complex time-evolving system consisting of numerous individual cells. The effect of regular smoking is the accumulation of small perturbations to this complex system which collectively lead to increased risk that, at some point in time, one or more of the many cells malfunction and a cancerous growth appears. 
+\item Thus, although it is true to say that "smoking causes cancer", hiding behind this simple statement is a very complicated causal relationship at the level of molecules and cells.
+\item The first contribution of this thesis is the formalisation of a theory of \emph{causal abstraction} which builds on the mathematical language for modelling causal structure known as Structural Equation Models (SEMs), providing an understanding of when it is legitimate to model causal relationships in the world at a coarser level of detail than the `true' level at which causal relations hold. The main outcome of this research was the paper \emph{Causal Consistency of Structural Equation Models} which is adapted and presented in Chapter 3. A follow-up paper, \emph{From Deterministic ODEs to Dynamic Structural Causal Models}, is not presented in this thesis. %Additionally, another causality paper, though not on the theme of causal abstractions, \emph{Probabilistic Active Learning of Functions in Structural Causal Models}, is also not presented in this thesis.
+\end{itemize}
+
+Non-linear ICA:
+
+\begin{itemize}
+\item The second type of representation comes from \emph{Independent Component Analysis} (ICA). 
+\item The \emph{cocktail party problem} is often used to describe this problem: at a party where many people are speaking, listening to the voice of a single person requires the separation of many mixed audio signals.
+\item In the classical ICA problem setting, independent sources $\mathbf{s}$ are mixed through an unknown function $f$ giving rise to a vector of observations $\mathbf{x} = f(\mathbf{s})$. Given the observations $\mathbf{x}$, the goal is to learn a function $g$ that inverts $f$ up to possibly tolerable ambiguities, thus approximately recovering the original independent sources $\mathbf{s}$. 
+\item The resulting $g(\mathbf{x})$ is a representation of the observed data that should have more appealing properties compared to the raw observations themselves.
+\item The contribution of this thesis to the ICA literature is to consider a problem setting in which multiple different \emph{views} of the same sources is given. For example, different functions $f_1$ and $f_2$ give rise to different observations $f_1(\mathbf{x})$ and $f_2(\mathbf{x})$ which can both be used to recover $\mathbf{s}$.
+\item In the usual single view setting, very strong assumptions need to be made on $f$ and $\mathbf{s}$ in order to prove that recovery is possible. In the multi-view setting considered in this thesis, much weaker assumptions can be made. This significantly increases the applicability of ICA methods, since the multi-view setting arises naturally in many real scenarios.
+\end{itemize}
+
+WAE:
+
+\begin{itemize}
+\item The third and final type of representation comes from \emph{Wasserstein Autoencoders} (WAEs), a type of generative model. 
+\item Autoencoders are a broad class of method that enable learning low-dimensional representations of high-dimensional raw data. An encoder $e$ mapping from the data space $\mathcal{X}$ to the low dimensional representation space $\mathcal{Z}$ and generator or decoder $g$ mapping the reverse direction are simultaneously learned by minimising a reconstruction loss $L\left(x, g(e(x))\right)$. If 
+\end{itemize}
+
+
+Scrap:
+
+Unify notation: $x$ or $\mathbf{x}$ for data, $z$ or $\mathbf{z}$ for latent space. Encoder $e$ and generator $g$. 
+
+\begin{itemize}
 \item At the beginning of my PhD I was interested in working in Causal Inference. The goal is to learn causal relations between random variables, in contrast to the usual statistical relations in most of machine learning. 
 \item The asking of such questions is ubiquitous in the social and natural sciences. Does smoking cause cancer? Does cutting corporation taxes cause economic growth? Will a sugar tax reduce the prevalence of obesity?
 \item This is all well and good, and clearly important. However, I found it troubling that people often seek to discover causal relations that are ill-defined in the real world. For instance, do blood cholesterol levels causally influence the risk of heart disease? 
@@ -52,6 +92,10 @@ This is the 'proper' introduction.
 \item Yet, even when there appears to be no problem in the statement of the question, in many cases a non-trivial set of assumptions is implicitly made. Consider the smoking and cancer example. In reality, the human body is a complex time-evolving system consisting of numerous individual cells. The effect of regular smoking is the accumulation of small perturbations to this complex system which collectively lead to increased risk that, at some point in time, one or more of the many cells malfunction and a cancerous growth appears. 
 \item Thus, although it is true to say that "smoking causes cancer", hiding behind this simple statement is a very complicated causal relationship at the level of molecules and cells.
 \item These problems motivated approximately the first half of my PhD. During this time, I worked to formalise a theory of "Causal Abstraction" within the mathematical modelling language known as Structural Equation Models (SEMs). The goal of this line of work is to understand when it is legitimate to model causal relationship in the world at a coarser level of detail than the "true" level at which causal relations hold. The main outcome of this research was the paper \emph{Causal Consistency of Structural Equation Models} which is adapted and presented in Chapter 3. A follow-up paper, \emph{From Deterministic ODEs to Dynamic Structural Causal Models}, is not presented in this thesis. Additionally, another causality paper, though not on the theme of causal abstractions, \emph{Probabilistic Active Learning of Functions in Structural Causal Models}, is also not presented in this thesis.
+\item Causal inference algorithms usually rely on being presented with meaningful low-dimensional variables. 
+\item In contrast, one of the revolutions in machine learning in the past years is that of feature learning. 
+\item The second half of my PhD began with a desire to 
+\item Chapters 4, 5, and 6 contain work done in the second half of my PhD. 
 \end{itemize}
 
 
