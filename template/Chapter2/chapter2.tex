@@ -23,30 +23,52 @@ In this chapter we review the literature relevant to the thesis.
 \item Each of the above named chapters additionally begins with a smaller literature review that is more focussed to the particular problem setting considered.
 \end{itemize}
 
-\paragraph{Representations and the learning thereof}
-
-\begin{itemize}
-\item The terms \emph{representation} and \emph{representation learning} in machine learning are somewhat ill-defined, with their precise meaning depending on the particular context or niche of research under consideration. Common to these subtly different meanings is the existence of a data space $\mathcal{X}$ of raw data and a function $f:\mathcal{X} \to \mathcal{Z}$ mapping to another space $\mathcal{Z}$. In many cases, $\mathcal{X}$ may be high dimensional natural data such as images or audio, while $\mathcal{Z}$ is a lower dimensional vector space.
-\item The function $f$ is often referred to as a \emph{feature extractor} and \emph{representations} as \emph{features}.
-\item The reasons that features may be preferred over raw data are myriad. The most basic reason is that most successful machine learning algorithms typically require vectors as inputs. For sequential discrete data such as text or genome data, the raw data must first be processed into a form that can be digested by these methods.
-\item Another is that even when data are vectorial, the performance of simple methods such as linear and logistic regression can be significantly improved by first appropriately featurising the raw data. Indeed, the famous class of techniques known as \emph{kernel methods} can be viewed as performing simple (e.g. linear) algorithms on top of features induced by the kernel of choice \citep{scholkopf2001learning, rasmussen2006gaussian}, while classification using neural networks can be viewed as performing logistic regression on top of learned features \citep{goodfellow2016deep}.
-\item 
-\end{itemize}
-
-Aspects of representations to cover:
+\paragraph{Representations in machine learning}
 
 \begin{itemize}
 \item What do we mean by representations?
-\item What are representations used for, and in which diverse subfields of ML do they arise?
-\item History of representations in each of these diverse subfields.
-\item What are methods by which representations are learned / constructed?
-\item Brief discussion about representation learning for transfer, which is not discussed further in this thesis, though acknowledge that this is currently a very important area in academia and industrial research.
-\end{itemize}
-
-
-
-
-Papers to include:
 \begin{itemize}
-\item Review of representation learning: \cite{bengio2013representation}
+	\item The terms \emph{representation} and \emph{representation learning} in machine learning are somewhat ill-defined, with their precise meaning depending on the particular context or niche of research under consideration. Common to these subtly different meanings is the existence of a data space $\mathcal{X}$ of raw data and a function $f:\mathcal{X} \to \mathcal{Z}$ mapping to another space $\mathcal{Z}$. In many cases, $\mathcal{X}$ may be high dimensional natural data such as images or audio, while $\mathcal{Z}$ is a lower dimensional vector space.
+	\item The function $f$ is often referred to as a \emph{feature extractor} and \emph{representations} as \emph{features}.
 \end{itemize}
+\item Where do representations occur?
+\begin{itemize}
+	\item Across machine learning, many subfields involve learning representations. The reasons for doing so can be broadly divided into two main categories: 
+	\item the unsupervised setting, where the representation learning is in some sense the explicit end goal, such as in unsupervised structure learning algorithms such as PCA, ICA, (interpretability? disentanglement? data analysis?) ... to a lesser extent, also autoencoder based generative models such as VAEs and WAEs where representation arise as a serendipitous by-product of another goal.
+	\item the supervised setting, where the representations learned are a means to solve some other goal, such as in supervised deep learning models, transfer learning / domain adaptation...
+\end{itemize}
+\item Why do machine learners care about representations?
+\begin{itemize}
+	\item Possibly the main pragmatic reason is that many of the bread-and-butter problems in both academia and industry for which machine learning methods are applied are supervised in nature, in which case the performance of popular algorithms may be very sensitive to the featurisation of the data. For instance, the performance of simple methods such as linear and logistic regression can be significantly improved by first appropriately featurising the raw data. Indeed, the famous class of techniques known as \emph{kernel methods} can be viewed as performing simple (e.g. linear) algorithms on top of rich features induced by the kernel of choice \citep{scholkopf2001learning, rasmussen2006gaussian}, while binary classification using neural networks can be viewed as performing logistic regression on top of learned features \citep{goodfellow2016deep}.
+	\item An even more basic reason is that many successful machine learning algorithms typically require vectors as inputs. For sequential discrete data such as text or genome data, the raw data must first be processed into a form that can be digested by these methods. [cite BERT, word2vec and other NLP preprocessing techniques]
+	\item A different class of reasons are cases in which the goal is to \emph{understand} the raw data, either by directly learning features, or by then using the features in some downstream statistical analysis. For instance, high dimensional data often lies on a low dimensional manifold of the data space. A basic algorithm for identifying the low dimensional structure can be found in PCA, which for any $k$ finds the $k$-dimensional subspace in which the data varies most. Identification of this low-dimensional structure is useful in a variety of ways: for instance, as a first step of \emph{data exploration} to assist humans in understanding how to model the data, or indeed as a preprocessing / data cleaning technique to avoid overfitting to high-dimensional noise when fitting models.
+	\item Another example comes from applications of ICA, ranging from neuroimaging to astronomy and finance, where recorded data may be a superposition of many independent signals [cite papers from incomplete rosetta stone paper]. The problem of \emph{blind source separation} is to separate out these signals, which may be of interest in and of themselves (e.g. detecting the changing luminescence of celestial bodies) or as an input to some other statistical analysis (e.g. correlating activity in some brain region with a controlled stimulus).
+\end{itemize}
+\item Although this thesis is primarily about representations in the context of causality, ICA and generative modelling, this section would be incomplete without discussing recent advances in the application of representation learning to boosting the performance of deep supervised learning. We thus discuss this in the next section before moving on to background of the main topics.
+\end{itemize}
+
+
+\paragraph{Transfer learning and deep unsupervised representation learning / Recent advances in improving supervised learning with deep unsupervised representation learning}
+
+\begin{itemize}
+	\item In the past decade, rapid innovation and progress has occurred in deep learning. This is epitomised by progress in the Imagenet challenge, a supervised learning benchmark of natural images for which the classification error has plummeted to better-than-human performance. Improvements have come from a variety of areas, including architectures [resnets, relu], optimizers [adam], hardware [gpus, tpus] and software [torch, pytorch, tensorflow]. 
+	\item Performance on benchmark supervised learning tasks continue to improve, despite concerns of the community overfitting to these tasks [recht, ludwig schmidt cifar10 and imagenet paprs]. Nonetheless, the diminishing returns have caused many to switch their focus to reducing the sample complexity of solving supervised problems, i.e. the amount of labelled data required to achieve a given level of performance.
+	\item Doing so is an academic problem with significant industrial implications. There are many supervised tasks which could in principle be solved, but for which the cost of collecting a sufficiently large dataset are not offset by the economic benefits of doing so. For such problems, reducing the amount of data required can entail economic feasibility.
+	\item We have lots of unlabelled data, as well as labelled data from different datasets. These can be used 'for free'. 
+	\item Recent methods have been proposed for exploiting this, falling under different categories. 
+\end{itemize}
+
+
+%Aspects of representations to cover:
+
+%\begin{itemize}
+%\item What are representations used for, and in which diverse subfields of ML do they arise?
+%\item History of representations in each of these diverse subfields.
+%\item What are methods by which representations are learned / constructed?
+%\item Brief discussion about representation learning for transfer, which is not discussed further in this thesis, though acknowledge that this is currently a very important area in academia and industrial research.
+%\end{itemize}
+
+%Papers to include:
+%\begin{itemize}
+%\item Review of representation learning: \cite{bengio2013representation}
+%\end{itemize}
