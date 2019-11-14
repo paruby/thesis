@@ -23,7 +23,7 @@ In this chapter we review the literature relevant to the thesis.
 \item Each of the above named chapters additionally begins with a smaller literature review that is more focussed to the particular problem setting considered.
 \end{itemize}
 
-\paragraph{Representations in machine learning}
+\section{Representations in machine learning}
 
 \begin{itemize}
 \item What do we mean by representations?
@@ -41,22 +41,122 @@ In this chapter we review the literature relevant to the thesis.
 \begin{itemize}
 	\item Possibly the main pragmatic reason is that many of the bread-and-butter problems in both academia and industry for which machine learning methods are applied are supervised in nature, in which case the performance of popular algorithms may be very sensitive to the featurisation of the data. For instance, the performance of simple methods such as linear and logistic regression can be significantly improved by first appropriately featurising the raw data. Indeed, the famous class of techniques known as \emph{kernel methods} can be viewed as performing simple (e.g. linear) algorithms on top of rich features induced by the kernel of choice \citep{scholkopf2001learning, rasmussen2006gaussian}, while binary classification using neural networks can be viewed as performing logistic regression on top of learned features \citep{goodfellow2016deep}.
 	\item An even more basic reason is that many successful machine learning algorithms typically require vectors as inputs. For sequential discrete data such as text or genome data, the raw data must first be processed into a form that can be digested by these methods. [cite BERT, word2vec and other NLP preprocessing techniques]
-	\item A different class of reasons are cases in which the goal is to \emph{understand} the raw data, either by directly learning features, or by then using the features in some downstream statistical analysis. For instance, high dimensional data often lies on a low dimensional manifold of the data space. A basic algorithm for identifying the low dimensional structure can be found in PCA, which for any $k$ finds the $k$-dimensional subspace in which the data varies most. Identification of this low-dimensional structure is useful in a variety of ways: for instance, as a first step of \emph{data exploration} to assist humans in understanding how to model the data, or indeed as a preprocessing / data cleaning technique to avoid overfitting to high-dimensional noise when fitting models.
+	\item A different class of reasons are cases in which the goal is to \emph{understand} the raw data, either by directly learning features, or by then using the features in some downstream statistical analysis. For instance, high dimensional data often lies on a low dimensional manifold of the data space. A basic algorithm for identifying the low dimensional structure can be found in PCA, which for any $k$ finds the $k$-dimensional subspace in which the data varies most. Identification of this low-dimensional structure is useful in a variety of ways: for instance, as a first step of \emph{data exploration} to assist humans in understanding how to model the data, or indeed as a preprocessing / data cleaning technique to avoid overfitting to high-dimensional noise when fitting models. More advanced versions of this technique include manifold learning,... possibly connect to autoencoders.
 	\item Another example comes from applications of ICA, ranging from neuroimaging to astronomy and finance, where recorded data may be a superposition of many independent signals [cite papers from incomplete rosetta stone paper]. The problem of \emph{blind source separation} is to separate out these signals, which may be of interest in and of themselves (e.g. detecting the changing luminescence of celestial bodies) or as an input to some other statistical analysis (e.g. correlating activity in some brain region with a controlled stimulus).
 \end{itemize}
 \item Although this thesis is primarily about representations in the context of causality, ICA and generative modelling, this section would be incomplete without discussing recent advances in the application of representation learning to boosting the performance of deep supervised learning. We thus discuss this in the next section before moving on to background of the main topics.
 \end{itemize}
 
 
-\paragraph{Transfer learning and deep unsupervised representation learning / Recent advances in improving supervised learning with deep unsupervised representation learning}
+\section{Transfer learning and deep unsupervised representation learning / Recent advances in improving supervised learning with deep unsupervised representation learning}
 
 \begin{itemize}
-	\item In the past decade, rapid innovation and progress has occurred in deep learning. This is epitomised by progress in the Imagenet challenge, a supervised learning benchmark of natural images for which the classification error has plummeted to better-than-human performance. Improvements have come from a variety of areas, including architectures [resnets, relu], optimizers [adam], hardware [gpus, tpus] and software [torch, pytorch, tensorflow]. 
+	\item In the past decade, rapid innovation and progress has occurred in deep learning. This is epitomised by progress in the Imagenet challenge, a supervised learning benchmark of natural images, for which the classification error has plummeted to better-than-human performance. Improvements have come from a variety of areas, including architectures [resnets, relu], optimizers [adam], hardware [gpus, tpus] and software [torch, pytorch, tensorflow]. 
 	\item Performance on benchmark supervised learning tasks continue to improve, despite concerns of the community overfitting to these tasks [recht, ludwig schmidt cifar10 and imagenet paprs]. Nonetheless, the diminishing returns have caused many to switch their focus to reducing the sample complexity of solving supervised problems, i.e. the amount of labelled data required to achieve a given level of performance.
 	\item Doing so is an academic problem with significant industrial implications. There are many supervised tasks which could in principle be solved, but for which the cost of collecting a sufficiently large dataset are not offset by the economic benefits of doing so. For such problems, reducing the amount of data required can entail economic feasibility.
 	\item We have lots of unlabelled data, as well as labelled data from different datasets. These can be used 'for free'. 
 	\item Recent methods have been proposed for exploiting this, falling under different categories. 
+	\item A common and straightforward strategy for classification is to use a pre-trained classifier on some previous dataset (e.g. Imagenet) to provide embeddings which are then fine-tuned on the new dataset. The penultimate layer of the classifier is a common choice to provide the embeddings, on top of which a new linear layer or small MLP is added mapping to the new class outputs. The entire network can then be trained using the new dataset (this is fine-tuning). 
+	\item When it is not possible or not desirable to use existing datasets, other methods exist to exploit datasets for which only a small number of labels are given. Semi-supervised learning combines unsupervised learning on a large corpus of unlabelled data, with supervised learning on a small subset of the same dataset with labels. The additional unlabelled samples are used to model the marginal distribution of the input.... Examples include pre-training an autoencoder to get features (also, back in the day this was used as a way to do normal supervised learning [greedy layerwise unsupervised training, see bengio 2013 representation review paper])
+	\item Recently there has been interest in \emph{self-supervised} methods, which are fully unsupervised methods that generate a synthetic 'pretext' task. Simple examples of this include rotation, in which a random 0, 90, 180 or 270 degree rotation is applied and then predicted [cite rotation paper], or jigsaw, in which the relative location of patches of an image are applied [cite jigsaw paper]. More sophisticated methods have been proposed [CPC, deep infomax] based on the paradigm of mutual information maximisation, though recent work has demonstrated that theoretical understanding of these methods is not yet complete [our ICML paper]. [s4l] combines both elements of self-supervision and semi-supervision.
+	\item In academic scenarios, no single agreed-upon metrics exist for evaluating the performance of representation learning algorithms. A common approach has been to evaluate performance on 1\% and 10\% of a dataset such as Imagenet to understand how the algorithms perform in the low data regime, though recently a more comprehensive benchmark has been released permitting the evaluation on a large number of synthetic and natural image datasets [VTAB].
 \end{itemize}
+
+Further discussion on these topics will be deferred to Chapter [conclusion and discussion]. In the remainder of this chapter we will discuss the backgrounds required for Chapters 3-6.
+
+\section{Causality}
+
+The goal of this section is to set the scene for Chapter 2. We introduce Structural Equation Models, the basic mathematical framework of the Pearl school of causality, and survey the literature on causal inference, the learning of causal structure from data.
+
+\subsection{Structural Equation Models}
+
+\begin{itemize}
+\item SEMs
+\item Interventions
+\item Distributions implied by SEMs (observational and interventional), this is discussed in more detail in Chapter 3.
+\item Cyclicity. (Discussed in more detail in Chapter 3).
+\end{itemize}
+
+\subsection{Causal Inference}
+\begin{itemize}
+\item Conditional independence based methods
+\item SEM / residual methods
+\end{itemize}
+
+\subsection{Causal Variables}
+\begin{itemize}
+\item Causal inference algorithms suppose that we are given a tuple of meaningful variables over which causal structure is to be learned. But in reality, meaningful variables have to be inferred from low level sensory data. 
+\item Discuss work that talks about where these variables come from. See intro of causal consistency paper as well as papers that cite this from Google scholar.
+\end{itemize}
+
+
+\section{Independent Component Analysis}
+
+\begin{itemize}
+\item Problem statement and impossibility result.
+\end{itemize}
+
+\subsection{Results for classical single view setting}
+
+\begin{itemize}
+\item Assumptions on distribution of s
+\item Assumptions on mixing function f
+\item Linear vs nonlinear.
+\item Intuition of proof techniques.
+\end{itemize}
+
+\subsection{Recent advances}
+\begin{itemize}
+\item Aapo's string of papers, including the one that our work built on.
+\item VAE paper with Dirk and Aapo.
+\item Discussion of new types of assumptions being explored.
+\end{itemize}
+
+
+
+
+\section{Generative Modelling with Latent Variable Models}
+
+
+\begin{itemize}
+\item Fundamental problem of generative modelling: given iid samples from some distribution $Q_X$, learn an distribution $P_X \approx Q_X$ from which new samples can be drawn. 
+\end{itemize}
+
+
+\subsection{Latent Variable Models}
+
+\begin{itemize}
+\item A convenient way to specify distributions over high dimensional spaces is with a latent variable model which can express complex distributions by combining simpler parts. Idea to specify simple \emph{prior} distribution $P_Z$ over low dimensional \emph{latent space} and a family of conditional distributions $P_{X|Z}$. For any fixed value $Z=z$, the distribution $P_{X|Z=x}$ may be simple, e.g. isotropic Gaussian, but my marginalising over the prior we can get arbitrarily complex distributions $P_X = \int P_{X|Z=z} P_Z(z) dz$. Give precise mathematical definition
+\end{itemize}
+
+
+\subsection{Divergences}
+
+\begin{itemize}
+\item The goal that $P_X$ should be approximately equal to $Q_X$ is made precise by demanding that some divergence $D(P_X \| Q_X)$ should be small. A divergence is a measure of dissimilarity on distributions. Give precise mathematical definition. Note that this is weaker than a \emph{distance}, which has a triangle inequality.
+\item Examples of divergences include Integral Probability Metrics and f-divergences. 
+\item In practice, minimising such divergences between high dimensional distributions is often intractable. Thus, two broad families of methods exist to get tractable surrogate losses. General strategy is to get variational lower bound on loss (GANs), tractable upper bound (VAE), or other approximate loss (WAE).
+\end{itemize}
+
+
+\subsection{GANs}
+
+\begin{itemize}
+\item Describe GANs. We don't use them in this thesis, but they have been so important throughout generative modelling that any review of this area is required to cover them. In their vanilla form, GANs don't have encoders, though some extensions have included encoders [cite encoder GAN project and references therein, e.g. BiGAN].
+\end{itemize}
+
+\subsection{VAEs}
+
+\begin{itemize}
+\item VAEs are another popular method. Describe them. They do have encoders, though the name autoencoder is perhaps somewhat of a misnomer [cite blogpost].
+\end{itemize}
+
+\subsection{WAEs}
+
+\begin{itemize}
+\item WAEs are a recently introduced method which will be examined in more detail in Chapters 5 and 6. Describe that they start from the optimal transport perspective, which has some advantages over KL in VAE. Idea is that OT cost factors into latent space, and so problem reduces to reconstruction + distribution matching. 
+\end{itemize}
+
 
 
 %Aspects of representations to cover:
