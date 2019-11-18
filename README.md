@@ -15,6 +15,7 @@ install missing packages:
 sudo apt install latexmk
 sudo apt-get install texlive-science
 sudo apt-get install lmodern
+sudo apt-get install texlive-fonts-extra 
 ```
 
 The tex is compiled by `cd`ing to the `template` directory and running the 
