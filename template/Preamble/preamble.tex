@@ -193,3 +193,88 @@
 % *****************************************************************************
 % ******************* Better enumeration my MB*************
 \usepackage{enumitem}
+
+
+
+% *****************************************************************************
+% *****************************************************************************
+% *****************************************************************************
+% Additional stuff added by me
+% *****************************************************************************
+% *****************************************************************************
+% *****************************************************************************
+
+
+% *****************************************************************************
+% Causality paper
+% *****************************************************************************
+
+%\makeatletter
+%\let\oldsection=\section
+%\renewcommand{\section}{\@ifstar\@ssection\@section}
+%\newcommand{\@ssection}[1]{\oldsection*{\MakeUppercase{#1}}}
+%\newcommand{\@section}[1]{\oldsection{\MakeUppercase{#1}}}
+%\let\oldsubsection=\subsection
+%\renewcommand{\subsection}{\@ifstar\@ssubsection\@subsection}
+%\newcommand{\@ssubsection}[1]{\oldsubsection*{\MakeUppercase{#1}}}
+%\newcommand{\@subsection}[1]{\oldsubsection{\MakeUppercase{#1}}}
+%\makeatother
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+
+\tikzstyle{green}=[fill=green!50!black,draw=green!50!black,color=green!50!black]
+\tikzstyle{red}=[fill=red!50!black,draw=red!50!black,color=red!50!black]
+
+\definecolor{docolour}{gray}{.75}
+
+\tikzstyle{keep}=[circle,draw,minimum size=2em]
+\tikzstyle{drop1}=[circle,fill=green!50!white]
+\tikzstyle{drop2a}=[circle,fill=red!50!white]
+\tikzstyle{drop2b}=[circle,fill=blue!50!white]
+\tikzstyle{micro}=[circle,draw,minimum size=1em,fill=docolour]
+\DeclareRobustCommand\dropNode[1]{\tikz[baseline={([yshift=-.6ex]current bounding box.center)}]\node[#1] at(0,0) {};}
+\usetikzlibrary{shadings}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\usepackage{ifthen}
+
+\usepackage{subcaption}
+
+\usepackage{enumitem}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\DeclareMathOperator{\doop}{do}
+\DeclareMathOperator{\pa}{pa}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\range}{range}
+\newcommand{\nulli}{\varnothing}
+\newcommand{\indexset}{\mathbb{I}}
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{example}[definition]{Example}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}[definition]{Corollary}
+
+\mathchardef\ordinarycolon\mathcode`\:
+\mathcode`\:=\string"8000
+\begingroup \catcode`\:=\active
+  \gdef:{\mathrel{\mathop\ordinarycolon}}
+\endgroup
+
+\linepenalty=1000
+\usepackage{microtype}
+
+\usepackage{stackengine}
+%\usepackage{stix}
+\newcommand{\vt}{{\mathrel{\raisebox{.3pt}{\scriptsize\topinset{$\smblksquare$}{$\vrectangle$}{.3pt}{}}}}}
+\newcommand{\vb}{{\mathrel{\raisebox{.3pt}{\scriptsize\bottominset{$\smblksquare$}{$\vrectangle$}{}{}}}}}
+\newcommand{\Mbr}{{\mathrel{\raisebox{.3pt}{\scriptsize\bottominset{$\smblksquare$}{$\squarelrquad$}{}{1.2pt}}}}}
+\newcommand{\Mbl}{{\mathrel{\raisebox{.3pt}{\scriptsize\bottominset{$\smblksquare$}{$\squarellquad$}{}{-1.2pt}}}}}
