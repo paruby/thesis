@@ -11,20 +11,46 @@
     \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
 \fi
 
-High level explanation of chapter and outline of contents.
+This chapter is largely based on the paper \emph{Causal Consistency of Structural Equation Models} published at UAI 2017. It extends the paper with an in-depth introduction to Causality, motivating and explaining the setting considered by the paper.
 
-This chapter is based on the paper \emph{Causal Consistency of Structural Equation Models} published at UAI 2017.
+In particular, Sections ... are an extended literature review, while Sections ... are mostly based on the paper. Section ... discusses how this work has influence the research community and briefly discusses work that builds on it.
 
 
 
-\section{Introduction to Causality}
+\section{Introduction}
 
 Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed probability distribution exists, that observed data are independent and identically distributed (\iid) samples from this distribution, and that new data at `test time' will similarly be drawn \iid~from the same distribution.
 Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $\PP_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $\PP_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
 %Given a set of \emph{i.i.d.} samples from a distribution $\PP_X$, the goal of \emph{density estimation} is to learn an approximation to $\PP_X$.
 
-Despite the great empirical success of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly in the framework described above. 
-Consider the following 
+Despite the great empirical successes of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly in the framework described above. 
+The framework is limited in that it presupposes the existence of a single joint distribution over all of the random variables of interest, with the operations of marginalisation and conditioning then providing the relationships connecting any subset of variables.
+But there are many examples of problems for which a single joint distribution over all variables does not suffice. 
+For many questions of scientific interest, this is because the problem either implicitly or explicitly concerns an \emph{intervention} or \emph{action} in the world that changes the joint distribution over the observable variables.
+
+For example, we may be interested to understand the influence of diet on longevity, with the aim of improving public health by encouraging people to eat healthily. Or we may wish to understand whether a widely used drug has some adverse affect on health, for instance whether consumption of ibuprofen increases risk of developing stomach ulcers.
+Such questions are concerned with understanding causal, not statistical, relationships in the world, and identification of such relationships can be highly non-trivial. 
+Indeed, to quote the well-known phrase, ``correlation does not imply causation''. 
+Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship can never be inferred without other external knowledge. 
+Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
+
+Causality is the study of causal influence between random variables.
+This introduction to the basics of causality continues in the next two sections.
+In Section ??, we will introduce \emph{Structural Equation Models (SEMs)}, a mathematical framework for modelling the causal influences between random variables and the variety of joint distributions this entails.
+Following this, in Section ?? we discuss the challenge of \emph{causal inference}, the identification of causal structure from data.
+
+%Best summarised by the well known phrase ``correlation does not imply causation'', while causal influence between two random variables typically implies statistical dependence, the reverse is not true.
+%At its heart, causality and statistical machine learning differ in that the former concerns itself with interventions in the world. 
+
+
+
+
+
+%\begin{itemize}
+%\item There are interesting problems that don't fall into above framework that are nonetheless about learning from data.
+%\item For instance scientific questions that are causal in nature, which scientists investigate by gathering and analysing data. These often are to do with decision making. For instance, given a patient with some condition, should we give them drug A or drug B? Here we are interested in the causal influence of the choice of drug on health outcome, not the statistical correlations. The reasons for this are best illustrated with an example.
+%\item Suppose that drug A is a well established treatment for a condition, while drug B is new and experimental. It may be that only those patients that are very  
+%\end{itemize}
 
 
 \section{Structural Equation Models: A Language for Causality}
