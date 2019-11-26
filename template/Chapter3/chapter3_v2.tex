@@ -51,8 +51,9 @@ Since correlation (or statistical dependence more generally) is a symmetric rela
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
 While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics [**citations**], the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail. 
-In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit any explicit reference to time. 
-Though the work does not seek to propose new algorithms for causal inference, it has implications to existing algorithms by providing a framework for understanding the limitations of previous approaches.
+In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, causal influence between variables of interest may be mediated by irrelevant variables that are ignored; interactions between low-level variables may instead be modelled at a macroscopic level, similar to how temperature and pressure arise as macroscopic properties of a large number of gaseous particles; and though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit explicit reference to it.
+This work additionally sheds new light on \emph{cyclic} SEMs, a previously poorly understood family of causal models, and has has implications to existing causal inference algorithms by providing a framework for understanding the limitations of previous approaches.
+
 
 The next sections provide a comprehensive background sufficient to understand the novel contribution of this chapter.
 In Section ??, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
@@ -74,6 +75,10 @@ Section ?? discusses the influence that this work has had on the research commun
 
 
 \section{Structural Equation Models: A Language for Causality}
+
+\emph{Note: part of the contribution of this chapter is to extend the framework of SEMs. In this section a classical treatment of SEMs is present, while in Section ?? the extended framework is presented.}
+
+
 \section{Methods of Causal Inference}
 \section{What are causal variables?}
 \section{Transformations between Structural Equation Models}
