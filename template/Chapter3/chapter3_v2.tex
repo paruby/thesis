@@ -24,13 +24,13 @@
 
 \emph{Sections ... are an in-depth introduction to causality, motivating and explaining the setting considered by the paper.
 Sections ... are mostly based on the paper. 
-Section ... discusses how this work has influence the research community and briefly discusses work that builds on it.}
+Section ... discusses how this work has influenced the research community and briefly discusses work that builds on it.}
 
 
 
 \section{Introduction}
 
-Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed but unknown probability distribution exists from which observed data are independent and identically distributed (\iid) sampled, and that new data at `test time' will similarly be drawn \iid~from this distribution.
+Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed but unknown probability distribution exists from which observed data are sampled \emph{independently and identically distributed (\iid)}, and that new data at `test time' will similarly be drawn \iid~from this distribution.
 Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $\PP_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $\PP_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
 %Given a set of \emph{i.i.d.} samples from a distribution $\PP_X$, the goal of \emph{density estimation} is to learn an approximation to $\PP_X$.
 
@@ -40,25 +40,24 @@ But there are many examples of problems for which a single joint distribution ov
 For many questions of scientific interest, this is because the problem either implicitly or explicitly concerns an \emph{intervention} or \emph{action} in the world that changes the joint distribution over the observable variables.
 
 For example, we may be interested to understand the influence of diet on longevity, with the aim of improving public health by encouraging people to eat healthily. 
-One might find the consumption of expensive imported fruits to be correlated with a longer life. This may well be due to the nutritiousness of such fruits; it could equally well be due to the fact that only wealthy people can afford such a diet, and that such wealth entails better access to medical treatment, sports facilities for exercise and so on. In the former case, \emph{intervening} in the world by reducing tariffs on imported fruits to encourage their consumption would have a positive effect on public health; in the latter, not.
-Similarly, we may observe in the population that taking over-the-counter painkillers is associated with an elevated risk of heart disease. This might be because the painkillers increase the risk, in which case acting to reduce access to such painkillers might have a positive impact on health outcomes. But if instead the association is because of that fact that people who already have poor health, and thus heightened risk of heart disease, tend to take more painkillers, then such a policy might have little effect other than to increase overall suffering.
+One might find the consumption of expensive imported fruits to be correlated with a longer life. This may well be due to the nutritiousness of such fruits; it could equally well be due to the fact that only wealthy people can afford such a diet, and that such wealth entails better access to medical treatment, sports facilities for exercise and so on. In the former case, intervening in the world by reducing tariffs on imported fruits to encourage their consumption would have a positive effect on public health; in the latter, not.
+Similarly, we may observe in the population that taking over-the-counter painkillers is associated with an elevated risk of heart disease. This might be because such painkillers have a negative effect on the cardiovascular system, in which case acting to reduce access to such painkillers might have a positive impact on health outcomes. But if instead the association is because of that fact that people who already have poor health, and thus heightened risk of heart disease, tend to take more painkillers, then such a policy might have little effect other than to increase overall suffering.
 
 These questions are concerned with understanding causal, not statistical, relationships in the world. 
 The aim of \emph{causality} is to study causal influence through the lens of a formal mathematical language, in much the same way that statistical machine learning uses the language of probability. 
-In the context of machine learning, \emph{causal inference}, a large part of the causality literature, seeks to discover causal relationships using data.
-The phrase ``correlation does not imply causation'' being well-known is a testament to the simultaneous difficulty and ubiquity of this problem.
-
-Though the causal inference is a large part of the causality literature,
-
-As the examples above demonstrate, the identification of such relationships can be highly non-trivial. 
-Indeed, to quote the well-known phrase, ``correlation does not imply causation''. 
-Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship can never be inferred without other external knowledge. 
+\emph{Causal inference}, a large part of the causality literature, seeks to discover causal relationships using data.
+As the examples above demonstrate, the identification of causal relationships can be highly non-trivial, with the well-known phrase ``correlation does not imply causation'' standing testament to the simultaneous difficulty and ubiquity of this problem.
+Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship can never be inferred without other prior knowledge. 
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
-Causality is the study of causal influence between random variables.
-This introduction to the basics of causality continues in the next two sections.
-In Section ??, we will introduce \emph{Structural Equation Models (SEMs)}, a mathematical framework for modelling the causal influences between random variables and the variety of joint distributions this entails.
-Following this, in Section ?? we discuss the challenge of \emph{causal inference}, the identification of causal structure from data.
+While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics [**citations**], the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail. 
+In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit any explicit reference to time. 
+Though the work does not seek to propose new algorithms for causal inference, it has implications to existing algorithms by providing a framework for understanding the limitations of previous approaches.
+
+The next sections provide a comprehensive background sufficient to understand the novel contribution of this chapter.
+In Section ??, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
+In Section ?? we will discuss the implicit assumptions in these approaches to causal inference, which will lead us to discussing causal abstractions in Sections ?? to ??.
+Section ?? discusses the influence that this work has had on the research community in the $\sim 2$ years since its publication as well as recent work by others that directly builds on it.
 
 %Best summarised by the well known phrase ``correlation does not imply causation'', while causal influence between two random variables typically implies statistical dependence, the reverse is not true.
 %At its heart, causality and statistical machine learning differ in that the former concerns itself with interventions in the world. 
