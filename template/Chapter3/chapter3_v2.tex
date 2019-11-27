@@ -76,7 +76,32 @@ Section ?? discusses the influence that this work has had on the research commun
 
 \section{Structural Equation Models: A Language for Causality}
 
-\emph{Note: part of the contribution of this chapter is to extend the framework of SEMs. In this section a classical treatment of SEMs is present, while in Section ?? the extended framework is presented.}
+\emph{This section introduces Structural Equations Models (SEMs), a mathematical formalism used to model causal influence. Later in the chapter an extension to the classical SEM will be presented; as such, in this section we present classical SEMs in a slightly different way compared to typical treatments.}
+\\
+
+\noindent An SEM over a tuple of random variables $X = (X_1, \ldots, X_N)$ consists of equations linking each $X_i$ to a subset of the other $X_j$ and an \emph{exogenous noise variable} $E_i$. More formally:
+
+\begin{definition}[Structural Equation Model (SEM)]
+Let $X = (X_1, \ldots, X_N)$ with each $X_i$ taking value in $\R$. An SEM $\mathcal{M}_X$ over $X$ is a tuple $(\mathcal{S}_X, \mathbb{P}_E)$ where
+\begin{itemize}
+	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, where $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
+	\item The variables $E = (E_1,\ldots,E_N)$ have distribution $\mathbb{P}_E$ which factorises, i.e. the $E_i$ are independent.
+	\item The \emph{causal graph} $\mathcal{G}$, the directed graph with nodes $X_i$ and edges $X_i \to X_j$ if and only if $i \in \pa(j)$, is acyclic.
+\end{itemize}
+\end{definition}
+
+The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}. We will discuss this fact further now. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
+
+\begin{lemma}[Well defined observational distribution]
+For any measurable functions $f_i$, an SEM implies a well-defined observational distribution $\mathbb{P}_X$ over $X$.
+\end{lemma}
+\begin{proof}
+For any particular value $e$ of the noise variables $E$, there is a unique vector $x(e)$ so that $(x(e), e)$ solves the structural equations $\mathcal{S}_X$. To see this, observe that acyclicity of $\mathcal{G}$ means that the structural equations can be solved recursively, beginning with variables with no parents. It follows that each $x_i$ can be written as a function of $e_{\text{anc}(i)}$, where $\text{anc}(i)$ are the indices of the \emph{ancestors} of $X_i$ in $\mathcal{G}$, that is the $X_j$ for which there exists a path $X_j \to X_i$....
+
+continue this proof.
+\end{proof}
+
+
 
 
 \section{Methods of Causal Inference}
@@ -84,3 +109,45 @@ Section ?? discusses the influence that this work has had on the research commun
 \section{Transformations between Structural Equation Models}
 \section{Examples of transformations}
 \section{Discussion and work building on this}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
