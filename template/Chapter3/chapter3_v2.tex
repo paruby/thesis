@@ -79,28 +79,95 @@ Section ?? discusses the influence that this work has had on the research commun
 \emph{This section introduces Structural Equations Models (SEMs), a mathematical formalism used to model causal influence. Later in the chapter an extension to the classical SEM will be presented; as such, in this section we present classical SEMs in a slightly different way compared to typical treatments.}
 \\
 
-\noindent An SEM over a tuple of random variables $X = (X_1, \ldots, X_N)$ consists of equations linking each $X_i$ to a subset of the other $X_j$ and an \emph{exogenous noise variable} $E_i$. More formally:
+\noindent An SEM over a tuple of random variables $X = (X_1, \ldots, X_N)$ consists of equations so that each $X_i$ is written as a function of a subset of the other $X_j$ and an \emph{exogenous noise variable} $E_i$. More formally:
 
 \begin{definition}[Structural Equation Model (SEM)]
-Let $X = (X_1, \ldots, X_N)$ with each $X_i$ taking value in $\R$. An SEM $\mathcal{M}_X$ over $X$ is a tuple $(\mathcal{S}_X, \mathbb{P}_E)$ where
+Let $X = (X_1, \ldots, X_N)$ and $E = (E_1, \ldots E_N)$ with each $X_i$, $E_i$ taking value in $\R$. An SEM $\mathcal{M}_X$ over $X$ is a tuple $(\mathcal{S}_X, \mathbb{P}_E)$ where
 \begin{itemize}
-	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, where $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
+	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, where the functions $f_i$ are measurable, $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
 	\item The variables $E = (E_1,\ldots,E_N)$ have distribution $\mathbb{P}_E$ which factorises, i.e. the $E_i$ are independent.
 	\item The \emph{causal graph} $\mathcal{G}$, the directed graph with nodes $X_i$ and edges $X_i \to X_j$ if and only if $i \in \pa(j)$, is acyclic.
 \end{itemize}
 \end{definition}
 
-The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}. We will discuss this fact further now. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
+\paragraph{Remark:}
+The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}. We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
 
 \begin{lemma}[Well defined observational distribution]
-For any measurable functions $f_i$, an SEM implies a well-defined observational distribution $\mathbb{P}_X$ over $X$.
+An SEM implies a well-defined observational distribution $\mathbb{P}_X$ over $X$.
 \end{lemma}
 \begin{proof}
 For any particular value $e$ of the noise variables $E$, there is a unique vector $x(e)$ so that $(x(e), e)$ solves the structural equations $\mathcal{S}_X$. To see this, observe that acyclicity of $\mathcal{G}$ means that the structural equations can be solved recursively, beginning with variables with no parents. It follows that each $x_i$ can be written as a function of $e_{\text{anc}(i)}$, where $\text{anc}(i)$ are the indices of the \emph{ancestors} of $X_i$ in $\mathcal{G}$, that is the $X_j$ for which there exists a path $X_j \to X_i$....
 
-continue this proof.
+continue this proof. Use the fact that $f_i$ are measurable.
 \end{proof}
 
+As discussed in the introduction, an important part of causal relationships is a notion of behaviour under \emph{interventions}. SEMs are equipped with a formal notion of such interventions which we call \emph{perfect interventions}. The idea is that intervening on a variable makes a change to the function determining its value in the observational setting.  Although there may be an effect on the \emph{distributions} over variables downstream of the intervened variable, the functions determining those variables are unchanged. Such an intervention is realised simply by replacing the structural equation of the intervened variable. This notion is easily generalised to interventions on multiple variables by replacing all of the corresponding equations. Formally:
+
+\begin{definition}[Perfect interventions and the do-operator]
+	Let $\mathcal{M}_X$ be a SEM, $i \in \{1,\ldots,N \}$ and $x_i \in \mathbb{R}$. The perfect intervention setting $X_i$ to take value $x_i$ is denoted $\doop(X_i = x_i)$ and is implemented by replacing the $i$th equation with $X_i = x_i$. The resulting set of structural equations is denoted $\mathcal{S}_X^{\doop(X_i=x_i)}$ and the resulting SEM $\mathcal{M}_X^{\doop(X_i=x_i)} = (\mathcal{S}_X^{\doop(X_i=x_i)}, \mathbb{P}_E)$.
+	Perfect interventions over two or more variables are also valid, which are denoted for instance as $\doop(X_i = x_i, X_k = x_k)$.
+\end{definition}
+
+\paragraph{Remark:} An intervened SEM is still just a SEM, since it has structural equations and a distribution over exogenous variables. The only difference is that the functions corresponding to an intervened variable $X_i = f_i(X_{\pa(i)}, E_i)$ will have $\pa(i) = \emptyset$ and $f_i$ will be a constant function. Moreover, the causal graph $\mathcal{G}_{\doop(\ldots)}$ has the same nodes but a \emph{subset} of edges compared to $\mathcal{G}$, and thus inherits acyclicity. This implies the following lemma.
+
+\begin{lemma}[Well defined interventional distribution for any perfect intervention]
+	Any perfect intervention on a SEM (i.e. any subset of variables set to any particular values) implies a well-defined interventional distribution $\mathbb{P}^{\doop(...)}_X$ over $X$.
+\end{lemma}
+\begin{proof}
+	As discussed in the remark above, $\mathcal{M}_X^{\doop(...)}$ is a valid SEM. Thus, Lemma ?? applies to $\mathcal{M}_X^{\doop(...)}$.
+\end{proof}
+	
+\paragraph{Remark:} SEMs can thus be thought of as a way to model not just a single distribution over the variables of interest, but an entire family of related distributions, one for each possible perfect intervention.
+
+
+\paragraph{Example:} Give example of simple SEM, one or two interventions and the distributions implied by all of them.
+
+\subsection{Connections between SEMs and Bayesian networks}
+
+SEMs as described in the previous section are essentially equivalent to Bayesian networks, a class of graphical models.
+\begin{definition}
+A Bayesian network over variables $X = (X_1,\ldots, X_N)$ with directed acyclic graph $\mathcal{G}$ specifies a joint distribution over $X$ as a product of simple conditional distributions
+\begin{align*}
+	p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{\pa(i)})
+\end{align*}
+where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an edge $X_j \to X_i$ in $\mathcal{G}$ if and only if $j \in \pa(i)$.
+
+Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a dirac delta distribution $\delta_{X_i = x_i}$.
+\end{definition}
+
+\paragraph{Remark:} Any SEM induces a Bayesian network with the same graph $\mathcal{G}$.
+To see this, observe that for any fixed value of $X_{\pa(i)}$, the equation $X_i = f(X_{\pa(i)} , E_i)$ in combination with the distribution over $E_i$ induces a distribution over $X_i$ which corresponds to $p(X_i | X_{\pa(i)})$. The observational distributions of the SEM and Bayesian network are then equal. Further, since the equation $X_i=x_i$ associated with the intervention $\doop(X_i = x_i)$ corresponds to the distribution $\delta_{X_i = x_i}$, and similar for interventions or arbitrary subsets of variables, the interventional distributions also agree.
+
+Showing the reverse, namely that any Bayesian network induces a SEM, is somewhat more complicated. In the case that all variables are discrete, this can be shown relatively straightforwardly \cite{druzdzel1993causality}. The intuition is that for any fixed value for $x_{\pa(i)}$,  the distribution $p(X_i | X_{\pa(i)}=x_{\pa(i)})$ can be written as a transformation $g_{x_{\pa(i)}}(E_i)$ of a uniformly distributed random variable $E_i$. We can then define the function $f_i$ of the constructed SEM as $f_i(x_{\pa(i)}, e_i) = g_{x_{\pa(i)}}(e_i)$, which is straightforwardly measurable as all spaces are discrete. [**Check this**]
+
+In the general case, however, one quickly runs into very technical measure-theoretical arguments due to the requirement that the functions $f_i$ be measurable. [Basically, the issue is that you need to ensure that $E_i$ can be transformed into $p(X_i | X_{\pa(i)}=x_{\pa(i)})$ for all choices of $x_{\pa(i)}$. You get a different transformation$g_{x_{\pa(i)}}$ for each value of $x_{\pa(i)}$. Then you need to show that defining $f_i(x_{\pa(i)}, e_i) = g_{x_{\pa(i)}}(e_i)$ results in $f_i$ being measurable. If $f_i$ is continuous in each of its arguments then paper cited in second answer of \url{https://math.stackexchange.com/questions/215215/showing-a-function-of-two-variables-is-measurable} says that it is measurable. But in the general case I'm not sure what to do. 
+
+I think it suffices to say that in most typical use cases, the conditional probability distributions will be specified in some way that makes them amenable to directly rewriting as an SEM. For example, if conditional distribution is Gaussian with mean and covariance dependent on parents, the reparameterisation trick is precisely writing this as a SEM.]
+
+
+
+Since the connection between SEMs and Bayesian networks is so close, it is instructive to first discuss their two main differences.
+The first is that in an SEM, the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not. 
+
+The first is to some degree philosophical: SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may be latent variables that have no direct physical meaning.
+A second pertains to \emph{counterfactual reasoning}. In a SEM, the noise variables $E$ are explicitly modelled. This means that if all the functions $f_i$ are known, then after 
+
+something that we will not discuss in great detail in this thesis. 
+
+
+
+
+There is a strong connection between SEMs as presented above and Bayesian networks, a widespread form of probabilistic graphical model whose graph is a directed and acyclic (DAG). 
+The obvious connection is through the causal graph $\mathcal{G}$ of an SEM, which is itself a DAG. 
+Before we discuss things further, let us define Bayesian network.
+
+\begin{definition}
+	
+\end{definition}
+
+
+Since the correspondence is so strong, it is easier to first discuss the two main differences. 
 
 
 
