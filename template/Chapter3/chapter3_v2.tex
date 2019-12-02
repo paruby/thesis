@@ -45,8 +45,8 @@ Similarly, we may observe in the population that taking over-the-counter painkil
 
 These questions are concerned with understanding causal, not statistical, relationships in the world. 
 The aim of \emph{causality} is to study causal influence through the lens of a formal mathematical language, in much the same way that statistical machine learning uses the language of probability. 
-\emph{Causal inference}, a large part of the causality literature, seeks to discover causal relationships using data.
-As the examples above demonstrate, the identification of causal relationships can be highly non-trivial, with the well-known phrase ``correlation does not imply causation'' standing testament to the simultaneous difficulty and ubiquity of this problem.
+\emph{Causal inference} or \emph{causal discovery}, a large part of the causality literature, concerns the identification of causal relationships using data.
+As the examples above demonstrate, this can be highly non-trivial, with the well-known phrase ``correlation does not imply causation'' standing testament to the simultaneous difficulty and ubiquity of this problem.
 Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship can never be inferred without other prior knowledge. 
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
@@ -109,6 +109,8 @@ As discussed in the introduction, an important part of causal relationships is a
 	Perfect interventions over two or more variables are also valid, which are denoted for instance as $\doop(X_i = x_i, X_k = x_k)$.
 \end{definition}
 
+\paragraph{Remark:} We note in passing that the notion of a perfect intervention can also be extended to a notion of \emph{imperfect} or \emph{stochastic intervention} in which the intervened variable is set equal to some random variable rather than a constant. Formally, this is no different from the perfect case other than needing to additionally introduce the new random variables. We will not discuss such interventions further.
+
 \paragraph{Remark:} An intervened SEM is still just a SEM, since it has structural equations and a distribution over exogenous variables. The only difference is that the functions corresponding to an intervened variable $X_i = f_i(X_{\pa(i)}, E_i)$ will have $\pa(i) = \emptyset$ and $f_i$ will be a constant function. Moreover, the causal graph $\mathcal{G}_{\doop(\ldots)}$ has the same nodes but a \emph{subset} of edges compared to $\mathcal{G}$, and thus inherits acyclicity. This implies the following lemma.
 
 \begin{lemma}[Well defined interventional distribution for any perfect intervention]
@@ -136,7 +138,7 @@ where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an
 Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a dirac delta distribution $\delta_{X_i = x_i}$.
 \end{definition}
 
-\paragraph{Remark:} Any SEM induces a Bayesian network with the same graph $\mathcal{G}$.
+\paragraph{Remark (equivalence of SEMs and Bayesian networks):} Any SEM induces a Bayesian network with the same graph $\mathcal{G}$.
 To see this, observe that for any fixed value of $X_{\pa(i)}$, the equation $X_i = f(X_{\pa(i)} , E_i)$ in combination with the distribution over $E_i$ induces a distribution over $X_i$ which corresponds to $p(X_i | X_{\pa(i)})$. The observational distributions of the SEM and Bayesian network are then equal. Further, since the equation $X_i=x_i$ associated with the intervention $\doop(X_i = x_i)$ corresponds to the distribution $\delta_{X_i = x_i}$, and similar for interventions or arbitrary subsets of variables, the interventional distributions also agree.
 
 Showing the reverse, namely that any Bayesian network induces a SEM, is somewhat more complicated. In the case that all variables are discrete, this can be shown relatively straightforwardly \cite{druzdzel1993causality}. The intuition is that for any fixed value for $x_{\pa(i)}$,  the distribution $p(X_i | X_{\pa(i)}=x_{\pa(i)})$ can be written as a transformation $g_{x_{\pa(i)}}(E_i)$ of a uniformly distributed random variable $E_i$. We can then define the function $f_i$ of the constructed SEM as $f_i(x_{\pa(i)}, e_i) = g_{x_{\pa(i)}}(e_i)$, which is straightforwardly measurable as all spaces are discrete. [**Check this**]
@@ -144,30 +146,18 @@ Showing the reverse, namely that any Bayesian network induces a SEM, is somewhat
 In the general case, however, one quickly runs into very technical measure-theoretical arguments due to the requirement that the functions $f_i$ be measurable. [Basically, the issue is that you need to ensure that $E_i$ can be transformed into $p(X_i | X_{\pa(i)}=x_{\pa(i)})$ for all choices of $x_{\pa(i)}$. You get a different transformation$g_{x_{\pa(i)}}$ for each value of $x_{\pa(i)}$. Then you need to show that defining $f_i(x_{\pa(i)}, e_i) = g_{x_{\pa(i)}}(e_i)$ results in $f_i$ being measurable. If $f_i$ is continuous in each of its arguments then paper cited in second answer of \url{https://math.stackexchange.com/questions/215215/showing-a-function-of-two-variables-is-measurable} says that it is measurable. But in the general case I'm not sure what to do. 
 
 I think it suffices to say that in most typical use cases, the conditional probability distributions will be specified in some way that makes them amenable to directly rewriting as an SEM. For example, if conditional distribution is Gaussian with mean and covariance dependent on parents, the reparameterisation trick is precisely writing this as a SEM.]
+\\
 
+\noindent
+%Since the connection between SEMs and Bayesian networks is so close, it is instructive to first discuss their two main differences.
+There are two main differences between SEMs and Bayesian networks.
+The first is philosophical: SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may be latent variables that have no direct physical meaning.
+The second is that in an SEM, the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not. Exceptions to this have arisen in recent years with the use of the \emph{reparameterisation trick} as a way to train Bayesian networks via stochastic gradient methods \citep{kingma, rezende}, though as the name suggests this is generally viewed as a computational `trick' rather than a general strategy of mathematical modelling.
+The explicit use of a noise variable enables \emph{counterfactual reasoning}. That is, once the variables have been observed, the noise values for the variables can generally be inferred. This means that one can answer questions such as ``what would have happened had the intervention $\doop(X_i=x_i)$ been performed?'', as illustrated by the following example:
 
+\paragraph{Example:} todo.
 
-Since the connection between SEMs and Bayesian networks is so close, it is instructive to first discuss their two main differences.
-The first is that in an SEM, the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not. 
-
-The first is to some degree philosophical: SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may be latent variables that have no direct physical meaning.
-A second pertains to \emph{counterfactual reasoning}. In a SEM, the noise variables $E$ are explicitly modelled. This means that if all the functions $f_i$ are known, then after 
-
-something that we will not discuss in great detail in this thesis. 
-
-
-
-
-There is a strong connection between SEMs as presented above and Bayesian networks, a widespread form of probabilistic graphical model whose graph is a directed and acyclic (DAG). 
-The obvious connection is through the causal graph $\mathcal{G}$ of an SEM, which is itself a DAG. 
-Before we discuss things further, let us define Bayesian network.
-
-\begin{definition}
-	
-\end{definition}
-
-
-Since the correspondence is so strong, it is easier to first discuss the two main differences. 
+Note that different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be it in the observational or interventional setting. Therefore one cannot hope to be able to answer counterfactual questions based on data without prior knowledge to distinguish between counterfactually non-equivalent models.
 
 
 
