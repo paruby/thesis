@@ -93,7 +93,7 @@ Let $X = (X_1, \ldots, X_N)$ and $E = (E_1, \ldots E_N)$ with each $X_i$, $E_i$ 
 \paragraph{Remark:}
 The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}. We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
 
-\begin{lemma}[Well defined observational distribution]
+\begin{lemma}[Well defined observational distribution]\label{lemma:acyclic-sem-well-defined-obs-dist}
 An SEM implies a well-defined observational distribution $\mathbb{P}_X$ over $X$.
 \end{lemma}
 \begin{proof}
@@ -113,7 +113,7 @@ As discussed in the introduction, an important part of causal relationships is a
 
 \paragraph{Remark:} An intervened SEM is still just a SEM, since it has structural equations and a distribution over exogenous variables. The only difference is that the functions corresponding to an intervened variable $X_i = f_i(X_{\pa(i)}, E_i)$ will have $\pa(i) = \emptyset$ and $f_i$ will be a constant function. Moreover, the causal graph $\mathcal{G}_{\doop(\ldots)}$ has the same nodes but a \emph{subset} of edges compared to $\mathcal{G}$, and thus inherits acyclicity. This implies the following lemma.
 
-\begin{lemma}[Well defined interventional distribution for any perfect intervention]
+\begin{lemma}[Well defined interventional distribution for any perfect intervention]\label{lemma:acyclic-sem-well-defined-int-dist}
 	Any perfect intervention on a SEM (i.e. any subset of variables set to any particular values) implies a well-defined interventional distribution $\mathbb{P}^{\doop(...)}_X$ over $X$.
 \end{lemma}
 \begin{proof}
@@ -148,20 +148,60 @@ In the general case, however, one quickly runs into very technical measure-theor
 I think it suffices to say that in most typical use cases, the conditional probability distributions will be specified in some way that makes them amenable to directly rewriting as an SEM. For example, if conditional distribution is Gaussian with mean and covariance dependent on parents, the reparameterisation trick is precisely writing this as a SEM.]
 \\
 
-\noindent
-%Since the connection between SEMs and Bayesian networks is so close, it is instructive to first discuss their two main differences.
-There are two main differences between SEMs and Bayesian networks.
-The first is philosophical: SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may be latent variables that have no direct physical meaning.
-The second is that in an SEM, the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not. Exceptions to this have arisen in recent years with the use of the \emph{reparameterisation trick} as a way to train Bayesian networks via stochastic gradient methods \citep{kingma, rezende}, though as the name suggests this is generally viewed as a computational `trick' rather than a general strategy of mathematical modelling.
-The explicit use of a noise variable enables \emph{counterfactual reasoning}. That is, once the variables have been observed, the noise values for the variables can generally be inferred. This means that one can answer questions such as ``what would have happened had the intervention $\doop(X_i=x_i)$ been performed?'', as illustrated by the following example:
+
+
+
+It is easy to overstate the differences between SEMs and Bayesian networks. As the remark above discusses, they are fundamentally the same, with their main differences being mostly philosophical.
+First, SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may be latent variables that have no direct physical meaning.
+Second, in an SEM the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not. \footnote{Exceptions to this have arisen in recent years with the use of the \emph{reparameterisation trick} as a way to train Bayesian networks via stochastic gradient methods \citep{kingma, rezende}, though as the name suggests this is generally viewed as a computational `trick' rather than a general strategy of mathematical modelling.}
+As discussed in \cite{pearl}, this corresponds to a Laplacian quasi-deterministic view of the world in which any observed randomness is a consequence of a lack of knowledge. In contrast, modelling with Bayesian networks corresponds to a view that the world is inherently stochastic. This difference is largely academic and we will not concern ourselves with it further.
+
+As a consequence of the noise variables being explicitly modelled, SEMs are equipped with \emph{counterfactual reasoning}. That is, once the variables have been observed, the noise values for the variables can generally be inferred. This means that one can answer questions such as ``what would have happened had the intervention $\doop(X_i=x_i)$ been performed?'', as illustrated by the following example:
 
 \paragraph{Example:} todo.
 
-Note that different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be it in the observational or interventional setting. Therefore one cannot hope to be able to answer counterfactual questions based on data without prior knowledge to distinguish between counterfactually non-equivalent models.
+Whether or not this is useful in practice is debatable: different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be it in the observational or interventional setting. Therefore one cannot hope to be able to answer counterfactual questions based on data without prior knowledge to distinguish between counterfactually non-equivalent models.
+We will not discuss counterfactual reasoning further.
 
+
+The main consequential difference is that it can be easier to express assumptions on the mechanisms of causal influence within the SCM framework, for instance by assuming that the distribution $\mathbb{P}_E$ and the functions $f_i$ fall in some restricted sets.
+It is also conceptually simple to extend the SCM framework to express cyclic dependencies, which we discuss in the next section.
+%For this reasons, study of the SCM framework is preferred in this chapter.
+
+%Next, we discuss the relaxation of the acyclicity contraint in the definition
+
+
+\subsection{Cyclic Structural Equation Models}
+
+Many, if not most, causal systems involve some degree of feedback. 
+Examples can be found in a wide variety of settings: molecular biology (e.g. gene-gene or gene-protein interactions in a cell), ecology (e.g. population dynamics), climate science (e.g. methane release from thawing permafrost) and public policy and economics (e.g. poverty traps).
+Mathematically modelling these cases is interesting in part because their treatment requires consideration of issues that are not present in the acyclic, feedback-free case.
+
+Recall that Lemmas \ref{lemma:acyclic-sem-well-defined-obs-dist} and \ref{lemma:acyclic-sem-well-defined-int-dist} relied on acyclicity of the causal graph $\mathcal{G}$ to prove that an SEM induces well-defined observational and interventional distributions over the variables $X$. 
+When generalising to \emph{cyclic SEMs} by relaxing this acyclicity constraint, one must be careful to understand under which conditions the observational and interventional distributions are well-defined.
+The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $\mathbb{P}_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if the intervened structural equations have unique solution $\mathbb{P}_E$-almost surely.
+The following example shows a simple case of an SEM with well-defined observational distribution for which some interventional distributions are well-defined but others are ill-defined.
+
+\paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.
+
+The literature on cyclic SEMs has not settled on a set of criteria for which cyclic SEMs should be considered `valid'. 
+All agree on the fact that observational distributions must be well-defined, but there is significant disagreement on interventional distributions.
+Notable works include [16], which requires well-defined distributions after any intervention, and [35], which state that for any cyclic SEM, any intervention leading to a well-defined interventional distribution may be given a causal interpretation. Other works in this area such as [29] avoid discussion of this issue.
+
+It will be argued in Sections [4.4-4.5] that it should be considered an integral part of the modelling process to choose a set of interventions being modelled. As such, it should be guaranteed that interventional distributions be well-defined for those that are part of the modelled intervention set; the behaviour outside of this set being considered outside of the universe and thus irrelevant.
+
+\paragraph{Interpretations of cyclic SEMs}
+Note to self: mention this later on after presenting transformations.
+In the acyclic case, one can think of an SEM as defining a generative process in which variables are realised as a function of their parents. Interventions then break the generative process for a single variable, leaving other processes unchanged.
+This interpretation breaks down for cyclic models. Existing works have interpreted them as dynamical systems that equilibrate quickly. 
 
 
 \section{Methods of Causal Inference}
+
+The main practical use of 
+
+
+
 \section{What are causal variables?}
 \section{Transformations between Structural Equation Models}
 \section{Examples of transformations}
