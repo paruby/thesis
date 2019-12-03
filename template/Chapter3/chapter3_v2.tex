@@ -198,7 +198,86 @@ This interpretation breaks down for cyclic models. Existing works have interpret
 
 \section{Methods of Causal Inference}
 
-The main practical use of 
+Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, we discuss here the challenge of performing causal inference from observational data. %and outline some prominent methods for doing so, since this is ultimately of most interest to practitioners.
+Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. Once this has been done, learning the functional relationships between parents and children reduces to regression. As such, we will only discuss methods for identifying $\mathcal{G}$.
+These methods focus on the acyclic case unless otherwise stated.
+
+More formally, the problem can be stated thus: Given \iid~draws from a distribution $\mathbb{P}_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
+Broadly speaking, there are two main categories of methods: those which exploit a correspondence between statistical properties of $\mathbb{P}_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $\mathbb{P}_E$ and functions $f_i$.
+
+\subsection{Conditional independence based methods}
+
+At a high level, the idea is to relate statistical properties of the joint distribution $\mathbb{P}_X$ to properties of the causal graph $\mathcal{G}$.
+The statistical properties in question are \emph{conditional independences}.
+Graphs exhibiting the same set of conditional independences form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
+From the conditional independences present in $\mathbb{P}_X$, it is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class.
+We begin by defining the notion of \emph{d-separation}, a purely graph theoretic concept. 
+\\
+
+\begin{definition}[d-separation]\label{def:d-sep}\citep{pearl2009causality}
+Let $\mathcal{G}$ be a DAG with vertex set $V$ and edge set $\mathcal{E}$, and define a \emph{path} to be a sequence of consecutive edges of either directionality. 
+Let $Z \subset V$ and $u, w \in V \setminus Z$. 
+
+$Z$ \emph{d-separates} $u$ and $w$ if and only if, for any path $p$
+connecting $u$ and $w$, one of the following conditions holds:
+
+\begin{itemize}
+\item $p$ contains a chain $i \rightarrow m \rightarrow j$ or a fork $i \leftarrow m \rightarrow j$ such that $m \in Z$
+\item $p$ contains a collider $i \rightarrow m \leftarrow j$ such that $m$ and all of its descendants
+are not elements of $Z$.
+\end{itemize}
+
+Given disjoint subsets of variables $U$, $W$ and $Z$, we say that $Z$ \emph{d-separates} $U$ and $W$ if $Z$ d-separates $u$ and $w$ for all $u \in U$ and $w \in W$.
+\end{definition}
+
+The `d' stands for `directed', since this is a notion that holds only for directed acyclic graphs.
+Intuitively, $Z$ d-separates two nodes $x$ and $y$ if conditioning on $Z$ blocks any flow of information between $x$ and $y$. That is, having already observed $Z$, learning the value of $x$ provides no extra information about the value of $y$ (and vice versa).
+
+The following definition and theorem show how this graph theoretic notion is related to probability distributions.
+\\
+
+\begin{definition}[Markov]\cite{cite something?}
+Suppose that $\mathcal{G}$ is a DAG with nodes corresponding to the tuple of variables $X$. 
+A distribution $\mathbb{P}_X$ on $X$ is \emph{Markov} with respect to $\mathcal{G}$ if, for all
+disjoint subsets $A$, $B$ and $C$ of $X$, 
+\begin{center}
+$A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
+\end{center}
+\end{definition}
+\bigskip
+
+\begin{theorem}\cite{lauritzen}
+Suppose that $\mathbb{P}_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
+Then the following two conditions are equivalent:
+\begin{enumerate}
+\item $p(x)$ factorises as $p(x) = \prod_i p(x_i |x_{\pa(i)})$;
+\item $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$.
+\end{enumerate}
+\end{theorem}
+\medskip
+
+Suppose that the distribution $\mathbb{P}_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
+The conditional independences exhibited by $\mathbb{P}_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
+However, the set graphs with respect to which $\mathbb{P}_X$ is Markov is `too large', since $\mathbb{P}_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
+The following definition is a kind of minimality condition.\footnote{Faithfulness is additionally required to rule out certain pathological cases, for instance in which the influence of two variables on a third exactly cancel out. In the case of linear SEMs, such cases are rare \cite{lauritzen, see elem causality book ex. 6.34}.}
+\\
+
+\begin{definition}[Faithfulness]\cite{cite something?}
+$\mathbb{P}_X$ is faithful with respect to $\mathcal{G}$ if, for all disjoint subsets
+$A$, $B$ and $C$, 
+\begin{center}
+$A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
+\end{center}
+\end{definition}
+\medskip
+
+If $\mathbb{P}_X$ is faithful with respect to $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $\mathbb{P}_X$ and the Markov equivalence class of $\mathcal{G}$.
+
+
+
+
+
+
 
 
 
