@@ -170,6 +170,7 @@ It is also conceptually simple to extend the SCM framework to express cyclic dep
 
 %Next, we discuss the relaxation of the acyclicity contraint in the definition
 
+Mention latent confounders and that independent noise variables corresponds to no latent confounders?
 
 \subsection{Cyclic Structural Equation Models}
 
@@ -199,13 +200,14 @@ This interpretation breaks down for cyclic models. Existing works have interpret
 \section{Methods of Causal Inference}
 
 Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, we discuss here the challenge of performing causal inference from observational data. %and outline some prominent methods for doing so, since this is ultimately of most interest to practitioners.
-Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. Once this has been done, learning the functional relationships between parents and children reduces to regression. As such, we will only discuss methods for identifying $\mathcal{G}$.
+Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. 
+In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to regression. As such, we will only discuss methods for identifying $\mathcal{G}$.
 These methods focus on the acyclic case unless otherwise stated.
 
 More formally, the problem can be stated thus: Given \iid~draws from a distribution $\mathbb{P}_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
-Broadly speaking, there are two main categories of methods: those which exploit a correspondence between statistical properties of $\mathbb{P}_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $\mathbb{P}_E$ and functions $f_i$.
+Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $\mathbb{P}_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $\mathbb{P}_E$ and functions $f_i$.
 
-\subsection{Conditional independence based methods}
+\subsection{Conditional independence}
 
 At a high level, the idea is to relate statistical properties of the joint distribution $\mathbb{P}_X$ to properties of the causal graph $\mathcal{G}$.
 The statistical properties in question are \emph{conditional independences}.
@@ -244,7 +246,12 @@ disjoint subsets $A$, $B$ and $C$ of $X$,
 $A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
 \end{center}
 \end{definition}
-\bigskip
+\medskip
+
+\paragraph{Remark:} if $\mathcal{G}'$ and $\mathcal{G}$ are two DAGs over the same vertices such that the edges present in $\mathcal{G}$ are a subset of those in $\mathcal{G}'$, then the set of d-separations entailed by $\mathcal{G}'$ is a subset of those entailed by $\mathcal{G}$. To see this, note that given any nodes $Z$, $u$ and $v$ in the definition, adding extra edges can only increase the number of paths $p$ that have to satisfy one of the conditions. 
+The means that if $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
+\medskip
+
 
 \begin{theorem}\cite{lauritzen}
 Suppose that $\mathbb{P}_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
@@ -271,7 +278,98 @@ $A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
 \end{definition}
 \medskip
 
-If $\mathbb{P}_X$ is faithful with respect to $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $\mathbb{P}_X$ and the Markov equivalence class of $\mathcal{G}$.
+If $\mathbb{P}_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $\mathbb{P}_X$ and the Markov equivalence class of $\mathcal{G}$. 
+This fact can be exploited for causal inference.
+The most well-known algorithm that does so is the IC (inductive causality) algorithm.
+
+The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
+For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{ab}$. 
+An undirected edge is drawn between $u$ and $v$ if no such $Z_{ab}$ can be found, since pair of nodes are adjacent if and only if there is a set that d-separates them \cite{elem causality, lemma 7.8}. 
+The undirected arrows are then oriented as much as possible by identifying v-structures ($u \rightarrow z \leftarrow v$).
+This is done by exploiting the fact that only out of all possible directed graphs consistent with the skeleton $u - z- v $\footnote{$u \rightarrow z \rightarrow v$, $u \leftarrow z \leftarrow v$, $u \leftarrow  z \rightarrow v$ and $u \rightarrow z \leftarrow v$}, it is only the v-structure in which $u$ and $v$ are \emph{not} d-separated by $z$.
+The remaining edges are then oriented as much as possible such that any other orientation would lead to new v-structures or cycles. 
+The result is a graph consisting of a mixture of directed and undirected edges. Any orientations of the undirected edges that does not result in new v-structures or cycles results in a Markov equivalent graph.
+Note that in general, the search over sets of vertices $Z_{uv}$ for each pair $(u,v)$ can be in the worst case combinatorially expensive.
+
+The PC algorithm (named after the authors Peter Sprites and Clark Glymore) is a faster refinement of the IC algorithm. In the particular case that the causal graph is sparse, it runs in polynomial time. The main difference is that the search over the conditioning sets $Z_{uv}$ is restricted, and the `skeleton'  is constructed by starting with a fully-connected graph which is progressively pruned.  
+
+These are `meta-algorithms' in that they do not provide a way to directly learn structure from data, but rather use the list of conditional independences.  
+Thus, for practical use one requires a reliable method for detecting conditional independences from samples.
+Note that errors in doing so will propogate into errors in inferred causal graph and can even result in inconsistent sets of conditional independences. 
+This is a hard problem which we will not discuss further here.
+
+\subsection{Structural Equation based methods}
+
+The conditional independence approach outlined in the previous section makes rather weak assumptions about the data generating process, namely only that the conditional independences should agree with those implied by the causal graphical structure (Markov and faithfulness). 
+As a result of such weak assumptions, it is often not possible to uniquely identify the causal structure using only observational data. 
+Indeed, in the very simple case of a two variable system, the graphs $X \rightarrow Y$ and $Y \rightarrow X$ cannot be distinguished:
+both graphs exhibit the same (trivial) set of d-separations, thus are Markov equivalent. 
+
+One way in which we can specify further assumptions is to use the language of SEMs. 
+By placing suitable restrictions on the functional forms of the structural equations, we can make further assumptions that lead to identifiability - that is, unambiguous recovery of the SEM from the observational distribution. In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. The main restricted model class that has been studied are \emph{additive noise models}.
+
+\begin{definition}
+	An SEM is an \emph{additive noise model} if the structural equations are deterministic functions of the parent variables with additive noise, i.e.
+	\[f_i(\mathbf{X}_i,E_i) = g_i(\mathbf{X}_i) + E_i \]
+	
+	for some functions $g_i$, with the noise variables $E_i$ being jointly independent.
+\end{definition}
+
+In the case that the additive noise model is linear, we can write this model as:
+\[ \mathbf{x} = \mathbf{A}\mathbf{x} + \mathbf{e} \]
+
+where $\mathbf{A}$ is strictly upper triangular\footnote{i.e. the diagonal and anything below/left of it is 0.} for an acyclic SEM. 
+We see that $\mathbf{e}$ induces a density on $\mathbf{x}$ via
+\[\mathbf{x} = (\mathbf{I}-\mathbf{A})^{-1} \mathbf{e}\]
+
+The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} assumes further that the components of $\mathbf{e}$ are jointly independent and that at most one component has a Gaussian marginal distribution. 
+Under these conditions, Independent Component Analysis (ICA) algorithms can be applied to recover the both the matrix $\mathbf{I}-\mathbf{A}$ and the distribution over $\mathbf{e}$ from only observational data.
+In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
+LiNGAM then prunes the matrix of linear weights to force small entries to be 0, and then finds an ordering on the components by rearranging the matrix to be upper triangular. 
+ICA will be covered in more detail in the next chapter 
+[Remove these citations] \cite{hyvarinen2000independent},  \cite{comon1994independent}.
+
+\cite{peters2013identifiability} prove identifiability under the different assumption that the noise variables are independent Gaussians with equal variance.
+Under this assumption, all model parameters are identifiable from observational data. 
+Intuitively, the idea is that in this model, graphs in the same Markov equivalence class would be distinguishable from one another given the variances of the observed variables. 
+Therefore, at least in principle, any technique could be used to first identify the set of graphs satisfying the conditional independence relations of the observed variables. 
+Then, the correct graph amongst these can be identified by considering the variances. 
+The method proposed by \cite{peters2013identifiability} to learn the SEM in practice works by performing a greedy search over graphical structures. 
+A score for each graph is evaluated by optimising the model likelihood subject to the constraints on the parameters imposed by the graph.
+
+When the linearity assumption is dropped, the possible model complexity grows enormously. As such, much of the work that has been done on inferring casual structure from observational data in \emph{non-linear} additive noise models has considered the bivariate case, as this is the simplest non-trivial problem. Inferring causal structure in this case is often referred to as the problem of \emph{distinguishing between cause and effect}. A variety of different approaches have been taken to this problem, including using ideas from information theory \cite{janzing2012information} \cite{janzing2010causal} \cite{janzing2009telling}, ICA \cite{hyvarinen2013pairwise}, \cite{zhang2008distinguishing}, Bayesian methods \cite{mooij2010distinguishing} \cite{stegle2010probabilistic} and RKHS theory \cite{lopez2015towards}.
+
+The key to all of the above approaches is to make assumptions on the data-generating process, and then exploit these to reconstruct the model. In particular, a prominent assumption is that the noise variables are independent\footnote{This assumption is often referred to as `causal sufficiency' or that there are `no latent confounders'.}, which can be incorporated as part of an optimisation objective or to test model fit. For example, the main idea of \cite{hoyer2009nonlinear}, \cite{peters2014causal}, \cite{peters2010identifying} and \cite{mooij2010distinguishing} is to perform regression using both models $X \longrightarrow Y$ and $Y \longrightarrow X$ and to choose between these using one of a variety of independence scores to test that the `regressor' or `parent' variable is independent of the residuals. \cite{zhang2008distinguishing} and \cite{zhang2009identifiability} extend the additive noise model by considering the \emph{post-nonlinear (PNL)} model where $x = f_2(f_1(y+e))$ and $f_2$ is invertible. The notable exception to the above ideas is \cite{lopez2015towards}, which treats the identification of cause and effect as a classification problem: artificial data is generated by additive noise models which is used to train a classifier. This classifier, perhaps somewhat surprisingly, is able to generalise to perform well on real data that does not obviously satisfy the additive noise model.
+
+We note in passing that distinguishing between cause and effect in the presence of confounders is significantly more challenging than without confounders; \cite{hoyer2008estimation} and \cite{janzing2009identifying} consider this problem.  For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
+
+
+\paragraph{Cyclic SEMs:}
+As previously discussed, different works in the literature consider different variations on definitions for cyclic SEMs. 
+Nonetheless, work has been done on causal inference in different models. 
+The basic assumption core to many of the methods is that the causal model is linear with additive noise, and that the observations are the solution to the equation to the following equation for fixed realisations of the noise variables:
+\[ \mathbf{x} = \mathbf{B}\mathbf{x} + \mathbf{e}\]
+
+The fundamental problem is to learn the matrix $\mathbf{B}$ and the distribution over the noise variables $\mathbf{e}$.
+
+
+Variations on this model, including different assumptions on the noise structure and the types of interventions, are considered in different lines of research. 
+For example, \cite{hyttinen2010causal} \cite{hyttinen2012learning} \cite{hyttinen2013discovering} and \cite{scheines2010combining} consider the case that the errors $\mathbf{e}$ are not independent (equivalently that there are latent confounders) and that interventions correspond to perfectly randomising the intervened variables. 
+The essence of their idea is to first estimate $\mathbf{B}$ and then use this to estimate the joint distribution on the error terms via the equation $\mathbf{e} = (I-B)\mathbf{x}$. 
+Their method to estimate $\mathbf{B}$ exploits the fact that the observed correlations between pairs of variables can be decomposed into weighted sums of elements of $\mathbf{B}$, meaning that estimating $\mathbf{B}$ boils down to solving a simple linear algebraic problem.
+
+\cite{lacerda2012discovering} take a different approach, and assume that the noise variables are jointly independent. 
+Their method generalises LiNGAM \cite{shimizu2006linear} to the cyclic case by exploiting ICA. 
+This method, however, is only able to identify the SEM up to the equivalence class of those that induce the same observational distribution, and so in general will not be able to correctly predict the result of interventions.
+
+Another line of research tries to relax the linearity assumption. 
+As was the case for acyclic SEMS, removing this assumption leads to the possible model complexity growing significantly with the challenge of learning structure growing correspondingly. \cite{mooij2011causal} considers the following model class:
+\[\mathbf{x} = \mathbf{f}(\mathbf{x}) + \mathbf{e}\] 
+where $\mathbf{e}$ is Gaussian distributed. 
+They assume a Gaussian Process prior over $\mathbf{f}$ and find sufficient conditions for identifiability in the bivariate case. \cite{mooij2013cyclic} assume the same model but make a locally linear approximation in order to reduce model complexity.
+
+
+We note in passing that there are also methods \cite{richardson1996automated} \cite{richardson1996discovery} that exploit the conditional independences present and try to connect this to graphical structures that are consistent with these.
 
 
 
