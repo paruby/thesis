@@ -34,27 +34,27 @@ Much of machine learning concerns the statistical relationships between random v
 Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $\PP_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $\PP_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
 %Given a set of \emph{i.i.d.} samples from a distribution $\PP_X$, the goal of \emph{density estimation} is to learn an approximation to $\PP_X$.
 
-Despite the great empirical successes of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly in the framework described above. 
+Despite the great empirical successes of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly into the framework described above. 
 The framework is limited in that it presupposes the existence of a single joint distribution over all of the random variables of interest, with the operations of marginalisation and conditioning then providing the relationships connecting any subset of variables.
 But there are many examples of problems for which a single joint distribution over all variables does not suffice. 
 For many questions of scientific interest, this is because the problem either implicitly or explicitly concerns an \emph{intervention} or \emph{action} in the world that changes the joint distribution over the observable variables.
 
 For example, we may be interested to understand the influence of diet on longevity, with the aim of improving public health by encouraging people to eat healthily. 
-One might find the consumption of expensive imported fruits to be correlated with a longer life. This may well be due to the nutritiousness of such fruits; it could equally well be due to the fact that only wealthy people can afford such a diet, and that such wealth entails better access to medical treatment, sports facilities for exercise and so on. In the former case, intervening in the world by reducing tariffs on imported fruits to encourage their consumption would have a positive effect on public health; in the latter, not.
-Similarly, we may observe in the population that taking over-the-counter painkillers is associated with an elevated risk of heart disease. This might be because such painkillers have a negative effect on the cardiovascular system, in which case acting to reduce access to such painkillers might have a positive impact on health outcomes. But if instead the association is because of that fact that people who already have poor health, and thus heightened risk of heart disease, tend to take more painkillers, then such a policy might have little effect other than to increase overall suffering.
+One might find the consumption of expensive imported fruits to be correlated with a longer life. This may well be due to the nutritiousness of such fruits; it could equally well be due to the fact that only wealthy people can afford such a diet, and that such wealth entails better access to medical treatment, sports facilities for exercise and so on. In the former case, intervening in the world by reducing tariffs on imported fruits to make them cheaper and thus encourage their consumption would have a positive effect on public health; in the latter, not.
+Similarly, we may observe in the population that taking over-the-counter painkillers is associated with an elevated risk of heart disease. This might be because such painkillers have a negative effect on the cardiovascular system, in which case acting to reduce access to such painkillers might have a positive impact on health outcomes. But if instead the association is because people who have poor health, and thus heightened risk of heart disease, tend to take more painkillers, then such a policy might have little effect other than to increase overall suffering.
 
 These questions are concerned with understanding causal, not statistical, relationships in the world. 
 The aim of \emph{causality} is to study causal influence through the lens of a formal mathematical language, in much the same way that statistical machine learning uses the language of probability. 
 \emph{Causal inference} or \emph{causal discovery}, a large part of the causality literature, concerns the identification of causal relationships using data.
 As the examples above demonstrate, this can be highly non-trivial, with the well-known phrase ``correlation does not imply causation'' standing testament to the simultaneous difficulty and ubiquity of this problem.
-Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship can never be inferred without other prior knowledge. 
+Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship between two variables can never be inferred without other prior knowledge. 
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
 While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics [**citations**], the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail. 
-In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, causal influence between variables of interest may be mediated by irrelevant variables that are ignored; interactions between low-level variables may instead be modelled at a macroscopic level, similar to how temperature and pressure arise as macroscopic properties of a large number of gaseous particles; and though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit explicit reference to it.
-This work additionally sheds new light on \emph{cyclic} SEMs, a previously poorly understood family of causal models, and has has implications to existing causal inference algorithms by providing a framework for understanding the limitations of previous approaches.
+In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, causal influence between variables of interest may be mediated by irrelevant variables that are ignored; interactions between low-level variables may instead be modelled at a macroscopic level, similar to the manner in which temperature and pressure arise as macroscopic properties of a large number of gaseous particles; and though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit explicit reference to it.
+This work additionally sheds new light on \emph{cyclic} SEMs, a previously poorly understood family of causal models, and has implications to existing causal inference algorithms by providing a framework for understanding the limitations of previous approaches.
 
-
+REWRITE:
 The next sections provide a comprehensive background sufficient to understand the novel contribution of this chapter.
 In Section ??, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
 In Section ?? we will discuss the implicit assumptions in these approaches to causal inference, which will lead us to discussing causal abstractions in Sections ?? to ??.
@@ -84,13 +84,13 @@ Section ?? discusses the influence that this work has had on the research commun
 \begin{definition}[Structural Equation Model (SEM)]
 Let $X = (X_1, \ldots, X_N)$ and $E = (E_1, \ldots E_N)$ with each $X_i$, $E_i$ taking value in $\R$. An SEM $\mathcal{M}_X$ over $X$ is a tuple $(\mathcal{S}_X, \mathbb{P}_E)$ where
 \begin{itemize}
-	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, where the functions $f_i$ are measurable, $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
+	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, [where the functions $f_i$ are measurable], $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
 	\item The variables $E = (E_1,\ldots,E_N)$ have distribution $\mathbb{P}_E$ which factorises, i.e. the $E_i$ are independent.
 	\item The \emph{causal graph} $\mathcal{G}$, the directed graph with nodes $X_i$ and edges $X_i \to X_j$ if and only if $i \in \pa(j)$, is acyclic.
 \end{itemize}
 \end{definition}
 
-\paragraph{Remark:}
+\paragraph{Remark:} REWRITE:
 The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}. We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
 
 \begin{lemma}[Well defined observational distribution]\label{lemma:acyclic-sem-well-defined-obs-dist}
@@ -109,7 +109,7 @@ As discussed in the introduction, an important part of causal relationships is a
 	Perfect interventions over two or more variables are also valid, which are denoted for instance as $\doop(X_i = x_i, X_k = x_k)$.
 \end{definition}
 
-\paragraph{Remark:} We note in passing that the notion of a perfect intervention can also be extended to a notion of \emph{imperfect} or \emph{stochastic intervention} in which the intervened variable is set equal to some random variable rather than a constant. Formally, this is no different from the perfect case other than needing to additionally introduce the new random variables. We will not discuss such interventions further.
+\paragraph{Remark:} We note in passing that the notion of a perfect intervention can also be extended to a notion of \emph{imperfect} or \emph{stochastic intervention} in which the intervened variable is set equal to some random variable rather than a constant. Formally, this is no different from the case of perfect interventions other than needing to additionally introduce distributions over the new random variables. We will not discuss such interventions further. [cite Eberhardt? See elem causality book for references].
 
 \paragraph{Remark:} An intervened SEM is still just a SEM, since it has structural equations and a distribution over exogenous variables. The only difference is that the functions corresponding to an intervened variable $X_i = f_i(X_{\pa(i)}, E_i)$ will have $\pa(i) = \emptyset$ and $f_i$ will be a constant function. Moreover, the causal graph $\mathcal{G}_{\doop(\ldots)}$ has the same nodes but a \emph{subset} of edges compared to $\mathcal{G}$, and thus inherits acyclicity. This implies the following lemma.
 
@@ -127,16 +127,20 @@ As discussed in the introduction, an important part of causal relationships is a
 
 \subsection{Connections between SEMs and Bayesian networks}
 
-SEMs as described in the previous section are essentially equivalent to Bayesian networks, a class of graphical models.
+SEMs as described in the previous section are closely related to Bayesian networks, a class of graphical models.
 \begin{definition}
 A Bayesian network over variables $X = (X_1,\ldots, X_N)$ with directed acyclic graph $\mathcal{G}$ specifies a joint distribution over $X$ as a product of simple conditional distributions
 \begin{align*}
 	p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{\pa(i)})
 \end{align*}
 where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an edge $X_j \to X_i$ in $\mathcal{G}$ if and only if $j \in \pa(i)$.
-
-Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a dirac delta distribution $\delta_{X_i = x_i}$.
 \end{definition}
+
+
+Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a dirac delta distribution $\delta_{X_i = x_i}$. 
+Bayesian networks equipped with such a notion are often referred to as \emph{causal} Bayesian networks. 
+In the following, we will simply refer to them as Bayesian networks.
+
 
 \paragraph{Remark (equivalence of SEMs and Bayesian networks):} Any SEM induces a Bayesian network with the same graph $\mathcal{G}$.
 To see this, observe that for any fixed value of $X_{\pa(i)}$, the equation $X_i = f(X_{\pa(i)} , E_i)$ in combination with the distribution over $E_i$ induces a distribution over $X_i$ which corresponds to $p(X_i | X_{\pa(i)})$. The observational distributions of the SEM and Bayesian network are then equal. Further, since the equation $X_i=x_i$ associated with the intervention $\doop(X_i = x_i)$ corresponds to the distribution $\delta_{X_i = x_i}$, and similar for interventions or arbitrary subsets of variables, the interventional distributions also agree.
@@ -176,11 +180,11 @@ Mention latent confounders and that independent noise variables corresponds to n
 
 Many, if not most, causal systems involve some degree of feedback. 
 Examples can be found in a wide variety of settings: molecular biology (e.g. gene-gene or gene-protein interactions in a cell), ecology (e.g. population dynamics), climate science (e.g. methane release from thawing permafrost) and public policy and economics (e.g. poverty traps).
-Mathematically modelling these cases is interesting in part because their treatment requires consideration of issues that are not present in the acyclic, feedback-free case.
+Studying the mathematical modelling of these cases is interesting in part because their treatment requires consideration of issues that are not present in the acyclic, feedback-free case.
 
 Recall that Lemmas \ref{lemma:acyclic-sem-well-defined-obs-dist} and \ref{lemma:acyclic-sem-well-defined-int-dist} relied on acyclicity of the causal graph $\mathcal{G}$ to prove that an SEM induces well-defined observational and interventional distributions over the variables $X$. 
 When generalising to \emph{cyclic SEMs} by relaxing this acyclicity constraint, one must be careful to understand under which conditions the observational and interventional distributions are well-defined.
-The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $\mathbb{P}_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if the intervened structural equations have unique solution $\mathbb{P}_E$-almost surely.
+The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $\mathbb{P}_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if and only if the intervened structural equations have unique solution $\mathbb{P}_E$-almost surely.
 The following example shows a simple case of an SEM with well-defined observational distribution for which some interventional distributions are well-defined but others are ill-defined.
 
 \paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.
@@ -201,7 +205,7 @@ This interpretation breaks down for cyclic models. Existing works have interpret
 
 Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, we discuss here the challenge of performing causal inference from observational data. %and outline some prominent methods for doing so, since this is ultimately of most interest to practitioners.
 Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. 
-In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to regression. As such, we will only discuss methods for identifying $\mathcal{G}$.
+In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. As such, we will only discuss methods for identifying $\mathcal{G}$, though some of these may estimate the functional relationships as an intermediate step.
 These methods focus on the acyclic case unless otherwise stated.
 
 More formally, the problem can be stated thus: Given \iid~draws from a distribution $\mathbb{P}_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
@@ -209,6 +213,7 @@ Broadly speaking, there are two main categories of approaches: those which explo
 
 \subsection{Conditional independence}
 
+REWRITE:
 At a high level, the idea is to relate statistical properties of the joint distribution $\mathbb{P}_X$ to properties of the causal graph $\mathcal{G}$.
 The statistical properties in question are \emph{conditional independences}.
 Graphs exhibiting the same set of conditional independences form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
@@ -217,7 +222,7 @@ We begin by defining the notion of \emph{d-separation}, a purely graph theoretic
 \\
 
 \begin{definition}[d-separation]\label{def:d-sep}\citep{pearl2009causality}
-Let $\mathcal{G}$ be a DAG with vertex set $V$ and edge set $\mathcal{E}$, and define a \emph{path} to be a sequence of consecutive edges of either directionality. 
+Let $\mathcal{G}$ be a DAG with vertex set $V$ and define a \emph{path} to be a sequence of consecutive edges of either directionality. 
 Let $Z \subset V$ and $u, w \in V \setminus Z$. 
 
 $Z$ \emph{d-separates} $u$ and $w$ if and only if, for any path $p$
@@ -249,7 +254,7 @@ $A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
 \medskip
 
 \paragraph{Remark:} if $\mathcal{G}'$ and $\mathcal{G}$ are two DAGs over the same vertices such that the edges present in $\mathcal{G}$ are a subset of those in $\mathcal{G}'$, then the set of d-separations entailed by $\mathcal{G}'$ is a subset of those entailed by $\mathcal{G}$. To see this, note that given any nodes $Z$, $u$ and $v$ in the definition, adding extra edges can only increase the number of paths $p$ that have to satisfy one of the conditions. 
-The means that if $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
+This means that if $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
 \medskip
 
 
@@ -265,7 +270,7 @@ Then the following two conditions are equivalent:
 
 Suppose that the distribution $\mathbb{P}_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
 The conditional independences exhibited by $\mathbb{P}_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
-However, the set graphs with respect to which $\mathbb{P}_X$ is Markov is `too large', since $\mathbb{P}_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
+However, the set of graphs with respect to which $\mathbb{P}_X$ is Markov is `too large', since $\mathbb{P}_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
 The following definition is a kind of minimality condition.\footnote{Faithfulness is additionally required to rule out certain pathological cases, for instance in which the influence of two variables on a third exactly cancel out. In the case of linear SEMs, such cases are rare \cite{lauritzen, see elem causality book ex. 6.34}.}
 \\
 
@@ -283,20 +288,20 @@ This fact can be exploited for causal inference.
 The most well-known algorithm that does so is the IC (inductive causality) algorithm.
 
 The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
-For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{ab}$. 
-An undirected edge is drawn between $u$ and $v$ if no such $Z_{ab}$ can be found, since pair of nodes are adjacent if and only if there is a set that d-separates them \cite{elem causality, lemma 7.8}. 
-The undirected arrows are then oriented as much as possible by identifying v-structures ($u \rightarrow z \leftarrow v$).
-This is done by exploiting the fact that only out of all possible directed graphs consistent with the skeleton $u - z- v $\footnote{$u \rightarrow z \rightarrow v$, $u \leftarrow z \leftarrow v$, $u \leftarrow  z \rightarrow v$ and $u \rightarrow z \leftarrow v$}, it is only the v-structure in which $u$ and $v$ are \emph{not} d-separated by $z$.
-The remaining edges are then oriented as much as possible such that any other orientation would lead to new v-structures or cycles. 
+For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{uv}$. 
+An undirected edge is drawn between $u$ and $v$ if no such $Z_{uv}$ can be found, since pair of nodes are adjacent if and only if there is a set that d-separates them \cite{elem causality, lemma 7.8}. 
+The undirected arrows are then oriented as much as possible by identifying colliders ($u \rightarrow z \leftarrow v$).
+This is done by exploiting the fact that out of all possible directed graphs consistent with the skeleton $u - z- v $\footnote{These are: $u \rightarrow z \rightarrow v$, $u \leftarrow z \leftarrow v$, $u \leftarrow  z \rightarrow v$ and $u \rightarrow z \leftarrow v$}, it is only the collider in which $u$ and $v$ are \emph{not} d-separated by $z$.
+The remaining edges are then oriented as much as possible such that any other orientation would lead to new colliders or cycles. 
 The result is a graph consisting of a mixture of directed and undirected edges. Any orientations of the undirected edges that does not result in new v-structures or cycles results in a Markov equivalent graph.
-Note that in general, the search over sets of vertices $Z_{uv}$ for each pair $(u,v)$ can be in the worst case combinatorially expensive.
+Note that the search over sets of vertices $Z_{uv}$ for each pair $(u,v)$ can be in the worst case combinatorially expensive.
 
 The PC algorithm (named after the authors Peter Sprites and Clark Glymore) is a faster refinement of the IC algorithm. In the particular case that the causal graph is sparse, it runs in polynomial time. The main difference is that the search over the conditioning sets $Z_{uv}$ is restricted, and the `skeleton'  is constructed by starting with a fully-connected graph which is progressively pruned.  
 
 These are `meta-algorithms' in that they do not provide a way to directly learn structure from data, but rather use the list of conditional independences.  
 Thus, for practical use one requires a reliable method for detecting conditional independences from samples.
 Note that errors in doing so will propogate into errors in inferred causal graph and can even result in inconsistent sets of conditional independences. 
-This is a hard problem which we will not discuss further here.
+This is a hard problem which we will not discuss further here, see .... for further details.
 
 \subsection{Structural Equation based methods}
 
@@ -306,7 +311,8 @@ Indeed, in the very simple case of a two variable system, the graphs $X \rightar
 both graphs exhibit the same (trivial) set of d-separations, thus are Markov equivalent. 
 
 One way in which we can specify further assumptions is to use the language of SEMs. 
-By placing suitable restrictions on the functional forms of the structural equations, we can make further assumptions that lead to identifiability - that is, unambiguous recovery of the SEM from the observational distribution. In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. The main restricted model class that has been studied are \emph{additive noise models}.
+By placing suitable restrictions on the functional forms of the structural equations, we can make further assumptions that lead to identifiability - that is, unambiguous recovery of the SEM from the observational distribution. In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. 
+The main restricted model class that has been studied are \emph{additive noise models}.
 
 \begin{definition}
 	An SEM is an \emph{additive noise model} if the structural equations are deterministic functions of the parent variables with additive noise, i.e.
@@ -322,21 +328,23 @@ where $\mathbf{A}$ is strictly upper triangular\footnote{i.e. the diagonal and a
 We see that $\mathbf{e}$ induces a density on $\mathbf{x}$ via
 \[\mathbf{x} = (\mathbf{I}-\mathbf{A})^{-1} \mathbf{e}\]
 
+\paragraph{Linear additive noise models:}
 The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} assumes further that the components of $\mathbf{e}$ are jointly independent and that at most one component has a Gaussian marginal distribution. 
-Under these conditions, Independent Component Analysis (ICA) algorithms can be applied to recover the both the matrix $\mathbf{I}-\mathbf{A}$ and the distribution over $\mathbf{e}$ from only observational data.
+Under these conditions, Independent Component Analysis (ICA) can be applied to recover the both the matrix $\mathbf{I}-\mathbf{A}$ and the distribution over $\mathbf{e}$ from only observational data.
 In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
-LiNGAM then prunes the matrix of linear weights to force small entries to be 0, and then finds an ordering on the components by rearranging the matrix to be upper triangular. 
+LiNGAM then prunes the matrix of linear weights to force small entries to be 0 and finds an ordering on the components by rearranging the matrix to be upper triangular. 
 ICA will be covered in more detail in the next chapter 
 [Remove these citations] \cite{hyvarinen2000independent},  \cite{comon1994independent}.
 
-\cite{peters2013identifiability} prove identifiability under the different assumption that the noise variables are independent Gaussians with equal variance.
-Under this assumption, all model parameters are identifiable from observational data. 
+\cite{peters2013identifiability} consider linear additive noise models under the assumption that the noise variables are independent Gaussians with equal (unknown) variance.
+It is shown that all model parameters are identifiable from observational data under this assumption. 
 Intuitively, the idea is that in this model, graphs in the same Markov equivalence class would be distinguishable from one another given the variances of the observed variables. 
 Therefore, at least in principle, any technique could be used to first identify the set of graphs satisfying the conditional independence relations of the observed variables. 
 Then, the correct graph amongst these can be identified by considering the variances. 
 The method proposed by \cite{peters2013identifiability} to learn the SEM in practice works by performing a greedy search over graphical structures. 
 A score for each graph is evaluated by optimising the model likelihood subject to the constraints on the parameters imposed by the graph.
 
+\paragraph{Nonlinear additive noise models:}
 When the linearity assumption is dropped, the possible model complexity grows enormously. As such, much of the work that has been done on inferring casual structure from observational data in \emph{non-linear} additive noise models has considered the bivariate case, as this is the simplest non-trivial problem. Inferring causal structure in this case is often referred to as the problem of \emph{distinguishing between cause and effect}. A variety of different approaches have been taken to this problem, including using ideas from information theory \cite{janzing2012information} \cite{janzing2010causal} \cite{janzing2009telling}, ICA \cite{hyvarinen2013pairwise}, \cite{zhang2008distinguishing}, Bayesian methods \cite{mooij2010distinguishing} \cite{stegle2010probabilistic} and RKHS theory \cite{lopez2015towards}.
 
 The key to all of the above approaches is to make assumptions on the data-generating process, and then exploit these to reconstruct the model. In particular, a prominent assumption is that the noise variables are independent\footnote{This assumption is often referred to as `causal sufficiency' or that there are `no latent confounders'.}, which can be incorporated as part of an optimisation objective or to test model fit. For example, the main idea of \cite{hoyer2009nonlinear}, \cite{peters2014causal}, \cite{peters2010identifying} and \cite{mooij2010distinguishing} is to perform regression using both models $X \longrightarrow Y$ and $Y \longrightarrow X$ and to choose between these using one of a variety of independence scores to test that the `regressor' or `parent' variable is independent of the residuals. \cite{zhang2008distinguishing} and \cite{zhang2009identifiability} extend the additive noise model by considering the \emph{post-nonlinear (PNL)} model where $x = f_2(f_1(y+e))$ and $f_2$ is invertible. The notable exception to the above ideas is \cite{lopez2015towards}, which treats the identification of cause and effect as a classification problem: artificial data is generated by additive noise models which is used to train a classifier. This classifier, perhaps somewhat surprisingly, is able to generalise to perform well on real data that does not obviously satisfy the additive noise model.
@@ -344,7 +352,7 @@ The key to all of the above approaches is to make assumptions on the data-genera
 We note in passing that distinguishing between cause and effect in the presence of confounders is significantly more challenging than without confounders; \cite{hoyer2008estimation} and \cite{janzing2009identifying} consider this problem.  For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
 
 
-\paragraph{Cyclic SEMs:}
+\paragraph{Cyclic additive noise models:}
 As previously discussed, different works in the literature consider different variations on definitions for cyclic SEMs. 
 Nonetheless, work has been done on causal inference in different models. 
 The basic assumption core to many of the methods is that the causal model is linear with additive noise, and that the observations are the solution to the equation to the following equation for fixed realisations of the noise variables:
