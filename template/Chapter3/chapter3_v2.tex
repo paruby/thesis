@@ -381,13 +381,120 @@ We note in passing that there are also methods \cite{richardson1996automated} \c
 
 
 
-
-
-
-
-
-
 \section{What are causal variables?}
+
+The approaches to causal inference discussed in the previous section all make a crucial assumption that we have not yet discussed: we are presented with a vector of random variables which are individually `causally meaningful' in the sense that causal relations between them exist and are to be discovered. 
+Clearly not all random variables are meaningful in this way, and thus cannot be endowed with a causal interpretation. 
+This issue is best illustrated by an example previously used by~\cite{spirtes2004causal} to demonstrate problems in the causal modelling process.
+
+
+\begin{figure}
+	\begin{subfigure}{.45\linewidth}
+		\center\
+		\begin{tikzpicture}
+		\node (d1) at(0,0.0) {diet};
+		\node (LDL) at(1.5,0.3) {LDL};
+		\node (HDL) at(1.5,-0.3) {HDL};
+		\node (HD) at(3,0) {HD};
+		
+		\draw[->,thick] (d1) -- (HDL);
+		\draw[->,thick] (d1) -- (LDL);
+		\draw[->,red,thick] (LDL) -- node[above,yshift=-1] {$-$} (HD);
+		\draw[->,green,thick] (HDL) -- node[below] {$+$} (HD);
+		\end{tikzpicture}
+		\caption{}\label{fig:cholesterol:a}
+	\end{subfigure}
+	%
+	\hfill
+	%
+	\begin{subfigure}{.45\linewidth}
+		\center\
+		\begin{tikzpicture}
+		\node (d1) at(0,0.) {diet};
+		\node (LHDL) at(1.5,0) {TC};
+		\node (HD) at(3,0) {HD};
+		
+		\draw[->,thick] (d1) -- (LHDL);
+		\draw[->,red,dash pattern= on 3pt off 3pt,ultra thick] (LHDL) -- node[above,yshift=-1] {$-$} (HD);
+		\draw[->,green,dash pattern= on 3pt off 3pt,dash phase=3pt,ultra thick] (LHDL) -- node[below] {$+$} (HD);
+		\end{tikzpicture}
+		\caption{}\label{fig:cholesterol:b}
+	\end{subfigure}
+	%
+	\caption{Effects of cholesterol on risk of heart disease. As illustrated by~(a), the current consensus is that low-density lipoprotein (LDL) has a negative effect on heart disease (HD), while high-density lipoprotein (HDL) has a positive effect on heart disease. Considering total blood cholesterol (TC = LDL + HDL) to be a causal variable as in~(b) leads to problems: two diets promoting raised LDL levels and raised HDL levels respectively have the same effect on TC but opposite effects on heart disease. Hence different studies come to contradictory conclusions about the effect of TC on heart disease.}
+	\label{fig:cholesterol}
+\end{figure}
+
+
+%In the following we give an example of the problems that can arise when there exists no consistent correspondence between two causal models, i.\,e.\ neither model can be viewed as an exact transformation of the other. This example falls into category (b) of the differing model levels listed above and was used by~\cite{spirtes2004causal} to illustrate problems in the causal modelling process.
+
+
+Historically, the level of total blood cholesterol (TC) was thought to be an important variable in determining risk of heart disease (HD).
+To investigate this, many experiments were carried out in which patients were assigned to different diets in order to raise or lower TC\@.
+Conflicting evidence was found by these experiments: some found that higher TC had the effect of lowering HD, while others found the opposite \citep{truswell2010cholesterol,steinberg2011cholesterol}.
+
+The reason for this apparent contradiction is clear with hindsight, but serves to illustrate the care that must be taken when seeking causal relations. 
+The current scientific consensus is that there are two types of blood cholesterol, low-density lipoprotein (LDL) and high-density lipoprotein (HDL), which have a negative and positive effect on HD respectively (Figure \ref{fig:cholesterol:a}).
+When measuring TC, the sum of LDL and HDL is measured.
+Therefore two experiments, one raising LDL levels and the other raising HDL levels, would have the same effect on TC but opposite effects on HD (Figure \ref{fig:cholesterol:b}).
+
+In this example, total blood cholesterol is too `coarse' a variable to have a well-defined causal relation with risk of heart disease. 
+However, if it had been possible to affect only one of LDL and HDL through diet, this issue may never have been discovered:
+if only HDL could be influenced by diet, the scientific consensus would be that total blood cholesterol is protective against heart disease and no contradictions would have been found.\footnote{Similarly, it is conceivable that there are in fact two different types of HDL: a more prevalent form which is protective against heart disease and one present in smaller quantities that has a detrimental impact. If the ratio of these two types is constant under any intervention through diet, the negative impact will always be outweighed by the positive impact and so we might never discover the detrimental subtype.}
+
+This example raises two main points that we will discuss in the rest of this section. The first is that in the real world measurements or observations are always made at some level of detail or coarseness that is somewhat arbitrary. In the next subsection we will outline a variety of ways in which models of different levels of detail naturally arise in a variety of cases and further motivate the study of this fact in a causal setting.
+The second is that whether or not a variable is `causally meaningful' is intricately connected to the interventions being considered. If we consider a coarse variable such as TC, we can consistently model causal relations if the interventions considered are sufficiently restricted, but this breaks down if the interventions are too rich. In subsection ?? we will discuss how to modify the framework of SEMs to take this into account.
+
+The remainder of this section sets the stage for section ??, in which we tackle our overarching goal of trying to answer the following questions:
+If the true causal mechanisms of the world operate at a very low level of detail (e.g. atoms), under what conditions can we speak of causal relations at higher levels (e.g. objects)?
+How can we formalise such a notion of consistent modelling in the framework of SEMs?
+
+
+\subsection{Modelling at different levels of detail}
+
+Physical systems or processes in the real world are complex and can be understood at various levels of detail.
+For instance, a gas in a volume consists of a large number of molecules.
+But instead of modelling the motions of each particle individually (micro-level), we may choose to consider macroscopic properties of their motions such as temperature and pressure.
+Our decision to use such macroscopic properties is first necessitated by practical considerations.
+Indeed, for all but extremely simple cases, making a measurement of all the individual molecules is practically impossible and our resources insufficient for modelling the ${\sim}10^{22}$ particles present per litre of ideal gas.
+Furthermore, the decision for a macroscopic description level is also a pragmatic one: if we only wish to reason about temperature and pressure, a model of $10^{22}$ particles is ill-suited.
+
+Statistical physics explains how higher-level concepts such as temperature and pressure arise as statistical properties of a system of a large number of particles, justifying the use of a macro-level model as a useful transformation of the micro-level model~\citep{Balian}.
+However, in many cases aggregate or indirect measurements of a complex system form the basis of a macroscopic description of the system, with little theory to explain whether this is justified or how the micro- and macro-descriptions stand in relation to each other.
+
+Due to deliberate modelling choice or the limited ability to observe a system, differing levels of model descriptions are ubiquitous and occur, amongst possibly others, in the following three settings:
+
+\begin{itemize}[noitemsep]
+	\item[(a)] Models with large numbers of variables versus models in which the `irrelevant' or unobservable variables have been marginalised out \citep{bongers2016structural}; e.\,g.\ modelling blood cholesterol levels and risk of heart disease while ignoring other blood chemicals or external factors such as stress.
+	
+	\item[(b)] Micro-level models versus macro-level models in which the macro-variables are aggregate features of the micro-variables \citep{simon1961aggregation,iwasaki1994causality,hoel2013quantifying,chalupka2015visual,chalupka2016multi}; e.\,g.\ instead of modelling the brain as consisting of $100$ billion neurons it can be modelled as averaged neuronal activity in distinct functional brain regions.
+	
+	\item[(c)] Dynamical time series models versus models of their stationary behaviour \citep{fisher1970correspondence,iwasaki1994causality,dash2001caveats,lacerda2012discovering,mooij2013ode,mooij2013cyclic}; e.\,g.\ modelling only the final ratios of reactants and products of a time evolving chemical reaction.
+\end{itemize}
+
+%In the context of causal modelling, such differing model levels  should be consistent with one another in the sense that they agree in their predictions of the effects of interventions. The particular causal models we focus on in this paper are Structural Equation Models (SEMs, Section~\ref{sec:SEMs}, Section~\ref{sec:sem-for-causal-modelling}) \citep{spirtes2000causation,pearl2009causality}.
+%
+%In Section~\ref{sec:sem-transformation}, we introduce the notion of an exact transformation between two SEMs, providing us with a general framework to evaluate when two models can be thought of as causal descriptions of the same system.
+%An important novel idea of this paper is to explicitly make use of a natural ordering on the set of interventions.
+%On a high level, if an SEM can be viewed as an exact transformation of another SEM, we are provided with an explicit correspondence between the two models in such a way that causal reasoning on both levels is consistent.
+%We discuss this notion of consistency in detail in Sections~\ref{subsec:causal-interpretation-transformation} and~\ref{sec:wrong}.
+%
+%In Section~\ref{sec:example-transformations} we apply this mathematical framework and prove the exactness of transformations belonging to each of the three categories listed above, with practical implications for the following questions in causal modelling:
+%When can we model only a subsystem of a more complex system?
+%When does a micro-level system admit a causal description in terms of macro-level features?
+%How do cyclic SEMs arise?
+%The fact that these distinct problems can all be considered using the language of transformations between SEMs demonstrates the generality of our approach.
+%We close in Section~\ref{sec:questions} with a discussion.
+
+
+%It is therefore not possible to transform the model in Figure~\ref{fig:cholesterol:b} into the model in Figure~\ref{fig:cholesterol:a} without leading to conflict:
+%in order to reason about the causes of HD we need to consider the variables LDL and HDL separately.
+
+
+
+
+
+
 \section{Transformations between Structural Equation Models}
 \section{Examples of transformations}
 \section{Discussion and work building on this}
