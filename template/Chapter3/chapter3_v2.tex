@@ -384,8 +384,9 @@ We note in passing that there are also methods \cite{richardson1996automated} \c
 \section{What are causal variables?}
 
 The approaches to causal inference discussed in the previous section all make a crucial assumption that we have not yet discussed: we are presented with a vector of random variables which are individually `causally meaningful' in the sense that causal relations between them exist and are to be discovered. 
-Clearly not all random variables are meaningful in this way, and thus cannot be endowed with a causal interpretation. 
-This issue is best illustrated by an example previously used by~\cite{spirtes2004causal} to demonstrate problems in the causal modelling process.
+Clearly not all random variables are meaningful in this way, and thus cannot be endowed with a causal interpretation.
+A simple intuitive example of this can be found in images, where individual pixels are not meaningful, though higher level features such as the presence of an object may be.
+This issue is best illustrated concretely by an example previously used by~\cite{spirtes2004causal} to demonstrate problems in the causal modelling process.
 
 
 \begin{figure}
@@ -429,33 +430,43 @@ This issue is best illustrated by an example previously used by~\cite{spirtes200
 %In the following we give an example of the problems that can arise when there exists no consistent correspondence between two causal models, i.\,e.\ neither model can be viewed as an exact transformation of the other. This example falls into category (b) of the differing model levels listed above and was used by~\cite{spirtes2004causal} to illustrate problems in the causal modelling process.
 
 
-Historically, the level of total blood cholesterol (TC) was thought to be an important variable in determining risk of heart disease (HD).
+Historically, the level of total blood cholesterol (TC) in a human subject was thought to be an important variable in determining their risk of developing heart disease (HD).
 To investigate this, many experiments were carried out in which patients were assigned to different diets in order to raise or lower TC\@.
 Conflicting evidence was found by these experiments: some found that higher TC had the effect of lowering HD, while others found the opposite \citep{truswell2010cholesterol,steinberg2011cholesterol}.
 
 The reason for this apparent contradiction is clear with hindsight, but serves to illustrate the care that must be taken when seeking causal relations. 
 The current scientific consensus is that there are two types of blood cholesterol, low-density lipoprotein (LDL) and high-density lipoprotein (HDL), which have a negative and positive effect on HD respectively (Figure \ref{fig:cholesterol:a}).
-When measuring TC, the sum of LDL and HDL is measured.
+A measurement of TC is in fact a measurement of the sum of LDL and HDL.
 Therefore two experiments, one raising LDL levels and the other raising HDL levels, would have the same effect on TC but opposite effects on HD (Figure \ref{fig:cholesterol:b}).
 
 In this example, total blood cholesterol is too `coarse' a variable to have a well-defined causal relation with risk of heart disease. 
 However, if it had been possible to affect only one of LDL and HDL through diet, this issue may never have been discovered:
-if only HDL could be influenced by diet, the scientific consensus would be that total blood cholesterol is protective against heart disease and no contradictions would have been found.\footnote{Similarly, it is conceivable that there are in fact two different types of HDL: a more prevalent form which is protective against heart disease and one present in smaller quantities that has a detrimental impact. If the ratio of these two types is constant under any intervention through diet, the negative impact will always be outweighed by the positive impact and so we might never discover the detrimental subtype.}
+if only HDL could be influenced by diet, the scientific consensus would be that total blood cholesterol is protective against heart disease and no contradictions would have been found.
+
+Similarly, it is conceivable that there are in fact two different types of HDL: a more prevalent form which is protective against heart disease and one present in smaller quantities that has a detrimental impact. 
+If the ratio of these two types is constant under any intervention through diet, the negative impact will always be outweighed by the positive impact and so we might never discover the detrimental subtype. 
+If this were true, would the statement `increased HDL levels cause reduced risk of heart disease' be rendered false? 
+Arguably it would be an oversimplification of the more complicated truth, but it would not be false in that it would correctly predict the outcome of any conceivable diet-based intervention.
 
 This example raises two main points that we will discuss in the rest of this section. The first is that in the real world measurements or observations are always made at some level of detail or coarseness that is somewhat arbitrary. In the next subsection we will outline a variety of ways in which models of different levels of detail naturally arise in a variety of cases and further motivate the study of this fact in a causal setting.
 The second is that whether or not a variable is `causally meaningful' is intricately connected to the interventions being considered. If we consider a coarse variable such as TC, we can consistently model causal relations if the interventions considered are sufficiently restricted, but this breaks down if the interventions are too rich. In subsection ?? we will discuss how to modify the framework of SEMs to take this into account.
 
 The remainder of this section sets the stage for section ??, in which we tackle our overarching goal of trying to answer the following questions:
-If the true causal mechanisms of the world operate at a very low level of detail (e.g. atoms), under what conditions can we speak of causal relations at higher levels (e.g. objects)?
+If the true causal mechanisms of the world operate at a very low level of detail (e.g.~atoms), under what conditions can we speak of causal relations at higher levels (e.g.~objects)?
 How can we formalise such a notion of consistent modelling in the framework of SEMs?
 
 
 \subsection{Modelling at different levels of detail}
 
 Physical systems or processes in the real world are complex and can be understood at various levels of detail.
-For instance, a gas in a volume consists of a large number of molecules.
-But instead of modelling the motions of each particle individually (micro-level), we may choose to consider macroscopic properties of their motions such as temperature and pressure.
-Our decision to use such macroscopic properties is first necessitated by practical considerations.
+In the previous subsection we discussed the example of cholesterol levels and risk of heart disease.
+Although the true mechanisms by which cholesterol affects heart disease are surely very complicated -- for instance, it may be important how cholesterol is distributed throughout the body -- we sought to summarise the micro-level details into a small number of macro-level variables, the total levels of HDL and LDL.
+
+Another example of micro-macro abstraction 
+%that is more rigorously understood 
+can be found in statistical physics.
+A gas in a volume consists of a large number of molecules, but instead of modelling the motions of each particle individually, we may choose to consider macroscopic properties of their motions such as temperature and pressure.
+As in the case of cholesterol, our decision to use such macroscopic properties may first necessitated by practical considerations.
 Indeed, for all but extremely simple cases, making a measurement of all the individual molecules is practically impossible and our resources insufficient for modelling the ${\sim}10^{22}$ particles present per litre of ideal gas.
 Furthermore, the decision for a macroscopic description level is also a pragmatic one: if we only wish to reason about temperature and pressure, a model of $10^{22}$ particles is ill-suited.
 
@@ -472,7 +483,12 @@ Due to deliberate modelling choice or the limited ability to observe a system, d
 	\item[(c)] Dynamical time series models versus models of their stationary behaviour \citep{fisher1970correspondence,iwasaki1994causality,dash2001caveats,lacerda2012discovering,mooij2013ode,mooij2013cyclic}; e.\,g.\ modelling only the final ratios of reactants and products of a time evolving chemical reaction.
 \end{itemize}
 
-%In the context of causal modelling, such differing model levels  should be consistent with one another in the sense that they agree in their predictions of the effects of interventions. The particular causal models we focus on in this paper are Structural Equation Models (SEMs, Section~\ref{sec:SEMs}, Section~\ref{sec:sem-for-causal-modelling}) \citep{spirtes2000causation,pearl2009causality}.
+In the context of causal modelling, such differing model levels should be consistent with one another in the sense that they agree in their predictions of the effects of interventions. 
+In section ??, the notion of an exact transformation between two SEMs is introduced, providing a general framework to evaluate when two models can be thought of as causal descriptions of the same system.
+On a high level, if an SEM can be viewed as an exact transformation of another SEM, there is an explicit correspondence between the two models in such a way that causal reasoning on both levels is consistent.
+
+
+%The particular causal models we focus on in this paper are Structural Equation Models (SEMs, Section~\ref{sec:SEMs}, Section~\ref{sec:sem-for-causal-modelling}) \citep{spirtes2000causation,pearl2009causality}.
 %
 %In Section~\ref{sec:sem-transformation}, we introduce the notion of an exact transformation between two SEMs, providing us with a general framework to evaluate when two models can be thought of as causal descriptions of the same system.
 %An important novel idea of this paper is to explicitly make use of a natural ordering on the set of interventions.
@@ -489,6 +505,11 @@ Due to deliberate modelling choice or the limited ability to observe a system, d
 
 %It is therefore not possible to transform the model in Figure~\ref{fig:cholesterol:b} into the model in Figure~\ref{fig:cholesterol:a} without leading to conflict:
 %in order to reason about the causes of HD we need to consider the variables LDL and HDL separately.
+
+\subsection{Natural partial orderings on interventions}
+
+We next introduce an important novel idea that must be discussed before exact transformations can be formally defined.
+This is to extend the definition of SEMs to explicitly include restricted sets of interventions and to introduce a natural ordering that exists on such sets of interventions.
 
 
 
