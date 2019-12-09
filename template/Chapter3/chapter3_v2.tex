@@ -448,18 +448,21 @@ If the ratio of these two types is constant under any intervention through diet,
 If this were true, would the statement `increased HDL levels cause reduced risk of heart disease' be rendered false? 
 Arguably it would be an oversimplification of the more complicated truth, but it would not be false in that it would correctly predict the outcome of any conceivable diet-based intervention.
 
-This example raises two main points that we will discuss in the rest of this section. The first is that in the real world measurements or observations are always made at some level of detail or coarseness that is somewhat arbitrary. In the next subsection we will outline a variety of ways in which models of different levels of detail naturally arise in a variety of cases and further motivate the study of this fact in a causal setting.
-The second is that whether or not a variable is `causally meaningful' is intricately connected to the interventions being considered. If we consider a coarse variable such as TC, we can consistently model causal relations if the interventions considered are sufficiently restricted, but this breaks down if the interventions are too rich. In subsection ?? we will discuss how to modify the framework of SEMs to take this into account.
+This example raises two main points. The first is that in the real world, measurements or observations are always made at some level of detail or coarseness that is somewhat arbitrary. 
+%In the next subsection we will outline a variety of ways in which models of different levels of detail naturally arise in a variety of cases and further motivate the study of this fact in a causal setting.
+The second is that whether or not a variable is `causally meaningful' is intricately connected to the interventions being considered. If we consider a coarse variable such as TC, we can consistently model causal relations if the interventions considered are sufficiently restricted, but this breaks down if the interventions are too rich. 
+%In subsection ?? we will discuss how to modify the framework of SEMs to take this into account.
 
-The remainder of this section sets the stage for section ??, in which we tackle our overarching goal of trying to answer the following questions:
+We elaborate on each of these points next, 
+setting the stage for section ?? in which we tackle our overarching goal of trying to answer the following questions:
 If the true causal mechanisms of the world operate at a very low level of detail (e.g.~atoms), under what conditions can we speak of causal relations at higher levels (e.g.~objects)?
 How can we formalise such a notion of consistent modelling in the framework of SEMs?
 
 
 \subsection{Modelling at different levels of detail}
 
-Physical systems or processes in the real world are complex and can be understood at various levels of detail.
-In the previous subsection we discussed the example of cholesterol levels and risk of heart disease.
+All physical systems or processes in the real world are complex and can be understood at various levels of detail.
+We previously discussed the example of cholesterol levels and risk of heart disease.
 Although the true mechanisms by which cholesterol affects heart disease are surely very complicated -- for instance, it may be important how cholesterol is distributed throughout the body -- we sought to summarise the micro-level details into a small number of macro-level variables, the total levels of HDL and LDL.
 
 Another example of micro-macro abstraction 
@@ -470,8 +473,10 @@ As in the case of cholesterol, our decision to use such macroscopic properties m
 Indeed, for all but extremely simple cases, making a measurement of all the individual molecules is practically impossible and our resources insufficient for modelling the ${\sim}10^{22}$ particles present per litre of ideal gas.
 Furthermore, the decision for a macroscopic description level is also a pragmatic one: if we only wish to reason about temperature and pressure, a model of $10^{22}$ particles is ill-suited.
 
-Statistical physics explains how higher-level concepts such as temperature and pressure arise as statistical properties of a system of a large number of particles, justifying the use of a macro-level model as a useful transformation of the micro-level model~\citep{Balian}.
-However, in many cases aggregate or indirect measurements of a complex system form the basis of a macroscopic description of the system, with little theory to explain whether this is justified or how the micro- and macro-descriptions stand in relation to each other.
+Statistical physics is a rigorous theory that explains how higher-level concepts such as temperature and pressure arise as statistical properties of a system of a large number of particles, justifying the use of a macro-level model as a useful transformation of the micro-level model~\citep{Balian}.
+However, in many other cases where aggregate or indirect measurements of a complex system form the basis of a macroscopic description of the system, e.g. in the cholesterol example, there is little theory to explain whether this is justified or how the micro- and macro-descriptions stand in relation to each other.
+Occasionally this lack of theory leads to apparent contradictions.
+%, as with the effect of total cholesterol on risk of heart disease
 
 Due to deliberate modelling choice or the limited ability to observe a system, differing levels of model descriptions are ubiquitous and occur, amongst possibly others, in the following three settings:
 
@@ -483,9 +488,11 @@ Due to deliberate modelling choice or the limited ability to observe a system, d
 	\item[(c)] Dynamical time series models versus models of their stationary behaviour \citep{fisher1970correspondence,iwasaki1994causality,dash2001caveats,lacerda2012discovering,mooij2013ode,mooij2013cyclic}; e.\,g.\ modelling only the final ratios of reactants and products of a time evolving chemical reaction.
 \end{itemize}
 
-In the context of causal modelling, such differing model levels should be consistent with one another in the sense that they agree in their predictions of the effects of interventions. 
-In section ??, the notion of an exact transformation between two SEMs is introduced, providing a general framework to evaluate when two models can be thought of as causal descriptions of the same system.
-On a high level, if an SEM can be viewed as an exact transformation of another SEM, there is an explicit correspondence between the two models in such a way that causal reasoning on both levels is consistent.
+In each of these cases, the fine-grained model is the `truth' while the coarse-grained model is a convenient abstraction.\footnote{\emph{`Truth'} is in quotation marks because the fine-grained model may itself be a coarsening of an even more detailed model.} 
+In the context of causal modelling, an intervention in the coarse-grained model must correspond in reality to some intervention in the fine-grained model.
+Such differing model levels should be consistent with one another in the sense that they agree in their predictions of the effects of corresponding interventions. 
+%In section ??, the notion of an exact transformation between two SEMs is introduced, formalising this idea of consistency of corresponding interventions, and providing a general framework to evaluate when two models can be thought of as causal descriptions of the same system.
+%On a high level, if an SEM can be viewed as an exact transformation of another SEM, there is an explicit correspondence between the two models in such a way that causal reasoning on both levels is consistent.
 
 
 %The particular causal models we focus on in this paper are Structural Equation Models (SEMs, Section~\ref{sec:SEMs}, Section~\ref{sec:sem-for-causal-modelling}) \citep{spirtes2000causation,pearl2009causality}.
@@ -506,17 +513,46 @@ On a high level, if an SEM can be viewed as an exact transformation of another S
 %It is therefore not possible to transform the model in Figure~\ref{fig:cholesterol:b} into the model in Figure~\ref{fig:cholesterol:a} without leading to conflict:
 %in order to reason about the causes of HD we need to consider the variables LDL and HDL separately.
 
-\subsection{Natural partial orderings on interventions}
+\subsection{The importance of interventions}
 
-We next introduce an important novel idea that must be discussed before exact transformations can be formally defined.
-This is to extend the definition of SEMs to explicitly include restricted sets of interventions and to introduce a natural ordering that exists on such sets of interventions.
+Recall the two models in Figure \ref{fig:cholesterol} in the cholesterol and heart disease example. 
+Here, the micro-level model with variables HDL and LDL is inconsistent with the macro-level model with only the TC variable. 
+The inconsistency arose because two different interventions in the mirco-level (raise HDL and raise LDL) have different effects yet map to the same intervention at the micro-level (raise TC).
+This would not have been noticed had it been possible to intervene only on one of HDL and LDL through dietary means, and in this case the TC model would have been considered valid.
+In other words, whether or not the two models are consistent with one another is in large part a question of which interventions in the micro-model are to be represented in the macro-model.
 
+This is illustrative of a more general case in which the same system is modelled at two different levels of complexity: if the two models are to be considered consistent, the set of interventions modelled at the micro-level may need to be restricted, since a macro-model will generally have the capacity to express fewer interventions than a micro-model with a larger number of variables. 
+This point cannot be formally expressed using SEMs as given by Definition ??, since this does not specify which interventions are valid. 
 
+In summary, for a macro-variable that is a function of underlying causal micro-variables to be itself considered a causal variable, it is important to consider the set of interventions being modelled.
 
-
+For a \emph{collection} of macro-variables to be considered a causal model consistent with a micro-level model, we must also consider compositionality, an often-overlooked natural structure present in interventions.
+Given an SEM $\mathcal{M}_X$ over variables $X_1, \ldots, X_N$, the two interventions $\doop(X_i=x_i)$ and $\doop(X_j=x_j)$ for $i\not=j$  can be combined to form the intervention $\doop(X_i=x_i, X_j=x_j)$. 
+This corresponds to the intuitive notion that interventions on distinct causal variables can be combined, and can be formalised by imposing a \emph{partial ordering} $\leq_X$ on the set of interventions modelled in which $\doop(X_i=x_i) \leq \doop(X_i=x_i, X_j=x_j)$ and $\doop(X_j=x_j) \leq \doop(X_i=x_i, X_j=x_j)$. 
+The importance of this structure will be elaborated on in Section ??.
 
 
 \section{Transformations between Structural Equation Models}
+
+
+
+\subsection{An extended definition for SEMs}
+
+\begin{definition}[Structural Equation Model (SEM)]
+	Let $\indexset_X$ be an index set.
+	An SEM $\mathcal{M}_X$ over  variables ${X = (X_i : i\in\indexset_X )}$ taking value in $\mathcal{X}$ is a triple $\left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E} \right)$ where
+	\begin{itemize}[noitemsep]
+		\item $\mathcal{S}_X$ is a set of structural equations, i.\,e.\ it is a set of equations $X_i = f_i\left( X , E_i \right)\ $ for $i \in \indexset_X$;
+		\item ($\mathcal{I}_X, \leq_X)$ is a subset of all perfect interventions equipped with a natural partial ordering (see below), i.\,e.\ it is an index set where each index corresponds to a particular perfect intervention on some of the $X$ variables;
+		\item $\mathbb{P}_{E}$ is a distribution over the exogenous variables $E = ( E_i : i\in\indexset_X)$;
+		\item with $\mathbb{P}_E$-probability one, under any intervention ${i \in \mathcal{I}_X}$ there is a unique solution $x\in\mathcal{X}$ to the intervened structural equations. This ensures that for any intervention ${i \in \mathcal{I}_X}$, $\mathcal{M}_X$ induces a well-defined distribution over $\mathcal{X}$.%
+		\footnote{That is, with probability one over the exogenous variables $E$, for each draw $E=e$ there exists a unique value $x\in \mathcal{X}$ such that $e$ and $x$ satisfy the intervened structural equations. The distribution of $E$ in conjunction with $\mathcal{S}_X$ then implies a distribution over $\mathcal{X}$ for each intervention $i \in \mathcal{I}_X$ via these unique solutions.
+			If the SEM is acyclic, this is always satisfied; we impose this condition because we also consider \emph{cyclic} SEMs \cite{bongers2016structural}.}
+	\end{itemize}
+\end{definition}
+\medskip
+
+
 \section{Examples of transformations}
 \section{Discussion and work building on this}
 
