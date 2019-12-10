@@ -284,8 +284,8 @@ $A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
 \medskip
 
 If $\mathbb{P}_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $\mathbb{P}_X$ and the Markov equivalence class of $\mathcal{G}$. 
-This fact can be exploited for causal inference.
-The most well-known algorithm that does so is the IC (inductive causality) algorithm.
+This fact can be exploited for causal inference: give $\mathbb{P}_X$, identify the set of conditional independences and from this identify $\mathcal{G}$ up to its Markov equivalence class.
+The most well-known algorithm that does this is the IC (inductive causality) algorithm.
 
 The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
 For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{uv}$. 
@@ -365,6 +365,8 @@ Variations on this model, including different assumptions on the noise structure
 For example, \cite{hyttinen2010causal} \cite{hyttinen2012learning} \cite{hyttinen2013discovering} and \cite{scheines2010combining} consider the case that the errors $\mathbf{e}$ are not independent (equivalently that there are latent confounders) and that interventions correspond to perfectly randomising the intervened variables. 
 The essence of their idea is to first estimate $\mathbf{B}$ and then use this to estimate the joint distribution on the error terms via the equation $\mathbf{e} = (I-B)\mathbf{x}$. 
 Their method to estimate $\mathbf{B}$ exploits the fact that the observed correlations between pairs of variables can be decomposed into weighted sums of elements of $\mathbf{B}$, meaning that estimating $\mathbf{B}$ boils down to solving a simple linear algebraic problem.
+
+\todo{Check ricardo / aapo UAI causality paper}
 
 \cite{lacerda2012discovering} take a different approach, and assume that the noise variables are jointly independent. 
 Their method generalises LiNGAM \cite{shimizu2006linear} to the cyclic case by exploiting ICA. 
@@ -474,7 +476,7 @@ Indeed, for all but extremely simple cases, making a measurement of all the indi
 Furthermore, the decision for a macroscopic description level is also a pragmatic one: if we only wish to reason about temperature and pressure, a model of $10^{22}$ particles is ill-suited.
 
 Statistical physics is a rigorous theory that explains how higher-level concepts such as temperature and pressure arise as statistical properties of a system of a large number of particles, justifying the use of a macro-level model as a useful transformation of the micro-level model~\citep{Balian}.
-However, in many other cases where aggregate or indirect measurements of a complex system form the basis of a macroscopic description of the system (such as the cholesterol example) there is little theory to explain whether this is justified or how the micro- and macro-descriptions stand in relation to each other.
+However, in many other cases where aggregate or indirect measurements of a complex system form the basis of a macroscopic description of the system (such as the cholesterol example) there is little theory to explain whether this is justified or how the micro- and macro-descriptions stand in relation to one another.
 As we saw, this lack of theory occasionally leads to apparent contradictions.
 %, as with the effect of total cholesterol on risk of heart disease
 
@@ -517,7 +519,7 @@ Such differing model levels should be consistent with one another in the sense t
 
 Recall the two models in Figure \ref{fig:cholesterol} in the cholesterol and heart disease example. 
 Here, the micro-level model with variables HDL and LDL is inconsistent with the macro-level model with only the TC variable. 
-The inconsistency arose because two different interventions in the mirco-level (raise HDL and raise LDL) have different effects yet map to the same intervention at the micro-level (raise TC).
+The inconsistency arose because two different interventions in the mirco-level (raise HDL and raise LDL) have different effects on risk of heart disease yet map to the same intervention at the micro-level (raise TC).
 This would not have been noticed had it been possible to intervene only on one of HDL and LDL through dietary means, and in this case the TC model would have been considered valid.
 In other words, whether or not the two models are consistent with one another is in large part a question of which interventions in the micro-model are to be represented in the macro-model.
 
@@ -610,12 +612,12 @@ For example, the distribution over the variables $X$ in the observational settin
 
 Suppose we have a function ${\tau: \mathcal{X} \to \mathcal{Y}}$ which maps the variables of the SEM $\mathcal{M}_X$ to another space $\mathcal{Y}$.
 Observe that since $X$ is a random variable, $\tau(X)$ is also a random variable.
-For any distribution $\mathbb{P}_X$ on $\mathcal{X}$ we thus obtain the distribution of the variable $\tau(X)$ on $\mathcal{Y}$ as $\mathbb{P}_{\tau(X)} = \tau\left(\mathbb{P}_X\right)$ via the push-forward measure.
+For any distribution $\mathbb{P}_X$ on $\mathcal{X}$ we thus obtain the distribution of the variable $\tau(X)$ on $\mathcal{Y}$ as $\mathbb{P}_{\tau(X)} = \tau\left(\mathbb{P}_X\right)$ via the push-forward measure. \todo{Possibly change push-forward notation to use hash. Check compatibility with WAE section.}
 
 In particular, for each intervention $i \in \mathcal{I}_X$ we can define the induced distribution $\mathbb{P}_{\tau(X)}^{i} = \tau\left(\mathbb{P}_X^{\doop(i)}\right)$.
 We can write the poset of distributions on $\mathcal{Y}$ that are induced by the original SEM $\mathcal{M}_X$ and the transformation $\tau$ as
 \[\mathcal{P}_{\tau(X)} := \left( \left\{ \mathbb{P}_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
-where $\leq_X$ is the partial ordering inherited from $\mathcal{P}_X$ (and in turn from $\mathcal{I}_X$).
+where $\leq_X$ is the partial ordering inherited from $\mathcal{P}_X$ (in turn inherited from $\mathcal{I}_X$).
 
 $\mathcal{P}_{\tau(X)}$ is just a structured collection of distributions over $\mathcal{Y}$, indexed by interventions $\mathcal{I}_X$ on the $\mathcal{X}$-level; importantly, the indices are \emph{not} interventions on the $\mathcal{Y}$-level.
 
@@ -881,11 +883,11 @@ In contrast, $\mathcal{M}_Y$ suggests that implementing the corresponding interv
 
 \section{Examples of transformations}
 
-In the introduction we motivated the problem considered in this paper by listing three settings in which differing model levels naturally occur.
+In Section ?? we motivated the problem of modelling at multiple levels of complexity by listing three settings in which differing model levels naturally occur.
 Having now introduced the notion of an exact transformation between SEMs, we provide in this section examples of exact transformations falling into each of these categories.
 The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
-Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact. This highlights the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in  the Appendix.
+Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact. This highlights the importance to the causal modelling process of carefully considering the set of interventions. \todo{update proof locations:} All proofs are found in  the Appendix.
 
 
 
@@ -916,7 +918,7 @@ naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transform
 \medskip
 
 \begin{proof}
-By Lemma~\ref{theorem:transitivity} it suffices to proof this for marginalisation of one childless variable.
+By Lemma~\ref{theorem:transitivity} it suffices to prove this for marginalisation of one childless variable.
 Without loss of generality, let $X_1$ be the childless variable to be marginalised out.
 
 Let $\mathcal{M}_Y=(\mathcal{S}_Y,\mathcal{I}_Y,\mathbb{P}_F)$ be the SEM where
