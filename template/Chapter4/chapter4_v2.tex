@@ -27,20 +27,32 @@ This chapter is based on the paper \emph{The Incomplete Rosetta Stone Problem: I
 	\item Discuss ambiguities at high level (identifiability usually is done up to 'tolerable ambiguities')
 \end{itemize}
 
-Independent Component Analysis (ICA) is often motivated with the so-called \emph{cocktail-party problem}.
-When two conversations at a party are happening simultaneously, a listener will hear in each of their ears different mixes of the two audio streams produced by the speakers.
-Despite both ears receiving mixes of the conversations, the listener is able to focus on either of the conversations separately, hearing and understanding one while ignoring the other.
+Independent Component Analysis (ICA) is often motivated by the so-called \emph{cocktail-party problem}.
+When two conversations at a party are happening simultaneously, a listener will hear in each of their ears different mixtures of the two audio streams produced by the speakers.
+Despite both ears receiving mixtures of the conversations, the listener is able to focus on either of the conversations separately, hearing and understanding one while ignoring the other.
 This is due to the brain's ability to separate out the mixed audio streams into the separate underlying sources, one for each conversation.
 
-More generally, given data that are a mixing of independent underlying sources, the goal of ICA is `unmix' the data, thus recovering the sources.
+More generally, given data that are mixtures of independent underlying sources, the goal of ICA is `unmix' the data, thus recovering the sources.
 This can be written formally by defining the generative model
 \begin{align*}
 \bm{x} &= \bm{f}(\bm{s}) \\
 p(\bm{s}) &= \prod_{i} p_i(s_i)
 \end{align*}
 where $\bm{s}$ is a vector of independent \emph{sources}, $\bm{x}$ are the vector of \emph{observations} or \emph{mixtures} and $\bm{f}$ is the vector of \emph{mixing functions} expressing how each coordinate of $\bm{x}$ depends on all of the coordinates of $\bm{s}$. 
-Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal. We will assume this throughout this chapter unless otherwise specified. 
-If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete}.
+Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal, which we will take to be the case throughout this chapter unless specified otherwise. 
+If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete} \cite{citation_needed}.
+
+Assuming that a dataset of observations of $\bm{x}$ is provided, the goal of ICA is to recover the corresponding unknown values of $\bm{s}$ by learning to invert the unknown $\bm{f}$.
+An ICA problem is known as \emph{identifiable} when it is possible to recover the sources $\bm{s}$ up to tolerable ambiguities---for instance, it may be acceptable to recover $\bm{s}$ up to linear rescaling or permuted coordinates.
+The basic ICA problem is \emph{non-identifiable} without making any assumptions additional to the independence of the sources \cite{aapo}.
+Thus, much of the ICA literature seeks to understand under what extra assumptions the problem becomes identifiable. 
+
+Assumptions can be made either on the mixing functions or on the distributions of the sources.
+In the rest of this section we give an overview of the different cases for which identifiability results are known. 
+In brief, the case of linear mixing functions has been extensively studied and is well understood, while the non-linear case is very challenging and impossibility results are known.
+Recently, many papers have used a novel proof technique to derive identifiability results for slight modifications to the standard ICA problem setting.
+The contribution of this chapter (Sections ??-??) is similar, proving identifiability in the case of \emph{multiple nonlinear views}. 
+That is, the given dataset consists of observations $\bm{x}^{(1)}$ and $\bm{x}^{(2)}$ of the same sources $\bm{s}$.
 
 
 
@@ -51,6 +63,19 @@ If there are more observations than sources, the problem is called \emph{overdet
 	\item If more than one component is Gaussian, then these components cannot be unmixed since Gaussians are closed under linear mixing, so any linear unmixing function will not be able to distinguish them.
 	\item Overview of techniques
 \end{itemize}
+
+
+The case in which the functions $\bm{f}$ are linear is known as \emph{Linear ICA}. 
+In this case, the generative model can be written
+\begin{align*}
+\bm{x} &= \bm{A}\bm{s} \\
+p(\bm{s}) &= \prod_{i} p_i(s_i)
+\end{align*}
+where $\bm{A}$ is a square matrix.
+This has been extensively studied and is identifiable if and only if at most one of the source components is Gaussian \cite{cite}.
+
+%It is straightforward to see why the problem is non-identifiable if more than one component is Gaussian: since Gaussians are closed under linear mappings, 
+
 
 \subsection{Nonlinear ICA}
 
