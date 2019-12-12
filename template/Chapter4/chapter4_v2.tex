@@ -1,0 +1,62 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Third Chapter **********************************
+%*******************************************************************************
+\chapter{Nonlinear Independent Component Analysis}
+
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter4/Figs/Raster/}{Chapter4/Figs/PDF/}{Chapter4/Figs/}}
+\else
+    \graphicspath{{Chapter4/Figs/Vector/}{Chapter4/Figs/}}
+\fi
+
+This chapter is based on the paper \emph{The Incomplete Rosetta Stone Problem: Identifiability Results for Multi-View Nonlinear ICA} published at UAI 2019.
+
+
+\section{Introduction}
+
+\begin{itemize}
+	\item What is ICA?
+	\begin{itemize}
+		\item cocktail party problem with two speakers
+	\end{itemize}
+	\item Formal definition and definition of identifiability
+	\item Without making assumptions, identifiability is impossible (refer to nonlinear ica section for result)
+	\item Assumptions can be made on the mixing function or on the distribution of sources.
+	\item Discuss ambiguities at high level (identifiability usually is done up to 'tolerable ambiguities')
+\end{itemize}
+
+Independent Component Analysis (ICA) is often motivated with the so-called \emph{cocktail-party problem}.
+When two conversations at a party are happening simultaneously, a listener will hear in each of their ears different mixes of the two audio streams produced by the speakers.
+Despite both ears receiving mixes of the conversations, the listener is able to focus on either of the conversations separately, hearing and understanding one while ignoring the other.
+This is due to the brain's ability to separate out the mixed audio streams into the separate underlying sources, one for each conversation.
+
+More generally, given data that are a mixing of independent underlying sources, the goal of ICA is `unmix' the data, thus recovering the sources.
+This can be written formally by defining the generative model
+\begin{align*}
+\bm{x} &= \bm{f}(\bm{s}) \\
+p(\bm{s}) &= \prod_{i} p_i(s_i)
+\end{align*}
+where $\bm{s}$ is a vector of independent \emph{sources}, $\bm{x}$ are the vector of \emph{observations} or \emph{mixtures} and $\bm{f}$ is the vector of \emph{mixing functions} expressing how each coordinate of $\bm{x}$ depends on all of the coordinates of $\bm{s}$. 
+Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal. We will assume this throughout this chapter unless otherwise specified. 
+If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete}.
+
+
+
+\subsection{Linear ICA}
+
+\begin{itemize}
+	\item The linear case has been studied extensively and is identifiable if at most one of the components is Gaussian
+	\item If more than one component is Gaussian, then these components cannot be unmixed since Gaussians are closed under linear mixing, so any linear unmixing function will not be able to distinguish them.
+	\item Overview of techniques
+\end{itemize}
+
+\subsection{Nonlinear ICA}
+
+\begin{itemize}
+	\item Without making assumptions, identifiability is impossible.
+	\item In the past two decades some work has been done on this. Some works making assumptions on the sources as time series, some restricting the mixing function classes.
+\end{itemize}
+
+\section{Nonlinear ICA with multiple views}
