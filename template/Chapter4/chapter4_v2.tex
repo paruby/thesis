@@ -16,16 +16,16 @@ This chapter is based on the paper \emph{The Incomplete Rosetta Stone Problem: I
 
 \section{Introduction}
 
-\begin{itemize}
-	\item What is ICA?
-	\begin{itemize}
-		\item cocktail party problem with two speakers
-	\end{itemize}
-	\item Formal definition and definition of identifiability
-	\item Without making assumptions, identifiability is impossible (refer to nonlinear ica section for result)
-	\item Assumptions can be made on the mixing function or on the distribution of sources.
-	\item Discuss ambiguities at high level (identifiability usually is done up to 'tolerable ambiguities')
-\end{itemize}
+%\begin{itemize}
+%	\item What is ICA?
+%	\begin{itemize}
+%		\item cocktail party problem with two speakers
+%	\end{itemize}
+%	\item Formal definition and definition of identifiability
+%	\item Without making assumptions, identifiability is impossible (refer to nonlinear ica section for result)
+%	\item Assumptions can be made on the mixing function or on the distribution of sources.
+%	\item Discuss ambiguities at high level (identifiability usually is done up to 'tolerable ambiguities')
+%\end{itemize}
 
 Independent Component Analysis (ICA) is often motivated by the so-called \emph{cocktail-party problem}.
 When two conversations at a party are happening simultaneously, a listener will hear in each of their ears different mixtures of the two audio streams produced by the speakers.
@@ -33,24 +33,31 @@ Despite both ears receiving mixtures of the conversations, the listener is able 
 This is due to the brain's ability to separate out the mixed audio streams into the separate underlying sources, one for each conversation.
 
 More generally, given data that are mixtures of independent underlying sources, the goal of ICA is `unmix' the data, thus recovering the sources.
-This can be written formally by defining the generative model
-\begin{align*}
-\bm{x} &= \bm{f}(\bm{s}) \\
-p(\bm{s}) &= \prod_{i} p_i(s_i)
-\end{align*}
+This provides a principled approach to disentanglement of independent latent components, blind source separation, and feature extraction~\citep{hyvarinen2000independent}.
+The applications of ICA are ubiquitous, including neuroimaging~\citep{mckeown1998independent}, signal processing~\citep{sawada2003direction}, text mining~\citep{honkela2010wordica}, astronomy~\citep{nuzillard2000blind} and financial time series analysis~\citep{oja2000independent}.
+
+The ICA problem can be written formally by defining the generative model
+\begin{align}
+\bm{x} &= \bm{f}(\bm{s}) \label{eqn:ica-basic-1}\\
+p(\bm{s}) &= \prod_{i} p_i(s_i) \label{eqn:ica-basic-2}
+\end{align}
 where $\bm{s}$ is a vector of independent \emph{sources}, $\bm{x}$ are the vector of \emph{observations} or \emph{mixtures} and $\bm{f}$ is the vector of \emph{mixing functions} expressing how each coordinate of $\bm{x}$ depends on all of the coordinates of $\bm{s}$. 
-Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal, which we will take to be the case throughout this chapter unless specified otherwise. 
-If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete} \cite{citation_needed}.
+%Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal, which we will take to be the case throughout this chapter unless specified otherwise. 
+%If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete} \cite{citation_needed}.
+Given a dataset of observations of $\bm{x}$, the goal of ICA is to recover the corresponding unknown values of $\bm{s}$ by learning to invert the unknown $\bm{f}$.
 
-Assuming that a dataset of observations of $\bm{x}$ is provided, the goal of ICA is to recover the corresponding unknown values of $\bm{s}$ by learning to invert the unknown $\bm{f}$.
-An ICA problem is known as \emph{identifiable} when it is possible to recover the sources $\bm{s}$ up to tolerable ambiguities---for instance, it may be acceptable to recover $\bm{s}$ up to linear rescaling or permuted coordinates.
-The basic ICA problem is \emph{non-identifiable} without making any assumptions additional to the independence of the sources \cite{aapo}.
-Thus, much of the ICA literature seeks to understand under what extra assumptions the problem becomes identifiable. 
+An ICA problem is known as \emph{identifiable} when it is possible to recover the sources $\bm{s}$ up to tolerable ambiguities. 
+For instance, it will generally be acceptable to recover $\bm{s}$ up to linear rescaling or permuted coordinates.
+Proofs of identifiability are crucial for the characterization of reliable ICA methods; in absence of these, there is no guarantee that a proposed method will successfully reconstruct the true sources, even in controlled settings.
+The basic ICA problem as presented in Equations \ref{eqn:ica-basic-1} and \ref{eqn:ica-basic-2}, in which only independence of the sources is assumed, was proven to be \emph{non-identifiable} \citep{hyvarinen1999nonlinear}.
+Thus, much research in this field has attempted to characterize the assumptions under which identifiability holds.
+Such assumptions may be made either on the mixing functions or on the distributions of the sources. 
 
-Assumptions can be made either on the mixing functions or on the distributions of the sources.
 In the rest of this section we give an overview of the different cases for which identifiability results are known. 
-In brief, the case of linear mixing functions has been extensively studied and is well understood, while the non-linear case is very challenging and impossibility results are known.
-Recently, many papers have used a novel proof technique to derive identifiability results for slight modifications to the standard ICA problem setting.
+%Note that the ICA literature also includes a variety of methods for implementing solutions to the problem with real data, as well as a variety of application areas. 
+%Since the contribution of this chapter is to prove identifiability results in a novel setting, only the essentials required to understand the novel results in full context will be provided in this section.
+In brief, the case of linear mixing functions has been extensively studied and is well understood, while the non-linear case is more challenging.
+Recently, many papers have used a novel proof technique to derive identifiability results in slight modifications to the standard ICA problem setting.
 The contribution of this chapter (Sections ??-??) is similar, proving identifiability in the case of \emph{multiple nonlinear views}. 
 That is, the given dataset consists of observations $\bm{x}^{(1)}$ and $\bm{x}^{(2)}$ of the same sources $\bm{s}$.
 
@@ -58,23 +65,41 @@ That is, the given dataset consists of observations $\bm{x}^{(1)}$ and $\bm{x}^{
 
 \subsection{Linear ICA}
 
-\begin{itemize}
-	\item The linear case has been studied extensively and is identifiable if at most one of the components is Gaussian
-	\item If more than one component is Gaussian, then these components cannot be unmixed since Gaussians are closed under linear mixing, so any linear unmixing function will not be able to distinguish them.
-	\item Overview of techniques
-\end{itemize}
+%\begin{itemize}
+%	\item The linear case has been studied extensively and is identifiable if at most one of the components is Gaussian
+%	\item If more than one component is Gaussian, then these components cannot be unmixed since Gaussians are closed under linear mixing, so any linear unmixing function will not be able to distinguish them.
+%	\item Overview of techniques
+%\end{itemize}
 
 
-The case in which the functions $\bm{f}$ are linear is known as \emph{Linear ICA}. 
+The case in which the functions $\bm{f}$ are linear is known as \emph{linear ICA}. 
 In this case, the generative model can be written
 \begin{align*}
 \bm{x} &= \bm{A}\bm{s} \\
 p(\bm{s}) &= \prod_{i} p_i(s_i)
 \end{align*}
 where $\bm{A}$ is a square matrix.
-This has been extensively studied and is identifiable if and only if at most one of the source components is Gaussian \cite{cite}.
+This problem has been extensively studied and has been shown to be identifiable if at most one of the latent components is Gaussian~\citep{darmois1953analyse, skitovich1954linear, comon1994independent}.
+Non-identifiability in the case of more than one Gaussian component is a consequence of the fact that an isotropic Gaussian is invariant under orthogonal linear mappings.
+Thus if the diagonal matrix $\bm{\Lambda}$ rescales the Gaussian components of $\bm{s}$ to be unit variance, and $\bm{U}$ is an orthogonal matrix mixing these components, $\bm{x}$ can be rewritten
+%
+\begin{align*}
+\bm{x} = \left(\bm{A}\bm{\Lambda}^{-1}\bm{U}^{-1} \right) \left(\bm{U}\bm{\Lambda} \bm{s}\right)
+\end{align*}
+%
+and so it is impossible to tell which of $\bm{s}$ and $\bm{U}\bm{\Lambda} \bm{s}$ corresponds to the true source distribution. 
 
-%It is straightforward to see why the problem is non-identifiable if more than one component is Gaussian: since Gaussians are closed under linear mappings, 
+The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking linear maps $\bm{W}$ such that the transformed data $\bm{W}\bm{x}$ have maximally non-Gaussian components.
+Intuition for why such approaches might work can be seen in the Central Limit Theorem, which, informally, states that an average of \iid~random variables becomes more Gaussian as the number of variables in the average increases. 
+Similarly, in sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables will always make them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
+
+
+
+
+We recall in passing that linear ICA methods can be used for causal discovery in linear cyclic models, as discussed in Section ??.
+
+
+
 
 
 \subsection{Nonlinear ICA}
