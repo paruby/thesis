@@ -2,7 +2,7 @@
 %*******************************************************************************
 %****************************** Third Chapter **********************************
 %*******************************************************************************
-\chapter{Generative Modelling}
+\chapter{Latent space learning theory} %Generative Modelling}
 
 % **************************** Define Graphics Path **************************
 \ifpdf
@@ -17,14 +17,11 @@
 \fullcite{rubenstein2019practical}
 \end{quote}
 
-\emph{and in part the following workshop paper:}
+\emph{Additionally, the following workshop papers on the theme of generative modelling were published during my PhD but are not included in this thesis:}
 
 \begin{quote}
 \fullcite{rubenstein2018wasserstein}
 \end{quote}
-
-
-\emph{Additionally, the following workshop paper on the theme of generative modelling was published during my PhD but is not included in this thesis:}
 
 \begin{quote}
 \fullcite{rubenstein2018learning}
@@ -41,28 +38,193 @@ Generative modelling has in recent years become synonymous with the artificial g
 The mathematical formulation of this is, however, more general.
 Suppose that we are given a dataset of samples. 
 These are presumed to have been drawn \iid~from some unknown data distribution $Q_X$.
-
 The high level goal of generative modelling is to learn a distribution $P_X \approx Q_X$ from which new samples can be drawn. 
-To make this precise, one must specify a choice of \emph{divergence} $D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, and the goal becomes:
+
+To make this precise, one must specify a choice of \emph{divergence}\footnote{Defined in Section \ref{subsec:gen-model-divergence}} $D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, and the goal becomes:
 
 \begin{align*}
-\min_{\theta \in \Theta} D\left(P_X^\theta | Q_X \right)
+\min_{\theta \in \Theta} \ D\left(P_X^\theta,  Q_X \right)
 \end{align*}
 
-There are two main challenges.
-First, when the data are drawn from complex high dimensional distributions, how can this be modelled with a parameterised distribution?
+There are two main challenges in practically implementing and solving this problem.
+First, when the data are drawn from complex high dimensional distributions, how can this be modelled with a parameterised distribution that is computationally tractable?
 Second, what are appropriate choices of divergences, and how can they be estimated or minimised with respect to the parameters $\theta$?
-
 We will tackle these two questions in the next parts. 
+
+We will see that one of the main families of methods for solving this problem, autoencoders, involve the introduction of a latent space and encoder, a mapping from the data to the latent space.
+The main contribution of this chapter is a learning theoretic analysis of the estimation of divergences in this latent space. 
 
 \subsection{Latent variable models}
 
-\subsection{Divergences}
+A \emph{Latent Variable Model (LVM)} is one way to specify high dimensional distributions using simpler components. 
+One specifies a distribution $P_Z$ over a low dimensional space $\mathcal{Z}$ together with a family of conditional distributions $P_{X|Z}$. 
+The conditional distributions can be thought of as a mapping $g$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$,
+and may in general be dirac-delta distributions, in which case the associated mapping $g$ is a well-defined function. 
+
+Often $P_Z$ is referred to as a \emph{prior} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
+The conditional distributions are usually referred to as \emph{generators} or \emph{decoders} in the literature, and are usually parameterised by parameter $\theta$, which we may write as $P_{X|Z}^\theta$ or $g^\theta$. 
+If the conditional distributions correspond to dirac-delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
+
+In practice, generators are usually implemented as a deep neural network.
+This is straightforward if the generator is deterministic: in this case, $g^\theta$ is simply a function and can thus be represented as a deep network with parameters $\theta$.
+If the generator is stochastic, it can still be represented simply as a deep network provided that the conditional distributions are sufficiently structured. 
+For instance, if the conditional distributions are always Gaussian, $g^\theta$ can be represented as a deep network with two outputs, one for the mean and one for the covariance.
+
+For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data-space $\mathcal{X}$ by marginalisation. 
+If densities of all relevant distributions exist, this is equivalent to specifying $P_X^\theta$ via the integral
+
+\begin{align*}
+p^\theta(x) = \int p^\theta(x|z) p(z) dz.
+\end{align*}
+
+The integral above will generally be intractable, meaning that $P_X^\theta$ has unknown density.
+However, the important reason that LVMs are useful is that samples from $P_X^\theta$ can be drawn easily:
+one samples first a value $z\sim P_Z$ and then samples $x \sim P^\theta_{X|Z=z}$. 
+All relevant distributions are chosen so that these sampling procedures are simple.
 
 
-\section{Examples of generative models}
+\subsection{Divergences}\label{subsec:gen-model-divergence}
 
-\subsection{GANs}
-\subsection{VAEs}
-\subsection{WAEs}
+A \emph{divergence} is a notion of dissimilarity between pairs of distributions that is weaker than a \emph{metric} or \emph{distance}. 
+Denoting by $\mathcal{P}_{\mathcal{X}}$ the set of distributions on $\mathcal{X}$, a divergence $D$ is a mapping $D: \mathcal{P}_{\mathcal{X}} \times \mathcal{P}_{\mathcal{X}} \to \mathbb{R} \cup \{\infty\}$ such that
+
+\begin{itemize}
+\item $D(P, Q)  \geq 0$ for any distributions $P, Q \in \mathcal{P}_{\mathcal{X}}$,
+\item $D(P, Q) = 0$ if and only if $P = Q$.
+\end{itemize}
+
+For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimize it with respect to the parameters $\theta$. 
+We will discuss in the next section how this can be done, discussing here the two main families 
+of divergences that occur in the machine learning literature generally, and generative modelling literature in particular. 
+
+The first are \emph{Integral Probability Metrics (IPMs)}. 
+These are divergences that can be written as
+
+\begin{align*}
+D_{\mathcal{H}}(P, Q) = \sup_{h\in\mathcal{H}} \left| \int h(x) dP(x) - \int h(x) dQ(x) \right|
+\end{align*}
+
+for some restricted function class $\mathcal{H}: \mathcal{X} \to \mathbb{R}$. 
+As the name suggests, such divergences are in fact metrics, obeying the triangle inequality and symmetry.
+
+Commonly encountered IPMs include the Wasserstein distance (where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$), the Total Variation distance (where $\mathcal{H}$ is the set of all functions with infinity norm $1$) and the Maximum Mean Discrepancy (where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \cite{gretton}).
+
+The second family of divergences are \emph{f-divergences}. 
+These can be written as
+\begin{align*}
+D_f(P, Q) = \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx
+\end{align*}
+for distributions that both admit densities with respect to Lebesgue measure\footnote{More generally, f-divergences are defined when $P$ is absolutely continuous with respect to $Q$, though discussion of such technicalities are outside of the scope of this introduction.}, where $f$ is a convex function such that $f(1)=0$. 
+Intuitively, the $f$-divergence compares the density ratio of the two distributions; if $P=Q$, the density ratio is $1$ and thus $D_f(P,Q) = 0$ since $f(1)=0$. 
+It can be shown using convexity of $f$ that $D_f$ is always non-negative.
+
+By selecting different choices for $f$, several commonly encountered divergences can be recovered, including the Kullback-Leibler, Jensen-Shannon, $\chi^2$, $\alpha$- and $\beta$-divergences, as well as the Total Variation distance (which is the only divergence that is both an $f$-divergence and an IPM).
+See Table \ref{???} for a list of the corresponding functions for each of these divergences.
+
+
+%\begin{align*}
+%D_f(P, Q) = 
+%    \begin{cases}
+%       \int f\left(\frac{dQ}{dP}(x) \right) dP, & \text{if $dQ/dP$ exists} \\
+%      \infty, & \text{otherwise}
+%    \end{cases}
+%\end{align*}
+
+%Intuitively, such divergences measure the discrepancy between the two distributions by seeking functions which are maximal on one distribution and minimal on the other. 
+
+
+\subsection{Examples of generative models}
+
+To actually solve the generative modelling problem, it must be possible to minimise $D(P^\theta_X, Q_X)$ with respect to the parameters $\theta$ in a computationally tractable way.
+In general it is infeasible to estimate $D(P^\theta_X, Q_X)$ directly, or even to compute gradients of it with respect to $\theta$. 
+Thus, one must resort to approximations.
+
+There are two families of methods that introduce auxiliary functions as computational tricks to bound or estimate $D(P^\theta_X, Q_X)$ in a computationally tractable way.
+These are \emph{Generative Adversarial Networks (GANs)}, which introduce a \emph{discriminator} $d:\mathcal{X} \to \mathbb{R}$, and \emph{autoencoders}, which introduce an \emph{encoder} $e:\mathcal{X} \to \mathcal{Z}$.
+
+In the following subsections we discuss GANs and two types of autoencoders, Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), showing how specific choices of divergences can be approximated.
+
+\subsubsection{Generative Adversarial Networks}
+
+GANs are a family of methods that approximately minimise any $f$-divergence and some choices of IPMs. 
+The original GAN paper \citep{goodfellow} introduced the key idea: a discriminator $d^\phi: \mathcal{X} \to \mathbb{R}$ is introduced and trained to distinguish between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$. 
+The generator $g^\theta$ is trained simultaneously to maximise the loss of the discriminator. 
+This surrogate loss for the generator is computationally tractable when $g^\theta$ and $d^\phi$ are both implemented as neural networks.
+
+In \cite{goodfellow}, the loss of the discriminator is implemented as logistic regression with the output $d^\phi(x)$ taken to be the logit, so that the loss is
+
+\begin{align*}
+L(\theta, \phi) = \mathbb{E}_{x\sim Q_X}\left[ \log d^\phi(x) \right] - \mathbb{E}_{x \sim P_Z} \left[\log(1 - d^\phi(g^\theta(z)) \right].
+\end{align*}
+
+Stochastic gradients of this loss can be taken with respect to both $\phi$ and $\theta$ by using minibatch samples of data to approximate the outer expectations when $d^\phi$ and $g^\theta$ are both neural networks.
+It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence. 
+
+Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractable, the surrogate loss $L(\theta, \phi)$ is (up to constants) a lower bound on this.
+Hence the desired divergence can be approximately minimised by \emph{maximising} $L(\theta, \phi)$ with respect to $\phi$ and minimising this with respect to $\theta$.
+
+\cite{f-gan}, building on the work of \cite{nguyen}, generalised this result to arbitrary $f$-divergences using Fenchel conjugacy of convex functions.
+Any convex function $f(x)$ has a conjugate $f^*(t)$ defined as
+%
+\begin{align*}
+f^*(t) = \sup_{x \in \dom(f)} \{xt - f(x)\}.
+\end{align*}
+%
+The resulting function $f^*$ is itself convex, and
+provided that $f$ is continuous\footnote{It is actually sufficient for $f$ to be \emph{lower semi-continuous}, though this is a technical detail that is out of the scope of this introduction.}, $f$ and $f^*$ are dual in the sense that $f^{**} = f$.
+This means that $f$ can be written as
+%
+\begin{align*}
+f(x) = \sup_{t \in \dom(f^*)} \{xt - f^*(t)\}.
+\end{align*}
+
+Plugging the above equality into the definition of $f$-divergences yields
+%
+\begin{align*}
+D_f(P, Q) &= \int q(x) \sup_{t \in \dom(f^*)} \left\{t \frac{p(x)}{q(x)} - f^*(t) \right\} dx \\
+& \geq \sup_{T \in \mathcal{T}} \left\{ \int p(x) T(x) dx - \int q(x) f^*(T(x)) \right\} dx \\
+&= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
+\end{align*}
+%
+where $\mathcal{T}$ is an arbitrary class of functions $\mathcal{X} \to \dom(f^*) \subseteq \mathbb{R}$, which could be implemented as a neural network.
+Thus, parameterising $T$ by $\theta$ yields the surrogate loss
+%
+\begin{align*}
+L_f(\phi, \theta) = \mathbb{E}_{x \sim Q_X} \left[ T^\phi(x) \right] - \mathbb{E}_{z \sim P_Z} \left[ f^*(T^\phi(g^\theta(x))) \right] \leq D_f(P^\theta_X, Q_X)
+\end{align*}
+%
+As with the original GAN objective, stochastic gradients of this surrogate loss can be computed. 
+The function $T^\theta$ corresponds to the discriminator introduced by \cite{goodfellow}, but the above derivation holds for arbitrary choices of $f$. 
+\cite{nowozin et al} thus demonstrated how the GAN `trick' can be applied to other $f$-divergences to get computational tractable lower bounds of $D_f(P^\theta_X, Q_X)$.
+
+The GAN trick can also be used to approximately minimise IPMs $D_\mathcal{H}(P^\theta_X, Q_X)$, provided that the function class $\mathcal{H}$ can be parameterised with neural networks.
+If $\mathcal{H}$ is such that $h \in \mathcal{H}$ implies that $-h \in \mathcal{H}$, $D_\mathcal{H}$ can be written without the inner absolute function, leading to
+%
+\begin{align*}
+D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x) \\
+&= \sup_{h\in\mathcal{H}} \left\{ \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right] \right\} \\
+&\geq  \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right] \\
+\end{align*}
+%
+where the inequality holds for any $h \in \mathcal{H}$. 
+Here $h$ plays the role of the discriminator, and the loss can be differentiated with respect to any parameters of $h$.
+Note that in contrast to the $f$-GAN, the discriminator $h$ is restricted to belong to a certain class of functions which can complicate specifying the parameterisation.
+The most notable example of an IPM being used for generative modelling is the Wasserstein GAN of \cite{WGAN}. 
+Here, the Wasserstein distance is used, corresponding to $h$ being restricted to having Lipschitz constant at most $1$. 
+For certain neural network architectures, this can be enforced by weight clipping.
+
+
+\subsubsection{VAEs}
+\subsubsection{WAEs}
+
+
+
+
+
+
+
+
+
+
+
 
