@@ -27,9 +27,10 @@
 \fullcite{rubenstein2018learning}
 \end{quote}
 
-\emph{Sections ?? - ?? are a review of latent variable models used in the generative modelling community, in particular Wasserstein Autoencoders (WAEs). 
-This sets the stage for Sections ?? - ?? which is based on} \cite{rubenstein2019practical}.
-\emph{This is a learning theoretic analysis of one aspect of training WAEs.}
+\emph{The main contribution of this chapter is a learning theoretic analysis of estimating divergences between distributions. 
+The setting considered by this work occurs naturally in and has application to the latent variable models used in the generative modelling community, in particular Wasserstein Autoencoders.
+Sections ?? - ?? are a review of generative modelling, setting the stage for Sections ?? - ?? which is based on} \cite{rubenstein2019practical}.
+
 
 
 \section{Introduction}
@@ -61,16 +62,16 @@ One specifies a distribution $P_Z$ over a low dimensional space $\mathcal{Z}$ to
 The conditional distributions can be thought of as a mapping $g$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$,
 and may in general be dirac-delta distributions, in which case the associated mapping $g$ is a well-defined function. 
 
-Often $P_Z$ is referred to as a \emph{prior} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
+$P_Z$ is often referred to as a \emph{prior} or \emph{noise distribution} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
 The conditional distributions are usually referred to as \emph{generators} or \emph{decoders} in the literature, and are usually parameterised by parameter $\theta$, which we may write as $P_{X|Z}^\theta$ or $g^\theta$. 
 If the conditional distributions correspond to dirac-delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
 
 In practice, generators are usually implemented as a deep neural network.
-This is straightforward if the generator is deterministic: in this case, $g^\theta$ is simply a function and can thus be represented as a deep network with parameters $\theta$.
+This is straightforward in the deterministic case: $g^\theta$ is simply a function and can thus be represented as a deep network with parameters $\theta$.
 If the generator is stochastic, it can still be represented simply as a deep network provided that the conditional distributions are sufficiently structured. 
-For instance, if the conditional distributions are always Gaussian, $g^\theta$ can be represented as a deep network with two outputs, one for the mean and one for the covariance.
+For instance, if the conditional distributions are Gaussian with varying mean and covariance, $g^\theta$ can be represented as a deep network with two outputs, one for the mean and one for the covariance.
 
-For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data-space $\mathcal{X}$ by marginalisation. 
+For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data-space $\mathcal{X}$. 
 If densities of all relevant distributions exist, this is equivalent to specifying $P_X^\theta$ via the integral
 
 \begin{align*}
@@ -80,12 +81,12 @@ p^\theta(x) = \int p^\theta(x|z) p(z) dz.
 The integral above will generally be intractable, meaning that $P_X^\theta$ has unknown density.
 However, the important reason that LVMs are useful is that samples from $P_X^\theta$ can be drawn easily:
 one samples first a value $z\sim P_Z$ and then samples $x \sim P^\theta_{X|Z=z}$. 
-All relevant distributions are chosen so that these sampling procedures are simple.
+All relevant distributions can be chosen so that these sampling procedures are simple.
 
 
 \subsection{Divergences}\label{subsec:gen-model-divergence}
 
-A \emph{divergence} is a notion of dissimilarity between pairs of distributions that is weaker than a \emph{metric} or \emph{distance}. 
+A \emph{divergence} is a notion of dissimilarity between pairs of distributions. 
 Denoting by $\mathcal{P}_{\mathcal{X}}$ the set of distributions on $\mathcal{X}$, a divergence $D$ is a mapping $D: \mathcal{P}_{\mathcal{X}} \times \mathcal{P}_{\mathcal{X}} \to \mathbb{R} \cup \{\infty\}$ such that
 
 \begin{itemize}
@@ -93,6 +94,7 @@ Denoting by $\mathcal{P}_{\mathcal{X}}$ the set of distributions on $\mathcal{X}
 \item $D(P, Q) = 0$ if and only if $P = Q$.
 \end{itemize}
 
+This notion is weaker than that of a \emph{metric} in that a divergence need not be symmetric or obey the triangle inequality.
 For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimize it with respect to the parameters $\theta$. 
 We will discuss in the next section how this can be done, discussing here the two main families 
 of divergences that occur in the machine learning literature generally, and generative modelling literature in particular. 
@@ -139,12 +141,13 @@ To actually solve the generative modelling problem, it must be possible to minim
 In general it is infeasible to estimate $D(P^\theta_X, Q_X)$ directly, or even to compute gradients of it with respect to $\theta$. 
 Thus, one must resort to approximations.
 
+
 There are two families of methods that introduce auxiliary functions as computational tricks to bound or estimate $D(P^\theta_X, Q_X)$ in a computationally tractable way.
 These are \emph{Generative Adversarial Networks (GANs)}, which introduce a \emph{discriminator} $d:\mathcal{X} \to \mathbb{R}$, and \emph{autoencoders}, which introduce an \emph{encoder} $e:\mathcal{X} \to \mathcal{Z}$.
 
 In the following subsections we discuss GANs and two types of autoencoders, Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), showing how specific choices of divergences can be approximated.
 
-\subsubsection{Generative Adversarial Networks}
+\subsubsection{Generative Adversarial Networks (GANs)}
 
 GANs are a family of methods that approximately minimise any $f$-divergence and some choices of IPMs. 
 The original GAN paper \citep{goodfellow} introduced the key idea: a discriminator $d^\phi: \mathcal{X} \to \mathbb{R}$ is introduced and trained to distinguish between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$. 
@@ -161,13 +164,13 @@ Stochastic gradients of this loss can be taken with respect to both $\phi$ and $
 It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence. 
 
 Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractable, the surrogate loss $L(\theta, \phi)$ is (up to constants) a lower bound on this.
-Hence the desired divergence can be approximately minimised by \emph{maximising} $L(\theta, \phi)$ with respect to $\phi$ and minimising this with respect to $\theta$.
+Hence the Jensen-Shannon divergence can be approximately minimised by \emph{maximising} $L(\theta, \phi)$ with respect to $\phi$ and minimising this with respect to $\theta$.
 
 \cite{f-gan}, building on the work of \cite{nguyen}, generalised this result to arbitrary $f$-divergences using Fenchel conjugacy of convex functions.
-Any convex function $f(x)$ has a conjugate $f^*(t)$ defined as
+Any convex function $f(u)$ has a conjugate $f^*(t)$ defined as \todo{check that f(x) is replaced by f(u) everywhere}
 %
 \begin{align*}
-f^*(t) = \sup_{x \in \dom(f)} \{xt - f(x)\}.
+f^*(t) = \sup_{u \in \dom(f)} \{ut - f(u)\}.
 \end{align*}
 %
 The resulting function $f^*$ is itself convex, and
@@ -175,7 +178,7 @@ provided that $f$ is continuous\footnote{It is actually sufficient for $f$ to be
 This means that $f$ can be written as
 %
 \begin{align*}
-f(x) = \sup_{t \in \dom(f^*)} \{xt - f^*(t)\}.
+f(u) = \sup_{t \in \dom(f^*)} \{ut - f^*(t)\}.
 \end{align*}
 
 Plugging the above equality into the definition of $f$-divergences yields
@@ -197,7 +200,7 @@ As with the original GAN objective, stochastic gradients of this surrogate loss 
 The function $T^\theta$ corresponds to the discriminator introduced by \cite{goodfellow}, but the above derivation holds for arbitrary choices of $f$. 
 \cite{nowozin et al} thus demonstrated how the GAN `trick' can be applied to other $f$-divergences to get computational tractable lower bounds of $D_f(P^\theta_X, Q_X)$.
 
-The GAN trick can also be used to approximately minimise IPMs $D_\mathcal{H}(P^\theta_X, Q_X)$, provided that the function class $\mathcal{H}$ can be parameterised with neural networks.
+A similar idea can also be used to approximately minimise IPMs $D_\mathcal{H}(P^\theta_X, Q_X)$, provided that the function class $\mathcal{H}$ can be parameterised in practice.
 If $\mathcal{H}$ is such that $h \in \mathcal{H}$ implies that $-h \in \mathcal{H}$, $D_\mathcal{H}$ can be written without the inner absolute function, leading to
 %
 \begin{align*}
@@ -207,19 +210,122 @@ D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x
 \end{align*}
 %
 where the inequality holds for any $h \in \mathcal{H}$. 
-Here $h$ plays the role of the discriminator, and the loss can be differentiated with respect to any parameters of $h$.
-Note that in contrast to the $f$-GAN, the discriminator $h$ is restricted to belong to a certain class of functions which can complicate specifying the parameterisation.
+Here $h$ plays the role of the discriminator. 
+If it is differentiable, stochastic gradients of the loss can be obtained with respect its parameters.
+Note that in contrast to the $f$-divergence case above, the discriminator $h$ is restricted to belong to a certain class of functions which can complicate specifying the parameterisation.
 The most notable example of an IPM being used for generative modelling is the Wasserstein GAN of \cite{WGAN}. 
 Here, the Wasserstein distance is used, corresponding to $h$ being restricted to having Lipschitz constant at most $1$. 
-For certain neural network architectures, this can be enforced by weight clipping.
+For certain neural network architectures, including those composed of fully-connected and convolutional layers, this can be enforced by weight clipping.
 
+\subsubsection{Variational Autoencoders (VAEs)}
 
-\subsubsection{VAEs}
-\subsubsection{WAEs}
+VAEs \cite{kingma, rezende} are a method to minimize the KL-divergence, defined as
 
+\begin{align*}
+D_{\text{KL}}(Q_X, P^\theta_X) &= \int q(x) \log \left( \frac{q(x)}{p^\theta(x)} \right) dx \\
+&= \int q(x) \log q(x) - \int q(x) \log p^\theta(x) dx.
+\end{align*}
 
+The first term above, the negative \emph{differential entropy} of $Q_X$, is not possible to estimate without knowledge of the density $q(z)$.
+However, since it is constant as a function of $\theta$, it can be ignored.
+The term $\log p^\theta(x)$ inside the second integral is known as the \emph{log-likelihood} or \emph{evidence}. 
+Although the density $p^\theta(x)$ is intractable, the evidence can be tractably lower bounded leading to the so-called Evidence LOwer Bound (ELBO), which in turn leads to a tractable \emph{upper} bound on $D_{\text{KL}}(Q_X, P^\theta_X)$. 
 
+First, observe that the log-likelihood can be written 
 
+\begin{align*}
+\log p^\theta(x) &= \log \left( \int p^\theta(x|z) p(z) dz \right)
+\end{align*}
+
+For any distribution $q^\phi(z|x)$ depending on parameter $\phi$ and the value of $x$, we can multiply and divide inside the integral, leaving its value unchanged.
+This leads to
+
+\begin{align*}
+\log p^\theta(x) &= \log \left( \int p^\theta(x|z) \frac{p(z)}{q^\phi(z|x)} q^\phi(z|x) dz \right) \\
+&= \log \left( \mathbb{E}_{q^\phi(z|x)} \left[  p^\theta(x|z) \frac{p(z)}{q^\phi(z|x)} \right]\right) \\
+&\geq \mathbb{E}_{q^\phi(z|x)} \left[ \log p^\theta(x|z) + \log p(z) - \log q^\phi(z|x) \right] \\
+&= \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z)  - D_{\text{KL}}\left(q^\phi(z|x), p(z)\right) \\
+\end{align*}
+
+where the inequality follows from Jensen's inequality due to the concavity of $\log$.
+The distribution $q^\phi(z|x)$ is a variational approximation to the true posterior $p^\theta(z|x)$; it can be shown that the gap introduced by Jensen's inequality is equal to $D_{\text{KL}}\left(q^\phi(z|x), p^\theta(z|x)\right)$. 
+$q^\phi(z|x)$ is often referred to as an encoder as it maps elements of the data-space $\mathcal{X}$ to distributions over the latent space $\mathcal{Z}$.
+Putting things together yields
+
+\begin{align*}
+D_{\text{KL}}(Q_X, P^\theta_X) \leq -H(Q_X)  - \mathbb{E}_{q(x)} \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z) + \mathbb{E}_{q(x)}D_{\text{KL}}\left(q^\phi(z|x), p(z)\right) = L_{\text{VAE}}(\theta, \phi)
+\end{align*}
+
+where $H(Q_X)$ is the constant differential entropy.
+All distributions involved can be chosen so this can be unbiasedly estimated, meaning that it can be minimised with respect to the parameters $\theta$ and $\phi$ using stochastic gradient methods.
+
+\subsubsection{Wasserstein Autoencoders (WAEs)}
+
+WAEs \citep{tolstikhin et al} are concerned with \emph{optimal transport} or \emph{1-Wasserstein} distances.
+Let $c$ be any metric on $\mathcal{X}$.
+For intuition, $c(x, x')$ may be thought of as a function specifying the cost of transporting a point from $x$ to $x'$.
+The optimal transport distance between two distributions $P$ and $Q$ over $\mathcal{X}$ is then the minimal cost incurred by transporting the probability mass of $P$ to that of $Q$.
+For simplicity in the following, we will assume $P$ and $Q$ have densities $p$ and $q$. 
+
+Formally, let $\Gamma$ be the set of joint distributions over $\mathcal{X} \times \mathcal{X}$ with marginals $P$ and $Q$. 
+That is, any element $\gamma(x, x') \in \Gamma$ is a joint distribution satisfying $\gamma(x) = p(x)$ and $\gamma(x') = q(x')$.
+Then, the optimal transport distance is defined as
+%
+\begin{align*}
+OT_c(P, Q) = \min_{\gamma \in \Gamma} \mathbb{E}_{x, x' \sim \gamma} \left[ c(x, x') \right].
+\end{align*}
+%
+This can equivalently be written as
+%
+\begin{align*}
+OT_c(P, Q) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right],
+\end{align*}
+%
+where instead we think of the $\gamma$ as a conditional distribution that specifies how an element of probability mass at $x$ should be spread over the points $x'$. 
+Specified this way, each element of $\Gamma$ should satisfy $\int \gamma(x'|x) q(x) dx = p(x')$.
+In our case of interest, we thus have
+%
+\begin{align*}
+OT_c(P_X^\theta, Q_X) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right].
+\end{align*}
+%
+In practice, this minimisation problem cannot be solved: given a candidate conditional distribution $\gamma(x'|x)$ it is not practically possible to verify whether or not $\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$ holds.
+
+\cite{tolstikhin} prove the following result that gives a handle on this problem:
+If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be written as a composition $\gamma(x'|x) = \int p^\theta(x'|z) q^\phi(z|x) dz$ where $q(z|x)$ is a conditional distribution satisfying $\int q(z|x) q(x) dx = p(z)$. 
+That is, any $\gamma$ can be `factored through' the latent space by introducing an encoder $q(z|x)$, replacing the constraint of distribution matching in the data-space ($\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$) with distribution matching in the latent space ($\int q(z|x) q(x) dx = p(z)$).
+
+Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if the $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and the generator will result in $P_X^\theta$. 
+While it is clear that the composition of any such encoder and the generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
+This is proved in Theorem 1 of \cite{tolstikhin}.
+
+Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder, and $g$ for the deterministic generator, we obtain the following alternative statement of the optimal transport distance:
+%
+\begin{align*}
+OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, G(z)) \right].
+\end{align*}
+
+This optimisation problem is again not feasible to solve due to the hard constraint, 
+but can be made computationally feasible by relaxing the constraint to obtain the $WAE$ objective
+
+\begin{align*}
+L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, G^\theta(z)) \right] + \lambda D\left(Q^\phi_Z, P_Z  \right)
+\end{align*}
+
+where $D$ is some divergence, $\lambda$ is a positive scalar and the encoder is given parameter $\phi$.
+For general choices of $\lambda$ and $D$, $\inf_{\phi} L_{\text{WAE}}^{\lambda, D}(\theta, \phi)$ is neither an upper nor lower bound on the original objective $OT_c(P_X^\theta, Q_X)$, but a heuristic approximation due to the relaxation of the constraint. 
+
+%It was, however, proven by \cite{sinkhorn} (Theorem 2.1) that if $G$ is $\lambda$-Lipschitz, , then taking $D$ to be
+
+Observe that the first part of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and their reconstruction obtained by pushing through the encoder and decoder.
+This is therefore simple to estimate and hence optimise with respect to the parameters $\phi$ and $\theta$.
+
+The second term is still potentially challenging to estimate depending on the choice of $D$. 
+\cite{tolstikhin} propose two choices for $D$ which can be estimated based on samples from $P_Z$ and $Q_Z^\phi$: the Maximum Mean Discrepancy (MMD) \cite{gretton} which can be estimated directly, and a GAN style estimation of the Jensen-Shannon divergence by introducing an additional discriminator to obtain a lower bound on the divergence. 
+
+Notably, both of these methods do not make use of a significant degree of structure that is present in the problem. $P_Z$ is typically chosen to be a simple distribution with known density. While $Q_Z^\phi$ may be complex and have intractable density, it can be decomposed as $q^\phi(z) = \mathbb{E}_{x\sim Q_X} q^\phi(z|x)$ where $q^\phi(z|x)$ is also typically chosen with known density and $Q_X$ can be sampled.
+
+The main contribution of this chapter, beginning in the next section, is to propose and analyse an estimator for the case that $D$ is chosen to be an $f$-divergence. 
 
 
 
