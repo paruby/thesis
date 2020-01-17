@@ -17,7 +17,7 @@
 \fullcite{rubenstein2019practical}
 \end{quote}
 
-\emph{Additionally, the following workshop papers on the theme of generative modelling were published during my PhD but are not included in this thesis:}
+\emph{Additionally, the following related workshop papers were published during my PhD but are not included in this thesis:}
 
 \begin{quote}
 \fullcite{rubenstein2018wasserstein}
@@ -36,17 +36,17 @@ Sections ?? - ?? are a review of generative modelling, setting the stage for Sec
 \section{Introduction}
 
 The estimation and minimization of divergences between probability distributions based on samples are fundamental problems of machine learning.
-For example, maximum likelihood learning can be viewed as minimizing the Kullback-Leibler divergence $D_{\text{KL}}(P_{\text{data}}\| P_{\text{model}})$ with respect to the model parameters.
+For example, maximum likelihood learning can be viewed as minimizing the Kullback-Leibler divergence $D_{\text{KL}}(P_{\text{data}}, P_{\text{model}})$ with respect to the model parameters.
 More generally, generative modelling
 %---most famously Variational Autoencoders and Generative Adversarial Networks \cite{kingma2013auto, goodfellow2014generative} discussed in the next section---
-can be viewed as minimizing a divergence $\smash{D(P_{\text{data}}\| P_{\text{model}})}$ where $\smash{P_{\text{model}}}$ may be intractable.
-In variational inference, an intractable posterior $p(z|x)$ is approximated with a tractable distribution $q(z)$ chosen to minimize $\smash{D_{\text{KL}}\bigl(q(z) \| p(z|x)\bigr)}$.
-The mutual information between two variables $\smash{I(X,Y)}$, core to information theory and Bayesian machine learning, is equivalent to $\smash{D_{\text{KL}}(P_{X,Y} \| P_X P_Y)}$. 
-Independence testing often involves estimating a divergence $\smash{D(P_{X,Y} \| P_X P_Y)}$, while two-sample testing (does $P=Q$?) involves estimating a divergence $D(P\|Q)$.
-Additionally, one approach to domain adaptation, in which a classifier is learned on a distribution $P$ but tested on a distinct distribution $Q$, involves learning a feature map $\phi$ such that a divergence $\smash{D\left( \phi_\# P \| \phi_\# Q \right)}$ is minimized, where $\smash{\phi_\#}$ represents the push-forward operation \cite{ben2007analysis,ganin2016domain}.
+can be viewed as minimizing a divergence $\smash{D(P_{\text{data}}, P_{\text{model}})}$ where $\smash{P_{\text{model}}}$ may be intractable.
+In variational inference, an intractable posterior $p(z|x)$ is approximated with a tractable distribution $q(z)$ chosen to minimize $\smash{D_{\text{KL}}\bigl(q(z) , p(z|x)\bigr)}$.
+The mutual information between two variables $\smash{I(X,Y)}$, core to information theory and Bayesian machine learning, is equivalent to $\smash{D_{\text{KL}}(P_{X,Y} , P_X P_Y)}$. 
+Independence testing often involves estimating a divergence $\smash{D(P_{X,Y} , P_X P_Y)}$, while two-sample testing (does $P=Q$?) involves estimating a divergence $D(P,Q)$.
+Additionally, one approach to domain adaptation, in which a classifier is learned on a distribution $P$ but tested on a distinct distribution $Q$, involves learning a feature map $\phi$ such that a divergence $\smash{D\left( \phi_\# P , \phi_\# Q \right)}$ is minimized, where $\smash{\phi_\#}$ represents the push-forward operation \cite{ben2007analysis,ganin2016domain}.
 
 This chapter considers the well-known family of $f$-divergences \cite{csiszar2004information, liese2006divergences} that includes amongst others the $\KL$, Jensen-Shannon ($\JS$), $\chi^2$, and $\alpha$-divergences as well as the Total Variation ($\TV$) and squared Hellinger ($\Hsq$) distances, the latter two of which play an important role in the statistics literature \cite{tsybakov2009}.
-A significant body of work exists studying the estimation of the $f$-divergence $D_f(Q \| P)$ between general probability distributions $Q$ and $P$.
+A significant body of work exists studying the estimation of the $f$-divergence $D_f(Q , P)$ between general probability distributions $Q$ and $P$.
 While the majority of this focuses on $\alpha$-divergences and closely related R\'enyi-$\alpha$ divergences \citep{poczos11alpha, singh14alpha, krishnamurthy14icml},
 many works address specifically the KL-divergence \citep{perez08kl, wang09kl}
 with fewer considering $f$-divergences in full generality \cite{nguyen10ratio, kanamori12ratio, moon14ensemble, moon14followup}.
@@ -54,7 +54,7 @@ Although the $\KL$-divergence is the most frequently encountered $f$-divergence 
 in particular in the variational inference community where they have been employed to derive alternative evidence lower bounds \cite{pmlr-v80-chen18k, li2016renyi, dieng2017variational}.
 
 
-The main challenge in computing $D_f(Q \| P)$ is that it requires knowledge of either the densities of both $Q$ and $P$, or the density ratio $dQ/dP$.
+The main challenge in computing $D_f(Q , P)$ is that it requires knowledge of either the densities of both $Q$ and $P$, or the density ratio $dQ/dP$.
 In studying this problem, assumptions of differing strength can be made about $P$ and $Q$. 
 In the weakest \emph{agnostic} setting, one may be given only a finite number of i.i.d\:samples from the distributions without any further knowledge about their densities.
 As an example of stronger assumptions,
@@ -65,22 +65,22 @@ Most of the literature on $f$-divergence estimation considers the weaker agnosti
 The lack of assumptions makes such work widely applicable, but comes at the cost of needing to work around estimation of either the densities of $P$ and $Q$ \cite{singh14alpha, krishnamurthy14icml} or the density ratio $dQ/dP$ \citep{nguyen10ratio, kanamori12ratio} from samples.
 Both of these estimation problems are provably hard \citep{tsybakov2009, nguyen10ratio} and suffer rates---the speed at which the error of an estimator decays as a function of the number of samples $N$---of order $\smash{N^{-1/d}}$ when $P$ and $Q$ are defined over $\R^d$ unless their densities are sufficiently smooth.
 This is a manifestation of the \emph{curse of dimensionality} and rates of this type are often called \emph{nonparametric}.
-One could hope to estimate $D_f(P\|Q)$ without explicitly estimating the densities or their ratio and thus avoid suffering nonparametric rates, however a lower bound of the same order $\smash{N^{-1/d}}$ was recently proved for $\alpha$-divergences \citep{krishnamurthy14icml}, a sub-family of $f$-divergences.
+One could hope to estimate $D_f(P,Q)$ without explicitly estimating the densities or their ratio and thus avoid suffering nonparametric rates, however a lower bound of the same order $\smash{N^{-1/d}}$ was recently proved for $\alpha$-divergences \citep{krishnamurthy14icml}, a sub-family of $f$-divergences.
 While some works considering the agnostic setting provide rates for the bias and variance of the proposed estimator \cite{nguyen10ratio, krishnamurthy14icml} or even exponential tail bounds \citep{singh14alpha},
 it is more common to only show that the estimators are asymptotically unbiased or consistent without proving specific rates of convergence \cite{wang09kl, poczos11alpha, kanamori12ratio}.
 
 
 Motivated by recent advances in machine learning, this chapter studies a setting in which much stronger structural assumptions are made about the distributions.
 Let $\X$ and $\Z$ be two finite dimensional Euclidean spaces.
-We consider estimation of the divergence $D_f(Q_Z\| P_Z)$ between two probability distributions $P_Z$ and $Q_Z$, both defined over $\Z$.
+We consider estimation of the divergence $D_f(Q_Z, P_Z)$ between two probability distributions $P_Z$ and $Q_Z$, both defined over $\Z$.
 $P_Z$ has known density $p(z)$, while $Q_Z$ with density  $q(z)$ admits the factorization $\smash{q(z) := \int_\X q(z|x)q(x) dx}$ where access to independent samples from the distribution $Q_X$ with unknown density $q(x)$ and full knowledge of the conditional distribution $\smash{Q_{Z|X}}$ with density $q(z|x)$ are assumed.
-In most cases $Q_Z$ is intractable due to the integral and so is $D_f(Q_Z \| P_Z)$.
+In most cases $Q_Z$ is intractable due to the integral and so is $D_f(Q_Z , P_Z)$.
 As a concrete example, these assumptions are often satisfied in applications of modern unsupervised generative modeling with deep autoencoder architectures,
 where $\X$ and $\Z$ would be \emph{data} and \emph{latent} spaces, $\smash{P_Z}$ the \emph{prior}, $\smash{Q_X}$ the \emph{data distribution}, $\smash{Q_{Z|X}}$ the \emph{encoder}, and $\smash{Q_Z}$ the \emph{aggregate posterior}.
 
 Given independent observations $\smash{X_1, \ldots, X_N}$ from $\smash{Q_X}$, the finite mixture $\smash{\hat{Q}_Z^N := \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i}}$ can be used to approximate the continuous mixture $\smash{Q_Z}$. 
-The main contribution of this chapter is to approximate the intractable $\smash{D_f(Q_Z \| P_Z)}$ with $\smash{D_f(\hat{Q}_Z^N \| P_Z)}$, a quantity that can be estimated to arbitrary precision using Monte-Carlo sampling since both distributions have known densities, and to theoretically study conditions under which this approximation is reasonable.
-$\smash{D_f(\hat{Q}_Z^N \| P_Z)}$ is denoted the Random Mixture (RAM) estimator and rates at which it converges to $\smash{D_f(Q_Z \| P_Z)}$ as $N$ grows are derived.
+The main contribution of this chapter is to approximate the intractable $\smash{D_f(Q_Z , P_Z)}$ with $\smash{D_f(\hat{Q}_Z^N , P_Z)}$, a quantity that can be estimated to arbitrary precision using Monte-Carlo sampling since both distributions have known densities, and to theoretically study conditions under which this approximation is reasonable.
+$\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is denoted the Random Mixture (RAM) estimator and rates at which it converges to $\smash{D_f(Q_Z , P_Z)}$ as $N$ grows are derived.
 Similar guarantees are also provided for RAM-MC---a practical Monte-Carlo based version of RAM.
 By side-stepping the need to perform density estimation, one obtains \emph{parametric} rates of order $N^{-\gamma}$, where $\gamma$ is independent of the dimension (see Tables \ref{table:convergence} and \ref{table:concentration}), although the constants may still in general show exponential dependence on dimension.
 This is in contrast to the agnostic setting where \emph{both} nonparametric rates and constants are exponential in dimension. 
@@ -89,18 +89,7 @@ These results have immediate implications to existing literature.
 For the particular case of the $\KL$ divergence, a similar approach has been \emph{heuristically} applied independently by several authors for estimating the mutual information \cite{poolevariational} and total correlation \cite{chen2018isolating}.
 The results presented in this chapter provide strong theoretical grounding for these existing methods by showing sufficient conditions for their consistency.
 
-\todo{Possibly move later}
-
-A final piece of related work is \cite{burda2015importance}, which proposes to reduce the gap introduced by Jensen's inequality in the derivation of the classical evidence lower bound (ELBO) by using multiple Monte-Carlo samples from the approximate posterior $\smash{Q_{Z|X}}$.
-This is similar in flavour to the approach considered here, but fundamentally different since we use multiple samples from the \emph{data distribution} to reduce a different Jensen gap.
-To avoid confusion, we note that replacing the ``regularizer'' term $\mathbb{E}_X[\KL(Q_{Z|X} \| P_Z)]$ of the classical ELBO with expectation of our estimator $\E_{\XN}[\KL(\hat{Q}_Z^N\| P_Z)]$ results in an upper bound of the classical ELBO (see Proposition~\ref{prop:upper-bound}) but is itself not in general an evidence lower bound:
-%
-\begin{align*}
-    \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) - \KL(Q_{Z|X} \| P_Z ) \Big] \leq \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) \Big] - \mathbb{E}_{\XN} \Big[ \KL(\hat{Q}_Z^N \| P_Z ) \Big].
-\end{align*}
-
-\todo{rewrite}
-Since the setting we consider arises naturally in the study of autoencoder-based generative models, the next Section \ref{sec:generative-modelling-tour} provides an overview of the important parts of generative modelling in the context of this chapter.
+Since the setting we consider arises naturally in the study of autoencoder-based generative models, the following Section \ref{sec:generative-modelling-tour} provides an overview of the key concepts in the generative modelling literature in the context of this chapter.
 Following this, Section \ref{sec:theory} introduces the RAM and RAM-MC estimators and presents the main theoretical results, including rates of convergence for the bias (Theorems~\ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general}) and tail bounds (Theorems \ref{thm:concentration} and \ref{thm:mc-variance}).
 In Section \ref{sec:experiments} we validate our results in both synthetic and real-data experiments. 
 In Section \ref{sec:applications} we discuss further applications of our results.
@@ -112,11 +101,11 @@ Additional details and proofs can be found in Appendix \ref{chapter:appendix-lat
 
 Generative modelling has in recent years become synonymous with the artificial generation of natural images or audio \cite{something_for_images, wavenet?}.
 The mathematical formulation of this is, however, more general.
-Suppose that we are given a dataset of samples. 
-These are presumed to have been drawn \iid~from some unknown data distribution $Q_X$.
+Suppose that we are given a dataset of samples that have been drawn \iid~from some unknown data distribution $Q_X$.
 The high level goal of generative modelling is to learn a distribution $P_X \approx Q_X$ from which new samples can be drawn. 
-
-To make this precise, one must specify a choice of \emph{divergence}\footnote{Defined in Section \ref{subsec:gen-model-divergence}} $D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, and the goal becomes:
+To make this precise, one must specify a choice of \emph{divergence}
+%\footnote{Defined in Section \ref{subsec:gen-model-divergence}} 
+$D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, and the goal becomes:
 %
 \begin{align*}
 \min_{\theta \in \Theta} \ D\left(P_X^\theta,  Q_X \right)
@@ -125,7 +114,7 @@ To make this precise, one must specify a choice of \emph{divergence}\footnote{De
 There are two main challenges in practically implementing and solving this problem.
 First, when the data are drawn from complex high dimensional distributions, how can this be modelled with a parameterised distribution that is computationally tractable?
 Second, what are appropriate choices of divergences, and how can they be estimated or minimised with respect to the parameters $\theta$?
-We will tackle these two questions in the next parts. 
+We will discuss these questions in the rest of this section. 
 
 We will see that one of the main families of methods for solving this problem, autoencoders, involve the introduction of a latent space and encoder, a mapping from the data to the latent space.
 The main contribution of this chapter is a learning theoretic analysis of the estimation of divergences in this latent space. 
@@ -139,7 +128,7 @@ and may in general be dirac-delta distributions, in which case the associated ma
 
 $P_Z$ is often referred to as a \emph{prior} or \emph{noise distribution} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
 The conditional distributions are usually referred to as \emph{generators} or \emph{decoders} in the literature, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
-If the conditional distributions correspond to dirac-delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
+If the conditional distributions they correspond to are dirac-delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
 
 In practice, generators are usually implemented as a deep neural network.
 This is straightforward in the deterministic case: $g^\theta$ is simply a function and can thus be represented as a deep network with parameters $\theta$.
@@ -155,8 +144,8 @@ p^\theta(x) = \int p^\theta(x|z) p(z) dz.
 %
 This integral will generally be intractable, meaning that $P_X^\theta$ has unknown density in practice.
 However, the important reason that LVMs are useful is that samples from $P_X^\theta$ can be drawn easily:
-one samples first a value $z\sim P_Z$ and then samples $x \sim P^\theta_{X|Z=z}$. 
-All relevant distributions can be chosen so that these sampling procedures are simple.
+one samples first a value $z\sim P_Z$ and then $x \sim P^\theta_{X|Z=z}$. 
+All relevant distributions can be chosen so that these sampling procedures are simple, e.g.\:if $P_Z$ and all $P^\theta_{X|Z}$ are Gaussian. 
 
 
 \subsection{Integral Probability Metrics and $f$-divergences}\label{subsec:gen-model-divergence}
@@ -174,19 +163,39 @@ For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative 
 We will discuss in the next section how this can be done, discussing here the two main families 
 of divergences that occur in the machine learning literature generally, and the generative modelling literature in particular. 
 
-\subsubsection{Integral Probability Metrics (IPMs)}
+\subsubsection{Integral Probability Metrics (IPMs)}\label{subsec:intro-ipm}
 
 
 IPMs are divergences that can be written as
-
+%
 \begin{align*}
 D_{\mathcal{H}}(P, Q) = \sup_{h\in\mathcal{H}} \left| \int h(x) dP(x) - \int h(x) dQ(x) \right|
 \end{align*}
-
+%
 for some restricted function class $\mathcal{H}: \mathcal{X} \to \mathbb{R}$. 
-As the name suggests, such divergences are in fact metrics, obeying the triangle inequality and symmetry.
+If $\mathcal{H}$ is too small, $D_\mathcal{H}$ may not be a divergence.
+For instance, taking $\mathcal{H}$ to contain only the constant $0$ function results in $D_{\mathcal{H}}(P, Q) = 0$ for any $P$ and $Q$.
+On the other hand, if $\mathcal{H}$ is too rich then $D_{\mathcal{H}}$ may not be useful: 
+taking $\mathcal{H}$ to be the set of all real-valued measurable functions leads to the trivial (Theorem 1, \cite{sriperumbudur2009integral})
+\begin{align*}
+D_{\mathcal{H}}(P, Q) = \begin{cases} 0 &\text{ if } P = Q \\ \infty &\text{ if } P \not= Q\end{cases}
+\end{align*}
+%
+which would in practice not be useful since a degree of smoothness in $P$ and $Q$ is normally desirable.
+Provided $\mathcal{H}$ is sufficiently rich that $D_{\mathcal{H}}$ is a divergence, it is in fact a metric, obeying the triangle inequality and symmetry.
+These properties are inherited from the function $d(x,y) = |x - y|$.
+%For symmetry, observe that for any $h$, 
+%%
+%\begin{align*}
+%\left| \int h(x) dP(x) - \int h(x) dQ(x) \right| = \left| \int h(x) dQ(x) - \int h(x) dP(x) \right|,
+%\end{align*}
+%%
+%and thus taking the supremum over $h \in \mathcal{H}$ yields $D_{\mathcal{H}}(P, Q) = D_{\mathcal{H}}(Q, P)$. 
+%For the triangle inequality
 
-Commonly encountered IPMs include the Wasserstein distance (where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$), the Total Variation distance (where $\mathcal{H}$ is the set of all functions with infinity norm $1$) and the Maximum Mean Discrepancy (where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \cite{gretton}).
+
+Commonly encountered IPMs include Wasserstein or optimal transport distances (where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$ with respect to some metric), the Total Variation distance (where $\mathcal{H}$ is the set of all functions with infinity norm $1$) and the Maximum Mean Discrepancy (where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \cite{gretton}). 
+Optimal transport distances will be discussed further in the section on Wasserstein Autoencoders, making use of a different formulation of these distances than as IPMs.
 
 \subsubsection{$f$-divergences}
 
@@ -205,7 +214,7 @@ Commonly encountered IPMs include the Wasserstein distance (where $\mathcal{H}$ 
 %Of them, possibly the least well-known in the machine learning literature are $f_\beta$-divergences \cite{osterreicher2003new}. 
 %These symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$. Special cases include squared-Hellinger ($\mathrm{H}^2$) for ${\beta=\frac{1}{2}}$,  Jensen-Shannon (JS) for $\beta=1$, Total Variation (TV) for $\beta=\infty$. 
 
-\todo{flesh out this section, give more properties of $f$-divergences?}
+%\todo{flesh out this section, give more properties of $f$-divergences?}
 
 Given a convex real-valued function $f$ defined on $(0, \infty)$ such that $f(1)=0$, the $f$-divergence between two distributions $P$ and $Q$ with densities $p(x)$ and $q(x)$ is
 %
@@ -213,24 +222,41 @@ Given a convex real-valued function $f$ defined on $(0, \infty)$ such that $f(1)
 D_f(P, Q) = \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx.
 \end{align*}
 %
-Intuitively, the $f$-divergence compares the density ratio of the two distributions; if $P=Q$, the density ratio is $1$ and thus $D_f(P,Q) = 0$ since $f(1)=0$. 
-%It can be shown using convexity of $f$ that $D_f$ is always non-negative.
+This is defined for distributions $P$ and $Q$ for which $P$ is absolutely continuous with respect to $Q$, meaning that the density ratio $p(x)/q(x)$ is finite for all $x$, and is usually taken to be $\infty$ otherwise.
+The fact that $f(1)=0$ implies that $D_f(P,P) = 0$ for any $P$.
+Positivity of $D_f$ follows from convexity of $f$ and Jensen's inequality:
+%
+\begin{align*}
+D_f(P, Q) &= \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx \\ 
+&\geq f\left(\int \frac{p(x)}{q(x)} dx\right) \\
+&= f(1) = 0.
+\end{align*}
+%
+For any $f$ that is strictly convex, the above inequality is strict if $P\not=Q$.
+This can similarly be shown for any $f$ for which there exists some $c$ such that $f(u) > c(u-1)$ for all $u\not=1$. 
+Indeed, for any $P \not= Q$ there exists a set $A \subset \mathcal{X}$ with positive measure under $Q$ on which $p(x)/q(x) \not= 1$ (if this were not the case, we would have $p(x)/q(x) = 1$ everywhere that $Q$ puts mass and so $P=Q$).
+Thus,
+\begin{align*}
+D_f(P, Q) &= \int_A f\left(\frac{p(x)}{q(x)}\right) q(x) dx +  \int_{\mathcal{X} \setminus A} f\left(\frac{p(x)}{q(x)}\right) q(x) dx\\ 
+&> \int_A c \left(\frac{p(x)}{q(x)} - 1\right) q(x) dx +  \int_{\mathcal{X} \setminus A} c \left(\frac{p(x)}{q(x)} - 1\right) q(x) dx\\ 
+&= 0.
+\end{align*}
 
-By selecting different choices for $f$, several commonly encountered divergences can be recovered, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \cite{osterreicher2003new}.
+By selecting different choices for $f$, several commonly encountered divergences can be recovered, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
 These symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$. Special cases include squared-Hellinger ($\mathrm{H}^2$) for ${\beta=\frac{1}{2}}$,  Jensen-Shannon (JS) for $\beta=1$, Total Variation (TV) for $\beta=\infty$. 
 
-One of the useful properties of $f$-divergences is that for any constant $c$, replacing $f(u)$ by $f(u) + c(u-1)$ does not change the divergence $D_f$. 
+One of the useful properties of $f$-divergences is that for any constant $c$, replacing $f(u)$ by $\tilde{f}(u) = f(u) + c(u-1)$ does not change the divergence $D_f$. 
 To see this, observe that
 %
 \begin{align*}
-\int \left[ f\left(\frac{p(x)}{q(x)}\right) + c\left(\frac{p(x)}{q(x)} - 1\right) \right] q(x) dx = 
-\int f\left(\frac{p(x)}{q(x)}\right) q(x) dx + c \int p(x) - q(x) dx = D_f(P, Q)
+D_{\tilde{f}}(P, Q) &= \int \left[ f\left(\frac{p(x)}{q(x)}\right) + c\left(\frac{p(x)}{q(x)} - 1\right) \right] q(x) dx \\
+&=  \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx + c \int p(x) - q(x) dx \\
+&= D_f(P, Q)
 \end{align*}
 %
 since $p(x)$ and $q(x)$ integrate to $1$.
-
 It is often convenient to work with $f_0(u) := f(u) - f'(1)(u-1)$ which is decreasing on $(0, 1)$ and increasing on $(1, \infty)$ and satisfies $f'_0(1)=0$.
-In Table \ref{table:f-fns} we list the forms of the function $f_0$ for each of the divergences considered in this paper.
+In Table \ref{table:f-fns} we list the forms of the function $f_0$ for each of the divergences considered in this chapter.
 
 
 
@@ -272,6 +298,31 @@ In Table \ref{table:f-fns} we list the forms of the function $f_0$ for each of t
 %Intuitively, such divergences measure the discrepancy between the two distributions by seeking functions which are maximal on one distribution and minimal on the other. 
 
 
+$f$-divergences also admit a variational form as a result of convex conjugacy \citep{nguyen10ratio}.
+Any convex function $f(u)$ has a conjugate $f^*(t)$ defined as
+%
+\begin{align*}
+f^*(t) = \sup_{u \in \dom(f)} \{ut - f(u)\}.
+\end{align*}
+%
+The resulting function $f^*$ is itself convex, and
+provided that $f$ is continuous, $f$ and $f^*$ are dual in the sense that $f^{**} = f$.
+This means that $f$ can be written as
+%
+\begin{align*}
+f(u) = \sup_{t \in \dom(f^*)} \{ut - f^*(t)\}.
+\end{align*}
+%
+Plugging this into the definition of $f$-divergences yields
+%
+\begin{align*}
+D_f(P, Q) &= \int q(x) \sup_{t \in \dom(f^*)} \left\{t \frac{p(x)}{q(x)} - f^*(t) \right\} dx \\
+& \geq \sup_{T \in \mathcal{T}} \left\{ \int p(x) T(x) dx - \int q(x) f^*(T(x)) \right\} dx \\
+&= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
+\end{align*}
+where $\mathcal{T}$ is an arbitrary class of functions $\mathcal{X} \to \dom(f^*) \subseteq \mathbb{R}$.
+In this chapter we do not make use of this variational formulation of $f$-divergences, but it will be used in explaining Generative Adversarial Networks in the next section.
+
 \subsection{Examples of generative models}
 
 To actually solve the generative modelling problem, it must be possible to minimise $D(P^\theta_X, Q_X)$ with respect to the parameters $\theta$ in a computationally tractable way.
@@ -279,7 +330,7 @@ In general it is infeasible to estimate $D(P^\theta_X, Q_X)$ directly, or even t
 Thus, one must resort to approximations.
 
 
-There are two families of methods that introduce auxiliary functions as computational tricks to bound or estimate $D(P^\theta_X, Q_X)$ in a computationally tractable way.
+There are two main families of methods that introduce auxiliary functions as computational tricks to bound or estimate $D(P^\theta_X, Q_X)$ in a computationally tractable way.
 These are \emph{Generative Adversarial Networks (GANs)}, which introduce a \emph{discriminator} $d:\mathcal{X} \to \mathbb{R}$, and \emph{autoencoders}, which introduce an \emph{encoder} $e:\mathcal{X} \to \mathcal{Z}$.
 
 In the following subsections we discuss GANs and two types of autoencoders, Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), showing how specific choices of divergences can be approximated.
@@ -287,55 +338,35 @@ In the following subsections we discuss GANs and two types of autoencoders, Vari
 \subsubsection{Generative Adversarial Networks (GANs)}
 
 GANs are a family of methods that approximately minimise any $f$-divergence and some choices of IPMs. 
-The original GAN paper \citep{goodfellow} introduced the key idea: a discriminator $d^\phi: \mathcal{X} \to \mathbb{R}$ is introduced and trained to distinguish between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$. 
-The generator $g^\theta$ is trained simultaneously to maximise the loss of the discriminator. 
-This surrogate loss for the generator is computationally tractable when $g^\theta$ and $d^\phi$ are both implemented as neural networks.
-
-In \cite{goodfellow}, the loss of the discriminator is implemented as logistic regression with the output $d^\phi(x)$ taken to be the logit, so that the loss is
-
+\cite{goodfellow2014generative} introduced the idea of training a discriminator $d^\phi: \mathcal{X} \to \mathbb{R}$ to distinguish between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$, which then provides a surrogate loss for a generator $g^\theta$, trained simultaneously to maximise the loss of the discriminator. 
+In \cite{goodfellow2014generative}, the loss of the discriminator is implemented as logistic regression with the output $d^\phi(x)$ taken to be the logit, so that the loss is
+%
 \begin{align*}
 L(\theta, \phi) = \mathbb{E}_{x\sim Q_X}\left[ \log d^\phi(x) \right] - \mathbb{E}_{x \sim P_Z} \left[\log(1 - d^\phi(g^\theta(z)) \right].
 \end{align*}
-
+%
 Stochastic gradients of this loss can be taken with respect to both $\phi$ and $\theta$ by using minibatch samples of data to approximate the outer expectations when $d^\phi$ and $g^\theta$ are both neural networks.
-It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence. 
+It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence.
 
 Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractable, the surrogate loss $L(\theta, \phi)$ is (up to constants) a lower bound on this.
 Hence the Jensen-Shannon divergence can be approximately minimised by \emph{maximising} $L(\theta, \phi)$ with respect to $\phi$ and minimising this with respect to $\theta$.
 
-\cite{f-gan}, building on the work of \cite{nguyen}, generalised this result to arbitrary $f$-divergences using Fenchel conjugacy of convex functions.
-Any convex function $f(u)$ has a conjugate $f^*(t)$ defined as \todo{check that f(x) is replaced by f(u) everywhere}
+\cite{nowozin2016f}, building on the work of \cite{nguyen10ratio}, generalised this result to arbitrary $f$-divergences using the variational formulation of $f$-divergences.
 %
 \begin{align*}
-f^*(t) = \sup_{u \in \dom(f)} \{ut - f(u)\}.
+D_f(P, Q) &\geq \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
 \end{align*}
 %
-The resulting function $f^*$ is itself convex, and
-provided that $f$ is continuous\footnote{It is actually sufficient for $f$ to be \emph{lower semi-continuous}, though this is a technical detail that is out of the scope of this introduction.}, $f$ and $f^*$ are dual in the sense that $f^{**} = f$.
-This means that $f$ can be written as
-%
-\begin{align*}
-f(u) = \sup_{t \in \dom(f^*)} \{ut - f^*(t)\}.
-\end{align*}
-
-Plugging the above equality into the definition of $f$-divergences yields
-%
-\begin{align*}
-D_f(P, Q) &= \int q(x) \sup_{t \in \dom(f^*)} \left\{t \frac{p(x)}{q(x)} - f^*(t) \right\} dx \\
-& \geq \sup_{T \in \mathcal{T}} \left\{ \int p(x) T(x) dx - \int q(x) f^*(T(x)) \right\} dx \\
-&= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
-\end{align*}
-%
-where $\mathcal{T}$ is an arbitrary class of functions $\mathcal{X} \to \dom(f^*) \subseteq \mathbb{R}$, which could be implemented as a neural network.
-Thus, parameterising $T$ by $\theta$ yields the surrogate loss
+where the set of functions $\mathcal{T}$ is implemented as a neural network.
+Thus, parameterising $T$ by $\phi$ yields the surrogate loss
 %
 \begin{align*}
 L_f(\phi, \theta) = \mathbb{E}_{x \sim Q_X} \left[ T^\phi(x) \right] - \mathbb{E}_{z \sim P_Z} \left[ f^*(T^\phi(g^\theta(x))) \right] \leq D_f(P^\theta_X, Q_X)
 \end{align*}
 %
 As with the original GAN objective, stochastic gradients of this surrogate loss can be computed. 
-The function $T^\theta$ corresponds to the discriminator introduced by \cite{goodfellow}, but the above derivation holds for arbitrary choices of $f$. 
-\cite{nowozin et al} thus demonstrated how the GAN `trick' can be applied to other $f$-divergences to get computational tractable lower bounds of $D_f(P^\theta_X, Q_X)$.
+The function $T^\phi$ corresponds to the discriminator introduced by \cite{goodfellow2014generative}, but the above derivation holds for arbitrary choices of $f$. 
+\cite{nowozin2016f} thus demonstrated how the GAN `trick' can be applied to other $f$-divergences to get computational tractable lower bounds of $D_f(P^\theta_X, Q_X)$.
 
 A similar idea can also be used to approximately minimise IPMs $D_\mathcal{H}(P^\theta_X, Q_X)$, provided that the function class $\mathcal{H}$ can be parameterised in practice.
 If $\mathcal{H}$ is such that $h \in \mathcal{H}$ implies that $-h \in \mathcal{H}$, $D_\mathcal{H}$ can be written without the inner absolute function, leading to
@@ -350,20 +381,20 @@ where the inequality holds for any $h \in \mathcal{H}$.
 Here $h$ plays the role of the discriminator. 
 If it is differentiable, stochastic gradients of the loss can be obtained with respect its parameters.
 Note that in contrast to the $f$-divergence case above, the discriminator $h$ is restricted to belong to a certain class of functions which can complicate specifying the parameterisation.
-The most notable example of an IPM being used for generative modelling is the Wasserstein GAN of \cite{WGAN}. 
+The most notable example of an IPM being used for generative modelling is the Wasserstein GAN of \cite{AB17}. 
 Here, the Wasserstein distance is used, corresponding to $h$ being restricted to having Lipschitz constant at most $1$. 
 For certain neural network architectures, including those composed of fully-connected and convolutional layers, this can be enforced by weight clipping.
 
 \subsubsection{Variational Autoencoders (VAEs)}
 
-VAEs \cite{kingma, rezende} are a method to minimize the KL-divergence between model and data distributions, defined as
-
+VAEs \citep{kingma2013auto, rezende2014stochastic} are a method to minimize the KL-divergence between model and data distributions, defined as
+%
 \begin{align*}
 D_{\text{KL}}(Q_X, P^\theta_X) &= \int q(x) \log \left( \frac{q(x)}{p^\theta(x)} \right) dx \\
 &= \int q(x) \log q(x) - \int q(x) \log p^\theta(x) dx.
 \end{align*}
-
-The first term above, the negative \emph{differential entropy} of $Q_X$, is not possible to estimate without knowledge of the density $q(z)$.
+%
+The first term above, the negative of the \emph{differential entropy} of $Q_X$, often written $H(Q_X)$, cannot be estimated without knowledge of the density $q(x)$.
 However, since it is constant as a function of $\theta$, it can be ignored.
 The term $\log p^\theta(x)$ inside the second integral is known as the \emph{log-likelihood} or \emph{evidence}. 
 Although the density $p^\theta(x)$ is intractable, the evidence can be tractably lower bounded leading to the so-called \emph{evidence lower bound} (ELBO), which in turn leads to a tractable \emph{upper} bound on $D_{\text{KL}}(Q_X, P^\theta_X)$. 
@@ -371,17 +402,17 @@ Although the density $p^\theta(x)$ is intractable, the evidence can be tractably
 First, observe that the log-likelihood can be written 
 %
 \begin{align*}
-\log p^\theta(x) &= \log \left( \int p^\theta(x|z) p(z) dz \right)
+\log p^\theta(x) &= \log \left( \int p^\theta(x|z) p(z) dz \right).
 \end{align*}
 %
-For any distribution $q^\phi(z|x)$ depending on parameter $\phi$ and the value of $x$, we can multiply and divide inside the integral, leaving its value unchanged.
+Given any distribution $q^\phi(z|x)$ depending on parameter $\phi$ and the value of $x$, we can multiply and divide inside the integral, leaving its value unchanged.
 This leads to
 %
 \begin{align*}
 \log p^\theta(x) &= \log \left( \int p^\theta(x|z) \frac{p(z)}{q^\phi(z|x)} q^\phi(z|x) dz \right) \\
 &= \log \left( \mathbb{E}_{q^\phi(z|x)} \left[  p^\theta(x|z) \frac{p(z)}{q^\phi(z|x)} \right]\right) \\
 &\geq \mathbb{E}_{q^\phi(z|x)} \left[ \log p^\theta(x|z) + \log p(z) - \log q^\phi(z|x) \right] \\
-&= \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z)  - D_{\text{KL}}\left(q^\phi(z|x), p(z)\right) \\
+&= \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z)  - D_{\text{KL}}\left(q^\phi(z|x), p(z)\right),
 \end{align*}
 %
 where the inequality follows from Jensen's inequality due to the concavity of $\log$.
@@ -415,9 +446,10 @@ The term (ii) was shown by \cite{hoffman2016elbo} to be equivalent to $D_{\text{
 
 \subsubsection{Wasserstein Autoencoders (WAEs)}
 
-\todo{Define WAE-MMD and WAE-GAN informally}
+WAEs \citep{tolstikhin2017wasserstein} are concerned with optimal transport or Wasserstein distances.
+These were discussed briefly in Section \ref{subsec:intro-ipm} as they admit a formulation as IPMs. 
+In this section we will make use of a different formulation of these distances.
 
-WAEs \citep{tolstikhin et al} are concerned with \emph{optimal transport} or \emph{1-Wasserstein} distances.
 Let $c$ be any metric on $\mathcal{X}$.
 For intuition, $c(x, x')$ may be thought of as a function specifying the cost of transporting a point from $x$ to $x'$.
 The optimal transport distance between two distributions $P$ and $Q$ over $\mathcal{X}$ is then the minimal cost incurred by transporting the probability mass of $P$ to that of $Q$.
@@ -445,29 +477,29 @@ In our case of interest, we thus have
 OT_c(P_X^\theta, Q_X) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right].
 \end{align*}
 %
-In practice, this minimisation problem cannot be solved: given a candidate conditional distribution $\gamma(x'|x)$ it is not practically possible to verify whether or not $\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$ holds since only samples from $Q_X$ are available and the density $p^\theta_X(x)$ is intractable.
+In practice, this minimisation problem cannot be solved directly: given a candidate conditional distribution $\gamma(x'|x)$ it is not practically possible to verify whether or not $\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$ holds since only samples from $Q_X$ are available and the density $p^\theta_X(x)$ is intractable.
 
-\cite{tolstikhin} prove the following result that gives a handle on this problem:
-If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be written as a composition $\gamma(x'|x) = \int p^\theta(x'|z) q^\phi(z|x) dz$ where $q(z|x)$ is a conditional distribution satisfying $\int q(z|x) q(x) dx = p(z)$. 
-That is, any $\gamma$ can be `factored through' the latent space by introducing an encoder $q(z|x)$, replacing the constraint of distribution matching in the data-space ($\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$) with distribution matching in the latent space ($\int q(z|x) q(x) dx = p(z)$).
+\cite{tolstikhin2017wasserstein} proved the following result, giving a handle on this problem:
+If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be written as a composition $\gamma(x'|x) = \int p^\theta(x'|z) q^\phi(z|x) dz$ where $q^\phi(z|x)$ is a conditional distribution satisfying $\int q^\phi(z|x) q(x) dx = p(z)$. 
+That is, any $\gamma$ can be `factored through' the latent space by introducing an encoder $q^\phi(z|x)$, replacing the constraint of distribution matching in the data-space ($\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$) with distribution matching in the latent space ($\int q^\phi(z|x) q(x) dx = p(z)$).
 
-Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if the $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and the generator will result in $P_X^\theta$. 
+Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and the generator will result in $P_X^\theta$. 
 While it is clear that the composition of any such encoder and the generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
-This is proved in Theorem 1 of \cite{tolstikhin}.
+This is proved in Theorem 1 of \cite{tolstikhin2017wasserstein}.
 
 Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder, and $g$ for the deterministic generator, we obtain the following alternative statement of the optimal transport distance in the LVM setting:
 %
 \begin{align*}
 OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, G(z)) \right].
 \end{align*}
-
+%
 This optimisation problem is again not feasible to solve due to the hard constraint, 
-but can be made computationally feasible by relaxing the constraint to obtain the WAE objective
-
+but can be made computationally feasible by relaxing the constraint to obtain the WAE objective:
+%
 \begin{align}
 L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, G^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}}
 \end{align}
-
+%
 where $D$ is some divergence, $\lambda$ is a positive scalar and the encoder is given parameter $\phi$.
 For general choices of $\lambda$ and $D$, $\inf_{\phi} L_{\text{WAE}}^{\lambda, D}(\theta, \phi)$ is neither an upper nor lower bound on the original objective $OT_c(P_X^\theta, Q_X)$, but a heuristic approximation due to the relaxation of the constraint. 
 
@@ -476,10 +508,10 @@ For general choices of $\lambda$ and $D$, $\inf_{\phi} L_{\text{WAE}}^{\lambda, 
 Observe that term (i) of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and their reconstruction obtained by pushing through the encoder and decoder.
 This is therefore simple to estimate and hence optimise with respect to the parameters $\phi$ and $\theta$.
 The term (ii) is still potentially challenging to estimate depending on the choice of $D$. 
-\cite{tolstikhin} propose two choices for $D$ which can be estimated based on samples from $P_Z$ and $Q_Z^\phi$: the Maximum Mean Discrepancy (MMD) \cite{gretton} which can be estimated directly, leading to WAE-MMD, and a GAN style estimation of the Jensen-Shannon divergence by introducing an additional discriminator to obtain a lower bound on the divergence, leading to WAE-GAN. 
+\cite{tolstikhin2017wasserstein} propose two choices for $D$ which can be estimated based on samples from $P_Z$ and $Q_Z^\phi$: the Maximum Mean Discrepancy (MMD) \citep{gretton2012kernel} which can be estimated directly, leading to WAE-MMD, and a GAN style estimation of the Jensen-Shannon divergence by introducing an additional discriminator to obtain a lower bound on the divergence, leading to WAE-GAN. 
 
 Estimating the discrepancy between $P_Z$ and $Q_Z^\phi$ using sample-based methods does not make use of a significant degree of structure that is present in the problem. $P_Z$ is typically chosen to be a simple distribution with known density. While $Q_Z^\phi$ may be complex, its density can be decomposed as $q^\phi(z) = \mathbb{E}_{x\sim Q_X} q^\phi(z|x)$ where $q^\phi(z|x)$ is also typically chosen to be simple (e.g. Gaussian) and $Q_X$ can be sampled.
-The main contribution of this chapter, beginning in the next section, is to propose and analyse an estimator for the case that $D$ is chosen to be an $f$-divergence. 
+The main contribution of this chapter, beginning in the next section, is to propose and analyse an estimator for the case that $D$ in (ii) is chosen to be an $f$-divergence. 
 
 
 \section{Random mixture estimator and convergence results}\label{sec:theory}
@@ -490,30 +522,30 @@ ${P_Z}$ and ${Q_Z}$ defined over $\Z$ with known density $p(z)$ and intractable 
 Our ultimate goal is to estimate the intractable $f$-divergence
 %
 \begin{align*}
-    D_f(Q_Z \| P_Z) = \int f \left( \frac{q(z)}{p(z)} \right) p(z) dz.
+    D_f(Q_Z , P_Z) = \int f \left( \frac{q(z)}{p(z)} \right) p(z) dz.
 \end{align*}
 %
-In our setting $Q_Z$ is intractable and so is ${D_f(Q_Z \| P_Z)}$.
+In our setting $Q_Z$ is intractable and so is ${D_f(Q_Z , P_Z)}$.
 Substituting $Q_Z$ with a sample-based finite mixture ${\hat{Q}_Z^N := \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i}}$ leads to our proposed 
 {\bf Random Mixture estimator (RAM)}:
 %
 \begin{align}\textstyle
-    D_f\bigl(\hat{Q}_Z^N \| P_Z\bigr) := D_f\Big(\frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} \big\| P_Z\Big).
+    D_f\bigl(\hat{Q}_Z^N , P_Z\bigr) := D_f\Big(\frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} , P_Z\Big).
 \end{align}
 %
 Although $\smash{\hat{Q}_Z^N}$ is a function of $\smash{\XN}$ we omit this dependence in notation for brevity. 
-In this section we identify sufficient conditions under which $\smash{D_f(\hat{Q}_Z^N \| P_Z)}$ is a ``good'' estimator of $\smash{D_f(Q_{Z} \| P_Z)}$.
+In this section we identify sufficient conditions under which $\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is a ``good'' estimator of $\smash{D_f(Q_{Z} , P_Z)}$.
 More formally, we establish conditions under which the estimator is asymptotically unbiased, concentrates to its expected value and can be practically estimated using Monte-Carlo sampling.
 
 \subsection{Convergence rates for the bias of RAM}
-The following proposition shows that $D_f(\hat{Q}_Z^N \| P_Z)$ upper bounds $D_f(Q_{Z} \| P_Z)$ in expectation for any finite $N$, and that the upper bound becomes tighter with increasing $N$:
+The following proposition shows that $D_f(\hat{Q}_Z^N , P_Z)$ upper bounds $D_f(Q_{Z} , P_Z)$ in expectation for any finite $N$, and that the upper bound becomes tighter with increasing $N$:
 %
 \begin{proposition}\label{prop:upper-bound}
 Let $M \leq N$ be integers. Then
 \begin{align}
 \label{eq:our-estimate}
-    D_f(Q_Z \| P_Z) \ \leq 
-    \mathbb{E}_{\mathbf{X}^N} \bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr] \  \leq \ \mathbb{E}_{\mathbf{X}^M} \bigl[D_f(\hat{Q}_Z^M \| P_Z)\bigr].
+    D_f(Q_Z , P_Z) \ \leq 
+    \mathbb{E}_{\mathbf{X}^N} \bigl[D_f(\hat{Q}_Z^N , P_Z)\bigr] \  \leq \ \mathbb{E}_{\mathbf{X}^M} \bigl[D_f(\hat{Q}_Z^M , P_Z)\bigr].
 \end{align}
 \end{proposition}
 \begin{proof}[Proof sketch (full proof in Appendix \ref{proof:prop1})]
@@ -522,13 +554,13 @@ The second holds since a sample ${\XM}$ can be drawn by sub-sampling (without re
 \end{proof}
 As a function of $N$, the expectation is a decreasing sequence that is bounded below.
 By the monotone convergence theorem, the sequence converges.
-Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} in this section give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} \| P_Z)$ as $N\to\infty$ for a variety of $f$ and provide rates at which this happens, summarized in Table \ref{table:convergence}.
+Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} in this section give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} , P_Z)$ as $N\to\infty$ for a variety of $f$ and provide rates at which this happens, summarized in Table \ref{table:convergence}.
 The two theorems are proved using different techniques and assumptions. 
 These assumptions, along with those of existing methods (see Table~\ref{table:convergence-other}) are discussed at the end of this section.
 
 \renewcommand{\arraystretch}{1}
 \begin{table}
- \caption{Rate of bias $\E_{\XN} D_f\big(\hat{Q}^N_{Z} \| P_Z\big) - D_f\left(Q_{Z} \| P_Z\right)$.}
+ \caption{Rate of bias $\E_{\XN} D_f\big(\hat{Q}^N_{Z} , P_Z\big) - D_f\left(Q_{Z} , P_Z\right)$.}
  \label{table:convergence}
  \centering
  \begin{tabular}{c c c c c c c c c } 
@@ -546,7 +578,7 @@ $\scriptstyle{-1<\alpha<1}$ \\
 \begin{theorem}[Rates of the bias]\label{thm:fast-KL-rate}
 If
 $\E_{X\sim Q_X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr]$ and
-$\KL\left( Q_{Z} \| P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
+$\KL\left( Q_{Z} , P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
 \end{theorem}
 \begin{proof}[Proof sketch (full proof in Appendix \ref{appendix:subsec:thm1})]
 There are two key steps to the proof. 
@@ -558,7 +590,7 @@ The second step is to bound ${\E_{\XN}\bigl[D_f(\hat{Q}_Z^N, Q_Z)\bigr]}$ in ter
 %
 \begin{theorem}[Rates of the bias]\label{thm:convergence-rate-general}
 If $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$ is finite then
-the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
+the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
 \end{theorem}
 \begin{proof}[Proof sketch (full proof in Appendix \ref{proof:thm2})]
 Denoting by $\hat{q}_N(z)$ the density of $\hat{Q}_Z^N$,
@@ -574,7 +606,7 @@ Fortunately, the following shows that RAM rapidly concentrates to its expectatio
 
 
 \begin{table}
- \caption{Rate $\psi(N)$ of high probability bounds for $D_f\big(\hat{Q}^N_{Z} \| P_Z\big)$ (Theorem 3).}
+ \caption{Rate $\psi(N)$ of high probability bounds for $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$ (Theorem 3).}
  \label{table:concentration}
  \centering
  \begin{tabular}{c c c c c c c c c } 
@@ -596,22 +628,22 @@ $\scriptstyle{\frac{1}{3}<\alpha<1}$ \\
 \end{table}
 
 \begin{theorem}[Tail bounds for RAM]\label{thm:concentration}
-Suppose that ${\chi^2\left(Q_{Z|x} \| P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
-Then, the RAM estimator ${D_f( \hat{Q}_Z^N \| P_Z)}$ concentrates to its mean in the following sense. 
+Suppose that ${\chi^2\left(Q_{Z|x} , P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
+Then, the RAM estimator ${D_f( \hat{Q}_Z^N , P_Z)}$ concentrates to its mean in the following sense. 
 For $N>8$ and for any $\delta >0$, with probability at least $1-\delta$ it holds that
 \begin{align*}
-    \left| D_f( \hat{Q}_Z^N \| P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
+    \left| D_f( \hat{Q}_Z^N , P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N , P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
 \end{align*}
 where $K$ is a constant and $\psi(N)$ is given in Table~\ref{table:concentration}.
 \end{theorem}
 \begin{proof}[Proof sketch (full proof in Appendix \ref{proof:thm3})]
 These results follow by applying McDiarmid's inequality.
 To apply it we need to show that RAM viewed as a function of $\XN$ has bounded differences.
-We show that when replacing $\smash{X_i\in\XN}$ with $\smash{X_i'}$ the value of $\smash{D_f( \hat{Q}_Z^N \| P_Z)}$ changes by at most $\smash{O(N^{-1/2}\psi(N))}$.
+We show that when replacing $\smash{X_i\in\XN}$ with $\smash{X_i'}$ the value of $\smash{D_f( \hat{Q}_Z^N , P_Z)}$ changes by at most $\smash{O(N^{-1/2}\psi(N))}$.
 Proof of this proceeds similarly to the one of Theorem \ref{thm:convergence-rate-general}.
 \end{proof}
 
-In practice it may not be possible to evaluate $\smash{D_f( \hat{Q}_Z^N \| P_Z)}$ analytically. 
+In practice it may not be possible to evaluate $\smash{D_f( \hat{Q}_Z^N , P_Z)}$ analytically. 
 We propose to use Monte-Carlo (MC) estimation since both densities $\hat{q}_N(z)$ and $p(z)$ are assumed to be known.
 We consider importance sampling with proposal distribution ${\pi(z|\XN)}$, highlighting the fact that $\pi$ can depend on the sample $\XN$.
 If $\pi(z|\XN) = p(z)$ this reduces to normal MC sampling. 
@@ -619,17 +651,17 @@ We arrive at the {\bf RAM-MC estimator} based on $M$ i.i.d.\:samples $\ZM:=\{Z_1
 \begin{align}
 \label{eq:our-mc-estimate}
     %\phi_\pi\left(\ZM, \XN\right) := 
-    \hat{D}^M_f( \hat{Q}_Z^N \| P_Z) :=
+    \hat{D}^M_f( \hat{Q}_Z^N , P_Z) :=
     \frac{1}{M}\sum_{m=1}^M f\left( \frac{\hat{q}_N(Z_m)}{p(Z_m)} \right) \frac{p(Z_m)}{\pi\left(Z_m|\XN\right)}.
 \end{align}
 
 \begin{theorem}[RAM-MC is unbiased and consistent]\label{thm:mc-variance}
-$\E\bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr]
-=\E\bigl[D_f( \hat{Q}^N_{Z} \| P_Z )\bigr]$ for any proposal distribution $\pi$.
+$\E\bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr]
+=\E\bigl[D_f( \hat{Q}^N_{Z} , P_Z )\bigr]$ for any proposal distribution $\pi$.
 If $\pi(z|\XN) = p(z)$ or $\pi(z | \XN) = \hat{q}_N(z)$ then under mild assumptions$^\star$ on the moments of $q(Z|X)/p(Z)$
 and denoting by ${\psi(N)}$ the rate given in Table~\ref{table:concentration}, we have
 \begin{align*}
-    \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr] = 
+    \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr] = 
     O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
 \end{align*}
 \end{theorem}
@@ -637,14 +669,14 @@ and denoting by ${\psi(N)}$ the rate given in Table~\ref{table:concentration}, w
 By the law of total variance, 
 \begin{align*}
     \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f\bigr] = 
-    \mathbb{E}_{\XN} \bigl[\text{Var}\bigl[\hat{D}^M_f\, | \XN\bigr]\bigr] + \text{Var}_{\XN} \bigl[D_f( \hat{Q}_Z^N \| P_Z )\bigr].
+    \mathbb{E}_{\XN} \bigl[\text{Var}\bigl[\hat{D}^M_f\, | \XN\bigr]\bigr] + \text{Var}_{\XN} \bigl[D_f( \hat{Q}_Z^N , P_Z )\bigr].
 \end{align*}
 The first of these terms is ${O( M^{-1})}$ by standard results on MC integration, subject to the assumptions on the moments.
 Using the fact that ${\text{Var}[Y] = \int_0^\infty\mathbb{P} ( |Y - \mathbb{E} Y| > \sqrt{t}) dt}$ for any random variable $Y$
 we bound the second term by integrating the exponential tail bound of Theorem~\ref{thm:concentration}.
 \end{proof}
 
-Through use of the Efron-Stein inequality---rather than integrating the tail bound provided by McDiarmid's inequality---it is possible for some choices of $f$ to weaken the assumptions under which the $O(\psi(N)^2)$ variance is achieved: from uniform boundedness of $\smash{\chi^2(Q_{Z|X}\|P_Z)}$ to boundedness in expectation.
+Through use of the Efron-Stein inequality---rather than integrating the tail bound provided by McDiarmid's inequality---it is possible for some choices of $f$ to weaken the assumptions under which the $O(\psi(N)^2)$ variance is achieved: from uniform boundedness of $\smash{\chi^2(Q_{Z|X},P_Z)}$ to boundedness in expectation.
 In general, a variance better than ${O(M^{-1})}$ is not possible using importance sampling. However, the constant and hence practical performance may vary significantly depending on the choice of $\pi$.
 We note in passing that through Chebyshev's inequality, it is possible to derive confidence bounds for RAM-MC of the form similar to Theorem~\ref{thm:concentration}, but with an additional dependence on $M$ and worse dependence on $\delta$. 
 For brevity we omit this.
@@ -686,7 +718,7 @@ For the estimator of \cite{krishnamurthy14icml}, both densities $p$ and $q$ must
 For that of \cite{nguyen10ratio}, the density ratio $p/q$ must satisfy $0<\eta_1 < p/q < \eta_2<\infty$ and belong to a function class $G$ whose \emph{bracketing entropy} (a measure of the complexity of a function class) is properly bounded. The condition on the bracketing entropy is quite strong and ensures that the density ratio is well behaved.
 For the estimator of \cite{moon14ensemble}, both $p$ and $q$ must have the same bounded support and satisfy $0<\eta_1 < p, q < \eta_2<\infty$ on the support. $p$ and $q$ must have \emph{continuous bounded} derivatives of order $d$ (which is stronger than assumptions of [22]), and $f$ must have derivatives of order at least $d$.
 
-In summary, the RAM estimator $D_f(\hat{Q}_Z^N \| P_Z)$ for $D_f(Q_Z \| P_Z)$ is \textbf{consistent} since it concentrates to its expectation $\E_{\XN}\bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr]$, which in turn converges to $D_f(Q_Z \| P_Z)$.
+In summary, the RAM estimator $D_f(\hat{Q}_Z^N , P_Z)$ for $D_f(Q_Z , P_Z)$ is \textbf{consistent} since it concentrates to its expectation $\E_{\XN}\bigl[D_f(\hat{Q}_Z^N , P_Z)\bigr]$, which in turn converges to $D_f(Q_Z , P_Z)$.
 It is also \textbf{practical} because it can be efficiently estimated with Monte-Carlo sampling via RAM-MC.
 
 \section{Empirical evaluation}\label{sec:experiments}
@@ -707,7 +739,7 @@ We choose a setting in which $Q^{\lambda}_Z$ parametrized by a scalar $\lambda$ 
 We use RAM-MC to estimate $D_f(Q^\lambda_Z, P_Z)$, which can be computed analytically for the KL, $\chi^2$, and squared Hellinger divergences in this setting (see Appendix \ref{appendix:toy-exps}).
 Namely, we take ${P_Z}$ and ${Q_X}$ to be standard normal distributions over $\Z=\R^d$ and $\X=\R^{20}$ respectively,
 and $\smash{Z\sim Q^\lambda_{Z|X}}$ be a linear transform of $X$ plus a fixed isotropic Gaussian noise, with the linear function parameterized by $\lambda$.
-By varying $\lambda$ we can interpolate between different values for $D_f(Q_Z^\lambda \| P_Z)$.
+By varying $\lambda$ we can interpolate between different values for $D_f(Q_Z^\lambda , P_Z)$.
 
 %\textbf{The estimators.}
 In Figure \ref{fig:synthetic-exps} we show the behaviour of RAM-MC with $N\,{\in}\,\{1, 500\}$ and $M{=}128$ compared to the ground truth as $\lambda$ is varied. 
@@ -776,7 +808,7 @@ and use them to evaluate the RAM-MC estimator as follows.
 We take the test dataset as the ground-truth $Q_X$, and embed it into the latent space via the trained encoder.
 All models considered have Gaussian encoders.
 As a result, we obtain a ${\sim}{20}\text{k}$-component Gaussian mixture for $Q_Z$, the \emph{empirical aggregate posterior}. 
-Since $Q_Z$ is a finite---not continuous--- mixture, the true $D_f(Q_Z\|P_Z)$ can be estimated using a large number of MC samples (we used $10^4$).
+Since $Q_Z$ is a finite---not continuous--- mixture, the true $D_f(Q_Z,P_Z)$ can be estimated using a large number of MC samples (we used $10^4$).
 Note that this is very costly and involves evaluating $2\cdot 10^4$ Gaussian densities for each of the $10^4$ MC points.
 We repeated this evaluation 10 times and report means and standard deviations.
 RAM-MC is evaluated using $N \in \{2^0, 2^1,\ldots, 2^{14}\}$ and $M \in \{10, 10^3\}$.
@@ -806,7 +838,7 @@ In contrast, even with a relatively modest $N{=}2^8$ and $M{=}1000$ samples, RAM
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot.pdf}
 \end{center}
 \caption{\label{fig:real-exps}
-(Section~\ref{sec:exp_wae}) Estimates of $KL(Q_Z^\theta \| P_Z)$ for pretrained autoencoder models with RAM-MC as a function of $N$ for $M{=}10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to an accurate MC estimate of the ground truth ({\bf\textcolor{blue}{blue}}).
+(Section~\ref{sec:exp_wae}) Estimates of $KL(Q_Z^\theta , P_Z)$ for pretrained autoencoder models with RAM-MC as a function of $N$ for $M{=}10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to an accurate MC estimate of the ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
 }
 \end{figure}
@@ -814,57 +846,72 @@ Lines and error bars represent means and standard deviations over 50 trials.
 
 
 \section{Applications: total correlation, entropy, and mutual information estimates}\label{sec:applications}
-In this section we describe in detail some direct consequences of our new estimator and its guarantees.
+This section details some direct consequences of the proposed estimator and its guarantees.
 Our theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
 \paragraph{Total correlation and entropy estimation.}
-The differential entropy, which is defined as $H(Q_Z)= -\int_{\mathcal{Z}} q(z) \log q(z)  dz$, is often a quantity of interest in machine learning.
+The differential entropy, defined as $H(Q_Z)= -\int_{\mathcal{Z}} q(z) \log q(z)  dz$, is often a quantity of interest in machine learning.
 While this is intractable in general, straightforward computation shows that for \emph{any} $P_Z$
 {\addtolength{\abovedisplayskip}{-0.5mm}
 \addtolength{\belowdisplayskip}{-0.5mm}
 \begin{align*}
-    H(Q_Z) - \mathbb{E}_{\XN} H(\hat{Q}_Z^N) = \mathbb{E}_{\XN} \KL[\hat{Q}_Z^N \| P_Z] -  \KL[Q_Z \| P_Z].
+    H(Q_Z) - \mathbb{E}_{\XN} H(\hat{Q}_Z^N) = \mathbb{E}_{\XN} D_{\text{KL}}\left(\hat{Q}_Z^N , P_Z\right) -  D_{\text{KL}}\left(Q_Z , P_Z\right).
 \end{align*}}%
 Therefore, our results provide sufficient conditions under which $\smash{H(\hat{Q}_Z^N)}$ converges to $\smash{H(Q_{Z})}$ and concentrates to its mean.
-We now examine some consequences for VAEs.
-Total Correlation (TC) is considered by \cite{chen2018isolating},
+This result has consequences for some existing VAE literature.
+The Total Correlation (TC) of a distribution $Q_Z$ is defined as 
 %
 \begin{align*}
-TC(Q_Z) := \KL[Q_Z \| \prod_{i=1}^{d_Z} Q_{Z_i}] = \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
+TC(Q_Z) := D_{\text{KL}}\left(Q_Z, \prod_{i=1}^{d_Z} Q_{Z_i}\right) = \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
 \end{align*}
 %
 where $Q_{Z_i}$ is the $i$th marginal of $Q_Z$.
-This is added to the VAE loss function to encourage $Q_Z$ to be factorized, resulting in the $\beta$-TC-VAE algorithm.
-By the second equality above, estimation of TC can be reduced to estimation of $H(Q_Z)$ (only slight modifications are needed to treat $H(Q_{Z_i})$).
+This is considered by \cite{chen2018isolating}, who add it to the VAE loss function to encourage $Q_Z$ to be factorized, resulting in the $\beta$-TC-VAE algorithm.
+By the second equality above, estimation of TC can be reduced to estimation of $H(Q_Z)$ with only slight modifications needed to treat $H(Q_{Z_i})$.
 
-Two methods are proposed in \cite{chen2018isolating} for estimating $\smash{H(Q_Z)}$, both of which assume a finite dataset of size $D$.
+Two methods are proposed by \cite{chen2018isolating} for estimating $\smash{H(Q_Z)}$, both of which assume a finite dataset of size $D$.
 One of these, named \emph{Minibatch Weighted Sample} (MWS), coincides with $\smash{H(\hat{Q}_Z^N) + \log D}$ estimated with a particular form of MC sampling.
 Our results therefore imply \emph{inconsistency} of the MWS method due to the constant $\log D$ offset. 
 In the context of \cite{chen2018isolating} this is not actually problematic since a constant offset does not affect gradient-based optimization techniques.
-Interestingly, although the derivations of \cite{chen2018isolating} suppose a data distribution of finite support, our results show that minor modifications result in an estimator suitable for both finite and infinite support data distributions.
+Interestingly, although their derivations suppose a data distribution of finite support, our results show that minor modifications result in an estimator suitable for both finite and infinite support data distributions.
 
 \paragraph{Mutual information estimation.}
-The mutual information (MI) between variables with joint distribution $\smash{Q_{Z,X}}$ is defined as $\smash{I(Z, X) := \KL\left[Q_{Z,X} \| Q_Z Q_X \right] = \E_{X} \KL\left[Q_{Z|X} \| Q_Z \right]}$.
+The mutual information (MI) between variables with joint distribution $\smash{Q_{Z,X}}$ is defined as $\smash{I(Z, X) := D_{\text{KL}}\left(Q_{Z,X}, Q_Z Q_X \right) = \E_{X} D_{\text{KL}}\left(Q_{Z|X}, Q_Z \right)}$.
 Several recent papers have estimated or optimized this quantity in the context of autoencoder architectures, coinciding with our setting \cite{dieng2018avoiding, hoffman2016elbo, alemi2017fixing, oord2018representation}. In particular, \cite{poolevariational} propose the following estimator based on replacing $Q_Z$ with $\smash{\hat{Q}_{Z}^N}$, proving it to be a lower bound on the true MI:
 %
 \begin{align*}\textstyle
-    I_{TCPC}^N(Z,X) = \mathbb{E}_{\XN}\Big[\frac{1}{N} \sum_{i=1}^N \KL[ Q_{Z|X_i} \| \hat{Q}_{Z}^N ]\Big] \leq I(Z,X).
+    I_{TCPC}^N(Z,X) = \mathbb{E}_{\XN}\Big[\frac{1}{N} \sum_{i=1}^N D_{\text{KL}}\left( Q_{Z|X_i}, \hat{Q}_{Z}^N \right)\Big] \leq I(Z,X).
 \end{align*}
 %
-The gap can be written as
-$\smash{I(Z,X) - I_{TCPC}^N(Z,X) = \E_{\XN} \KL[ \hat{Q}_{Z}^N \| P_{Z} ] - \KL[ Q_{Z} \| P_Z ]}$
+The gap in this inequality can be written as
+%
+\begin{align*}
+I(Z,X) - I_{TCPC}^N(Z,X) = \E_{\XN} D_{\text{KL}}\left( \hat{Q}_{Z}^N, P_{Z} \right) - D_{\text{KL}}\left( Q_{Z}, P_Z \right)
+\end{align*}
+%
 where $P_Z$ is \emph{any} distribution. 
 Therefore, our results also provide sufficient conditions under which $\smash{I^N_{TCPC}}$ converges and concentrates to the true mutual information.
 
 
+%\todo{Rewrite section heading to make this next bit fit in, moved from the intro}
+\paragraph{Related, but fundamentally different work}
+\cite{burda2015importance} propose to reduce the gap introduced by Jensen's inequality in the derivation of the classical evidence lower bound (ELBO) by using multiple Monte-Carlo samples from the approximate posterior $\smash{Q_{Z|X}}$.
+This is similar in flavour to the approach considered in this chapter, but is fundamentally different since we use multiple samples from the \emph{data distribution} to reduce a different Jensen gap.
+To avoid confusion, note that replacing the `regularizer' term $\mathbb{E}_X[D_{\text{KL}}(Q_{Z|X}, P_Z)]$ of the classical ELBO with expectation of our estimator $\E_{\XN}[D_{\text{KL}}(\hat{Q}_Z^N, P_Z)]$ results in an upper bound of the classical ELBO (by Proposition~\ref{prop:upper-bound}) but is itself not in general an evidence lower bound:
+%
+\begin{align*}
+    \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) - D_{\text{KL}}(Q_{Z|X}, P_Z ) \Big] \leq \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) \Big] - \mathbb{E}_{\XN} \Big[ D_{\text{KL}}(\hat{Q}_Z^N, P_Z ) \Big].
+\end{align*}
+
+
 \section{Conclusion}\label{sec:conclusion}
-We introduced a practical estimator for the $\smash{f}$-divergence $D_f(Q_Z\|P_Z)$ where $Q_Z = \int Q_{Z|X}dQ_X$, samples from $Q_X$ are available, and $P_Z$ and $Q_{Z|X}$ have known density.
+This chapter introduced a practical estimator for the $\smash{f}$-divergence $D_f(Q_Z,P_Z)$ where $Q_Z = \int Q_{Z|X}dQ_X$, samples from $Q_X$ are available, and $P_Z$ and $Q_{Z|X}$ have known density.
 The RAM estimator is based on approximating the true $Q_Z$ with data samples as a random mixture via $\smash{\hat{Q}^N_{Z}=\frac{1}{N}\sum_{n} Q_{Z|X_n}}$.
-We denote by RAM-MC the estimator version where $\smash{D_f(\hat{Q}^N_Z\|P_Z)}$ is estimated with MC sampling.
+We denote by RAM-MC the estimator version where $\smash{D_f(\hat{Q}^N_Z,P_Z)}$ is estimated with MC sampling.
 We proved rates of convergence and concentration for both RAM and RAM-MC, in terms of sample size $N$ and MC samples $M$ under a variety of choices of $\smash{f}$.
 Synthetic and real-data experiments strongly support the validity of our proposal in practice, and our theoretical results provide guarantees for methods previously proposed heuristically in existing literature.
 
 Future work could investigate the use of our proposals for optimization loops, in contrast to pure estimation.
-When $\smash{Q^\phi_{Z|X}}$ depends on parameter $\phi$ and the goal is to minimize $\smash{D_f(Q_Z^\phi \| P_Z)}$ with respect to $\phi$, RAM-MC provides a practical surrogate loss that can be minimized using stochastic gradient methods.
+When $\smash{Q^\phi_{Z|X}}$ depends on parameter $\phi$ and the goal is to minimize $\smash{D_f(Q_Z^\phi , P_Z)}$ with respect to $\phi$ such as is the case for Wasserstein Autoencoders, RAM-MC provides a practical surrogate loss that can be minimized using stochastic gradient methods.
 
 
 
