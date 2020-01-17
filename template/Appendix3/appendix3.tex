@@ -18,20 +18,20 @@
 \begin{proposition}
 Let $M \leq N$ be integers. Then
 \begin{align*}
-    D_f(Q_Z \| P_Z) \ \leq 
-    \mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) \  \leq \ \mathbb{E}_{\mathbf{X}^M \sim Q_{X}^M} D_f( \hat{Q}_Z^M \| P_Z).
+    D_f(Q_Z , P_Z) \ \leq 
+    \mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N , P_Z) \  \leq \ \mathbb{E}_{\mathbf{X}^M \sim Q_{X}^M} D_f( \hat{Q}_Z^M , P_Z).
 \end{align*}
 \end{proposition}
 \begin{proof}
 Observe that $\mathbb{E}_{\mathbf{X}^N} \hat{Q}_Z^N = Q_Z$. Thus,
 \begin{align*}
-    D_f(Q_Z \| P_Z) &= \int f\left(\frac{\E_{\XN}\hat{q}_N(z)}{p(z)}\right) dP_Z(z) \\
+    D_f(Q_Z , P_Z) &= \int f\left(\frac{\E_{\XN}\hat{q}_N(z)}{p(z)}\right) dP_Z(z) \\
     &\leq \E_{\XN} \int f\left(\frac{\hat{q}_N(z)}{p(z)}\right) dP_Z(z)\\
-    &=\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z),
+    &=\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z),
 \end{align*}
 where the inequality follows from convexity of $f$.
 
-To see that $\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) \leq \mathbb{E}_{\mathbf{X}^M \sim P_{X}^N} D_f( \hat{Q}_Z^M \| P_Z)$ for $N \geq M$,
+To see that $\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z) \leq \mathbb{E}_{\mathbf{X}^M \sim P_{X}^N} D_f( \hat{Q}_Z^M , P_Z)$ for $N \geq M$,
 let $I \subseteq \{1, \ldots, N\}$, $|I| = M$ and write
 \begin{align*}
     \hat{Q}_Z^I = \frac{1}{M} \sum_{i \in I} Q_{Z | X_i}.
@@ -49,8 +49,8 @@ observe that for any fixed $I$, $\mathbf{X}^I \sim \mathbb{P}_X^M$ (with the ran
 and so again by convexity of $f$ we have that
 
 \begin{align}
-    \mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N \| P_Z) &\leq  \mathbb{E}_{\mathbf{X}^N} \mathbb{E}_I D_f( \hat{Q}_Z^I \| P_Z) \\
-    &= \mathbb{E}_{\mathbf{X}^M} D_f(\hat{Q}_Z^M \| P_Z)
+    \mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z) &\leq  \mathbb{E}_{\mathbf{X}^N} \mathbb{E}_I D_f( \hat{Q}_Z^I , P_Z) \\
+    &= \mathbb{E}_{\mathbf{X}^M} D_f(\hat{Q}_Z^M , P_Z)
 \end{align}
 with the last line following from the observation that $\mathbf{X}^I \sim \mathbb{P}_X^M$.
 \end{proof}
@@ -63,13 +63,13 @@ with the last line following from the observation that $\mathbf{X}^I \sim \mathb
 Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
 Then for any $\lambda>0$,
 \begin{align*}
-    D_f\left(\hat{Q}^N_Z \| P_Z\right) - D_f\left(Q_{Z} \| P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z \| Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} \| P_Z \right)
+    D_f\left(\hat{Q}^N_Z , P_Z\right) - D_f\left(Q_{Z} , P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z , Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} , P_Z \right)
 \end{align*}
-If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z \| Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
+If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
 for some $k>0$, 
 then
 \begin{align*}
-    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z \| P_Z\right) \right] - D_f\left(Q_{Z} \| P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
+    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , P_Z\right) \right] - D_f\left(Q_{Z} , P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -82,7 +82,7 @@ The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2
 \begin{theorem}[Rates of the bias]
 If
 $\E_{X\sim Q_X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr]$ and
-$\KL\left( Q_{Z} \| P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
+$\KL\left( Q_{Z} , P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
 \end{theorem}
 
 \begin{proof}
@@ -100,7 +100,7 @@ where the introduction of the variance operator follows from the fact that $\E_{
 For the $\KL$-divergence, using the fact that $\KL \leq \chi^2$ (Lemma 2.7 of \cite{tsybakov2009}) yields
 
 \begin{align*}
-    \E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| P_Z\right)\right] - \KL\left( Q_{Z} \| P_Z\right) &=\E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| Q_Z\right)\right]\\
+    \E_{\XN}\left[\KL\left( \hat{Q}^N_Z , P_Z\right)\right] - \KL\left( Q_{Z} , P_Z\right) &=\E_{\XN}\left[\KL\left( \hat{Q}^N_Z , Q_Z\right)\right]\\
     &\leq \E_{\XN}\left[\chi^2\bigl(\hat{Q}^N_Z, Q_Z\bigr) \right]\\
     &= \frac{1}{N}\E_{X}\left[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\right]\\
     &=O\left(\frac{1}{N}\right),
@@ -109,23 +109,23 @@ where the first equality can be verified by using the definition of $\KL$ and th
 
 For Total Variation, we have
 \begin{align*}
-    \E_{\XN}\left[\TV\left( \hat{Q}^N_Z \| P_Z\right)\right] - \TV\left( Q_{Z} \| P_Z\right) &\leq\E_{\XN}\left[\TV\left( \hat{Q}^N_Z \| Q_Z\right)\right]\\
-    &\leq \frac{1}{\sqrt{2}} \sqrt{\E_{\XN}\left[\KL\left( \hat{Q}^N_Z \| Q_Z\right) \right]}\\
+    \E_{\XN}\left[\TV\left( \hat{Q}^N_Z , P_Z\right)\right] - \TV\left( Q_{Z} , P_Z\right) &\leq\E_{\XN}\left[\TV\left( \hat{Q}^N_Z , Q_Z\right)\right]\\
+    &\leq \frac{1}{\sqrt{2}} \sqrt{\E_{\XN}\left[\KL\left( \hat{Q}^N_Z , Q_Z\right) \right]}\\
     &=O\left(\frac{1}{\sqrt{N}}\right),
 \end{align*}
 where the first inequality holds since $\TV$ is a metric and thus obeys the triangle inequality, and the second inequality follows by Pinsker's inequality combined with concavity of $\sqrt{x}$ (Lemma 2.5 of \cite{tsybakov2009}).
 
 For $D_{f_\beta}$ (including Jenson-Shannon) using the fact that $D_{f_\beta}^{1/2}$ satisfies the triangular inequality, we apply the second part of Lemma~\ref{lemma:hilbertian-triangle}
 in combination with the fact that
-$D_{f_\beta}\left(\hat{Q}^N_Z \| Q_Z\right) \leq \psi(\beta) \ \TV\left( \hat{Q}^N_Z \| Q_Z \right)$ for some scalar $\psi(\beta)$ (Theorem 2 of \cite{osterreicher2003new}) to obtain
+$D_{f_\beta}\left(\hat{Q}^N_Z , Q_Z\right) \leq \psi(\beta) \ \TV\left( \hat{Q}^N_Z , Q_Z \right)$ for some scalar $\psi(\beta)$ (Theorem 2 of \cite{osterreicher2003new}) to obtain
 
 \begin{align*}
-    \E_{\XN}\left[D_{f_\beta}\left( \hat{Q}^N_Z \| P_Z\right)\right] - D_{f_\beta}\left( Q_{Z} \| P_Z\right) \leq O\left(\frac{1}{N^{1/4}}\right).
+    \E_{\XN}\left[D_{f_\beta}\left( \hat{Q}^N_Z , P_Z\right)\right] - D_{f_\beta}\left( Q_{Z} , P_Z\right) \leq O\left(\frac{1}{N^{1/4}}\right).
 \end{align*}
 
-Although the squared Hellinger divergence is a member of the $f_\beta$-divergence family, we can use the tighter bound $\Hsq\left( \hat{Q}^N_Z \| Q_Z\right) \leq KL\left( \hat{Q}^N_Z \| Q_Z\right)$ (Lemma 2.4 of \cite{tsybakov2009}) in combination with Lemma~\ref{lemma:hilbertian-triangle} to obtain
+Although the squared Hellinger divergence is a member of the $f_\beta$-divergence family, we can use the tighter bound $\Hsq\left( \hat{Q}^N_Z , Q_Z\right) \leq KL\left( \hat{Q}^N_Z , Q_Z\right)$ (Lemma 2.4 of \cite{tsybakov2009}) in combination with Lemma~\ref{lemma:hilbertian-triangle} to obtain
 \begin{align*}
-    \E_{\XN}\left[\Hsq\left( \hat{Q}^N_Z \| P_Z\right)\right] - \Hsq\left( Q_{Z} \| P_Z\right) \leq O\left(\frac{1}{\sqrt{N}}\right).
+    \E_{\XN}\left[\Hsq\left( \hat{Q}^N_Z , P_Z\right)\right] - \Hsq\left( Q_{Z} , P_Z\right) \leq O\left(\frac{1}{\sqrt{N}}\right).
 \end{align*}
 \end{proof}
 
@@ -289,7 +289,7 @@ $g(x) \leq \max\{\lim_{x\to 0}g(x), \lim_{x\to \infty}g(x)\}$ for all $x\in [0, 
 
 \begin{theorem}[Rates of the bias]
 If $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$ is finite then
-the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N \| P_Z)\bigr] - D_f\left( Q_{Z} \| P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
+the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
 \end{theorem}
 
 \begin{proof}
@@ -308,21 +308,21 @@ This implies that the second moment $B:= \E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^2(Z|X
 % 
 In this case, using $f(x) = x^2-1$, it can be seen that the bias is equal to
 \begin{align}\label{eqn:chi2-bias}
-    \E_{\XN} \left[ D_{f}\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_{f}\left( Q_{Z} \| P_Z\right) = \E_{\XN}\left[ \int_Z  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 dP(z) \right].
+    \E_{\XN} \left[ D_{f}\left( \hat{Q}_Z^N , P_Z\right)\right] - D_{f}\left( Q_{Z} , P_Z\right) = \E_{\XN}\left[ \int_Z  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 dP(z) \right].
 \end{align}
 Indeed, expanding the right hand side and using the fact that $\E_{\XN}\hat{q}_N(z) = q(z)$ yields
 \begin{align*}
     &\E_{\XN}\left[ \int_Z  \frac{\hat{q}^2_N(z) - 2\hat{q}_N(z)q(z) + q^2(z)}{p^2(z)} dP(z) \right]\\
     &=\E_{\XN}\left[ \int_Z  \frac{\hat{q}^2_N(z) - q^2(z)}{p^2(z)} dP(z) \right]\\
     &=\E_{\XN}\left[ \int_Z  \left(\frac{\hat{q}^2_N(z)}{p^2(z)} - 1 \right)dP(z) \right] - \int_Z  \left(\frac{q^2(z)}{p^2(z)} - 1\right) dP(z)\\
-    &= \E_{\XN} \left[ D_{f}\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_{f}\left( Q_{Z} \| P_Z\right).
+    &= \E_{\XN} \left[ D_{f}\left( \hat{Q}_Z^N , P_Z\right)\right] - D_{f}\left( Q_{Z} , P_Z\right).
 \end{align*}
 Again using the fact that $\E_{\XN}\hat{q}_N(z) = q(z)$, observe that taking expectations over $\XN$ in the right hand size of Equation \ref{eqn:chi2-bias} above (after changing the order of integration) can be viewed as taking the variance of $\hat{q}_N(z)/p(z)$, the average of $N$ i.i.d. random variables, and so
 
 \begin{align*}
  \E_{\XN}\left[ \int_Z  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 dP(z) \right] &= \int_Z \E_{\XN}\left[  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 \right] dP(z) \\
  &=\frac{1}{N} \int_Z \E_{X}\left[  \left(\frac{q(z|X) - q(z)}{p(z)}\right)^2 \right] dP(z) \\
- &= \frac{1}{N} \E_{X} \chi^2\left( Q_{Z|X} \| P_Z \right) - \frac{1}{N} \chi^2\left( Q_{Z} \| P_Z \right)\\
+ &= \frac{1}{N} \E_{X} \chi^2\left( Q_{Z|X} , P_Z \right) - \frac{1}{N} \chi^2\left( Q_{Z} , P_Z \right)\\
  &\leq \frac{B-1}{N}.
 \end{align*}
 
@@ -331,7 +331,7 @@ Again using the fact that $\E_{\XN}\hat{q}_N(z) = q(z)$, observe that taking exp
 For these divergences, we only need the condition that the second moment $\E_X \| q(z|X)/p(z)\|^2_{L_2(P_Z)} < \infty$ is bounded.
 
 \begin{align*}
-    & \E_{\XN} \left[ D_{f_0}\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_{f_0}\left( Q_{Z} \| P_Z\right)  \\
+    & \E_{\XN} \left[ D_{f_0}\left( \hat{Q}_Z^N , P_Z\right)\right] - D_{f_0}\left( Q_{Z} , P_Z\right)  \\
     &= \E_{\XN}\E_{P_Z} \left[ f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \right] \\
     &\leq \E_{\XN}\E_{P_Z} \left[ \left( \frac{\hat{q}_N(z) - q(z)}{p(z)} \right)     f_0'\left(\frac{\hat{q}_N(z)}{p(z)} \right) \right]  \\
     &\leq \underbrace{ \sqrt{ \E_{\XN}\E_{P_Z} \left[\left( \frac{\hat{q}_N(z) - q(z)}{p(z)} \right)^2\right] }}_{(i)} 
@@ -360,7 +360,7 @@ For $D_{f_\beta}$ with $\beta>1$, Lemma~\ref{lemma:upper-bound-f-beta} shows tha
 
 Thus, for both cases considered,
 \begin{align*}
-    \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right) \leq O\left( \frac{1}{\sqrt{N}} \right).
+    \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right) \leq O\left( \frac{1}{\sqrt{N}} \right).
 \end{align*}
 
 \paragraph{All other divergences.}
@@ -369,7 +369,7 @@ We start by writing the difference as the sum of integrals over mutually exclusi
 Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, write
 
 \begin{align*}
-    & \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)  \\
+    & \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)  \\
     &= \E_{\XN} \left[\int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) dP_Z(z) \right] \\
     &= \E_{\XN} \left[ \int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} \leq \delta_N \text{ and } \frac{q(z)}{p(z)} \leq \gamma_N \right\rbrace} dP_Z(z) \right] \tag*{\encircle{A}}\\
     & \quad + \E_{\XN} \left[\int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} \leq \delta_N \text{ and } \frac{q(z)}{p(z)} > \gamma_N \right\rbrace} dP_Z(z) \right]\tag*{\encircle{B}}\\
@@ -480,7 +480,7 @@ Therefore,
 Putting everything together,
 
 \begin{align*}
-    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)\\
+    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \sqrt{B} \sqrt{\frac{\log^2(\delta_N) + \frac{2}{e}}{N}}\\
     &= \gamma_N - \gamma_N \log \gamma_N  + \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \sqrt{B} \sqrt{\frac{\log^2(\delta_N) + \frac{2}{e}}{N}}.
@@ -516,7 +516,7 @@ Lemma~\ref{lemma:upper-bound-hellinger} provides a function $h_\delta$ that uppe
 and thus
 
 \begin{align*}
-    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)\\
+    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}\sqrt{B + 1}}{\sqrt{N \delta_N}}\\
     &= 2\sqrt{\gamma_N}  + \frac{2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}\sqrt{B + 1}}{\sqrt{N \delta_N}}.
@@ -552,7 +552,7 @@ Lemma~\ref{lemma:upper-bound-alpha} provides a function $h_\delta$ that upper bo
 and thus
 
 \begin{align*}
-    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)\\
+    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{2\sqrt{B}\sqrt{1+B}\left(\delta_N^\frac{\alpha-1}{2} - 1\right)}{(\alpha - 1) (\delta_N- 1) \sqrt{N}}\\
     &\leq k_1 \gamma_N^{\frac{\alpha+1}{2}} + k_2 \gamma_N + \frac{k_3}{N(\gamma_N - \delta_N)^2} + \frac{k_4 \delta_N^\frac{\alpha-1}{2}}{\sqrt{N}}.
@@ -595,7 +595,7 @@ Lemma~\ref{lemma:upper-bound-JS} provides a function $h_\delta$ that upper bound
 and thus
 
 \begin{align*}
-    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)\\
+    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B}\log \delta_N}{\sqrt{N}}\\
     &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{\log2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B} \log \delta_N}{\sqrt{N}} \\
@@ -640,7 +640,7 @@ Lemma~\ref{lemma:upper-bound-f-beta} provides a function $h_\delta$ that upper b
 (noting that $\frac{\beta^2}{(1-\beta)^2}\left(2^{\frac{1}{\beta} - 1}\right)^2 = \lim_{x\to\infty} f'^2_0(x)$ as defined in Lemma~\ref{lemma:upper-bound-f-beta}). Thus
 
 \begin{align*}
-    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N \| P_Z\right)\right] - D_f\left( Q_{Z} \| P_Z\right)\\
+    &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}}{\sqrt{N}}2^{\frac{2+\beta}{2\beta}}\left(\frac{\beta}{1-\beta}\right) \delta_N^{\beta - 1}\\
     &\leq \frac{\beta}{1-\beta}\left[1 - \left(1+\delta_N^\beta\right)^{1/\beta} + 2^{\frac{1-\beta}{\beta}}\delta_N\right] + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}}{\sqrt{N}}2^{\frac{2+\beta}{2\beta}}\left(\frac{\beta}{1-\beta}\right) \delta_N^{\beta - 1}\\
@@ -680,65 +680,65 @@ and
 \end{align*}
 \end{theorem*}
 
-In our setting we will consider $\phi(\XN) = D_f\left( \hat{Q}_Z^N \| P_Z\right)$.
+In our setting we will consider $\phi(\XN) = D_f\left( \hat{Q}_Z^N , P_Z\right)$.
 
 
 \begin{theorem}[Tail bounds for RAM]
-Suppose that ${\chi^2\left(Q_{Z|x} \| P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
-Then, the RAM estimator ${D_f( \hat{Q}_Z^N \| P_Z)}$ concentrates to its mean in the following sense. 
+Suppose that ${\chi^2\left(Q_{Z|x} , P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
+Then, the RAM estimator ${D_f( \hat{Q}_Z^N , P_Z)}$ concentrates to its mean in the following sense. 
 For $N>8$ and for any $\delta >0$, with probability at least $1-\delta$ it holds that
 \begin{align*}
-    \left| D_f( \hat{Q}_Z^N \| P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N \| P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
+    \left| D_f( \hat{Q}_Z^N , P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N , P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
 \end{align*}
 where $K$ is a constant and $\psi(N)$ is given in Table~\ref{table:concentration}.
 \end{theorem}
 \begin{proof}[Proof (Theorem \ref{thm:concentration})]
-We will show that $D_f\left( \hat{Q}_Z^N \| P_Z\right)$ exhibits the bounded difference property as in the statement of McDiarmid's theorem.
+We will show that $D_f\left( \hat{Q}_Z^N , P_Z\right)$ exhibits the bounded difference property as in the statement of McDiarmid's theorem.
 Since $\hat{q}_N(z)$ is symmetric in the indices of $\XN$, we can without loss of generality consider only the case $i=1$.
 Henceforth, suppose $\XN, {\XN}'$ are two batches of data with $\XN_1 \not= {\XN}'_1$ and $\XN_i = {\XN}'_i$ for all $i > 1$. 
 For the remainder of this proof we will write explicitly the dependence of $\hat{Q}_Z^N$ on $\XN$. 
 We will write $\hat{Q}_Z^N(\XN)$ for the probability measure and $\hat{q}_N(z; \XN)$ for its density.
 
 
-We will show that $\left|D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right)\right| \leq c_N$ where $c_N$ is a constant depending only on $N$.
+We will show that $\left|D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right)\right| \leq c_N$ where $c_N$ is a constant depending only on $N$.
 From this fact, McDiarmid's theorem and the union bound, it follows that:
 \begin{align*}
-    &\mathbb{P}\left( \left| D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \right|\geq t \right) \\
-    &= \mathbb{P}\bigg( D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \geq t \text{ or }\\
-    & \qquad \qquad D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \leq -t\bigg) \\
-    &\leq \mathbb{P}\left( D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \geq t \right) 
+    &\mathbb{P}\left( \left| D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \right|\geq t \right) \\
+    &= \mathbb{P}\bigg( D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \geq t \text{ or }\\
+    & \qquad \qquad D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \leq -t\bigg) \\
+    &\leq \mathbb{P}\left( D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \geq t \right) 
     + \\
-    & \qquad \qquad \mathbb{P}\left( D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \leq -t\right) \\
+    & \qquad \qquad \mathbb{P}\left( D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \leq -t\right) \\
     &\leq 2 \exp\left(\frac{-2 t^2 }{Nc^2_N} \right).
 \end{align*}
 Observe that by setting $t = \sqrt{\frac{Nc_N^2}{2} \log\left(\frac{2}{\delta}\right)}$, 
 
 the above inequality is equivalent to the statement that for any $\delta>0$, with probability at least $1-\delta$ 
 \begin{align*}
-    \left| D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) \right| < \sqrt{\frac{Nc_N^2}{2}} \sqrt{\log\left(\frac{2}{\delta}\right)}.
+    \left| D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - \E_{\XN} D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) \right| < \sqrt{\frac{Nc_N^2}{2}} \sqrt{\log\left(\frac{2}{\delta}\right)}.
 \end{align*}
 We will show that $c_N \leq k N^{-1/2} \psi(N)$ for $k$ and $\psi(N)$ depending on $f$.
 The statement of Theorem~\ref{thm:concentration} is of this form.
 Note that in order to show that
 \begin{align}\label{eqn:bounded-diff-abs}
-    \left|D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right)\right| \leq c_N,
+    \left|D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right)\right| \leq c_N,
 \end{align}
 it is sufficient to prove that 
 \begin{align}\label{eqn:bounded-diff}
-     D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \leq c_N
+     D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N
 \end{align}
 since the symmetry in $\XN \leftrightarrow {\XN}'$ implies that
 \begin{align}
-    - D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) + D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \leq c_N
+    - D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) + D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N
 \end{align}
 and thus implies Inequality \ref{eqn:bounded-diff-abs}.
 The remainder of this proof is therefore devoted to showing that Inequality \ref{eqn:bounded-diff} holds for each divergence.
 
-We will make use of the fact that $\chi^2\left(Q_{Z|x} \| P_Z\right) \leq C \implies \bigl\| \frac{q(z|x)}{p(z)} \bigr\|_{L_2(P_Z)} \leq C+1 $
+We will make use of the fact that $\chi^2\left(Q_{Z|x} , P_Z\right) \leq C \implies \bigl\| \frac{q(z|x)}{p(z)} \bigr\|_{L_2(P_Z)} \leq C+1 $
 
 \paragraph{The case that $D_f$ is the $\chi^2$-divergence, Total Variation or $D_{f_\beta}$ with $\beta>1$:}
 \begin{align*}
-    & D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right)  \\
+    & D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right)  \\
     &= \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) dP_Z(z)  \\
     &\leq \int \left( \frac{\hat{q}_N(z;\XN) - \hat{q}_N(z;{\XN}')}{p(z)} \right)     f'_0\left(\frac{\hat{q}_N(z;\XN)}{p(z)} \right) dP_Z(z)  \\
     &\leq \left\| \frac{\hat{q}_N(z;\XN) - \hat{q}_N(z;{\XN}')}{p(z)} \right\|_{L_2(P_Z)} \times \left\| f'_0\left(\frac{\hat{q}_N(z;\XN)}{p(z)}\right) \right\|_{L_2(P_Z)}
@@ -760,7 +760,7 @@ we write the difference as the sum of integrals over different mutually exclusiv
 Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, we have that
 
 \begin{align*}
-    & D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right)  \\
+    & D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right)  \\
     &= \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) dP_Z(z)  \\
     &= \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) \mathds{1}_{\left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \leq \delta_N \text{ and } \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \leq \gamma_N \right\rbrace} dP_Z(z) \tag*{\encircle{A}}\\
     & \quad + \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) \mathds{1}_{\left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \leq \delta_N \text{ and } \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) > \gamma_N \right\rbrace} dP_Z(z) \tag*{\encircle{B}}\\
@@ -869,7 +869,7 @@ By Lemma \ref{lemma:concave-upper-bound-kl}, there exists a function $h_{\delta_
 Putting together the separate integrals and setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N = \frac{2}{N^{2/3}}$ , we have that
 
 \begin{align*}
-    &D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \\
+    &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) +  \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \sqrt{\log^2(\delta_N) + \frac{2}{e} } \\
     &= \gamma_N - \gamma_N \log \gamma_N + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N}  \sqrt{\log^2(\delta_N) + \frac{2}{e}}\\
@@ -904,7 +904,7 @@ Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-ge
 Setting $\delta_N = \frac{1}{N^\frac{4}{\alpha+5}}$ and $\gamma_N = \frac{2}{N^\frac{4}{\alpha+5}}$,
 
 \begin{align*}
-    &D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \\
+    &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N}\frac{2\sqrt{1+(C+1)^2}\left(\delta_N^\frac{\alpha-1}{2} - 1\right)}{(1-\alpha) (1-\delta_N)} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{t^2f_0(0)C}{(t-1)^2(\gamma_N-\delta_N)^2N^2} + \frac{2(C+1)}{N}\frac{2\sqrt{1+(C+1)^2}\left(\delta_N^\frac{\alpha-1}{2} - 1\right)}{(1-\alpha) (1-\delta_N)} \\
@@ -937,7 +937,7 @@ Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-ge
 Setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N = \frac{2}{N^{2/3}}$,
 
 \begin{align*}
-    &D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \\
+    &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right) \\
     &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right).\\
@@ -971,7 +971,7 @@ Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-ge
 Setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N =\frac{2}{N^{2/3}}$,
 
 \begin{align*}
-    &D_f\left( \hat{Q}_Z^N(\XN) \| P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') \| P_Z\right) \\
+    &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{\beta}{1-\beta}\cdot 2^{\frac{2+\beta}{2\beta}}\delta_N^{\beta-1} \\
     &\leq \frac{\beta}{\beta-1}2^{\frac{1-\beta}{\beta}}\gamma_N + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2}+ \frac{\beta}{1-\beta}\cdot 2^{\frac{2+\beta}{2\beta}} \frac{ \delta^{\beta-1}}{N} \\
@@ -1000,8 +1000,8 @@ Below is the full statement, followed by its proof.
 \begin{theorem}
 For any $\pi$,
 \begin{align*}
-    \E_{\ZM, \XN} \bigl[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\bigr]
-    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z \| P_Z \right)\right].
+    \E_{\ZM, \XN} \bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr]
+    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
 \end{align*}
 If either of the following conditions are satisfied:
 \begin{align*}
@@ -1014,7 +1014,7 @@ If either of the following conditions are satisfied:
 \end{align*}
 then, denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
 \begin{align*}
-    \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)  \right] = 
+    \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
     O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
 \end{align*}
 \end{theorem}
@@ -1047,19 +1047,19 @@ By the same arguments above, this is positive for $x > 0$ and thus $\frac{f_0(x)
 For the expectation, observe that
 
 \begin{align*}
-    \E_{\ZM, \XN} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)
-    &=\E_{\XN} \left[ \E_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z | \XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)\right] \\
+    \E_{\ZM, \XN} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)
+    &=\E_{\XN} \left[ \E_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z | \XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)\right] \\
     &= \E_{\XN} \left[ \E_{z \sim \pi(z | \XN)} f\left(\frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi(z|\XN)} \right] \\
-    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z \| P_Z \right)\right].
+    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
 \end{align*}
 
 For the variance, by the law of total variance we have that
 
 \begin{align*}
-    &\text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N \| P_Z)  \right]  \\
-    &= \E_{\XN} \text{Var}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z) + \text{Var}_{\XN} \mathbb{E}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N \| P_Z)
+    &\text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right]  \\
+    &= \E_{\XN} \text{Var}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z) + \text{Var}_{\XN} \mathbb{E}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)
     \\
-    &=\frac{1}{M} \underbrace{\E_{\XN} \text{Var}_{\pi(z|\XN)} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi\left(z|\XN\right)} \right]}_{(i)}  + \underbrace{\text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z \| P_Z \right)\right]}_{(ii)}.
+    &=\frac{1}{M} \underbrace{\E_{\XN} \text{Var}_{\pi(z|\XN)} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi\left(z|\XN\right)} \right]}_{(i)}  + \underbrace{\text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z , P_Z \right)\right]}_{(ii)}.
 \end{align*}
 
 Consider term $(ii)$.
@@ -1071,7 +1071,7 @@ The concentration results of Theorem \ref{thm:concentration} imply bounds on $(i
 \end{align*}
 It follows therefore that
 \begin{align*}
-    \text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z \| P_Z \right)\right] 
+    \text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z , P_Z \right)\right] 
     &\leq \int_0^\infty 2 \exp\left( -\frac{k}{\psi(N)^2}t \right) dt\\
     &= O\left(\psi(N)^2 \right)
 \end{align*}
@@ -1265,8 +1265,8 @@ The objectives used to train these two components always involve some kind of re
 Representing by $\theta$ and $\eta$ the parameters of the encoder and generator respectively, the objective functions of VAEs and WAEs are:
 
 \begin{align*}
-    L^{\text{VAE}}(\theta, \eta) &= \E_X \left[ \E_{q_\theta(Z|X)} \log p_\eta(X|Z) + \KL\left( Q^\theta_{Z|X} \| P_Z) \right) \right]\\
-    L^{\text{WAE}}(\theta, \eta) &= \E_X \E_{q_\theta(Z|X)} c(X, G_\eta(Z)) + \lambda \cdot D(Q^\theta_Z \| P_Z)
+    L^{\text{VAE}}(\theta, \eta) &= \E_X \left[ \E_{q_\theta(Z|X)} \log p_\eta(X|Z) + \KL\left( Q^\theta_{Z|X} , P_Z) \right) \right]\\
+    L^{\text{WAE}}(\theta, \eta) &= \E_X \E_{q_\theta(Z|X)} c(X, G_\eta(Z)) + \lambda \cdot D(Q^\theta_Z , P_Z)
 \end{align*}
 
 For VAEs, both encoder $Q^\theta_{Z|X}$ and generator $p_\eta$ are \emph{stochastic} mappings taking an input and mapping it to a distribution over the output space.
@@ -1278,8 +1278,8 @@ In this case, the $\log p_\eta(X|z)$ term can be written as the $l^2_2$ (i.e. sq
 If the cost function of the WAE is chosen to be $l^2_2$, then the left hand terms of the VAE and WAE losses are the same. 
 That is, in this particular case, $L^{\text{VAE}}$ and $L^{\text{WAE}}$ differ only in their regularizers.
 
-The penalty of the VAE was shown by \cite{hoffman2016elbo} to be equivalent to $\smash{\KL(Q^\theta_Z \| P_Z) + I(X,Z)}$ where $I(X,Z)$ is the mutual information of a sample and its encoding.
-For the WAE penalty, there is a choice of which $\smash{D(Q^\theta_Z \| P_Z)}$ to use; it must only be possible to practically estimate it.
+The penalty of the VAE was shown by \cite{hoffman2016elbo} to be equivalent to $\smash{\KL(Q^\theta_Z , P_Z) + I(X,Z)}$ where $I(X,Z)$ is the mutual information of a sample and its encoding.
+For the WAE penalty, there is a choice of which $\smash{D(Q^\theta_Z , P_Z)}$ to use; it must only be possible to practically estimate it.
 In the experiments used in this paper, we considered models trained with the Maximum Mean Discrepency (MMD) \cite{gretton2012kernel}, a kernel-based distance on distributions, and a divergence estimated using a GAN-style classifier \cite{goodfellow2014generative} leading to WAE-MMD and WAE-GAN respectively, following \cite{tolstikhin2017wasserstein}.
 
 \subsubsection{Further experimental details}
@@ -1313,7 +1313,7 @@ A set of models satisfying these criteria were selected by hand, but as noted pr
 
 Figure~\ref{fig:real-exps-hsq} we display similar results to those displayed in Figure~\ref{fig:real-exps} of the main paper but with the $H^2$-divergence instead of the KL.
 An important point is that $H^2(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$,
-and due to considerations of scale we plot the estimated values $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z \| P_Z)\big)$.
+and due to considerations of scale we plot the estimated values $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$.
 Decreasing bias in $N$ of RAM-MC therefore manifests itself as the lines \emph{increasing} in Figure~\ref{fig:real-exps-hsq}. 
 Concavity of $\log$ means that the reduction in variance when increasing $M$ results in RAM-MC with $M{=}1000$ being above RAM-MC with $M{=}10$.
 Similar to those presented in the main part of the paper, these results therefore also support the theoretical findings of our work.
@@ -1327,9 +1327,9 @@ From Figure~\ref{fig:real-exps} we see that the $\KL$-divergence reaches values 
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot_hsq.pdf}
 \end{center}
 \caption{\label{fig:real-exps-hsq}
-Estimating $H^2(Q_Z^\theta \| P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
+Estimating $H^2(Q_Z^\theta , P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
-Plots depict $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z \| P_Z)\big)$ since $H^2$ is close to 2 in all models.
+Plots depict $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$ since $H^2$ is close to 2 in all models.
 Omitted lower error bars correspond to error bars going to $-\infty$ introduced by $\log$.
 Note that the approximately \emph{increasing} behaviour evident here corresponds to the expectation of RAM-MC \emph{decreasing} as a function of $N$. 
 Due to concavity of $\log$, the decrease in variance when increasing $M$ manifests itself as the {\bf \textcolor{red}{red}} line ($M{=}1000$) being consistently above the {\bf \textcolor{green!65!blue}{green}} line ($M{=}10$).
