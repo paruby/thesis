@@ -121,7 +121,7 @@
 
 % If you would like to use biblatex for your reference management, as opposed to the default `natbibpackage` pass the option `custombib` in the document class. Comment out the previous line to make sure you don't load the natbib package. Uncomment the following lines and specify the location of references.bib file
 
-\RequirePackage[backend=biber, style=authoryear, citestyle=authoryear, sorting=nty, natbib=true, maxbibnames=99,maxcitenames=1, dashed=false]{biblatex}
+\RequirePackage[backend=biber, style=authoryear, citestyle=authoryear, sorting=nty, natbib=true, maxbibnames=99,maxcitenames=2, dashed=false, uniquelist=false]{biblatex}
 \addbibresource{References/references.bib} %Location of references.bib only for biblatex, Do not omit the .bib extension from the filename.
 \DeclareBibliographyCategory{ignore}
 \addtocategory{ignore}{rubenstein2017causal}
@@ -131,7 +131,8 @@
 \renewcommand\nameyeardelim{, }
 \DeclareNameAlias{sortname}{last-first}
 \renewcommand*{\multinamedelim}{\addcomma\space}
-\renewcommand*{\finalnamedelim}{\addcomma\space}
+%\renewcommand*{\finalnamedelim}{\addcomma\space}
+\renewcommand*{\finalnamedelim}{ and }
 \setlength{\bibitemsep}{\baselineskip}
 \renewbibmacro{in:}{}
 
