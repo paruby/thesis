@@ -1053,10 +1053,10 @@ The requirement that $\omega$ be order-preserving rules this pathology out.
 \section{Examples of transformations}\label{sec:causality-causal-examples-of-transformations}
 
 The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur.
-Having now introduced the notion of an exact transformation between SEMs, we provide in this section examples of exact transformations falling into each of these categories.
+Having now introduced the notion of an exact transformation between SEMs, this section provides examples of exact transformations falling into each of the categories.
 %The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
-Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact. This highlights the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
+Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact, highlighting the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
 
 
 
@@ -1066,7 +1066,7 @@ Observe that in each of the following examples, the particular set of interventi
 \subsection{Marginalisation of variables}\label{sec:basic_trafos}
 
 In the following two theorems it is shown that the marginalisation of childless or non-intervened variables is an exact transformation, illustrated in Figure~\ref{fig:SEM_marginalisation}.
-That is, an SEM can be simplified into an SEM by marginalising out variables of either of these types without losing any causal content concerning the remaining variables.
+That is, an SEM can be simplified by marginalising out variables of either of these types without losing any causal content concerning the remaining variables.
 
 Thus if the SEM $\mathcal{M}_Y$ can be obtained from another SEM $\mathcal{M}_X$ by successively performing the operations in the following theorems, then $\mathcal{M}_Y$ is an exact transformation of $\mathcal{M}_X$ and hence the two models are causally consistent.
 This formally explains why we can sensibly consider causal models that focus on a subsystem $\mathcal{M}_Y$ of a more complex system $\mathcal{M}_X$.
@@ -1123,8 +1123,8 @@ This formally explains why we can sensibly consider causal models that focus on 
 \end{tikzpicture}
 %
 \caption{Suppose that there is a complex model $\mathcal{M}_X$ but that we only wish to model the distribution over $X_1,X_2,X_3$ and how it changes under some interventions on $X_1,X_2,X_3$.
-By Theorem~\ref{theorem:childless}, we can ignore downstream effects (\dropNode{drop1}) after grouping them together as one multivariate variable and by Theorem~\ref{theorem:never_intervened} we can ignore intermediate steps of complex mechanisms (\dropNode{drop2a}) and treat upstream causes as noise fluctuations (\dropNode{drop2b}).
-That is, we can exactly transform the complex SEM $\mathcal{M}_X$ into a simpler model $\mathcal{M}_Y$ by marginalisation.
+By Theorem~\ref{theorem:childless}, we can ignore downstream effects (\dropNode{drop1}) after grouping them together as one multivariate variable and by Theorem~\ref{theorem:never_intervened} we can ignore intermediate steps of complex mechanisms (\dropNode{drop2a}) and treat upstream causes as exogenous noise (\dropNode{drop2b}).
+That is, the complex SEM $\mathcal{M}_X$ can be exactly transformed into a simpler model $\mathcal{M}_Y$ by marginalisation.
 }
 \label{fig:SEM_marginalisation}
 \end{figure}
@@ -1165,9 +1165,11 @@ Theorem~\ref{theorem:never_intervened} would not hold if this restriction were m
 
 \subsection{Micro- to macro-level}\label{subsection:micromacro}
 
-Transformations from micro- to macro-levels may arise in situations in which the micro-level variables can be observed via a `coarse' measurement device, represented by the function $\tau$, e.\,g.\ we can use a thermometer to measure the temperature of a gas, but not the motions of the individual particles. They may also arise due to deliberate modelling choice when we wish to describe a system using higher level features, e.\,g.\ viewing the motor cortex as a single entity responsible for movements, rather than as a collection of individual neurons.
+Transformations from micro- to macro-levels may arise in situations in which the micro-level variables can be observed via a `coarse' measurement device, represented by the function $\tau$.
+For instance, we can use a thermometer to measure the temperature of a gas, but not the motions of the individual particles. 
+They may also arise due to deliberate modelling choice when we wish to describe a system using higher level features, such as viewing the motor cortex as a single entity responsible for movements, rather than as a collection of individual neurons.
 
-In such situations, our framework of exact transformations allows one to investigate whether such a macro-level model admits a causal interpretation. The following theorem provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging (cf.\ Figure~\ref{fig:micro_macro}).
+In such situations, the framework of exact transformations allows one to investigate whether such a macro-level model admits a causal interpretation. The following theorem, illustrated in Figure~\ref{fig:micro_macro}, provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging.
 
 \medskip
 
@@ -1185,7 +1187,7 @@ Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E,F} \righ
 %
 and $(E,F)  \sim \mathbb{P}$ where $\mathbb{P}$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
 
-Assume that there exists an $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
+Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
 %
 \begin{align*}
 \tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2 \\
@@ -1257,10 +1259,13 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 
 \subsection{Stationary behaviour of dynamical processes}\label{subsec:stationary}
 
-In this section we provide an example of an exact transformation between an SEM $\mathcal{M}_X$ describing a time-evolving system and another SEM $\mathcal{M}_Y$ describing the system after it has equilibrated. In this setting, $\tau$ could be thought of as representing our ability to only measure the time-evolving system at a single point in time, after the transient dynamics have taken place.
+This section provides an example of an exact transformation between an SEM $\mathcal{M}_X$ describing a time-evolving system and another SEM $\mathcal{M}_Y$ describing the system after it has equilibrated, illustrated in Figure~\ref{fig:stationary}. 
+In this setting, $\tau$ could be thought of as representing our ability to measure the time-evolving system at only a single point in time, after the transient dynamics have taken place.
 
-In particular, we consider a discrete-time linear dynamical system with identical noise and provide the explicit form of an SEM that models the distribution of the equilibria under each intervention (cf.\ Figure~\ref{fig:stationary}).%
-\footnote{Note that the assumption that the transition dynamics be linear can be relaxed to more general non-linear mappings. In this case, however, the structural equations of $\mathcal{M}_Y$ can only be written in terms of implicit solutions to the structural equations of $\mathcal{M}_X$. For purposes of exposition, we stick here to the simpler case of linear dynamics.}
+In particular, we consider a discrete-time linear dynamical system with identical noise and provide the explicit form of an SEM that models the distribution of the equilibria under each intervention.
+The assumption that the transition dynamics are linear could be relaxed to more general non-linear mappings. 
+In this case, however, the structural equations of $\mathcal{M}_Y$ can only be written in terms of implicit solutions to the structural equations of $\mathcal{M}_X$. 
+For purposes of exposition, the simpler case of linear dynamics suffices.
 
 \medskip
 
@@ -1380,16 +1385,10 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 \end{figure}
 
 
-The above theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.
-This supports one interpretation of SEMs as a description of a dynamical process that equilibrates quickly compared to its external environment.\footnote{This interpretation corresponds to the assumption that the noise in the dynamical model is constant through time, and is used by e.\,g.\ \cite{lacerda2012discovering,Mooij_et_al_NIPS_11,hyttinen2012learning,mooij2013ode} and \cite{mooij2013cyclic} to meaningfully interpret cyclic SEMs.}
+This theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.
+This supports one interpretation of SEMs as a description of a dynamical process that equilibrates quickly compared to its external environment, corresponding to the assumption that the noise in the dynamical model is constant through time.
+This understanding of SEMs is used by \cite{lacerda2012discovering,Mooij_et_al_NIPS_11,hyttinen2012learning,mooij2013ode} and \cite{mooij2013cyclic} to meaningfully interpret cyclic SEMs.
 The framework of exact transformations allows us to explain in a precise way the sense in which such equilibrium models can be used as causal descriptions of an underlying dynamical process.
-
-This result also sheds light on the interpretation of cyclic causal models.
-One interpretation of the structural equations of an acyclic SEM is that they represent a temporally ordered series of mechanisms by which data are generated.
-This is not possible in the case that the SEM exhibits cycles: there does not exist a partial ordering on the variables and hence one cannot think of each variable being generated temporally downstream of its parents.
-By showing that cyclic SEMs can arise as exact transformations of \emph{acyclic} SEMs, we provide an interpretation of cyclic SEMs that does not suffer from the above problem.
-
-
 
 
 \section{Discussion}
@@ -1403,6 +1402,13 @@ This work has implications for other problems in causal modelling.
 It suggests that the problem of `ambiguous manipulations' \citep{spirtes2004causal} may be thought of as arising due to the application of an inexact transformation to an SEM $\mathcal{M}_X$.
 This was illustrated in Section~\ref{sec:cholesterol} in which LDL and HDL cholesterol were only measured via their sum TC, resulting in a model that suffered from the problem of ambiguous manipulations (cf.\ Figure~\ref{fig:cholesterol:a}) since it was not an exact transformation of the underlying model (cf.\ Figure~\ref{fig:cholesterol:b}).
 This is related to the problem of causal variable definition as studied by~\cite{eberhardt2016green}.
+
+\todo{this is pasted in from the end of the previous section}
+This result also sheds light on the interpretation of cyclic causal models.
+One interpretation of the structural equations of an acyclic SEM is that they represent a temporally ordered series of mechanisms by which data are generated.
+This is not possible in the case that the SEM exhibits cycles: there does not exist a partial ordering on the variables and hence one cannot think of each variable being generated temporally downstream of its parents.
+By showing that cyclic SEMs can arise as exact transformations of \emph{acyclic} SEMs, we provide an interpretation of cyclic SEMs that does not suffer from the above problem.
+
 
 \subsection{Other papers building on this work}
 
