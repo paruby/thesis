@@ -2,7 +2,7 @@
 %*******************************************************************************
 %****************************** Third Chapter **********************************
 %*******************************************************************************
-\chapter{Causal Abstractions}
+\chapter{Causal Abstractions}\label{chapter:causality}
 
 % **************************** Define Graphics Path **************************
 \ifpdf
@@ -100,7 +100,7 @@ We will avoid going into measure-theoretic detail here, and point the reader to 
 
 \medskip
 
-\begin{definition}[Structural Equation Model (SEM)]
+\begin{definition}[Structural Equation Model (SEM)]\label{def:causality-classical-sem}
 Let $X = (X_1, \ldots, X_N)$ and $E = (E_1, \ldots E_N)$ with each $X_i$, $E_i$ taking value in $\R$. An SEM $\mathcal{M}_X$ over $X$ is a tuple $(\mathcal{S}_X, P_E)$ where
 \begin{itemize}
 	\item $\mathcal{S}_X$ is a set of structural equations of the form $X_i = f_i(X_{\pa(i)}, E_i)$ for $i=1,\ldots,N$, where 
@@ -297,10 +297,32 @@ Studying the mathematical modelling of these cases is interesting in part becaus
 
 Recall that Lemmas \ref{lemma:acyclic-sem-well-defined-obs-dist} and \ref{lemma:acyclic-sem-well-defined-int-dist} relied on acyclicity of the causal graph $\mathcal{G}$ to prove that an SEM induces well-defined observational and interventional distributions over the variables $X$. 
 When generalising to \emph{cyclic SEMs} by relaxing this acyclicity constraint, one must be careful to understand under which conditions the observational and interventional distributions are well-defined.
-The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $P_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if and only if the intervened structural equations have unique solution $\mathbb{P}_E$-almost surely.
+The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $P_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if and only if the intervened structural equations have unique solution $P_E$-almost surely.
 The following example shows a simple case of an SEM with well-defined observational distribution for which some interventional distributions are well-defined but others are ill-defined.
 
-\todo{\paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.}
+\begin{example}\label{example:causality-cyclic-invalid}
+Consider the cyclic SEM $\mathcal{M}_X=\{\mathcal{S}_X, P_E\}$ where
+%
+\begin{align*}
+\mathcal{S}_X = \big\{  X_1 &= X_2 + X_3 + E_1, \\
+					    X_2 &= X_1 + X_3 + E_2, \\
+					    X_3 &= X_1 + X_2 + E_3\big\} \\
+\end{align*}
+%
+and $P_E$ is any distribution.
+In the observational setting, the values 
+\[(X_1, X_2, X_3) = \left(\frac{E_2 + E_3}{2}, \frac{E_1 + E_3}{2}, \frac{E_1 + E_2}{2}\right)\]
+uniquely solve the structural equations, and hence the observational distribution $P_X$ is well-defined. 
+
+Under the intervention $\doop(X_1 = x_1)$, the equations have either infinitely many solution, in the case that $E_Y + E_Z = -2 x_1$, or zero solutions, if $E_Y + E_Z \not= -2 x_1$. 
+Hence the interventional distribution $P_X^{\doop(X_1 = x_1)}$ is ill-defined, and similarly for other interventions on a single variable.
+
+Under the intervention $\doop(X_1=x_1, X_2=x_2)$, the equations have unique solution 
+\[(X_1, X_2, X_3) = \left(x_1, x_2, x_1 + x_2 + E_3 \right).\]
+Thus the interventional distribution $P_X^{\doop(X_1 = x_1, X_2=x_2)}$ is well defined, similarly for any intervention on two variables.
+\end{example}
+
+%\todo{\paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.}
 
 The literature on cyclic SEMs has not settled on a set of criteria for which cyclic SEMs should be considered `valid'. 
 All agree on the fact that observational distributions must be well-defined, but there is significant disagreement on interventional distributions.
@@ -572,12 +594,12 @@ The second is that whether or not a variable is `causally meaningful' is intrica
 %In subsection ?? we will discuss how to modify the framework of SEMs to take this into account.
 
 We elaborate on each of these points next, 
-setting the stage for section ?? in which we tackle our overarching goal of trying to answer the following questions:
+setting the stage to tackle our overarching goal of trying to answer the following questions:
 If the true causal mechanisms of the world operate at a very low level of detail (e.g.~atoms), under what conditions can we speak of causal relations at higher levels (e.g.~objects)?
 How can we formalise such a notion of consistent modelling in the framework of SEMs?
 
 
-\subsection{Modelling at different levels of detail}
+\subsection{Modelling at different levels of detail}\label{subsec:causality-modelling-different-levels}
 
 All physical systems or processes in the real world are complex and can be understood at various levels of detail.
 We previously discussed the example of cholesterol levels and risk of heart disease.
@@ -640,53 +662,67 @@ This would not have been noticed had it been possible to intervene only on one o
 In other words, whether or not the two models are consistent with one another is in large part a question of which interventions in the micro-model are to be represented in the macro-model.
 
 This is illustrative of a more general case in which the same system is modelled at two different levels of complexity: if the two models are to be considered consistent, the set of interventions modelled at the micro-level may need to be restricted, since a macro-model will generally have the capacity to express fewer interventions than a micro-model with a larger number of variables. 
-This point cannot be formally expressed using SEMs as given by Definition ??, since this does not specify which interventions are valid. 
+This point cannot be formally expressed within the framework of classical SEMs as given by Definition \ref{def:causality-classical-sem}, since these does not specify which interventions are valid. 
 
-In summary, for a macro-variable that is a function of underlying causal micro-variables to be itself considered a causal variable, it is important to consider the set of interventions being modelled.
-
-For a \emph{collection} of macro-variables to be considered a causal model consistent with a micro-level model, we must also consider compositionality, an often-overlooked natural structure present in interventions.
+Moreover, for a \emph{collection} of macro-variables to be considered a causal model consistent with a micro-level model, we must also consider compositionality, an often-overlooked natural structure present in interventions.
 Given an SEM $\mathcal{M}_X$ over variables $X_1, \ldots, X_N$, the two interventions $\doop(X_i=x_i)$ and $\doop(X_j=x_j)$ for $i\not=j$  can be combined to form the intervention $\doop(X_i=x_i, X_j=x_j)$. 
-This corresponds to the intuitive notion that interventions on distinct causal variables can be combined, and can be formalised by imposing a \emph{partial ordering} $\leq_X$ on the set of interventions modelled in which $\doop(X_i=x_i) \leq_X \doop(X_i=x_i, X_j=x_j)$ and $\doop(X_j=x_j) \leq_X \doop(X_i=x_i, X_j=x_j)$. 
-The importance of this structure will be elaborated on in Section ??.
+This corresponds to the intuitive notion that interventions on distinct causal variables can be combined, and will be formalised by imposing a \emph{partial ordering} on the set of interventions modelled.
+% in which $\doop(X_i=x_i) \leq_X \doop(X_i=x_i, X_j=x_j)$ and $\doop(X_j=x_j) \leq_X \doop(X_i=x_i, X_j=x_j)$. 
+%The importance of this structure will be elaborated on in Section ??.
+
+In summary, for macro-variables that are functions of underlying causal micro-variables to be themselves considered causal entities, it is important to consider the set of interventions being modelled and the structure exhibited by these interventions.
 
 
 \section{Transformations between Structural Equation Models}\label{sec:causality-transformations-between-sems}
 
-In this section we will formalise a notion of \emph{exact transformations} between two SEMs. 
+In this section we will first introduce an extended definition for SEMs that can capture restricted sets of interventions and the structure they exhibit.
+We will then formalise a notion of \emph{exact transformations} between two SEMs. 
 The idea is that if one SEM can be viewed as an exact transformation of another, they can both be viewed as consistent causal models of the same underlying system at different levels of detail. 
+Elementary transformations satisfying this definition will be examined, and the main result (Theorem \ref{lemma:commuting}), which states that causal reasoning is preserved under exact transformations, is presented and discussed in detail.
+Section \ref{sec:causality-causal-examples-of-transformations} presents practical examples of exact transformations covering each of the three categories of modelling abstractions discussed in Section \ref{subsec:causality-modelling-different-levels}.
 
 
 \subsection{An extended definition for SEMs}
 
-As outlined in the last section, we first extend the usual definition of SEMs to take into account restricted sets of interventions imbued with a natural partial ordering.
+%As outlined in the last section, we first extend the usual definition of SEMs to take into account restricted sets of interventions imbued with a natural partial ordering.
+The following definition extends that of the classical definition for SEMs. 
+The main difference is the explicit introduction of the intervention set being modelled.
+Additionally, for generality it is not assumed that the distribution $P_E$ factorises.
+For convenience later on, the variables are labelled with an arbitrary index set $\indexset_X$ rather than $\{1,\ldots, N\}$, though this slight notational change has no formal impact on subsequent results.
+All mentions of SEMs henceforth refer to the following definition, rather than the classical definition.
 
-\begin{definition}[Structural Equation Model (SEM)]
+\medskip
+
+\begin{definition}[Updated definition for SEMs]\label{def:causality-updated-sem}
 	Let $\indexset_X$ be an index set.
-	An SEM $\mathcal{M}_X$ over  variables ${X = (X_i : i\in\indexset_X )}$ taking value in $\mathcal{X}$ is a triple $\left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E} \right)$ where
+	An SEM $\mathcal{M}_X$ over  variables ${X = (X_i : i\in\indexset_X )}$ taking value in $\mathcal{X}$ is a triple $\left(\mathcal{S}_X, \mathcal{I}_X, P_{E} \right)$ where
 	\begin{itemize}[noitemsep]
-		\item $\mathcal{S}_X$ is a set of structural equations, i.\,e.\ it is a set of equations $X_i = f_i\left( X , E_i \right)\ $ for $i \in \indexset_X$;
+		\item $\mathcal{S}_X$ is a set of structural equations $X_i = f_i\left( X_{\pa(i)} , E_i \right)\ $ for $i \in \indexset_X$;
 		\item ($\mathcal{I}_X, \leq_X)$ is a subset of all perfect interventions equipped with a natural partial ordering (see below), i.\,e.\ it is an index set where each index corresponds to a particular perfect intervention on some of the $X$ variables;
-		\item $\mathbb{P}_{E}$ is a distribution over the exogenous variables $E = ( E_i : i\in\indexset_X)$;
-		\item with $\mathbb{P}_E$-probability one, under any intervention ${i \in \mathcal{I}_X}$ there is a unique solution $x\in\mathcal{X}$ to the intervened structural equations. This ensures that for any intervention ${i \in \mathcal{I}_X}$, $\mathcal{M}_X$ induces a well-defined distribution over $\mathcal{X}$.%
-		\footnote{That is, with probability one over the exogenous variables $E$, for each draw $E=e$ there exists a unique value $x\in \mathcal{X}$ such that $e$ and $x$ satisfy the intervened structural equations. The distribution of $E$ in conjunction with $\mathcal{S}_X$ then implies a distribution over $\mathcal{X}$ for each intervention $i \in \mathcal{I}_X$ via these unique solutions.
-			If the SEM is acyclic, this is always satisfied; we impose this condition because we also consider \emph{cyclic} SEMs \cite{bongers2016structural}.}
+		\item $P_{E}$ is a (not necessarily factorised) distribution over $E = ( E_i : i\in\indexset_X)$;
+		\item with $P_E$-probability one, under any intervention ${i \in \mathcal{I}_X}$ there is a unique solution $x\in\mathcal{X}$ to the intervened structural equations. 
 	\end{itemize}
 \end{definition}
 \medskip
-
 
 As before, a perfect intervention on a single variable $\doop(X_i=x_i)$ is realised by replacing the structural equation for variable $X_i$ in $\mathcal{S}_X$ with $X_i = x_i$,
 while perfect interventions on multiple variables, e.g. $\doop(X_i=x_i, X_j=x_j)$, are similarly realised by replacing the structural equations for each variable individually.
 Elements of $\mathcal{I}_X$ correspond to perfectly intervening on a subset of the $X$ variables, setting them to some particular combination of values.
 
-$\mathcal{I}_X$ has a natural partial ordering in which, for interventions ${i, j \in \mathcal{I}_X}$, ${i\leq_X j}$ if and only if $i$ intervenes on a subset of the variables that $j$ intervenes on and sets them equal to the same values as $j$.
-For example, ${\doop(X_i=x_i) \leq_X \doop(X_i=x_i, X_j=x_j)}$.\footnote{Informally, this means that $j$ can be performed after $i$ without having to change or undo any of the changes to the structural equations made by $i$.
-Not all pairs of elements must be comparable: for instance, if $i= \doop(X_1=x_1)$ and $j = \doop(X_2=x_2)$, then neither $i\leq_X j$ nor $j \leq_X i$.} The observation that this structure is important and crucial use of it will be made use of in the next sections.
+$\mathcal{I}_X$ is equipped with the natural partial ordering $\leq_X$ in which, for interventions ${i, j \in \mathcal{I}_X}$, ${i\leq_X j}$ if and only if $i$ intervenes on a subset of the variables that $j$ intervenes on and sets them equal to the same values as $j$.
+For example, ${\doop(X_i=x_i) \leq_X \doop(X_i=x_i, X_j=x_j)}$.
+Informally, this means that $j$ can be performed after $i$ without having to change or undo any of the changes to the structural equations made by $i$.
+Not all pairs of elements must be comparable: for instance, if $i= \doop(X_1=x_1)$ and $j = \doop(X_2=x_2)$, then neither $i\leq_X j$ nor $j \leq_X i$. 
+The observation that this structure is important and crucial use of it will be made use of in the next sections.
 
-Aside from the treatment of interventions, this definition additionally relaxes the usual assumption of acyclicity of the causal graph, instead demanding that the distributions over the variables $X$ are well-defined for any intervention.
-This will be useful for interpreting cyclic SEMs as we will discuss later in Section ??.
+Aside from the treatment of interventions, Definition \ref{def:causality-updated-sem} additionally relaxes the usual assumption of acyclicity of the causal graph, 
+Instead, the final condition in the definition ensures that for any intervention ${i \in \mathcal{I}_X}$, $\mathcal{M}_X$ induces a well-defined distribution over $\mathcal{X}$. 
+This is always satisfied if the SEM is acyclic, but must be explicity included to also allow consideration of the cyclic case.
+%This will be useful for interpreting cyclic SEMs as we will discuss later in Section ??.
 
 The following example illustrates how SEMs are written in this notation and provides an example of a restricted set of interventions $\mathcal{I}_X$.
+
+\medskip
 
 \begin{example}\label{example1}
 Consider the following SEM defined over the variables $\{ B_1,B_2,L \}$
@@ -700,7 +736,7 @@ Consider the following SEM defined over the variables $\{ B_1,B_2,L \}$
 \{ E_1,E_2,E_3 \} & \overset{\text{iid}}{\sim} \mathrm{Bernoulli}(0.5)
 \end{align*}
 %
-where by the element $\nulli \in \mathcal{I}$ we denote the null-intervention corresponding to the unintervened SEM\@.
+where by the element $\nulli \in \mathcal{I}$ we denote the null- or empty-intervention corresponding to the unintervened SEM\@.
 \end{example}
 
 The SEM in Example~\ref{example1} could be thought of as a simple causal model of two light bulbs $B_1$ and $B_2$ and the presence of light $L$ in a room with a window.
@@ -711,28 +747,31 @@ The partial ordering of $\mathcal{I}_X$ corresponds to the ability to compose ph
 
 \subsection{Partially ordered sets of distributions}
 
-For each intervention $i \in \mathcal{I}_X$, the SEM $\mathcal{M}_X$ induces a distribution over the observable variables $X$ that we denote by $\mathbb{P}_X^{\doop(i)}$.
-Throughout, we will denote the null-intervention corresponding to the unintervened setting by $\nulli\in \mathcal{I}_X$.
-In our updated definition, this set of joint distributions moreover inherits the partial ordering from the intervention set $\mathcal{I}_X$. 
+For each intervention $i \in \mathcal{I}_X$, the SEM $\mathcal{M}_X$ induces a distribution over the observable variables $X$ that we denote by $P_X^{\doop(i)}$.
+Throughout, we will denote the empty- or null-intervention corresponding to the unintervened setting by $\nulli\in \mathcal{I}_X$.
+For notational convenience, we will use $P_X$ and $P_X^{\doop(i)}$ interchangeably for the observational distribution.
 
-We can write the poset of all distributions implied by the SEM $\mathcal{M}_X$ as
-\[\mathcal{P}_X := \left( \left\{ \mathbb{P}_X^{\doop(i)} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
-where $\leq_X$ is the partial ordering inherited from $\mathcal{I}_X$, i.\,e.\ ${\mathbb{P}_X^{\doop(i)} \leq_X \mathbb{P}_X^{\doop(j)} \iff i \leq_X j}$.%
-\footnote{More formally, one would need to define $\mathcal{P}_X$ to be the poset of \emph{tuples} $\left(i, \mathbb{P}_X^{\doop(i)}\right)$ to avoid problems in the case that $\mathbb{P}_X^{\doop(i)} = \mathbb{P}_X^{\doop(j)}$ for some $i\not=_X j$. Doing so would not require a change to Definition **???** or affect the results of this chapter. To avoid notational burden in our exposition, we omit this treatment.}
+$\mathcal{M}_X$ induces a set of joint distributions over $\mathcal{X}$, one for each intervention in $\mathcal{I}_X$, which moreover inherits the partial ordering from $\mathcal{I}_X$. 
+We can write this poset of distributions as
+\[\mathcal{P}_X := \left( \left\{ P_X^{\doop(i)} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
+where $\leq_X$ is the partial ordering inherited from $\mathcal{I}_X$, i.\,e.\ ${P_X^{\doop(i)} \leq_X P_X^{\doop(j)} \iff i \leq_X j}$.%
+%\footnote{More formally, one would need to define $\mathcal{P}_X$ to be the poset of \emph{tuples} $\left(i, P_X^{\doop(i)}\right)$ to avoid problems in the case that $P_X^{\doop(i)} = P_X^{\doop(j)}$ for some $i\not=_X j$. Doing so would not require a change to Definition **???** or affect the results of this chapter. To avoid notational burden in our exposition, we omit this treatment.}
 
 Note that $\mathcal{P}_X$ contains all of the information in $\mathcal{M}_X$ about the different distributions implied by the SEM and, importantly, how they are related via the interventions.
-For example, the distribution over the variables $X$ in the observational setting, $\mathbb{P}_X^\nulli$, changes to $\mathbb{P}_X^{\doop(i)}$ if we implement the intervention ${\doop(i)}$, and the partial ordering contains all information about which interventions can be composed.
+For example, the distribution over the variables $X$ in the observational setting, $P_X^\nulli$, changes to $P_X^{\doop(i)}$ if we implement the intervention ${\doop(i)}$, and the partial ordering contains all information about which distributions are subsequently attainable by composing with other interventions.
 
 
 \subsection{Exact transformations of SEMs}
 
 Suppose we have a function ${\tau: \mathcal{X} \to \mathcal{Y}}$ which maps the variables of the SEM $\mathcal{M}_X$ to another space $\mathcal{Y}$.
 Observe that since $X$ is a random variable, $\tau(X)$ is also a random variable.
-For any distribution $\mathbb{P}_X$ on $\mathcal{X}$ we thus obtain the distribution of the variable $\tau(X)$ on $\mathcal{Y}$ as $\mathbb{P}_{\tau(X)} = \tau\left(\mathbb{P}_X\right)$ via the push-forward measure. \todo{Possibly change push-forward notation to use hash. Check compatibility with WAE section.}
+For any distribution $P_X$ on $\mathcal{X}$ we thus obtain the distribution of the variable $\tau(X)$ on $\mathcal{Y}$ as $P_{\tau(X)} = \tau_{\#}P_X$ via the push-forward measure. 
 
-In particular, for each intervention $i \in \mathcal{I}_X$ we can define the induced distribution $\mathbb{P}_{\tau(X)}^{i} = \tau\left(\mathbb{P}_X^{\doop(i)}\right)$.
+%\todo{Possibly change push-forward notation to use hash. Check compatibility with WAE section.}
+
+In particular, for each intervention $i \in \mathcal{I}_X$ we can define the induced distribution $P_{\tau(X)}^{i} = \tau_{\#}P_X^{\doop(i)}$.
 We can write the poset of distributions on $\mathcal{Y}$ that are induced by the original SEM $\mathcal{M}_X$ and the transformation $\tau$ as
-\[\mathcal{P}_{\tau(X)} := \left( \left\{ \mathbb{P}_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
+\[\mathcal{P}_{\tau(X)} := \left( \left\{ P_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
 where $\leq_X$ is the partial ordering inherited from $\mathcal{P}_X$ (in turn inherited from $\mathcal{I}_X$).
 
 $\mathcal{P}_{\tau(X)}$ is just a structured collection of distributions over $\mathcal{Y}$, indexed by interventions $\mathcal{I}_X$ on the $\mathcal{X}$-level; importantly, the indices are \emph{not} interventions on the $\mathcal{Y}$-level.
@@ -740,15 +779,17 @@ $\mathcal{P}_{\tau(X)}$ is just a structured collection of distributions over $\
 
 
 Although $\mathcal{P}_{\tau(X)}$ is a poset of distributions over $\mathcal{Y}$, there does not necessarily exist an SEM $\mathcal{M}_Y$ over $\mathcal{Y}$ that implies it.
-For instance, if there is some intervention ${i \in \mathcal{I}_X \setminus \{ \nulli \}}$ such that none of the variables $Y_i$ is constant under the distribution $\mathbb{P}_{\tau(X)}^{i}$, then $\mathbb{P}_{\tau(X)}^{i}$ could not possibly be expressed as arising from a $\doop$-intervention $j\in \mathcal{I}_Y \setminus \{\nulli\}$ in any SEM over~$\mathcal{Y}$.\footnote{This problem is elaborated upon in~\cite{eberhardt2016green}.}
+For instance, if there is some intervention ${i \in \mathcal{I}_X \setminus \{ \nulli \}}$ such that none of the variables $Y_i$ is constant under the distribution $P_{\tau(X)}^{i}$, then $P_{\tau(X)}^{i}$ could not possibly be expressed as arising from a $\doop$-intervention $j\in \mathcal{I}_Y \setminus \{\nulli\}$ in any SEM over~$\mathcal{Y}$, an issue that is studied in detail by \cite{eberhardt2016green}.
 
 The case in which there \emph{does} exist an SEM $\mathcal{M}_Y$ that implies $\mathcal{P}_{\tau(X)}$ is special, motivating our main definition.
+
+\medskip
 
 \begin{definition}[Exact Transformations between SEMs]\label{def:exacttrafos}
 Let $\mathcal{M}_X$ and $\mathcal{M}_Y$ be SEMs and $\tau: \mathcal{X} \to \mathcal{Y}$ be a function.
 We say $\mathcal{M}_Y$ is an \emph{exact}  $\tau$-transformation of $\mathcal{M}_X$ if there exists a \emph{surjective order-preserving} map $\omega:\mathcal{I}_X\rightarrow \mathcal{I}_Y$ such that
-\[ \mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))} \quad \forall i \in \mathcal{I}_X \]
-where $\mathbb{P}_{\tau(X)}^{i}$ is the distribution of the $\mathcal{Y}$-valued random variable $\tau(X)$ with $X \sim \mathbb{P}_X^{\doop(i)}$.
+\[ P_{\tau(X)}^{i} = P_Y^{\doop(\omega(i))} \quad \forall i \in \mathcal{I}_X \]
+where $P_{\tau(X)}^{i}$ is the distribution of the $\mathcal{Y}$-valued random variable $\tau(X)$ with $X \sim P_X^{\doop(i)}$.
 \end{definition}
 
 Order-preserving means that ${i \leq_X j \implies \omega(i) \leq_Y \omega(j)}$.
@@ -757,8 +798,8 @@ It is important that the converse need not in general hold as this would imply t
 and hence also bijective.
 This would constrain the ways in which $\mathcal{M}_Y$ can be `simpler' than $\mathcal{M}_X$.\footnote{For instance, if it were necessary that $\omega$ be bijective, Theorems~\ref{theorem:childless} and \ref{theorem:micro-macro} would not hold.}
 That $\omega$ is surjective ensures that for any $\doop$-intervention $j \in \mathcal{I}_Y$ on $\mathcal{M}_Y$ there is at least one corresponding intervention on the $\mathcal{M}_X$ level, namely an element of $\omega^{-1}(\{j\}) \subseteq \mathcal{I}_X$.
-The following two results follow immediately from the definition. PROOFS.
-% (cf.\ proofs in Appendix~\ref{first_properties:appendix}).
+
+The following two results give elementary properties of exact transformations following immediately from the definition.
 \medskip
 
 \begin{lemma}\label{lemma:elementary}
@@ -786,34 +827,40 @@ This is a good sanity check; it would be problematic if this were not the case a
 \begin{proof}
     Let $\omega_{ZY}:\mathcal{I}_Y \to \mathcal{I}_Z$ and $\omega_{YX}:\mathcal{I}_X \to \mathcal{I}_Y$ be the mappings between interventions corresponding to the exact transformations $\tau_{ZY}$ and $\tau_{YX}$ respectively and define $\omega_{ZX} = \omega_{ZY}\circ\omega_{YX}:\mathcal{I}_X \to \mathcal{I}_Z$.
     Then $\omega_{ZX}$ is surjective and order-preserving since both $\omega_{ZY}$ and $\omega_{YX}$ are surjective and order-preserving.
-    Since $\tau_{ZY}$ and $\tau_{YX}$ are exact it follows that for all $i\in\mathcal{I}_X$. \todo{Check this:}
+    Since $\tau_{ZY}$ and $\tau_{YX}$ are exact it follows that for all $i\in\mathcal{I}_X$.
     \begin{align*}
-        \mathbb{P}^{i}_{\tau_{ZX}(X)}
+        P^{i}_{\tau_{ZX}(X)}
         =
-        \mathbb{P}^{ \omega_{ZY}(\omega_{YX}(i))}_{\tau_{ZY}(\tau_{YX}(X))}
+        P^{ \omega_{ZY}(\omega_{YX}(i))}_{\tau_{ZY}(\tau_{YX}(X))}
         =
-        \mathbb{P}^{\doop(\omega_{ZX}(i))}_{Z}
+        P^{\doop(\omega_{ZX}(i))}_{Z}
     \end{align*}
     i.\,e.\ $\mathcal{M}_Z$ is an $\tau_{ZX}$-exact transformation of $\mathcal{M}_X$.
 \end{proof}
 
-The following theorem is a consequence of the fact that $\omega$ is order-preserving. This is a mathematical formalisation of the sense in which an exact transformation preserves causal reasoning, which will be elaborated upon in the next subsection.
+
+
+\subsection{Causal interpretation of exact transformations}
+The notion of an exact transformation between SEMs was motivated by the desire to analyse the correspondence between two causal models describing the same system at different levels of detail.
+The purpose of this section is to show that if one SEM can be viewed as an exact transformation of the other, then both can sensibly be thought of as causal models of the same system. 
+The main technical result is the following theorem.
 
 \medskip
 
 \begin{theorem}[Causal consistency under exact transformations]\label{lemma:commuting}
 Suppose that  $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$ and $\omega$ is a corresponding surjective order-preserving mapping between interventions. Let $i,j \in \mathcal{I}_X$ be interventions such that $i\leq_X j$.
-Then the following diagram commutes:\\
+Then the following diagram commutes:
+\begin{center}
 \begin{tikzpicture}[thick, every node/.style = {circle, minimum size=.5cm}]
 
 {
-  \node[draw=none](Px) {$\mathbb{P}_X$};
-  \node[draw=none, right of=Px, xshift=2cm](PxInt) {$\mathbb{P}_X^{\doop(i)}$};
-  \node[draw=none, right of=PxInt, xshift=2cm](PxInt2) {$\mathbb{P}_X^{\doop(j)}$};
+  \node[draw=none](Px) {$P_X$};
+  \node[draw=none, right of=Px, xshift=2cm](PxInt) {$P_X^{\doop(i)}$};
+  \node[draw=none, right of=PxInt, xshift=2cm](PxInt2) {$P_X^{\doop(j)}$};
 
-  \node[draw=none, below of=Px, yshift=-1.5cm](Py) {$\mathbb{P}_Y$};
-  \node[draw=none, right of=Py, xshift=2cm](PyInt) {$\mathbb{P}_Y^{\doop(\omega(i))}$};
-  \node[draw=none, right of=PyInt, xshift=2cm](PyInt2) {$\mathbb{P}_Y^{\doop(\omega(j))}$};
+  \node[draw=none, below of=Px, yshift=-1.5cm](Py) {$P_Y$};
+  \node[draw=none, right of=Py, xshift=2cm](PyInt) {$P_Y^{\doop(\omega(i))}$};
+  \node[draw=none, right of=PyInt, xshift=2cm](PyInt2) {$P_Y^{\doop(\omega(j))}$};
 
   \draw[-{Latex[length=2mm,width=2mm]}](Px)--(Py);
   \draw[-{Latex[length=2mm,width=2mm]}](Px)--(PxInt);
@@ -832,22 +879,23 @@ Then the following diagram commutes:\\
   \node[draw=none, xshift=0.5cm](tauInt2) at ($(PxInt2)!0.5!(PyInt2)$){$\tau$};
 }
 \end{tikzpicture}
+\end{center}
 \end{theorem}
 
 \begin{proof}
 Let $i,j\in\mathcal{I}_X$ be interventions with $i\leq_X j$.
 The commutativity of the left square of the diagram follows immediately from the definition of an exact transformation.
 It remains to be shown that the right square of the diagram commutes.
-By definition we have that $\tau\left(\mathbb{P}_X^{\doop(i)}\right) = \mathbb{P}_Y^{\doop(\omega(i))}$ and $\tau\left(\mathbb{P}_X^{\doop(j)}\right) = \mathbb{P}_Y^{\doop(\omega(j))}$.
-Thus, we only have to show that ${\mathbb{P}_Y^{\doop(\omega(i))} \leq_Y \mathbb{P}_Y^{\doop(\omega(j))}}$ as elements of $\mathcal{P}_Y$, i.\,e.\ that the arrow ${\mathbb{P}_Y^{\doop(\omega(i))} \xrightarrow{\doop(\omega(j))} \mathbb{P}_Y^{\doop(\omega(j))}}$ exists.
+By definition we have that $\tau_{\#}P_X^{\doop(i)} = P_Y^{\doop(\omega(i))}$ and $\tau_{\#}P_X^{\doop(j)} = P_Y^{\doop(\omega(j))}$.
+Thus, we only have to show that ${P_Y^{\doop(\omega(i))} \leq_Y P_Y^{\doop(\omega(j))}}$ as elements of $\mathcal{P}_Y$, i.\,e.\ that the arrow ${P_Y^{\doop(\omega(i))} \xrightarrow{\doop(\omega(j))} P_Y^{\doop(\omega(j))}}$ exists.
 This follows from the order-preservingness of $\omega$.
 \end{proof}
 
-\subsection{Causal interpretation of exact transformations}
-The notion of an exact transformation between SEMs was motivated by the desire to analyse the correspondence between two causal models describing the same system at different levels of detail.
-The purpose of this section is to show that if one SEM can be viewed as an exact transformation of the other, then both can sensibly be thought of as causal models of the same system. In the following, we assume that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$ with $\omega$ the corresponding map between interventions.
+Suppose now that $\mathcal{M}_X$ is a causal model that is taken to be in some sense `true'.
+We will examine the implications of another SEM $\mathcal{M}_Y$ being an exact $\tau$-transformation of $\mathcal{M}_X$ with corresponding intervention map $\omega$.
 
-Surjectivity of $\omega$ ensures that any intervention in $\mathcal{I}_Y$ can be viewed as an $\mathcal{M}_Y$-level representative of some intervention on the $\mathcal{M}_X$-level. Consequently, if $\doop$-interventions on the $\mathcal{M}_X$-level are in correspondence with physical implementations, then surjectivity of $\omega$ ensures that $\doop$-interventions on the $\mathcal{M}_Y$-level have at least one corresponding physical implementation, i.\,e.\ if $\mathcal{M}_X$ is `rooted in reality', then so is $\mathcal{M}_Y$.
+Surjectivity of $\omega$ ensures that any intervention in $\mathcal{I}_Y$ can be viewed as an $\mathcal{M}_Y$-level representative of some intervention on the $\mathcal{M}_X$-level. Consequently, if $\doop$-interventions on the $\mathcal{M}_X$-level are in correspondence with physical implementations, then surjectivity of $\omega$ ensures that $\doop$-interventions on the $\mathcal{M}_Y$-level have at least one corresponding physical implementation.
+Thus, if $\mathcal{M}_X$ is physically grounded, so is $\mathcal{M}_Y$.
 
 Commutativity of the left hand part of the diagram ensures that the effects of interventions are consistently modelled by $\mathcal{M}_X$ and $\mathcal{M}_Y$.
 Suppose we want to reason about the effects on the $\mathcal{M}_Y$-level caused by the intervention $j \in \mathcal{I}_Y$.
@@ -858,7 +906,8 @@ Commutativity of the left hand part of the diagram implies that $\mathcal{M}_X$ 
 That is, we can reason directly about temperature and pressure when heating a volume of gas without having to perform the intermediate steps that involve the microscopic description of the system.
 
 Commutativity of the right hand side of the diagram ensures that once an intervention that fixes a subset of the variables has been performed, we can still consistently reason about the effects of further interventions on the remaining variables in $\mathcal{M}_X$ and $\mathcal{M}_Y$.
-Furthermore, it ensures that compositionality of $\doop$-interventions on the $\mathcal{M}_X$-level carries over to the $\mathcal{M}_Y$-level, i.\,e.\ if the intervention $j$ on the $\mathcal{M}_X$-level can be performed additionally to the intervention $i$ in $\mathcal{M}_X$---that is, $i\leq_X j$---, then the same is true of their representations in $\mathcal{M}_Y$.
+Furthermore, it ensures that compositionality of $\doop$-interventions on the $\mathcal{M}_X$-level carries over to the $\mathcal{M}_Y$-level.
+That is, if the intervention $j$ on the $\mathcal{M}_X$-level can be performed additionally to the intervention $i$ in $\mathcal{M}_X$ (i.\,e.\ $i\leq_X j$), then the same is true of their representations in $\mathcal{M}_Y$.
 
 If $\mathcal{M}_X$ and $\mathcal{M}_Y$ are models of the same system and it has been established that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$ for some mapping $\tau$, then the commutativity of the whole diagram in Theorem~\ref{lemma:commuting} ensures that they are causally consistent with one another in the sense described in the preceding paragraphs.
 If we wish to reason about the effects of interventions on the $\mathcal{Y}$-variables then it suffices to use the model $\mathcal{M}_Y$, rather than the (possibly more complex) model $\mathcal{M}_X$.
@@ -867,12 +916,12 @@ Only if this is the case, causal statements such as `raising temperature increas
 
 \subsection{What can go wrong when a transformation is not exact?}\label{sec:wrong}
 
-In the previous section we argued that our definition of exact transformations between SEMs is a sensible formalisation of causal consistency.
-In this section we will try to give the reader an intuition for why weakening the conditions of our definition would be problematic.
-In particular we focus on the requirement that $\omega$ be order-preserving, which we view as one of the core ideas of our paper.
+In the previous section it was argued that Definition \ref{def:exacttrafos} of exact transformations between SEMs is a sensible formalisation of causal consistency.
+This section provides intuition for why weakening the conditions of the definition would be problematic.
+Particular focus is paid to the requirement that $\omega$ be order-preserving, which is one of the core ideas of this work.
 
 The requirement that $\omega$ be surjective is, as discussed above, required so that all interventions on the $\mathcal{M}_Y$-level have a corresponding intervention on the $\mathcal{M}_X$-level.
-If we were to only require that $\omega$ be surjective (but not order-preserving), the observational distribution of $\mathcal{M}_X$ may be mapped to an interventional distribution of $\mathcal{M}_Y$, as illustrated by the following example (cf.\ Figure~\ref{fig:wrong-example} for an illustration).
+If it were only required that $\omega$ be surjective (but not order-preserving), the observational distribution of $\mathcal{M}_X$ might be mapped to an interventional distribution of $\mathcal{M}_Y$, as illustrated by the following example, illustrated in Figure~\ref{fig:wrong-example}.
 
 \begin{figure}
 \begin{subfigure}{.45\linewidth}
@@ -905,6 +954,8 @@ If we were to only require that $\omega$ be surjective (but not order-preserving
 \caption{Graphical illustration of parent-child relationships for the examples in Section~\ref{sec:wrong}. The micro-level model $\mathcal{M}_X$ depicted in (a) is to be transformed into the macro-level model $\mathcal{M}_Y$ depicted in (b) which is a coarser descriptions as in it only considers the sum of $X_1$ and $X_2$. In Section~\ref{sec:wrong} we give examples of what can go wrong if the transformation is not exact.}
 \label{fig:wrong-example}
 \end{figure}
+
+\medskip
 
 \begin{example}\label{example:wrong1}
 Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, \mathbb{P}_E\}$ over $\mathcal{X}=\mathbb{R}^3$ where
@@ -950,9 +1001,11 @@ Then it is true that ${\mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))
 
 If the SEMs in the above example were used to model the same system, it would be problematic that the observational setting of $\mathcal{M}_X$---a description of the system when not having physically performed any intervention---would correspond to an interventional setting in $\mathcal{M}_Y$, conversely suggesting that the system \emph{had} been intervened upon.
 
-To avoid the above conflict, we could demand in addition to surjectivity that $\omega$ map the null intervention of $\mathcal{M}_X$ to the null intervention of $\mathcal{M}_Y$.
+To avoid the above conflict, it could be demanded in addition to surjectivity that $\omega$ map the null intervention of $\mathcal{M}_X$ to the null intervention of $\mathcal{M}_Y$.
 This additional assumption would ensure commutativity of the left-hand part of the diagram in Theorem~\ref{lemma:commuting}.
 However, as the following example shows, this would not ensure that the right-hand part of the diagram commutes for all pairs of interventions ${i \leq_X j}$, since in this case the arrow from $\mathbb{P}_Y^{\doop(\omega(i))}$ to $\mathbb{P}_Y^{\doop(\omega(j))}$ may not exist.\footnote{By definition of the poset $\mathcal{P}_Y$, this arrow exists if and only if $\omega(i) \leq_Y \omega(j)$.}
+
+\medskip
 
 \begin{example}\label{example:wrong2}
 Let $\mathcal{X},\mathcal{Y}$ and $\tau$ be as in Example~\ref{example:wrong1}. Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, \mathbb{P}_E\}$ where
@@ -995,15 +1048,15 @@ Suppose now, however, that we have performed the intervention $\doop(X_2=0)$ in 
 If we wish to reason about the effect of the intervention $\doop(X_1=0,\, X_2=0)$ in $\mathcal{M}_X$, we run into a problem.
 $\mathcal{M}_X$ suggests that $\doop(X_1=0,\, X_2=0)$ could be implemented by performing an additional action on top of $\doop(X_2=0)$.
 In contrast, $\mathcal{M}_Y$ suggests that implementing the corresponding intervention $\doop(Y_1=0)$ would conflict with the already performed intervention $\doop(Y_1=1)$.
+The requirement that $\omega$ be order-preserving rules this pathology out. 
 
+\section{Examples of transformations}\label{sec:causality-causal-examples-of-transformations}
 
-\section{Examples of transformations}
-
-In Section ?? we motivated the problem of modelling at multiple levels of complexity by listing three settings in which differing model levels naturally occur.
+The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur.
 Having now introduced the notion of an exact transformation between SEMs, we provide in this section examples of exact transformations falling into each of these categories.
-The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
+%The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
-Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact. This highlights the importance to the causal modelling process of carefully considering the set of interventions. \todo{update proof locations:} All proofs are found in  the Appendix.
+Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact. This highlights the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
 
 
 
@@ -1012,82 +1065,12 @@ Observe that in each of the following examples, the particular set of interventi
 
 \subsection{Marginalisation of variables}\label{sec:basic_trafos}
 
-In the following two Theorems we consider two operations that can be performed on SEMs, namely marginalisation of childless or non-intervened variables, and prove that these are exact transformations.
-That is, an SEM can be simplified into an SEM with fewer variables by either of these operations without losing any causal content concerning the remaining variables.
+In the following two theorems it is shown that the marginalisation of childless or non-intervened variables is an exact transformation, illustrated in Figure~\ref{fig:SEM_marginalisation}.
+That is, an SEM can be simplified into an SEM by marginalising out variables of either of these types without losing any causal content concerning the remaining variables.
 
 Thus if the SEM $\mathcal{M}_Y$ can be obtained from another SEM $\mathcal{M}_X$ by successively performing the operations in the following theorems, then $\mathcal{M}_Y$ is an exact transformation of $\mathcal{M}_X$ and hence the two models are causally consistent.
-This formally explains why we can sensibly consider causal models that focus on a subsystem $\mathcal{M}_Y$ of a more complex system $\mathcal{M}_X$ (cf.\ Figure~\ref{fig:SEM_marginalisation}).
-For a measure-theoretic treatment of marginalisation in SEMs, see~\cite{bongers2016structural}.
-
-\medskip
-
-\begin{theorem}[Marginalisation of childless variables]\label{theorem:childless}
-Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables with no children, i.\,e.\ if $i\in\mathbb{I}_Z$ then $X_i$ does not appear in the right-hand side of any structural equation in $\mathcal{S}_X$.
-Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
-Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
-\begin{align*}
-   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
-\end{align*}
-naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the childless variables $X_i$ for $i\in\mathbb{I}_Z$.
-\end{theorem}
-
-\medskip
-
-\begin{proof}
-By Lemma~\ref{theorem:transitivity} it suffices to prove this for marginalisation of one childless variable.
-Without loss of generality, let $X_1$ be the childless variable to be marginalised out.
-
-Let $\mathcal{M}_Y=(\mathcal{S}_Y,\mathcal{I}_Y,\mathbb{P}_F)$ be the SEM where
-%
-\begin{itemize}
-    \item the structural equations $\mathcal{S}_Y$ are obtained from $\mathcal{S}_X$ by removing the structural equation corresponding to the childless variable $X_1$;
-    \item $\mathcal{I}_Y$ is the image of the map $\omega:\mathcal{I}_X \to \mathcal{I}_Y$ that drops any reference to the variable $X_1$ (e.\,g.\ ${\doop( X_1=x_1, X_2=x_2) \in \mathcal{I}_X}$ would be mapped to $\doop(X_2=x_2) \in \mathcal{I}_Y$);
-    \item $F = (E_i:\ i \in \mathbb{I}_X\setminus\{1\})$ are the remaining noise variables distributed according to their marginal distribution under $\mathbb{P}_E$.
-\end{itemize}
-%
-By construction, $\omega$ is surjective and order-preserving.
-Let $i\in\mathcal{I}_X$ be any intervention.
-The variable $X_1$ being childless ensures that the law on the remaining variables $X_k,k\in\mathbb{I}_X\setminus\{1\}$ that we obtain by \emph{marginalisation} of the childless variable, i.\,e.\ $\mathbb{P}_{\tau(X)}^{i}$, is equivalent to the law one obtains by simply \emph{dropping} the childless variable, which is exactly what the law under $\mathcal{M}_Y$ amounts to, i.\,e.\ $\mathbb{P}_Y^{\omega({\doop(i)})}$.
-\end{proof}
-
-
-\medskip
-
-
-\begin{theorem}[Marginalisation of non-intervened variables]\label{theorem:never_intervened}
-Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an \emph{acyclic} SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables that are not intervened upon by any intervention $i\in\mathcal{I}_X$.
-Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
-Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
-\begin{align*}
-   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
-\end{align*}
-naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the never-intervened-upon variables $X_i$ for $i\in\mathbb{I}_Z$.
-\end{theorem}
-
-\medskip
-
-
-\begin{proof}[Proof of Theorem~\ref{theorem:never_intervened} (Marginalisation of non-intervened variables)]
-By Lemma~\ref{theorem:transitivity} it suffices to proof this for marginalisation of one never-intervened-upon variable.
-Without loss of generality, let $X_1$ be the never-intervened-upon variable to be marginalised out.
-By acyclicity of the SEM $\mathcal{M}_X$, the structural equation corresponding to variable $X_1$ is of the form $X_1 = f_1\left(\mathbf{X}_{\pa(1)},E_1\right)$ and $X_1$ does not appear in the structural equation for any of its ancestors.
-
-Now let $\mathcal{M}_Y=(\mathcal{S}_Y,\mathcal{I}_Y,\mathcal{P}_F)$ be the SEM where
-%
-\begin{itemize}
-    \item $\mathcal{I}_Y = \mathcal{I}_X$;
-    \item $F_i = ((E_i,E_1):\ i \in \mathbb{I}_X\setminus\{1\})$ are the noise variables distributed as implied by $\mathbb{P}_E$;
-    \item the structural equations $\mathcal{S}_Y$ are obtained from $\mathcal{S}_X$ by removing the structural equation of $X_1$ and replacing any occurrence of $X_1$ in the right-hand side of the structural equations of children of $X_1$ by $f_1\left(\mathbf{X}_{\pa(1)},E_1\right)$, yielding $X_i = f_i\left(f_1\left(\mathbf{X}_{\pa(1)},E_1\right),\ \mathbf{X}_{\pa(i)},\ E_i\right)$.
-\end{itemize}
-%
-Note that the structural equations  of the resulting SEM are still acyclic and are all of the form $X_i = h_i\left(\mathbf{X}_{\setminus i},\ F_i\right)$.
-
-Then $\mathcal{M}_Y$ is, by construction, an $\tau$-exact transformation of $\mathcal{M}_X$ for $\omega=\operatorname{id}$.
-%
-\end{proof}
-
-The assumption of acyclicity made in Theorem~\ref{theorem:never_intervened} can be relaxed to allow marginalisation of non-intervened variables in cyclic SEMs, at the expense of extra technical conditions (see Section~3 of \cite{bongers2016structural}).
-
+This formally explains why we can sensibly consider causal models that focus on a subsystem $\mathcal{M}_Y$ of a more complex system $\mathcal{M}_X$.
+%For a measure-theoretic treatment of marginalisation in SEMs, see~\cite{bongers2016structural}.
 
 \begin{figure}
 \center\
@@ -1146,8 +1129,38 @@ That is, we can exactly transform the complex SEM $\mathcal{M}_X$ into a simpler
 \label{fig:SEM_marginalisation}
 \end{figure}
 
+\medskip
 
-We remind the reader that our definition of an SEM does not require that the exogenous $E$-variables be independent. 
+\begin{theorem}[Marginalisation of childless variables]\label{theorem:childless}
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables with no children, i.\,e.\ if $i\in\mathbb{I}_Z$ then $X_i$ does not appear in the right-hand side of any structural equation in $\mathcal{S}_X$.
+Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
+Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
+\begin{align*}
+   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
+\end{align*}
+naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the childless variables $X_i$ for $i\in\mathbb{I}_Z$.
+\end{theorem}
+
+
+
+\medskip
+
+
+\begin{theorem}[Marginalisation of non-intervened variables]\label{theorem:never_intervened}
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an \emph{acyclic} SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables that are not intervened upon by any intervention $i\in\mathcal{I}_X$.
+Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
+Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
+\begin{align*}
+   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
+\end{align*}
+naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the never-intervened-upon variables $X_i$ for $i\in\mathbb{I}_Z$.
+\end{theorem}
+
+\medskip
+
+The assumption of acyclicity made in Theorem~\ref{theorem:never_intervened} can be relaxed to allow marginalisation of non-intervened variables in cyclic SEMs, at the expense of extra technical conditions; see Section~3 of \cite{bongers2016structural}.
+
+Recall that Definition \ref{def:causality-updated-sem} does not require that the exogenous $E$-variables of a SEM be independent. 
 Theorem~\ref{theorem:never_intervened} would not hold if this restriction were made (which is usually the case in the literature); marginalising out a common parent node will in general result in its children having dependent exogenous variables.
 
 \subsection{Micro- to macro-level}\label{subsection:micromacro}
@@ -1155,6 +1168,8 @@ Theorem~\ref{theorem:never_intervened} would not hold if this restriction were m
 Transformations from micro- to macro-levels may arise in situations in which the micro-level variables can be observed via a `coarse' measurement device, represented by the function $\tau$, e.\,g.\ we can use a thermometer to measure the temperature of a gas, but not the motions of the individual particles. They may also arise due to deliberate modelling choice when we wish to describe a system using higher level features, e.\,g.\ viewing the motor cortex as a single entity responsible for movements, rather than as a collection of individual neurons.
 
 In such situations, our framework of exact transformations allows one to investigate whether such a macro-level model admits a causal interpretation. The following theorem provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging (cf.\ Figure~\ref{fig:micro_macro}).
+
+\medskip
 
 \begin{theorem}[Micro- to macro-level]\label{theorem:micro-macro}
 Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
@@ -1191,42 +1206,6 @@ Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, \mathbb{P}_{\w
 
 Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 \end{theorem}
-
-\medskip
-
-\begin{proof}[Proof of Theorem~\ref{theorem:micro-macro}]
-We begin by defining a mapping between interventions
-\begin{align*}
-\omega : \mathcal{I}_X &\rightarrow \mathcal{I}_Y \\
-\nulli &\mapsto \nulli \\
-\doop(W= w)&\mapsto \doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i\right) \\
-\doop(Z= z)&\mapsto \doop\left(\widehat{Z} = \frac{1}{m}\sum_{i=1}^m z_i\right) \\
-\doop(W=w, Z=z)&\mapsto \doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i,\, \widehat{Z} = \frac{1}{m}\sum_{i=1}^m z_i\right)
-\end{align*}
-
-Note that $\omega$ is surjective and order-preserving (in fact, it is an order embedding).
-Therefore, it only remains to show that the distributions implied by $\tau(X)$ under any intervention $i\in\mathcal{I}_X$ agree with the corresponding distributions implied by $\mathcal{M}_Y$.
-That is, we have to show that
-\[ \mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_{Y}^{\doop(\omega(i))} \quad \forall i\in\mathcal{I}_X \]
-%
-In the observational setting, the distribution over $\mathcal{Y}$ is implied by the following equations:
-%
-\begin{align*}
-\widehat{W} &= \frac{1}{n}\sum_{i=1}^n W_i = \frac{1}{n}\sum_{i=1}^n E_i \\
-\widehat{Z} &= \frac{1}{m}\sum_{i=1}^m Z_i =  \frac{1}{m}\sum_{i=1}^m \left( \sum_{j=1}^n A_{ij}W_j  + F_i\right) = \frac{a}{m}\widehat{W} +  \frac{1}{m}\sum_{i=1}^m F_i
-\end{align*}
-%
-Since the distributions of the exogenous variables in $\mathcal{M}_Y$ are given by $\widehat{E} \sim \frac{1}{n}\sum_{i=1}^n E_i$, $\widehat{F} \sim \frac{1}{m}\sum_{i=1}^m F_i$, it follows that $\mathbb{P}_{\tau(X)}^{\doop(\nulli)}$  and $\mathbb{P}_{Y}^{\doop(\nulli)}$ agree. Similarly, the push-forward measure on $\mathcal{Y}$ induced by the intervention $\doop(W=w)\in\mathcal{I}_X$ is given by
-%
-\begin{align*}
-\widehat{W} &= \frac{1}{n}\sum_{i=1}^n W_i = \frac{1}{n}\sum_{i=1}^n w_i \\
-\widehat{Z} &= \frac{1}{m}\sum_{i=1}^m Z_i =  \frac{1}{m}\sum_{i=1}^m \left( \sum_{j=1}^n A_{ij}W_j  + F_i\right) = \frac{a}{m}\widehat{W} +  \frac{1}{m}\sum_{i=1}^m F_i
-\end{align*}
-which is the same as the distribution induced by the $\omega$-corresponding intervention $\doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i\right)$ in $\mathcal{M}_Y$.
-
-Similar reasoning shows that this also holds for the interventions $\doop(Z=z)$ and $\doop(W=w, Z=z)$.
-
-\end{proof}
 
 \medskip
 
@@ -1299,8 +1278,8 @@ E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim \mathbb{P}
 %
 where $\mathbb{P}$ is any distribution over $\mathbb{R}^n$ and $A$ is a matrix.
 
-Assume that the linear mapping $v\mapsto Av$ is a contraction.
-Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:\footnote{In Appendix~\ref{contractionmapping:appendix} we show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ converges everywhere under any intervention $i\in\mathcal{I}_X$. That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.}
+Assume that the linear mapping $v\mapsto Av$ is a contraction.\footnote{In Appendix~\ref{subsec:causality-appendix-dynamical-proof} we show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ converges everywhere under any intervention $i\in\mathcal{I}_X$. That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.}
+Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:
 %
 \begin{align*}
 \tau : \mathcal{X} &\rightarrow \mathcal{Y} \\
@@ -1399,162 +1378,6 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 \caption{An illustration of the setting considered in Theorem~\ref{theorem:identical}. The discrete-time dynamical process is exactly transformed into a model describing its equilibria.}
 \label{fig:stationary}
 \end{figure}
-
-
-Before proving the above theorem, we need the following Lemmata which show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ in Theorem~\ref{theorem:identical} converges everywhere under any intervention $i\in\mathcal{I}_X$.
-That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.
-
-\medskip
-
-\begin{lemma}\label{lemma:contraction_add}
-Suppose that the function
-\begin{align*}
-f: \mathbb{R}^n & \rightarrow \mathbb{R}^m \\
- x & \mapsto f(x)
-\end{align*}
-is a contraction mapping.
-Then, for any $e \in \mathbb{R}^m$, so is the function
-\begin{align*}
-f^*: \mathbb{R}^n & \rightarrow \mathbb{R}^m \\
- x & \mapsto f(x) + e
-\end{align*}
-\end{lemma}
-
-\medskip
-
-\begin{proof}
-By definition, there exists $c<1$ such that for any $x,y\in \mathbb{R}^n$,
-\[
-\| f^*(x)-f^*(y) \| = \| (f(x)+e)-(f(y)+e) \| = \| f(x)-f(y) \| \leq c \| x - y \|
-\]
-and hence $f^*$ is a contraction mapping.
-\end{proof}
-
-\medskip
-
-\begin{lemma}\label{lemma:contraction_intervene}
-Suppose that the function
-\begin{align*}
-f: \mathbb{R}^n & \rightarrow \mathbb{R}^n \\
- x = \begin{pmatrix}x_1\\ \vdots \\ x_n \end{pmatrix}
- & \mapsto \begin{pmatrix}f_1(x)\\ \vdots \\ f_n(x) \end{pmatrix}
-\end{align*}
-is a contraction mapping. Then for any $m \leq n$, and $x^*_i \in \mathbb{R}, \: i \in [m]$, so is the function
-\begin{align*}
-f^*: \mathbb{R}^n & \rightarrow \mathbb{R}^n \\
- x = \begin{pmatrix}x_1\\ \vdots \\ x_n \end{pmatrix}
- & \mapsto \begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(x) \\ \vdots \\ f_n(x) \end{pmatrix}
-\end{align*}
-\end{lemma}
-\medskip
-
-
-\begin{proof}
-By definition, there exists $c < 1$ such that for any $x,y\in \mathbb{R}^n$,
-\begin{align*}
-\| f^*(x) - f^*(y) \| =
-\left\Vert
-\begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(x) \\ \vdots \\ f_n(x) \end{pmatrix} - \begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(y) \\ \vdots \\ f_n(y) \end{pmatrix} \right\Vert =
-\left\Vert
-\begin{pmatrix} 0 \\ \vdots \\ 0 \\ f_{m+1}(x) - f_{m+1}(y) \\ \vdots \\ f_{n}(x) - f_n(y) \end{pmatrix} \right\Vert &\leq
-\left\Vert
-\begin{pmatrix} f_{1}(x) - f_1(y)  \\ \vdots \\ f_{n}(x) - f_n(y) \end{pmatrix} \right\Vert \\
-& = \| f(x)-f(y) \|    \\
-&\leq c \| x - y \|
-\end{align*}
-and hence $f^*$ is a contraction mapping.
-\end{proof}
-
-\medskip
-
-
-\begin{lemma}\label{lemma:contraction_convergence}
-Consider the SEM $\mathcal{M}_X$ in Theorem~\ref{theorem:identical}, and suppose that the linear map $A:\mathbb{R}^n \to \mathbb{R}^n$ is a contraction mapping.
-Then, for any intervention $i\in\mathcal{I}_X$, the sequence of $X_t$ converges everywhere.
-\end{lemma}
-
-\medskip
-
-\begin{proof}
-Consider, without loss of generality, the intervention
-\[ \doop(X_t^j=x_j\ \forall t\in\mathbb{Z},\forall j \leq m \leq n) \in \mathcal{I}_X \]
-for $m \in [n]$ (for $m=0$ this amounts to the null-intervention).
-The structural equations under this intervention are
-\begin{align*}
-\begin{cases}
-X^k_{t+1} = x_k \quad &\text{if} \:  k \leq m \\
-X^k_{t+1} = \sum_j A_{kj}X^j_{t} + E^k  \quad &\text{if} \: m < k \leq n
-\end{cases}
-\end{align*}
-and thus the sequence $X_t$ can be seen to transition according to the function $f = g\circ h$, where
-\begin{align*}
-    h: \mathbb{R}^n &\to \mathbb{R}^n \\
-    v &\mapsto w = Av + E \\
-    \\
-    g : \mathbb{R}^n &\to \mathbb{R}^n \\
-    w = \begin{pmatrix}w_1\\\vdots\\w_n\end{pmatrix} &\mapsto
-    \begin{pmatrix} x_1\\\vdots\\x_m\\w_{m+1}\\\vdots\\w_n \end{pmatrix}
-\end{align*}
-By Lemma~\ref{lemma:contraction_add} and Lemma~\ref{lemma:contraction_intervene}, $f$ is a contraction mapping for any fixed $E$.
-Thus, by the contraction mapping theorem, the sequence of $X_t$ converges everywhere to a unique fixed point.
-\end{proof}
-
-\medskip
-
-
-\begin{proof}[Proof of Theorem~\ref{theorem:identical}]
-We begin by defining a mapping between interventions
-\begin{align*}
-\omega : \mathcal{I}_X &\rightarrow \mathcal{I}_Y \\
-\doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z}, \: \forall j \in J) & \mapsto \doop(Y^j= x_j \ \forall j \in J)
-\end{align*}
-%
-Note that $\omega$ is surjective and order-preserving (in fact, it is an order embedding).
-Therefore, it only remains to show that the distributions implied by $\tau(X)$ under any intervention $i\in\mathcal{I}_X$ agree with the corresponding distributions implied by $\mathcal{M}_Y$.
-That is, we have to show that
-\[ \mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_{Y}^{\doop(\omega(i))} \quad \forall i\in\mathcal{I}_X \]
-%
-For this we consider, without loss of generality, the distribution arising from performing the $\mathcal{M}_X$-level intervention
-\[ i = \doop(X_t^j=x_j\ \forall t\in\mathbb{Z},\forall j \leq m \leq n) \in \mathcal{I}_X \]
-for $m \in [n]$ (for $m=0$ this amounts to the null-intervention).
-
-Since $A$ is a contraction mapping, it follows from Lemma~\ref{lemma:contraction_convergence} that for any intervention in $\mathcal{I}_X$, the sequence of random variables $X_t$ defined by $\mathcal{M}_X$ converges everywhere.
-That is, there exists a random variable $X_*$ such that ${X_t \xrightarrow[t\to\infty]{\text{everywhere}} X_*}$.
-In the case of the intervention $i$ above, the random variable $X_*$ satisfies:
-\begin{align}\label{eq:x-star-cases}
-\begin{cases}
-X^k_{*} = x_k & \text{if}\  k \leq m \\
-X^k_{*} = \sum_j A_{kj}X^j_{*} + E^k  & \text{if}\ m < k \leq n
-\end{cases}
-\end{align}
-%
-Since $\tau(X) = \lim_{t\rightarrow \infty}X_t$, it follows from the definition of $X_*$ that $\tau(X)= X_*$, and hence $\tau(X)$ also satisfies the equations above.
-It follows (rewriting the second line in Equation \ref{eq:x-star-cases} above) that under the push-forward measure $\mathbb{P}_{\tau(X)}^{i} = \tau\left(\mathbb{P}_X^{\doop(i)}\right)$ the distribution of the random variable $\tau(X)=X_*$ is given by:
-%
-\begin{align*}
-\begin{cases}
-X_*^k = x_k & \text{if}\ k \leq m \\
-X_*^k = \frac{\sum_{j\neq k} A_{kj}X_*^j}{1-A_{kk}} + \frac{E^k}{1-A_{kk}} & \text{if}\ m < k \leq n
-\end{cases}
-\end{align*}
-%
-We need to compare this to the law of $Y$ as implied by $\mathcal{M}_Y$ under the intervention $\omega(i)$, i.\,e.\ $\mathbb{P}_Y^{\doop(\omega(i))}$.
-The $\mathcal{M}_Y$-level intervention $\omega(i)$ corresponding to $i$ is
-\[ \omega(i) = \doop(Y^j=x_j\ \forall j\leq m\leq n) \in \mathcal{I}_Y \]
-and so the structural equations of $\mathcal{M}_Y$ under the intervention $\omega(\doop(i))$ are
-%
-\begin{align*}
-\begin{cases}
-Y^k = x_k  & \text{if}\ k\leq m \\
-Y^k = \frac{\sum_{j\neq k} A_{kj}Y^j}{1-A_{kk}} + \frac{F^k}{1-A_{kk}}  & \text{if}\ m <  k \leq n
-\end{cases}
-\end{align*}
-%
-Since $F\sim E$ it indeed follows that $\tau(X) \sim Y$, i.\,e.\ $\mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))}$.
-
-Thus $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
-\end{proof}
-
 
 
 The above theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.

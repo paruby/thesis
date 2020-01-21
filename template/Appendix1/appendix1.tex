@@ -1,5 +1,353 @@
 %!TEX root = ../thesis.tex
 % ******************************* Thesis Appendix A ****************************
-\chapter{First Appendix}
+\chapter{Additional materials for Chapter \ref{chapter:causality}}\label{chapter:appendix-causality}
 
-I'm not sure yet what will go here.
+This appendix provides proofs for the results in Section~\ref{sec:causality-causal-examples-of-transformations} in which examples of exact transformations are stated.
+
+\section{Marginalisation of variables (Section \ref{sec:basic_trafos})}
+
+
+
+\begin{reptheorem}{theorem:childless}[Marginalisation of childless variables]
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables with no children, i.\,e.\ if $i\in\mathbb{I}_Z$ then $X_i$ does not appear in the right-hand side of any structural equation in $\mathcal{S}_X$.
+Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
+Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
+\begin{align*}
+   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
+\end{align*}
+naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the childless variables $X_i$ for $i\in\mathbb{I}_Z$.
+\end{reptheorem}
+
+\medskip
+
+\begin{proof}
+By Lemma~\ref{theorem:transitivity} it suffices to prove this for marginalisation of one childless variable.
+Without loss of generality, let $X_1$ be the childless variable to be marginalised out.
+
+Let $\mathcal{M}_Y=(\mathcal{S}_Y,\mathcal{I}_Y,\mathbb{P}_F)$ be the SEM where
+%
+\begin{itemize}
+    \item the structural equations $\mathcal{S}_Y$ are obtained from $\mathcal{S}_X$ by removing the structural equation corresponding to the childless variable $X_1$;
+    \item $\mathcal{I}_Y$ is the image of the map $\omega:\mathcal{I}_X \to \mathcal{I}_Y$ that drops any reference to the variable $X_1$ (e.\,g.\ ${\doop( X_1=x_1, X_2=x_2) \in \mathcal{I}_X}$ would be mapped to $\doop(X_2=x_2) \in \mathcal{I}_Y$);
+    \item $F = (E_i:\ i \in \mathbb{I}_X\setminus\{1\})$ are the remaining noise variables distributed according to their marginal distribution under $\mathbb{P}_E$.
+\end{itemize}
+%
+By construction, $\omega$ is surjective and order-preserving.
+Let $i\in\mathcal{I}_X$ be any intervention.
+The variable $X_1$ being childless ensures that the law on the remaining variables $X_k,k\in\mathbb{I}_X\setminus\{1\}$ that we obtain by \emph{marginalisation} of the childless variable, i.\,e.\ $\mathbb{P}_{\tau(X)}^{i}$, is equivalent to the law one obtains by simply \emph{dropping} the childless variable, which is exactly what the law under $\mathcal{M}_Y$ amounts to, i.\,e.\ $\mathbb{P}_Y^{\omega({\doop(i)})}$.
+\end{proof}
+
+
+\medskip
+
+
+\begin{reptheorem}{theorem:never_intervened}[Marginalisation of non-intervened variables]
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an \emph{acyclic} SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables that are not intervened upon by any intervention $i\in\mathcal{I}_X$.
+Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
+Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
+\begin{align*}
+   \tau: \left( x_i: i\in\mathbb{I}_X \right) = x &\mapsto y = \left( x_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)
+\end{align*}
+naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to marginalising out the never-intervened-upon variables $X_i$ for $i\in\mathbb{I}_Z$.
+\end{reptheorem}
+
+\medskip
+
+
+\begin{proof}
+By Lemma~\ref{theorem:transitivity} it suffices to proof this for marginalisation of one never-intervened-upon variable.
+Without loss of generality, let $X_1$ be the never-intervened-upon variable to be marginalised out.
+By acyclicity of the SEM $\mathcal{M}_X$, the structural equation corresponding to variable $X_1$ is of the form $X_1 = f_1\left(\mathbf{X}_{\pa(1)},E_1\right)$ and $X_1$ does not appear in the structural equation for any of its ancestors.
+
+Now let $\mathcal{M}_Y=(\mathcal{S}_Y,\mathcal{I}_Y,\mathcal{P}_F)$ be the SEM where
+%
+\begin{itemize}
+    \item $\mathcal{I}_Y = \mathcal{I}_X$;
+    \item $F_i = ((E_i,E_1):\ i \in \mathbb{I}_X\setminus\{1\})$ are the noise variables distributed as implied by $\mathbb{P}_E$;
+    \item the structural equations $\mathcal{S}_Y$ are obtained from $\mathcal{S}_X$ by removing the structural equation of $X_1$ and replacing any occurrence of $X_1$ in the right-hand side of the structural equations of children of $X_1$ by $f_1\left(\mathbf{X}_{\pa(1)},E_1\right)$, yielding $X_i = f_i\left(f_1\left(\mathbf{X}_{\pa(1)},E_1\right),\ \mathbf{X}_{\pa(i)},\ E_i\right)$.
+\end{itemize}
+%
+Note that the structural equations  of the resulting SEM are still acyclic and are all of the form $X_i = h_i\left(\mathbf{X}_{\setminus i},\ F_i\right)$.
+
+Then $\mathcal{M}_Y$ is, by construction, an $\tau$-exact transformation of $\mathcal{M}_X$ for $\omega=\operatorname{id}$.
+%
+\end{proof}
+
+
+
+\subsection{Micro- to macro-level (Section \ref{subsection:micromacro})}
+
+\begin{reptheorem}{theorem:micro-macro}[Micro- to macro-level]
+Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
+%
+\begin{align*}
+\mathcal{S}_X &= \left\lbrace W_i = E_i \:  : \: 1 \leq i \leq n  \right\rbrace \\
+& \quad \ \  \cup \left\lbrace Z_i = \sum_{j=1}^n A_{ij}W_j  + F_{i} \:  : \: 1\leq i \leq m \right\rbrace \\
+%
+\mathcal{I}_X &= \Big{\{} \nulli, \ \doop(W= w), \ \doop(Z= z), \\
+& \qquad\ \doop(W= w, Z= z ) :   w \in \mathbb{R}^{n}, \, z \in \mathbb{R}^m \Big{\}}
+%
+\end{align*}
+%
+and $(E,F)  \sim \mathbb{P}$ where $\mathbb{P}$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
+
+Assume that there exists an $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
+%
+\begin{align*}
+\tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2 \\
+\begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}
+\end{align*}
+%
+Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, \mathbb{P}_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
+%
+\begin{align*}
+\mathcal{S}_Y &= \Big\lbrace \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \Big\rbrace \\
+%
+\mathcal{I}_Y &= \Big{\{} \nulli,\ \doop(\widehat{W}= \widehat{w}), \ \doop(\widehat{Z}= \widehat{z}), \\
+& \qquad\ \doop(\widehat{W}= \widehat{w}, \widehat{Z}= \widehat{z} ) :   \widehat{w} \in \mathbb{R}, \, \widehat{z} \in \mathbb{R} \Big{\}} \\
+%
+\widehat{E}  & \sim \frac{1}{n}\sum_{i=1}^{n} E_i, \quad
+\widehat{F}  \sim \frac{1}{m}\sum_{i=1}^{m} F_i
+\end{align*}
+
+Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
+\end{reptheorem}
+
+\medskip
+
+\begin{proof}
+We begin by defining a mapping between interventions
+\begin{align*}
+\omega : \mathcal{I}_X &\rightarrow \mathcal{I}_Y \\
+\nulli &\mapsto \nulli \\
+\doop(W= w)&\mapsto \doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i\right) \\
+\doop(Z= z)&\mapsto \doop\left(\widehat{Z} = \frac{1}{m}\sum_{i=1}^m z_i\right) \\
+\doop(W=w, Z=z)&\mapsto \doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i,\, \widehat{Z} = \frac{1}{m}\sum_{i=1}^m z_i\right)
+\end{align*}
+
+Note that $\omega$ is surjective and order-preserving (in fact, it is an order embedding).
+Therefore, it only remains to show that the distributions implied by $\tau(X)$ under any intervention $i\in\mathcal{I}_X$ agree with the corresponding distributions implied by $\mathcal{M}_Y$.
+That is, we have to show that
+\[ \mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_{Y}^{\doop(\omega(i))} \quad \forall i\in\mathcal{I}_X \]
+%
+In the observational setting, the distribution over $\mathcal{Y}$ is implied by the following equations:
+%
+\begin{align*}
+\widehat{W} &= \frac{1}{n}\sum_{i=1}^n W_i = \frac{1}{n}\sum_{i=1}^n E_i \\
+\widehat{Z} &= \frac{1}{m}\sum_{i=1}^m Z_i =  \frac{1}{m}\sum_{i=1}^m \left( \sum_{j=1}^n A_{ij}W_j  + F_i\right) = \frac{a}{m}\widehat{W} +  \frac{1}{m}\sum_{i=1}^m F_i
+\end{align*}
+%
+Since the distributions of the exogenous variables in $\mathcal{M}_Y$ are given by $\widehat{E} \sim \frac{1}{n}\sum_{i=1}^n E_i$, $\widehat{F} \sim \frac{1}{m}\sum_{i=1}^m F_i$, it follows that $\mathbb{P}_{\tau(X)}^{\doop(\nulli)}$  and $\mathbb{P}_{Y}^{\doop(\nulli)}$ agree. Similarly, the push-forward measure on $\mathcal{Y}$ induced by the intervention $\doop(W=w)\in\mathcal{I}_X$ is given by
+%
+\begin{align*}
+\widehat{W} &= \frac{1}{n}\sum_{i=1}^n W_i = \frac{1}{n}\sum_{i=1}^n w_i \\
+\widehat{Z} &= \frac{1}{m}\sum_{i=1}^m Z_i =  \frac{1}{m}\sum_{i=1}^m \left( \sum_{j=1}^n A_{ij}W_j  + F_i\right) = \frac{a}{m}\widehat{W} +  \frac{1}{m}\sum_{i=1}^m F_i
+\end{align*}
+which is the same as the distribution induced by the $\omega$-corresponding intervention $\doop\left(\widehat{W} = \frac{1}{n}\sum_{i=1}^n w_i\right)$ in $\mathcal{M}_Y$.
+
+Similar reasoning shows that this also holds for the interventions $\doop(Z=z)$ and $\doop(W=w, Z=z)$.
+
+\end{proof}
+
+
+
+\subsection{Stationary behaviour of dynamical processes (Section \ref{subsec:stationary})}\label{subsec:causality-appendix-dynamical-proof}
+
+
+\begin{reptheorem}{theorem:identical}[Discrete-time linear dynamical process with identical noise]
+Let $\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E} \right)$ over the variables ${\left\lbrace X_t^i \: : \: t \in \mathbb{Z}, \: i\in \{1,\ldots,n\} \right\rbrace}$ be a linear SEM with
+%
+\begin{align*}
+\mathcal{S}_X &= \left\lbrace X_{t+1}^i = \sum_{j=1}^n A_{ij}X_t^j + E_t^i \:  : \: i \in \{1,\ldots,n\}, t\in\mathbb{Z} \right\rbrace \\
+&\qquad\text{i.\,e.}\ X_{t+1} = AX_t + E_t \\
+%
+\mathcal{I}_X &= \Big{\{} \doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z},\forall j \in J):  x \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+%
+E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim \mathbb{P}
+\end{align*}
+%
+where $\mathbb{P}$ is any distribution over $\mathbb{R}^n$ and $A$ is a matrix.
+
+Assume that the linear mapping $v\mapsto Av$ is a contraction.
+Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:\footnote{In Appendix~\ref{contractionmapping:appendix} we show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ converges everywhere under any intervention $i\in\mathcal{I}_X$. That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.}
+%
+\begin{align*}
+\tau : \mathcal{X} &\rightarrow \mathcal{Y} \\
+(x_t)_{t\in \mathbb{Z}} & \mapsto y= \lim_{t\rightarrow \infty} x_t
+\end{align*}
+%
+Let ${\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, \mathbb{P}_{F} \right)}$ be the (potentially cyclic) SEM over the variables ${\left\lbrace Y^i \: :  \: i\in \{1,\ldots,n\} \right\rbrace}$  with
+%
+\begin{align*}
+\mathcal{S}_Y &= \left\lbrace Y^i = \frac{\sum_{j\not=i} A_{ij}Y^j}{1-A_{ii}} + \frac{F^i}{1-A_{ii}} \:  : \: i \in \{1,\ldots,n\} \right\rbrace \\
+%
+\mathcal{I}_Y &= \Big{\{} \doop(Y^j= y_j \ \forall j \in J) : y \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+%
+F &\sim \mathbb{P}
+\end{align*}
+%
+Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
+\end{reptheorem}
+
+\medskip
+
+Before proving the above theorem, we need the following Lemmata which show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ in Theorem~\ref{theorem:identical} converges everywhere under any intervention $i\in\mathcal{I}_X$.
+That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.
+
+\medskip
+
+\begin{lemma}\label{lemma:contraction_add}
+Suppose that the function
+\begin{align*}
+f: \mathbb{R}^n & \rightarrow \mathbb{R}^m \\
+ x & \mapsto f(x)
+\end{align*}
+is a contraction mapping.
+Then, for any $e \in \mathbb{R}^m$, so is the function
+\begin{align*}
+f^*: \mathbb{R}^n & \rightarrow \mathbb{R}^m \\
+ x & \mapsto f(x) + e
+\end{align*}
+\end{lemma}
+
+\medskip
+
+\begin{proof}
+By definition, there exists $c<1$ such that for any $x,y\in \mathbb{R}^n$,
+\[
+\| f^*(x)-f^*(y) \| = \| (f(x)+e)-(f(y)+e) \| = \| f(x)-f(y) \| \leq c \| x - y \|
+\]
+and hence $f^*$ is a contraction mapping.
+\end{proof}
+
+\medskip
+
+\begin{lemma}\label{lemma:contraction_intervene}
+Suppose that the function
+\begin{align*}
+f: \mathbb{R}^n & \rightarrow \mathbb{R}^n \\
+ x = \begin{pmatrix}x_1\\ \vdots \\ x_n \end{pmatrix}
+ & \mapsto \begin{pmatrix}f_1(x)\\ \vdots \\ f_n(x) \end{pmatrix}
+\end{align*}
+is a contraction mapping. Then for any $m \leq n$, and $x^*_i \in \mathbb{R}, \: i \in [m]$, so is the function
+\begin{align*}
+f^*: \mathbb{R}^n & \rightarrow \mathbb{R}^n \\
+ x = \begin{pmatrix}x_1\\ \vdots \\ x_n \end{pmatrix}
+ & \mapsto \begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(x) \\ \vdots \\ f_n(x) \end{pmatrix}
+\end{align*}
+\end{lemma}
+\medskip
+
+
+\begin{proof}
+By definition, there exists $c < 1$ such that for any $x,y\in \mathbb{R}^n$,
+\begin{align*}
+\| f^*(x) - f^*(y) \| =
+\left\Vert
+\begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(x) \\ \vdots \\ f_n(x) \end{pmatrix} - \begin{pmatrix}x^*_1\\ \vdots \\ x^*_m \\ f_{m+1}(y) \\ \vdots \\ f_n(y) \end{pmatrix} \right\Vert =
+\left\Vert
+\begin{pmatrix} 0 \\ \vdots \\ 0 \\ f_{m+1}(x) - f_{m+1}(y) \\ \vdots \\ f_{n}(x) - f_n(y) \end{pmatrix} \right\Vert &\leq
+\left\Vert
+\begin{pmatrix} f_{1}(x) - f_1(y)  \\ \vdots \\ f_{n}(x) - f_n(y) \end{pmatrix} \right\Vert \\
+& = \| f(x)-f(y) \|    \\
+&\leq c \| x - y \|
+\end{align*}
+and hence $f^*$ is a contraction mapping.
+\end{proof}
+
+\medskip
+
+
+\begin{lemma}\label{lemma:contraction_convergence}
+Consider the SEM $\mathcal{M}_X$ in Theorem~\ref{theorem:identical}, and suppose that the linear map $A:\mathbb{R}^n \to \mathbb{R}^n$ is a contraction mapping.
+Then, for any intervention $i\in\mathcal{I}_X$, the sequence of $X_t$ converges everywhere.
+\end{lemma}
+
+\medskip
+
+\begin{proof}
+Consider, without loss of generality, the intervention
+\[ \doop(X_t^j=x_j\ \forall t\in\mathbb{Z},\forall j \leq m \leq n) \in \mathcal{I}_X \]
+for $m \in [n]$ (for $m=0$ this amounts to the null-intervention).
+The structural equations under this intervention are
+\begin{align*}
+\begin{cases}
+X^k_{t+1} = x_k \quad &\text{if} \:  k \leq m \\
+X^k_{t+1} = \sum_j A_{kj}X^j_{t} + E^k  \quad &\text{if} \: m < k \leq n
+\end{cases}
+\end{align*}
+and thus the sequence $X_t$ can be seen to transition according to the function $f = g\circ h$, where
+\begin{align*}
+    h: \mathbb{R}^n &\to \mathbb{R}^n \\
+    v &\mapsto w = Av + E \\
+    \\
+    g : \mathbb{R}^n &\to \mathbb{R}^n \\
+    w = \begin{pmatrix}w_1\\\vdots\\w_n\end{pmatrix} &\mapsto
+    \begin{pmatrix} x_1\\\vdots\\x_m\\w_{m+1}\\\vdots\\w_n \end{pmatrix}
+\end{align*}
+By Lemma~\ref{lemma:contraction_add} and Lemma~\ref{lemma:contraction_intervene}, $f$ is a contraction mapping for any fixed $E$.
+Thus, by the contraction mapping theorem, the sequence of $X_t$ converges everywhere to a unique fixed point.
+\end{proof}
+
+\medskip
+
+
+\begin{proof}[Proof of Theorem~\ref{theorem:identical}]
+We begin by defining a mapping between interventions
+\begin{align*}
+\omega : \mathcal{I}_X &\rightarrow \mathcal{I}_Y \\
+\doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z}, \: \forall j \in J) & \mapsto \doop(Y^j= x_j \ \forall j \in J)
+\end{align*}
+%
+Note that $\omega$ is surjective and order-preserving (in fact, it is an order embedding).
+Therefore, it only remains to show that the distributions implied by $\tau(X)$ under any intervention $i\in\mathcal{I}_X$ agree with the corresponding distributions implied by $\mathcal{M}_Y$.
+That is, we have to show that
+\[ \mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_{Y}^{\doop(\omega(i))} \quad \forall i\in\mathcal{I}_X \]
+%
+For this we consider, without loss of generality, the distribution arising from performing the $\mathcal{M}_X$-level intervention
+\[ i = \doop(X_t^j=x_j\ \forall t\in\mathbb{Z},\forall j \leq m \leq n) \in \mathcal{I}_X \]
+for $m \in [n]$ (for $m=0$ this amounts to the null-intervention).
+
+Since $A$ is a contraction mapping, it follows from Lemma~\ref{lemma:contraction_convergence} that for any intervention in $\mathcal{I}_X$, the sequence of random variables $X_t$ defined by $\mathcal{M}_X$ converges everywhere.
+That is, there exists a random variable $X_*$ such that ${X_t \xrightarrow[t\to\infty]{\text{everywhere}} X_*}$.
+In the case of the intervention $i$ above, the random variable $X_*$ satisfies:
+\begin{align}\label{eq:x-star-cases}
+\begin{cases}
+X^k_{*} = x_k & \text{if}\  k \leq m \\
+X^k_{*} = \sum_j A_{kj}X^j_{*} + E^k  & \text{if}\ m < k \leq n
+\end{cases}
+\end{align}
+%
+Since $\tau(X) = \lim_{t\rightarrow \infty}X_t$, it follows from the definition of $X_*$ that $\tau(X)= X_*$, and hence $\tau(X)$ also satisfies the equations above.
+It follows (rewriting the second line in Equation \ref{eq:x-star-cases} above) that under the push-forward measure $\mathbb{P}_{\tau(X)}^{i} = \tau\left(\mathbb{P}_X^{\doop(i)}\right)$ the distribution of the random variable $\tau(X)=X_*$ is given by:
+%
+\begin{align*}
+\begin{cases}
+X_*^k = x_k & \text{if}\ k \leq m \\
+X_*^k = \frac{\sum_{j\neq k} A_{kj}X_*^j}{1-A_{kk}} + \frac{E^k}{1-A_{kk}} & \text{if}\ m < k \leq n
+\end{cases}
+\end{align*}
+%
+We need to compare this to the law of $Y$ as implied by $\mathcal{M}_Y$ under the intervention $\omega(i)$, i.\,e.\ $\mathbb{P}_Y^{\doop(\omega(i))}$.
+The $\mathcal{M}_Y$-level intervention $\omega(i)$ corresponding to $i$ is
+\[ \omega(i) = \doop(Y^j=x_j\ \forall j\leq m\leq n) \in \mathcal{I}_Y \]
+and so the structural equations of $\mathcal{M}_Y$ under the intervention $\omega(\doop(i))$ are
+%
+\begin{align*}
+\begin{cases}
+Y^k = x_k  & \text{if}\ k\leq m \\
+Y^k = \frac{\sum_{j\neq k} A_{kj}Y^j}{1-A_{kk}} + \frac{F^k}{1-A_{kk}}  & \text{if}\ m <  k \leq n
+\end{cases}
+\end{align*}
+%
+Since $F\sim E$ it indeed follows that $\tau(X) \sim Y$, i.\,e.\ $\mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))}$.
+
+Thus $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
+\end{proof}
+
+
+
+
+
+
+
