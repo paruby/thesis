@@ -47,8 +47,8 @@ Section ... discusses how this work has influenced the research community and br
 \section{Introduction}
 
 Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed but unknown probability distribution exists from which observed data are sampled \emph{independently and identically distributed (\iid)}, and that new data at `test time' will similarly be drawn \iid~from this distribution.
-Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $\PP_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $\PP_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
-%Given a set of \emph{i.i.d.} samples from a distribution $\PP_X$, the goal of \emph{density estimation} is to learn an approximation to $\PP_X$.
+Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $P_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $P_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
+%Given a set of \emph{i.i.d.} samples from a distribution $P_X$, the goal of \emph{density estimation} is to learn an approximation to $P_X$.
 
 Despite the great empirical successes of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly into the framework described above. 
 The framework is limited in that it presupposes the existence of a single joint distribution over all of the random variables of interest, with the operations of marginalisation and conditioning then providing the relationships connecting any subset of variables.
@@ -112,8 +112,8 @@ $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of 
 \end{definition}
 
 %\paragraph{Remark:}
-The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $\mathbb{P}_X$ over the variables $X$. This is known as the \emph{observational distribution}.
-%We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $\mathbb{P}_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
+The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $P_X$ over the variables $X$. This is known as the \emph{observational distribution}.
+%We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $P_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
 
 \medskip
 
@@ -146,7 +146,7 @@ An intervened SEM is still just a SEM, since it has structural equations and a d
 \medskip
 
 \begin{lemma}[Well defined interventional distribution for any perfect intervention]\label{lemma:acyclic-sem-well-defined-int-dist}
-	Any perfect intervention $\doop(\cdot)$ on a SEM (i.e. any subset of variables set to any particular values) implies a well-defined interventional distribution $\mathbb{P}^{\doop(\cdot)}_X$ over $X$.
+	Any perfect intervention $\doop(\cdot)$ on a SEM (i.e. any subset of variables set to any particular values) implies a well-defined interventional distribution $P^{\doop(\cdot)}_X$ over $X$.
 \end{lemma}
 \begin{proof}
 	As discussed in the remark above, $\mathcal{M}_X^{\doop(\cdot)}$ is a valid SEM. Thus, Lemma \ref{lemma:acyclic-sem-well-defined-obs-dist} applies to $\mathcal{M}_X^{\doop(\cdot)}$.
@@ -344,16 +344,16 @@ Generally speaking, the goal of a causal inference algorithm is to learn the cau
 In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. As such, we will only discuss methods for identifying $\mathcal{G}$, though some of these may estimate the functional relationships as an intermediate step.
 These methods focus on the acyclic case unless otherwise stated.
 
-More formally, the problem can be stated thus: Given \iid~draws from a distribution $\mathbb{P}_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
-Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $\mathbb{P}_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $\mathbb{P}_E$ and functions $f_i$.
+More formally, the problem can be stated thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
+Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $P_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $P_E$ and functions $f_i$.
 
 \subsection{Conditional independence}
 
 REWRITE:
-At a high level, the idea is to relate statistical properties of the joint distribution $\mathbb{P}_X$ to properties of the causal graph $\mathcal{G}$.
+At a high level, the idea is to relate statistical properties of the joint distribution $P_X$ to properties of the causal graph $\mathcal{G}$.
 The statistical properties in question are \emph{conditional independences}.
 Graphs exhibiting the same set of conditional independences form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
-From the conditional independences present in $\mathbb{P}_X$, it is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class.
+From the conditional independences present in $P_X$, it is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class.
 We begin by defining the notion of \emph{d-separation}, a purely graph theoretic concept. 
 \\
 
@@ -381,7 +381,7 @@ The following definition and theorem show how this graph theoretic notion is rel
 
 \begin{definition}[Markov]\cite{cite something?}
 Suppose that $\mathcal{G}$ is a DAG with nodes corresponding to the tuple of variables $X$. 
-A distribution $\mathbb{P}_X$ on $X$ is \emph{Markov} with respect to $\mathcal{G}$ if, for all
+A distribution $P_X$ on $X$ is \emph{Markov} with respect to $\mathcal{G}$ if, for all
 disjoint subsets $A$, $B$ and $C$ of $X$, 
 \begin{center}
 $A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
@@ -390,28 +390,28 @@ $A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
 \medskip
 
 \paragraph{Remark:} if $\mathcal{G}'$ and $\mathcal{G}$ are two DAGs over the same vertices such that the edges present in $\mathcal{G}$ are a subset of those in $\mathcal{G}'$, then the set of d-separations entailed by $\mathcal{G}'$ is a subset of those entailed by $\mathcal{G}$. To see this, note that given any nodes $Z$, $u$ and $v$ in the definition, adding extra edges can only increase the number of paths $p$ that have to satisfy one of the conditions. 
-This means that if $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
+This means that if $P_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
 \medskip
 
 
 \begin{theorem}\cite{lauritzen}
-Suppose that $\mathbb{P}_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
+Suppose that $P_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
 Then the following two conditions are equivalent:
 \begin{enumerate}
 \item $p(x)$ factorises as $p(x) = \prod_i p(x_i |x_{\pa(i)})$;
-\item $\mathbb{P}_X$ is Markov with respect to $\mathcal{G}$.
+\item $P_X$ is Markov with respect to $\mathcal{G}$.
 \end{enumerate}
 \end{theorem}
 \medskip
 
-Suppose that the distribution $\mathbb{P}_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
-The conditional independences exhibited by $\mathbb{P}_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
-However, the set of graphs with respect to which $\mathbb{P}_X$ is Markov is `too large', since $\mathbb{P}_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
+Suppose that the distribution $P_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
+The conditional independences exhibited by $P_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
+However, the set of graphs with respect to which $P_X$ is Markov is `too large', since $P_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
 The following definition is a kind of minimality condition.\footnote{Faithfulness is additionally required to rule out certain pathological cases, for instance in which the influence of two variables on a third exactly cancel out. In the case of linear SEMs, such cases are rare \cite{lauritzen, see elem causality book ex. 6.34}.}
 \\
 
 \begin{definition}[Faithfulness]\cite{cite something?}
-$\mathbb{P}_X$ is faithful with respect to $\mathcal{G}$ if, for all disjoint subsets
+$P_X$ is faithful with respect to $\mathcal{G}$ if, for all disjoint subsets
 $A$, $B$ and $C$, 
 \begin{center}
 $A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
@@ -419,8 +419,8 @@ $A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
 \end{definition}
 \medskip
 
-If $\mathbb{P}_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $\mathbb{P}_X$ and the Markov equivalence class of $\mathcal{G}$. 
-This fact can be exploited for causal inference: give $\mathbb{P}_X$, identify the set of conditional independences and from this identify $\mathcal{G}$ up to its Markov equivalence class.
+If $P_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $P_X$ and the Markov equivalence class of $\mathcal{G}$. 
+This fact can be exploited for causal inference: give $P_X$, identify the set of conditional independences and from this identify $\mathcal{G}$ up to its Markov equivalence class.
 The most well-known algorithm that does this is the IC (inductive causality) algorithm.
 
 The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
@@ -958,17 +958,17 @@ If it were only required that $\omega$ be surjective (but not order-preserving),
 \medskip
 
 \begin{example}\label{example:wrong1}
-Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, \mathbb{P}_E\}$ over $\mathcal{X}=\mathbb{R}^3$ where
+Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, P_E\}$ over $\mathcal{X}=\mathbb{R}^3$ where
 %
 \begin{align*}
 \mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2,\ X_3 = X_1 + X_2 + E_3 \big\} \\
 %
 \mathcal{I}_X = \big\{ & \nulli,\ \doop(X_2=0),\ \doop(X_1=0,\, X_2=0)\big\}, \\
 %
-E_1 & \sim \mathbb{P}_{E_1},\ \,  E_2 = - E_1, \  \, E_3 \sim \mathbb{P}_{E_3}
+E_1 & \sim P_{E_1},\ \,  E_2 = - E_1, \  \, E_3 \sim P_{E_3}
 \end{align*}
 %
-where $\mathbb{P}_{E_1}$ and $\mathbb{P}_{E_3}$ are arbitrary distributions.
+where $P_{E_1}$ and $P_{E_3}$ are arbitrary distributions.
 Let ${\tau:\mathcal{X}\to\mathcal{Y}=\mathbb{R}^2}$ be the mapping such that
 \begin{align*}
 \tau\begin{pmatrix} x_1, x_2, x_3 \end{pmatrix}
@@ -976,14 +976,14 @@ Let ${\tau:\mathcal{X}\to\mathcal{Y}=\mathbb{R}^2}$ be the mapping such that
 = \begin{pmatrix} x_1 + x_2, x_3\end{pmatrix}
 \end{align*}
 %
-Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, \mathbb{P}_F\}$ be an SEM over $\mathcal{Y}$ with
+Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, P_F\}$ be an SEM over $\mathcal{Y}$ with
 %
 \begin{align*}
 \mathcal{S}_Y = \big\{ & Y_1 = F_1,\ Y_2 = Y_1 + F_2 \big\} \\
 %
 \mathcal{I}_Y = \big\{ & \nulli,\ \doop(Y_1=0) \big\}, \\
 %
-F_1 \sim \mathbb{P}_{E_1},&  \  \, F_2 \sim \mathbb{P}_{E_3}
+F_1 \sim P_{E_1},&  \  \, F_2 \sim P_{E_3}
 \end{align*}
 %
 Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
@@ -996,38 +996,38 @@ Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
 \end{cases}
 \end{align*}
 %
-Then it is true that ${\mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))}}$ for all  ${i \in \mathcal{I}_X }$, while $\omega$ is not order-preserving and $\omega(\nulli)\not = \nulli$.
+Then it is true that ${P_{\tau(X)}^{i} = P_Y^{\doop(\omega(i))}}$ for all  ${i \in \mathcal{I}_X }$, while $\omega$ is not order-preserving and $\omega(\nulli)\not = \nulli$.
 \end{example}
 
 If the SEMs in the above example were used to model the same system, it would be problematic that the observational setting of $\mathcal{M}_X$---a description of the system when not having physically performed any intervention---would correspond to an interventional setting in $\mathcal{M}_Y$, conversely suggesting that the system \emph{had} been intervened upon.
 
 To avoid the above conflict, it could be demanded in addition to surjectivity that $\omega$ map the null intervention of $\mathcal{M}_X$ to the null intervention of $\mathcal{M}_Y$.
 This additional assumption would ensure commutativity of the left-hand part of the diagram in Theorem~\ref{lemma:commuting}.
-However, as the following example shows, this would not ensure that the right-hand part of the diagram commutes for all pairs of interventions ${i \leq_X j}$, since in this case the arrow from $\mathbb{P}_Y^{\doop(\omega(i))}$ to $\mathbb{P}_Y^{\doop(\omega(j))}$ may not exist.\footnote{By definition of the poset $\mathcal{P}_Y$, this arrow exists if and only if $\omega(i) \leq_Y \omega(j)$.}
+However, as the following example shows, this would not ensure that the right-hand part of the diagram commutes for all pairs of interventions ${i \leq_X j}$, since in this case the arrow from $P_Y^{\doop(\omega(i))}$ to $P_Y^{\doop(\omega(j))}$ may not exist.\footnote{By definition of the poset $\mathcal{P}_Y$, this arrow exists if and only if $\omega(i) \leq_Y \omega(j)$.}
 
 \medskip
 
 \begin{example}\label{example:wrong2}
-Let $\mathcal{X},\mathcal{Y}$ and $\tau$ be as in Example~\ref{example:wrong1}. Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, \mathbb{P}_E\}$ where
+Let $\mathcal{X},\mathcal{Y}$ and $\tau$ be as in Example~\ref{example:wrong1}. Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, P_E\}$ where
 %
 \begin{align*}
 \mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2, \ X_3 = X_1 + X_2 + E_3 \big\} \\
 %
 \mathcal{I}_X = \big\{ & \nulli,\ \doop(X_2=0),\ \doop(X_1=0,\, X_2=0)\big\}, \\
 %
-E_1 & = 1,\ \,  E_2 \sim \mathbb{P}_{E_2}, \  \, E_3 \sim \mathbb{P}_{E_3}
+E_1 & = 1,\ \,  E_2 \sim P_{E_2}, \  \, E_3 \sim P_{E_3}
 \end{align*}
 %
-where $\mathbb{P}_{E_2}$ and $\mathbb{P}_{E_3}$ are arbitrary distributions.
+where $P_{E_2}$ and $P_{E_3}$ are arbitrary distributions.
 %
-Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, \mathbb{P}_F\}$ be the SEM over $\mathcal{Y}$ with
+Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, P_F\}$ be the SEM over $\mathcal{Y}$ with
 %
 \begin{align*}
 \mathcal{S}_Y = \big\{ & Y_1 =1+ F_1,\ Y_2 = Y_1 + F_2 \big\} \\
 %
 \mathcal{I}_Y = \big\{ & \nulli,\ \doop(Y_1=0),\ \doop(Y_1=1) \big\}, \\
 %
-F_1 &\sim \mathbb{P}_{E_2},  \  \, F_2 \sim \mathbb{P}_{E_3}
+F_1 &\sim P_{E_2},  \  \, F_2 \sim P_{E_3}
 \end{align*}
 %
 Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
@@ -1040,7 +1040,7 @@ Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
 \end{cases}
 \end{align*}
 %
-Then it is true that ${\mathbb{P}_{\tau(X)}^{i} = \mathbb{P}_Y^{\doop(\omega(i))}}$ for all ${i \in \mathcal{I}_X}$ and $\omega(\nulli)=\nulli$, although $\omega$ is not order-preserving.
+Then it is true that ${P_{\tau(X)}^{i} = P_Y^{\doop(\omega(i))}}$ for all ${i \in \mathcal{I}_X}$ and $\omega(\nulli)=\nulli$, although $\omega$ is not order-preserving.
 \end{example}
 
 If the above SEMs were used as models of the same system, they would not suffer from the problem illustrated in Example~\ref{example:wrong1}.
@@ -1053,10 +1053,10 @@ The requirement that $\omega$ be order-preserving rules this pathology out.
 \section{Examples of transformations}\label{sec:causality-causal-examples-of-transformations}
 
 The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur.
-Having now introduced the notion of an exact transformation between SEMs, this section provides examples of exact transformations falling into each of the categories.
+Having introduced the notion of an exact transformation between SEMs, this section provides examples of exact transformations falling into each of the categories.
 %The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
-Observe that in each of the following examples, the particular set of interventions considered is important. If we were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact, highlighting the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
+Observe that in each example, the particular set of interventions considered is important. If one were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact, highlighting the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
 
 
 
@@ -1122,9 +1122,10 @@ This formally explains why we can sensibly consider causal models that focus on 
 
 \end{tikzpicture}
 %
-\caption{Suppose that there is a complex model $\mathcal{M}_X$ but that we only wish to model the distribution over $X_1,X_2,X_3$ and how it changes under some interventions on $X_1,X_2,X_3$.
-By Theorem~\ref{theorem:childless}, we can ignore downstream effects (\dropNode{drop1}) after grouping them together as one multivariate variable and by Theorem~\ref{theorem:never_intervened} we can ignore intermediate steps of complex mechanisms (\dropNode{drop2a}) and treat upstream causes as exogenous noise (\dropNode{drop2b}).
-That is, the complex SEM $\mathcal{M}_X$ can be exactly transformed into a simpler model $\mathcal{M}_Y$ by marginalisation.
+\caption{Suppose that a complex model $\mathcal{M}_X$ is given but that only the subsystem $X_1,X_2,X_3$ is of interest.
+By Theorem~\ref{theorem:childless}, downstream effects (\dropNode{drop1}) can be ignored after grouping them together as one multivariate variable.
+By Theorem~\ref{theorem:never_intervened} intermediate steps of complex mechanisms (\dropNode{drop2a}) can be ignored and upstream causes (\dropNode{drop2b}) treated as exogenous noise.
+That is, the complex SEM $\mathcal{M}_X$ can be exactly transformed into a simpler model $\mathcal{M}_Y$ by marginalisation of the irrelevant variables.
 }
 \label{fig:SEM_marginalisation}
 \end{figure}
@@ -1132,7 +1133,7 @@ That is, the complex SEM $\mathcal{M}_X$ can be exactly transformed into a simpl
 \medskip
 
 \begin{theorem}[Marginalisation of childless variables]\label{theorem:childless}
-Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables with no children, i.\,e.\ if $i\in\mathbb{I}_Z$ then $X_i$ does not appear in the right-hand side of any structural equation in $\mathcal{S}_X$.
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,P_E)$ be an SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables with no children, i.\,e.\ if $i\in\mathbb{I}_Z$ then $X_i$ does not appear in the right-hand side of any structural equation in $\mathcal{S}_X$.
 Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
 Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
 \begin{align*}
@@ -1147,7 +1148,7 @@ naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transform
 
 
 \begin{theorem}[Marginalisation of non-intervened variables]\label{theorem:never_intervened}
-Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,\mathbb{P}_E)$ be an \emph{acyclic} SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables that are not intervened upon by any intervention $i\in\mathcal{I}_X$.
+Let $\mathcal{M}_X=(\mathcal{S}_X,\mathcal{I}_X,P_E)$ be an \emph{acyclic} SEM and suppose that ${\mathbb{I}_Z\subset\mathbb{I}_X}$ is a set of indices of variables that are not intervened upon by any intervention $i\in\mathcal{I}_X$.
 Let $\mathcal{Y}$ be the set in which $Y = \left( X_i: i\in\mathbb{I}_X\setminus \mathbb{I}_Z \right)$ takes value.
 Then the transformation $\tau: \mathcal{X} \to \mathcal{Y}$ mapping
 \begin{align*}
@@ -1169,12 +1170,12 @@ Transformations from micro- to macro-levels may arise in situations in which the
 For instance, we can use a thermometer to measure the temperature of a gas, but not the motions of the individual particles. 
 They may also arise due to deliberate modelling choice when we wish to describe a system using higher level features, such as viewing the motor cortex as a single entity responsible for movements, rather than as a collection of individual neurons.
 
-In such situations, the framework of exact transformations allows one to investigate whether such a macro-level model admits a causal interpretation. The following theorem, illustrated in Figure~\ref{fig:micro_macro}, provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging.
+In such situations, the framework of exact transformations allows the investigation of whether such a macro-level model admits a causal interpretation. The following theorem, illustrated in Figure~\ref{fig:micro_macro}, provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging.
 
 \medskip
 
 \begin{theorem}[Micro- to macro-level]\label{theorem:micro-macro}
-Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
+Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
 %
 \begin{align*}
 \mathcal{S}_X &= \left\lbrace W_i = E_i \:  : \: 1 \leq i \leq n  \right\rbrace \\
@@ -1185,7 +1186,7 @@ Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E,F} \righ
 %
 \end{align*}
 %
-and $(E,F)  \sim \mathbb{P}$ where $\mathbb{P}$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
+and $(E,F)  \sim P$ where $P$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
 
 Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
 %
@@ -1194,7 +1195,7 @@ Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$
 \begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}
 \end{align*}
 %
-Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, \mathbb{P}_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
+Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
 %
 \begin{align*}
 \mathcal{S}_Y &= \Big\lbrace \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \Big\rbrace \\
@@ -1266,45 +1267,6 @@ In particular, we consider a discrete-time linear dynamical system with identica
 The assumption that the transition dynamics are linear could be relaxed to more general non-linear mappings. 
 In this case, however, the structural equations of $\mathcal{M}_Y$ can only be written in terms of implicit solutions to the structural equations of $\mathcal{M}_X$. 
 For purposes of exposition, the simpler case of linear dynamics suffices.
-
-\medskip
-
-\begin{theorem}[Discrete-time linear dynamical process with identical noise]\label{theorem:identical}
-Let $\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, \mathbb{P}_{E} \right)$ over the variables ${\left\lbrace X_t^i \: : \: t \in \mathbb{Z}, \: i\in \{1,\ldots,n\} \right\rbrace}$ be a linear SEM with
-%
-\begin{align*}
-\mathcal{S}_X &= \left\lbrace X_{t+1}^i = \sum_{j=1}^n A_{ij}X_t^j + E_t^i \:  : \: i \in \{1,\ldots,n\}, t\in\mathbb{Z} \right\rbrace \\
-&\qquad\text{i.\,e.}\ X_{t+1} = AX_t + E_t \\
-%
-\mathcal{I}_X &= \Big{\{} \doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z},\forall j \in J):  x \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
-%
-E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim \mathbb{P}
-\end{align*}
-%
-where $\mathbb{P}$ is any distribution over $\mathbb{R}^n$ and $A$ is a matrix.
-
-Assume that the linear mapping $v\mapsto Av$ is a contraction.\footnote{In Appendix~\ref{subsec:causality-appendix-dynamical-proof} we show that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ converges everywhere under any intervention $i\in\mathcal{I}_X$. That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.}
-Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:
-%
-\begin{align*}
-\tau : \mathcal{X} &\rightarrow \mathcal{Y} \\
-(x_t)_{t\in \mathbb{Z}} & \mapsto y= \lim_{t\rightarrow \infty} x_t
-\end{align*}
-%
-Let ${\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, \mathbb{P}_{F} \right)}$ be the (potentially cyclic) SEM over the variables ${\left\lbrace Y^i \: :  \: i\in \{1,\ldots,n\} \right\rbrace}$  with
-%
-\begin{align*}
-\mathcal{S}_Y &= \left\lbrace Y^i = \frac{\sum_{j\not=i} A_{ij}Y^j}{1-A_{ii}} + \frac{F^i}{1-A_{ii}} \:  : \: i \in \{1,\ldots,n\} \right\rbrace \\
-%
-\mathcal{I}_Y &= \Big{\{} \doop(Y^j= y_j \ \forall j \in J) : y \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
-%
-F &\sim \mathbb{P}
-\end{align*}
-%
-Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
-\end{theorem}
-
-\medskip
 
 \begin{figure}
 \center\
@@ -1384,6 +1346,47 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 \label{fig:stationary}
 \end{figure}
 
+\medskip
+
+\begin{theorem}[Discrete-time linear dynamical process with identical noise]\label{theorem:identical}
+Let $\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E} \right)$ over the variables ${\left\lbrace X_t^i \: : \: t \in \mathbb{Z}, \: i\in \{1,\ldots,n\} \right\rbrace}$ be a linear SEM with
+%
+\begin{align*}
+\mathcal{S}_X &= \left\lbrace X_{t+1}^i = \sum_{j=1}^n A_{ij}X_t^j + E_t^i \:  : \: i \in \{1,\ldots,n\}, t\in\mathbb{Z} \right\rbrace \\
+&\qquad\text{i.\,e.}\ X_{t+1} = AX_t + E_t \\
+%
+\mathcal{I}_X &= \Big{\{} \doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z},\forall j \in J):  x \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+%
+E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim P
+\end{align*}
+%
+where $P$ is any distribution over $\mathbb{R}^n$ and $A$ is a matrix.
+
+Assume that the linear mapping $v\mapsto Av$ is a contraction.\footnote{In Appendix~\ref{subsec:causality-appendix-dynamical-proof} it is shown that $A$ being a contraction mapping ensures that the sequence $(X_t)_{t\in\mathbb{Z}}$ defined by $\mathcal{M}_X$ converges everywhere under any intervention $i\in\mathcal{I}_X$. That is, for any realisation $(x_t)_{t\in\mathbb{Z}}$ of this sequence, its limit $\lim_{t\rightarrow \infty}x_t$ as a sequence of elements of $\mathbb{R}^n$ exists.}
+Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:
+%
+\begin{align*}
+\tau : \mathcal{X} &\rightarrow \mathcal{Y} \\
+(x_t)_{t\in \mathbb{Z}} & \mapsto y= \lim_{t\rightarrow \infty} x_t
+\end{align*}
+%
+Let ${\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{F} \right)}$ be the (potentially cyclic) SEM over the variables ${\left\lbrace Y^i \: :  \: i\in \{1,\ldots,n\} \right\rbrace}$  with
+%
+\begin{align*}
+\mathcal{S}_Y &= \left\lbrace Y^i = \frac{\sum_{j\not=i} A_{ij}Y^j}{1-A_{ii}} + \frac{F^i}{1-A_{ii}} \:  : \: i \in \{1,\ldots,n\} \right\rbrace \\
+%
+\mathcal{I}_Y &= \Big{\{} \doop(Y^j= y_j \ \forall j \in J) : y \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+%
+F &\sim P
+\end{align*}
+%
+Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
+\end{theorem}
+
+\medskip
+
+
+
 
 This theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.
 This supports one interpretation of SEMs as a description of a dynamical process that equilibrates quickly compared to its external environment, corresponding to the assumption that the noise in the dynamical model is constant through time.
@@ -1393,69 +1396,144 @@ The framework of exact transformations allows us to explain in a precise way the
 
 \section{Discussion}
 
-It's turtles all the way down!
-There is no such thing as a `correct' model, but this chapter introduced the notion of exact transformations between SEMs to evaluate when two SEMs can be viewed as causally consistent models of the same system.
-Illustrating how these notions can be used in order to relate differing model levels, it was shown in Section ?? that exact transformations occur in three different settings outlined in Section ??.
-These have implications for the following questions in causal modelling: When can we model only a subsystem of a more complex system? When does a micro-level system admit a causal description in terms of macro-level features? How do cyclic causal models arise?
+This section discusses the implications of this work to the causality literature, future directions for extending this work as well as outlining other papers have already built directly upon it since the publication of the paper on which this chapter is in part based \citep{rubenstein2017causal}.
 
-This work has implications for other problems in causal modelling.
-It suggests that the problem of `ambiguous manipulations' \citep{spirtes2004causal} may be thought of as arising due to the application of an inexact transformation to an SEM $\mathcal{M}_X$.
-This was illustrated in Section~\ref{sec:cholesterol} in which LDL and HDL cholesterol were only measured via their sum TC, resulting in a model that suffered from the problem of ambiguous manipulations (cf.\ Figure~\ref{fig:cholesterol:a}) since it was not an exact transformation of the underlying model (cf.\ Figure~\ref{fig:cholesterol:b}).
-This is related to the problem of causal variable definition as studied by~\cite{eberhardt2016green}.
+\subsection{Implications to causality literature}
 
-\todo{this is pasted in from the end of the previous section}
-This result also sheds light on the interpretation of cyclic causal models.
-One interpretation of the structural equations of an acyclic SEM is that they represent a temporally ordered series of mechanisms by which data are generated.
-This is not possible in the case that the SEM exhibits cycles: there does not exist a partial ordering on the variables and hence one cannot think of each variable being generated temporally downstream of its parents.
-By showing that cyclic SEMs can arise as exact transformations of \emph{acyclic} SEMs, we provide an interpretation of cyclic SEMs that does not suffer from the above problem.
+\subsubsection{Ambiguous manipulations and causal variable definition}
+The example of cholesterol and heart disease discussed in Section \ref{sec:causality-what-are-causal-vars} was adapted from \cite{spirtes2004causal}, who illustrate the problem of \emph{ambiguous manipulations} of variables that are functions of underlying causal entities (e.g. TC = HDL + LDL).
+Although their work was primarily concerned with causal discovery in such a context, \cite{eberhardt2016green} demonstrated broader problematic implications to the idea of causal variable definition: in general, functions of causal variables cannot be considered to be themselves causal.
+
+The framework of exact transformations between SEMs provides a partial solution to this issue, as it has been argued that if a higher level SEM $\mathcal{M}_Y$ is an exact transformation of a SEM $\mathcal{M}_X$, they are causally consistent. 
+The key idea missing in previous work was to consider not simply individual variables in isolation, but the entire SEM \emph{along with the interventions being modelled} as the object being transformed.
 
 
-\subsection{Other papers building on this work}
+\subsubsection{Cyclic causal models}
 
-We briefly discuss here two papers that have directly built upon this work since its publication. 
-%\todo{check mooij citation, it might be duplicated.}
+As previously discussed, there is no settled consensus within the causality literature on what constitutes a `valid' cyclic SEM.
+Acyclic SEMs are usually interpreted as corresponding to a temporally ordered series of mechanisms by which data are generated; this is not possible for cyclic SEMs since there is no partial ordering on the variables.
 
-%Building on \cite{mooij2013ordinary}, \cite{rubenstein_dynamic} applies similar ideas presented here to investigate how SEMs can arise as higher-level abstractions of lower-level systems described by Ordinary Differential Equations (ODEs). 
-%While \cite{mooij2013ordinary} had already established that SEMs can be used to describe the fixed points of equilibrating ODEs,\footnote{That is, ODEs that under any intervention converge to some intervention-dependent fixed point regardless of initial conditions.}
-%\cite{rubenstein_dynamic} show that SEMs can also describe the long-term behaviour of ODEs exhibiting oscillatory dynamics.
+The most common interpretation is that they correspond to a dynamical system that converges quickly relative to its environment, represented by the exogenous noise variables \citep{mooij2013ode}.
+This is problematic because most real physical systems exhibit feedback, and many of these do not satisfy this assumption.
 
-\cite{sanders1} consider in great detail the notion of casual consistency proposed in this work. 
-They demonstrate that there exist examples of exact transformations that would nonetheless generally be considered to be inconsistent (or even unrelated) causal models. 
-In essence, the issue is that it is possible to use arbitrary distributions $\mathbb{P}_E$ over the exogenous noise variables in order to construct pairs of SEMs for which an exact transformation can be established, even though the models have little in common.
+Since all physical systems evolve in time, they can be represented as an acyclic model $\mathcal{M}_X$.
+In general our ability to make measurements is imperfect, and can be represented by the function $\tau$. 
+Whether or not the observed variables $\tau(X)$ admit a causal interpretation is equivalent to asking whether there exists an $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$.
+The framework of exact transformations between SEMs thus provides a way to think about cyclic SEMs, showing more generally how cyclicity can arise as a result of imperfect measurements of underlying acyclic models.
+
+\subsection{Extensions}
+
+A high level model need not be a perfectly accurate and faithful representation of lower-level model in order to be useful. 
+Indeed, in all models are an approximation to some degree.
+In this regard, the theory of exact transformations is perhaps too strict because of the requirement that $\tau_{\#}P_X^{\doop(i)} = P_Y^{\doop(\omega(i))}$ should hold for all interventions $i\in \mathcal{I}_X$.
+
+In the original publication from which this chapter is in part based \citep{rubenstein2017causal}, one of the proposals for future directions of enquiry was to generalise the notion of an exact transformation to an \emph{approximate} transformation in which the requirement of equality is relaxed to hold only approximately, something that could be rigorously formalised in a variety of ways.
+
+
+Since its publication, \cite{beckers2019approximate} have investigated precisely this question, exploring several subtleties. 
+For instance, for a pair of distributions the nearness of the approximation can be defined in multiple ways, and this must hold in some sense over a set of interventions. 
+They propose two ways of defining approximate abstractions and show how they are related, providing a way to quantify the trade-off between accuracy and abstraction.
+These ideas are illustrate in practice with application to climate models, showing how the El Ni\~no event arises as a macroscopic property of wind and sea temperatures.
+
+
+In a second paper, \cite{beckers2019abstracting} consider in great detail the notion of casual consistency proposed in this work. 
+They argue that there exist examples of exact transformations that would nonetheless generally be considered to be inconsistent (or even unrelated) causal models. 
+In essence, the issue is that it is possible to use arbitrary distributions $P_E$ over the exogenous noise variables in order to construct pairs of SEMs for which an exact transformation can be established, even though the models have little in common.
 In the paper they propose a sequence of increasingly restrictive definitions for transformations between SEMs, the weakest of which corresponds to the exact transformations of this chapter.
 
 The most interesting of their definitions is called an \emph{abstraction}, in which case the authors argue the coarser model really can be thought of as a higher level description of the finer one. 
-The main ideas are that if $\mathcal{M}_Y$ is a $\tau$-abstraction of $\mathcal{M}_X$, then regardless of the choice of noise distribution $\mathbb{P}_{E_X}$ in $\mathcal{M}_X$, there should exist a noise distribution $\mathbb{P}_{E_Y}$ in $\mathcal{M}_Y$ such that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$. 
+The main ideas are that if $\mathcal{M}_Y$ is a $\tau$-abstraction of $\mathcal{M}_X$, then regardless of the choice of noise distribution $P_{E_X}$ in $\mathcal{M}_X$, there should exist a noise distribution $P_{E_Y}$ in $\mathcal{M}_Y$ such that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$. 
 Moreover, $\tau$ should be surjective, in which case they show that it induces a natural mapping between interventions $\omega_\tau$.
 These extra requirements rule out the pathological cases mentioned previously.
 
-In the original publication from which this chapter is adapted \citep{rubenstein2017causal}, one of the proposals for future directions of enquiry was to generalise the notion of an exact transformation to an \emph{approximate} transformation in which the requirement that $\tau\left(\mathbb{P}_X^{\doop(i)}\right) = \mathbb{P}_Y^{\doop(\omega(i))}$ hold for all interventions $i\in \mathcal{I}_X$ be relaxed to approximate equality.
-This is interesting because a high level model need not be a perfectly accurate and faithful representation of lower-level model in order to be useful. 
-Indeed, in all models are an approximation to some degree and the theory of exact transformations cannot express this.
-\cite{sanders2} investigated precisely this question, exploring several subtleties. 
-For instance, for a pair of distributions the nearness of the approximation can be defined in multiple ways, and this must hold in some sense over a set of interventions. 
-They propose two ways of defining approximate abstractions and show how they are related, and illustrate the use of these ideas in application 
-%to previous work \citep{chalupka} in which the idea of causal models at at different scales is applied 
-to climate models in showing how the \todo{El Nino} event arises as a macroscopic property of wind and sea temperatures.
 
 
 \subsection{Future directions}
 
-%We discussed the importance of an order-preserving $\omega$ to ensure a notion of causal consistency between two SEMs.
-%It would be interesting to better understand the conditions under which different properties of consistency between causal models hold -- for instance, counterfactual reasoning, which we have not discussed in this paper.
-
-%While we have introduced the notion of an exact transformation, w
-In this work and that of \cite{sanders1, sanders2},
+In this work and that of \cite{beckers2019approximate} and \cite{beckers2019abstracting},
 no criteria to choose from amongst the set of all possible exact transformations of an SEM is provided.
-Foundational work in a similar direction has been done by \cite{chalupka2015visual,chalupka2016multi}, who consider a particular discrete setting.
-They provide algorithms to learn a transformation of a micro-level model to a macro-level model with desirable information-theoretic properties.
-We conjecture that our framework may lead to extensions of their work, e.\,g.\ to the continuous setting.
+Foundational work by \cite{chalupka2015visual,chalupka2016multi} considered the construction of higher-level causal variables in a particular discrete setting,
+providing algorithms to learn a transformation of a micro-level model to a macro-level model with desirable information-theoretic properties.
+The framework proposed here may lead to extensions of their work, for example to the continuous setting.
 
-Finally, suppose that we have made observations of an underlying system $\mathcal{M}_X$ via a measurement device $\tau$, and that we want to fit an SEM $\mathcal{M}_Y$ from a restricted model class to our data.
-By using the proposed framework, asking whether or not $\mathcal{M}_Y$ admits a causal interpretation consistent with $\mathcal{M}_X$ reduces to asking whether the transformation is exact.
-Similarly, the frameworks of \cite{sanders2} relaxes this strict notion to ask whether $\mathcal{M}_Y$ is an acceptable approximation of the truth $\mathcal{M}$.
-More generally, by fixing any two of $\mathcal{M}_X$, $\tau$ and $\mathcal{M}_Y$, we can ask what properties must be fulfilled by the third in order for the two models to be causally consistent.
-We hope that this may lead to the practical use of SEMs being theoretically grounded.
+Finally, suppose that observations of an underlying system $\mathcal{M}_X$ have been made via a measurement device $\tau$, and that an SEM $\mathcal{M}_Y$ is fit from a restricted model class to the collected data.
+The framework proposed here, and extended by the aforementioned works, provides a method to ask whether $\mathcal{M}_Y$ admits a causal interpretation consistent with $\mathcal{M}_X$.
+Although verifying that a transformation is exact (or approximate) may be impossible in practical scenarios where $\mathcal{M}_X$ and $\tau$ may be very complex (e.g. measuring the brain with EEG), it may be possible to identify general cases in which this does or does not hold.
+This may lead to the practical use of SEMs being more theoretically grounded.
+
+%By using the proposed framework, asking whether or not $\mathcal{M}_Y$ admits a causal interpretation consistent with $\mathcal{M}_X$ reduces to asking whether the transformation is exact.
+%Similarly, the frameworks of \cite{beckers2019approximate} relaxes this strict notion to ask whether $\mathcal{M}_Y$ is an acceptable approximation of the truth $\mathcal{M}$.
+%More generally, by fixing any two of $\mathcal{M}_X$, $\tau$ and $\mathcal{M}_Y$, we can ask what properties must be fulfilled by the third in order for the two models to be causally consistent.
+
+
+
+
+
+
+
+%It's turtles all the way down!
+%There is no such thing as a `correct' model, but this chapter introduced the notion of exact transformations between SEMs to evaluate when two SEMs can be viewed as causally consistent models of the same system.
+%Illustrating how these notions can be used in order to relate differing model levels, it was shown in Section ?? that exact transformations occur in three different settings outlined in Section ??.
+%These have implications for the following questions in causal modelling: When can we model only a subsystem of a more complex system? When does a micro-level system admit a causal description in terms of macro-level features? How do cyclic causal models arise?
+%
+%This work has implications for other problems in causal modelling.
+%It suggests that the problem of `ambiguous manipulations' \citep{spirtes2004causal} may be thought of as arising due to the application of an inexact transformation to an SEM $\mathcal{M}_X$.
+%This was illustrated in Section~\ref{sec:cholesterol} in which LDL and HDL cholesterol were only measured via their sum TC, resulting in a model that suffered from the problem of ambiguous manipulations (cf.\ Figure~\ref{fig:cholesterol:a}) since it was not an exact transformation of the underlying model (cf.\ Figure~\ref{fig:cholesterol:b}).
+%This is related to the problem of causal variable definition as studied by~\cite{eberhardt2016green}.
+%
+%\todo{this is pasted in from the end of the previous section}
+%This result also sheds light on the interpretation of cyclic causal models.
+%One interpretation of the structural equations of an acyclic SEM is that they represent a temporally ordered series of mechanisms by which data are generated.
+%This is not possible in the case that the SEM exhibits cycles: there does not exist a partial ordering on the variables and hence one cannot think of each variable being generated temporally downstream of its parents.
+%By showing that cyclic SEMs can arise as exact transformations of \emph{acyclic} SEMs, we provide an interpretation of cyclic SEMs that does not suffer from the above problem.
+%
+%
+%\subsection{Other papers building on this work}
+%
+%We briefly discuss here two papers that have directly built upon this work since its publication. 
+%%\todo{check mooij citation, it might be duplicated.}
+%
+%%Building on \cite{mooij2013ordinary}, \cite{rubenstein_dynamic} applies similar ideas presented here to investigate how SEMs can arise as higher-level abstractions of lower-level systems described by Ordinary Differential Equations (ODEs). 
+%%While \cite{mooij2013ordinary} had already established that SEMs can be used to describe the fixed points of equilibrating ODEs,\footnote{That is, ODEs that under any intervention converge to some intervention-dependent fixed point regardless of initial conditions.}
+%%\cite{rubenstein_dynamic} show that SEMs can also describe the long-term behaviour of ODEs exhibiting oscillatory dynamics.
+%
+%\cite{sanders1} consider in great detail the notion of casual consistency proposed in this work. 
+%They demonstrate that there exist examples of exact transformations that would nonetheless generally be considered to be inconsistent (or even unrelated) causal models. 
+%In essence, the issue is that it is possible to use arbitrary distributions $P_E$ over the exogenous noise variables in order to construct pairs of SEMs for which an exact transformation can be established, even though the models have little in common.
+%In the paper they propose a sequence of increasingly restrictive definitions for transformations between SEMs, the weakest of which corresponds to the exact transformations of this chapter.
+%
+%The most interesting of their definitions is called an \emph{abstraction}, in which case the authors argue the coarser model really can be thought of as a higher level description of the finer one. 
+%The main ideas are that if $\mathcal{M}_Y$ is a $\tau$-abstraction of $\mathcal{M}_X$, then regardless of the choice of noise distribution $P_{E_X}$ in $\mathcal{M}_X$, there should exist a noise distribution $P_{E_Y}$ in $\mathcal{M}_Y$ such that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$. 
+%Moreover, $\tau$ should be surjective, in which case they show that it induces a natural mapping between interventions $\omega_\tau$.
+%These extra requirements rule out the pathological cases mentioned previously.
+%
+%In the original publication from which this chapter is adapted \citep{rubenstein2017causal}, one of the proposals for future directions of enquiry was to generalise the notion of an exact transformation to an \emph{approximate} transformation in which the requirement that $\tau\left(P_X^{\doop(i)}\right) = P_Y^{\doop(\omega(i))}$ hold for all interventions $i\in \mathcal{I}_X$ be relaxed to approximate equality.
+%This is interesting because a high level model need not be a perfectly accurate and faithful representation of lower-level model in order to be useful. 
+%Indeed, in all models are an approximation to some degree and the theory of exact transformations cannot express this.
+%\cite{sanders2} investigated precisely this question, exploring several subtleties. 
+%For instance, for a pair of distributions the nearness of the approximation can be defined in multiple ways, and this must hold in some sense over a set of interventions. 
+%They propose two ways of defining approximate abstractions and show how they are related, and illustrate the use of these ideas in application 
+%%to previous work \citep{chalupka} in which the idea of causal models at at different scales is applied 
+%to climate models in showing how the \todo{El Nino} event arises as a macroscopic property of wind and sea temperatures.
+%
+%
+%\subsection{Future directions}
+%
+%%We discussed the importance of an order-preserving $\omega$ to ensure a notion of causal consistency between two SEMs.
+%%It would be interesting to better understand the conditions under which different properties of consistency between causal models hold -- for instance, counterfactual reasoning, which we have not discussed in this paper.
+%
+%%While we have introduced the notion of an exact transformation, w
+%In this work and that of \cite{sanders1, sanders2},
+%no criteria to choose from amongst the set of all possible exact transformations of an SEM is provided.
+%Foundational work in a similar direction has been done by \cite{chalupka2015visual,chalupka2016multi}, who consider a particular discrete setting.
+%They provide algorithms to learn a transformation of a micro-level model to a macro-level model with desirable information-theoretic properties.
+%We conjecture that our framework may lead to extensions of their work, e.\,g.\ to the continuous setting.
+%
+%Finally, suppose that we have made observations of an underlying system $\mathcal{M}_X$ via a measurement device $\tau$, and that we want to fit an SEM $\mathcal{M}_Y$ from a restricted model class to our data.
+%By using the proposed framework, asking whether or not $\mathcal{M}_Y$ admits a causal interpretation consistent with $\mathcal{M}_X$ reduces to asking whether the transformation is exact.
+%Similarly, the frameworks of \cite{sanders2} relaxes this strict notion to ask whether $\mathcal{M}_Y$ is an acceptable approximation of the truth $\mathcal{M}$.
+%More generally, by fixing any two of $\mathcal{M}_X$, $\tau$ and $\mathcal{M}_Y$, we can ask what properties must be fulfilled by the third in order for the two models to be causally consistent.
+%We hope that this may lead to the practical use of SEMs being theoretically grounded.
 
 
 
