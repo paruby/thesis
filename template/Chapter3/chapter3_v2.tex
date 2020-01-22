@@ -330,155 +330,192 @@ Notable works include \cite{hyttinen2010causal}, which requires well-defined dis
 
 It will be argued in Sections \ref{sec:causality-what-are-causal-vars} and \ref{sec:causality-transformations-between-sems} that it should be considered an integral part of the modelling process to choose a set of interventions being modelled. As such, it should be guaranteed that interventional distributions be well-defined for those that are part of the modelled intervention set; the behaviour outside of this set being considered outside of the universe and thus irrelevant.
 
-\paragraph{Interpretations of cyclic SEMs}
-Note to self: mention this later on after presenting transformations.
-In the acyclic case, one can think of an SEM as defining a generative process in which variables are realised as a function of their parents. Interventions then break the generative process for a single variable, leaving other processes unchanged.
-This interpretation breaks down for cyclic models. Existing works have interpreted them as dynamical systems that equilibrate quickly. 
+%\paragraph{Interpretations of cyclic SEMs}
+%Note to self: mention this later on after presenting transformations.
+%In the acyclic case, one can think of an SEM as defining a generative process in which variables are realised as a function of their parents. Interventions then break the generative process for a single variable, leaving other processes unchanged.
+%This interpretation breaks down for cyclic models. Existing works have interpreted them as dynamical systems that equilibrate quickly. 
 
 %\iffalse
 \section{Methods of Causal Inference}
-\todo{The contents of this section aren't really relevant to the rest of the chapter. It seems weird to have a chapter on causality without mentioning causal inference though. I'm inclined to just remove it but leaving it visible for the meantime. I will not polish it further until I decide whether or not to keep it.}
+%\todo{The contents of this section aren't really relevant to the rest of the chapter. It seems weird to have a chapter on causality without mentioning causal inference though. I'm inclined to just remove it but leaving it visible for the meantime. I will not polish it further until I decide whether or not to keep it.}
+The problem that is typically of greatest interest to practitioners in the context of causality is that of \emph{causal inference}, sometimes referred to as \emph{causal discovery}.
+The goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$, 
+either with only observational data, or with a mixture of observational and interventional data.
+In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. 
+Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, some discussion of approaches to causal inference will provide important context.
+All methods focus on the acyclic case unless otherwise stated.
 
-Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, we discuss here the challenge of performing causal inference from observational data. %and outline some prominent methods for doing so, since this is ultimately of most interest to practitioners.
-Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. 
-In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. As such, we will only discuss methods for identifying $\mathcal{G}$, though some of these may estimate the functional relationships as an intermediate step.
-These methods focus on the acyclic case unless otherwise stated.
+%Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, we discuss here the challenge of performing causal inference from observational data. %and outline some prominent methods for doing so, since this is ultimately of most interest to practitioners.
+%Generally speaking, the goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$. 
+%In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. As such, we will only discuss methods for identifying $\mathcal{G}$, though some of these may estimate the functional relationships as an intermediate step.
+%These methods focus on the acyclic case unless otherwise stated.
 
-More formally, the problem can be stated thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
+Formally, the problem can be stated thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
 Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $P_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $P_E$ and functions $f_i$.
+The former category will be briefly outlined in the next section, followed by a more detailed exposition of the latter.
 
-\subsection{Conditional independence}
+\subsection{Conditional independence based methods}
 
-REWRITE:
-At a high level, the idea is to relate statistical properties of the joint distribution $P_X$ to properties of the causal graph $\mathcal{G}$.
-The statistical properties in question are \emph{conditional independences}.
-Graphs exhibiting the same set of conditional independences form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
-From the conditional independences present in $P_X$, it is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class.
-We begin by defining the notion of \emph{d-separation}, a purely graph theoretic concept. 
-\\
+The key idea of this family of approaches is to relate \emph{conditional independences} of the joint distribution $P_X$ to graphical properties of the (acyclic) causal graph $\mathcal{G}$ known as \emph{d-separation}.
+This line of work is historically important, but only tangentially related to the topic of this chapter.
+As such, only a brief outline follows; see \cite{pearl2009causality} or \cite{peters2017elements} for an in-depth explanation.
 
-\begin{definition}[d-separation]\label{def:d-sep}\citep{pearl2009causality}
-Let $\mathcal{G}$ be a DAG with vertex set $V$ and define a \emph{path} to be a sequence of consecutive edges of either directionality. 
-Let $Z \subset V$ and $u, w \in V \setminus Z$. 
+Graphs exhibiting the same set of d-separations form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
+Subject to mild assumptions, there is a one-one correspondence between possible sets of conditional independences present in $P_X$, and Markov equivalence classes of $\mathcal{G}$. 
+It is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class by inferring the conditional independences present in $P_X$.
 
-$Z$ \emph{d-separates} $u$ and $w$ if and only if, for any path $p$
-connecting $u$ and $w$, one of the following conditions holds:
+In practice, one may have access only to a finite number of samples from $P_X$, and so conditional independence tests must be performed to identify the list of conditional independences which are subsequently used to infer the Markov equivalence class of $\mathcal{G}$.
 
-\begin{itemize}
-\item $p$ contains a chain $i \rightarrow m \rightarrow j$ or a fork $i \leftarrow m \rightarrow j$ such that $m \in Z$
-\item $p$ contains a collider $i \rightarrow m \leftarrow j$ such that $m$ and all of its descendants
-are not elements of $Z$.
-\end{itemize}
+Methods for causal inference using conditional independences have the advantage that they make few assumptions on the underlying distribution.
+This comes at the cost of needing to perform conditional independence tests, a hard problem in the general case \citep{shah2018hardness}, as well only being able to identify $\mathcal{G}$ up to an equivalence class of graphs. 
+In particular, it is impossible to distinguish between the two models $X \to Y$ and $Y \to X$ using only conditional independences since both exhibit the same (trivial) set of conditional independences.
+%SEMs provide a language and framework to make further assumptions, leading to other approaches to causal inference.
 
-Given disjoint subsets of variables $U$, $W$ and $Z$, we say that $Z$ \emph{d-separates} $U$ and $W$ if $Z$ d-separates $u$ and $w$ for all $u \in U$ and $w \in W$.
-\end{definition}
-
-The `d' stands for `directed', since this is a notion that holds only for directed acyclic graphs.
-Intuitively, $Z$ d-separates two nodes $x$ and $y$ if conditioning on $Z$ blocks any flow of information between $x$ and $y$. That is, having already observed $Z$, learning the value of $x$ provides no extra information about the value of $y$ (and vice versa).
-
-The following definition and theorem show how this graph theoretic notion is related to probability distributions.
-\\
-
-\begin{definition}[Markov]\cite{cite something?}
-Suppose that $\mathcal{G}$ is a DAG with nodes corresponding to the tuple of variables $X$. 
-A distribution $P_X$ on $X$ is \emph{Markov} with respect to $\mathcal{G}$ if, for all
-disjoint subsets $A$, $B$ and $C$ of $X$, 
-\begin{center}
-$A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
-\end{center}
-\end{definition}
-\medskip
-
-\paragraph{Remark:} if $\mathcal{G}'$ and $\mathcal{G}$ are two DAGs over the same vertices such that the edges present in $\mathcal{G}$ are a subset of those in $\mathcal{G}'$, then the set of d-separations entailed by $\mathcal{G}'$ is a subset of those entailed by $\mathcal{G}$. To see this, note that given any nodes $Z$, $u$ and $v$ in the definition, adding extra edges can only increase the number of paths $p$ that have to satisfy one of the conditions. 
-This means that if $P_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
-\medskip
-
-
-\begin{theorem}\cite{lauritzen}
-Suppose that $P_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
-Then the following two conditions are equivalent:
-\begin{enumerate}
-\item $p(x)$ factorises as $p(x) = \prod_i p(x_i |x_{\pa(i)})$;
-\item $P_X$ is Markov with respect to $\mathcal{G}$.
-\end{enumerate}
-\end{theorem}
-\medskip
-
-Suppose that the distribution $P_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
-The conditional independences exhibited by $P_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
-However, the set of graphs with respect to which $P_X$ is Markov is `too large', since $P_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
-The following definition is a kind of minimality condition.\footnote{Faithfulness is additionally required to rule out certain pathological cases, for instance in which the influence of two variables on a third exactly cancel out. In the case of linear SEMs, such cases are rare \cite{lauritzen, see elem causality book ex. 6.34}.}
-\\
-
-\begin{definition}[Faithfulness]\cite{cite something?}
-$P_X$ is faithful with respect to $\mathcal{G}$ if, for all disjoint subsets
-$A$, $B$ and $C$, 
-\begin{center}
-$A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
-\end{center}
-\end{definition}
-\medskip
-
-If $P_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $P_X$ and the Markov equivalence class of $\mathcal{G}$. 
-This fact can be exploited for causal inference: give $P_X$, identify the set of conditional independences and from this identify $\mathcal{G}$ up to its Markov equivalence class.
-The most well-known algorithm that does this is the IC (inductive causality) algorithm.
-
-The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
-For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{uv}$. 
-An undirected edge is drawn between $u$ and $v$ if no such $Z_{uv}$ can be found, since pair of nodes are adjacent if and only if there is a set that d-separates them \cite{elem causality, lemma 7.8}. 
-The undirected arrows are then oriented as much as possible by identifying colliders ($u \rightarrow z \leftarrow v$).
-This is done by exploiting the fact that out of all possible directed graphs consistent with the skeleton $u - z- v $\footnote{These are: $u \rightarrow z \rightarrow v$, $u \leftarrow z \leftarrow v$, $u \leftarrow  z \rightarrow v$ and $u \rightarrow z \leftarrow v$}, it is only the collider in which $u$ and $v$ are \emph{not} d-separated by $z$.
-The remaining edges are then oriented as much as possible such that any other orientation would lead to new colliders or cycles. 
-The result is a graph consisting of a mixture of directed and undirected edges. Any orientations of the undirected edges that does not result in new v-structures or cycles results in a Markov equivalent graph.
-Note that the search over sets of vertices $Z_{uv}$ for each pair $(u,v)$ can be in the worst case combinatorially expensive.
-
-The PC algorithm (named after the authors Peter Sprites and Clark Glymore) is a faster refinement of the IC algorithm. In the particular case that the causal graph is sparse, it runs in polynomial time. The main difference is that the search over the conditioning sets $Z_{uv}$ is restricted, and the `skeleton'  is constructed by starting with a fully-connected graph which is progressively pruned.  
-
-These are `meta-algorithms' in that they do not provide a way to directly learn structure from data, but rather use the list of conditional independences.  
-Thus, for practical use one requires a reliable method for detecting conditional independences from samples.
-Note that errors in doing so will propogate into errors in inferred causal graph and can even result in inconsistent sets of conditional independences. 
-This is a hard problem which we will not discuss further here, see .... for further details.
+%
+%REWRITE:
+%At a high level, the idea is to relate statistical properties of the joint distribution $P_X$ to properties of the causal graph $\mathcal{G}$.
+%The statistical properties in question are \emph{conditional independences}.
+%Graphs exhibiting the same set of conditional independences form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
+%From the conditional independences present in $P_X$, it is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class.
+%We begin by defining the notion of \emph{d-separation}, a purely graph theoretic concept. 
+%\\
+%
+%\begin{definition}[d-separation]\label{def:d-sep}\citep{pearl2009causality}
+%Let $\mathcal{G}$ be a DAG with vertex set $V$ and define a \emph{path} to be a sequence of consecutive edges of either directionality. 
+%Let $Z \subset V$ and $u, w \in V \setminus Z$. 
+%
+%$Z$ \emph{d-separates} $u$ and $w$ if and only if, for any path $p$
+%connecting $u$ and $w$, one of the following conditions holds:
+%
+%\begin{itemize}
+%\item $p$ contains a chain $i \rightarrow m \rightarrow j$ or a fork $i \leftarrow m \rightarrow j$ such that $m \in Z$
+%\item $p$ contains a collider $i \rightarrow m \leftarrow j$ such that $m$ and all of its descendants
+%are not elements of $Z$.
+%\end{itemize}
+%
+%Given disjoint subsets of variables $U$, $W$ and $Z$, we say that $Z$ \emph{d-separates} $U$ and $W$ if $Z$ d-separates $u$ and $w$ for all $u \in U$ and $w \in W$.
+%\end{definition}
+%
+%The `d' stands for `directed', since this is a notion that holds only for directed acyclic graphs.
+%Intuitively, $Z$ d-separates two nodes $x$ and $y$ if conditioning on $Z$ blocks any flow of information between $x$ and $y$. That is, having already observed $Z$, learning the value of $x$ provides no extra information about the value of $y$ (and vice versa).
+%
+%The following definition and theorem show how this graph theoretic notion is related to probability distributions.
+%\\
+%
+%\begin{definition}[Markov]\cite{cite something?}
+%Suppose that $\mathcal{G}$ is a DAG with nodes corresponding to the tuple of variables $X$. 
+%A distribution $P_X$ on $X$ is \emph{Markov} with respect to $\mathcal{G}$ if, for all
+%disjoint subsets $A$, $B$ and $C$ of $X$, 
+%\begin{center}
+%$A$ and $B$ are d-separated by $C$ $\implies$ $A \perp B | C$.
+%\end{center}
+%\end{definition}
+%\medskip
+%
+%\paragraph{Remark:} if $\mathcal{G}'$ and $\mathcal{G}$ are two DAGs over the same vertices such that the edges present in $\mathcal{G}$ are a subset of those in $\mathcal{G}'$, then the set of d-separations entailed by $\mathcal{G}'$ is a subset of those entailed by $\mathcal{G}$. To see this, note that given any nodes $Z$, $u$ and $v$ in the definition, adding extra edges can only increase the number of paths $p$ that have to satisfy one of the conditions. 
+%This means that if $P_X$ is Markov with respect to $\mathcal{G}$, it is also Markov with respect to $\mathcal{G}'$.
+%\medskip
+%
+%
+%\begin{theorem}\cite{lauritzen}
+%Suppose that $P_X$ admits density $p(x)$ with respect to the Lebesgue measure, and that $\mathcal{G}$ is a DAG with nodes corresponding to the variables $X$ in which $X_i$ has parents $X_{\pa(i)}$. 
+%Then the following two conditions are equivalent:
+%\begin{enumerate}
+%\item $p(x)$ factorises as $p(x) = \prod_i p(x_i |x_{\pa(i)})$;
+%\item $P_X$ is Markov with respect to $\mathcal{G}$.
+%\end{enumerate}
+%\end{theorem}
+%\medskip
+%
+%Suppose that the distribution $P_X$ is induced by an SEM with unknown graph $\mathcal{G}$.
+%The conditional independences exhibited by $P_X$ constrain the set of possible graphs to which $\mathcal{G}$ must belong, since the d-separations that it entails must be consistent with the conditional independences.
+%However, the set of graphs with respect to which $P_X$ is Markov is `too large', since $P_X$ is Markov with respect to any DAG $\mathcal{G}'$ whose edges contain those of $\mathcal{G}$.
+%The following definition is a kind of minimality condition.\footnote{Faithfulness is additionally required to rule out certain pathological cases, for instance in which the influence of two variables on a third exactly cancel out. In the case of linear SEMs, such cases are rare \cite{lauritzen, see elem causality book ex. 6.34}.}
+%\\
+%
+%\begin{definition}[Faithfulness]\cite{cite something?}
+%$P_X$ is faithful with respect to $\mathcal{G}$ if, for all disjoint subsets
+%$A$, $B$ and $C$, 
+%\begin{center}
+%$A \perp B | C$ $\implies$ $A$ and $B$ are d-separated by $C$.
+%\end{center}
+%\end{definition}
+%\medskip
+%
+%If $P_X$ is both Markov and faithful with respect to a DAG $\mathcal{G}$, then there is an exact correspondence between the conditional independences of $P_X$ and the Markov equivalence class of $\mathcal{G}$. 
+%This fact can be exploited for causal inference: give $P_X$, identify the set of conditional independences and from this identify $\mathcal{G}$ up to its Markov equivalence class.
+%The most well-known algorithm that does this is the IC (inductive causality) algorithm.
+%
+%The algorithm works by first constructing a `skeleton' of undirected edges, followed by orienting these edges.
+%For each pair of variables $u$ and $v$, one first searches for a set of other variables $Z_{uv}$ such that $u \perp v| Z_{uv}$. 
+%An undirected edge is drawn between $u$ and $v$ if no such $Z_{uv}$ can be found, since pair of nodes are adjacent if and only if there is a set that d-separates them \cite{elem causality, lemma 7.8}. 
+%The undirected arrows are then oriented as much as possible by identifying colliders ($u \rightarrow z \leftarrow v$).
+%This is done by exploiting the fact that out of all possible directed graphs consistent with the skeleton $u - z- v $\footnote{These are: $u \rightarrow z \rightarrow v$, $u \leftarrow z \leftarrow v$, $u \leftarrow  z \rightarrow v$ and $u \rightarrow z \leftarrow v$}, it is only the collider in which $u$ and $v$ are \emph{not} d-separated by $z$.
+%The remaining edges are then oriented as much as possible such that any other orientation would lead to new colliders or cycles. 
+%The result is a graph consisting of a mixture of directed and undirected edges. Any orientations of the undirected edges that does not result in new v-structures or cycles results in a Markov equivalent graph.
+%Note that the search over sets of vertices $Z_{uv}$ for each pair $(u,v)$ can be in the worst case combinatorially expensive.
+%
+%The PC algorithm (named after the authors Peter Sprites and Clark Glymore) is a faster refinement of the IC algorithm. In the particular case that the causal graph is sparse, it runs in polynomial time. The main difference is that the search over the conditioning sets $Z_{uv}$ is restricted, and the `skeleton'  is constructed by starting with a fully-connected graph which is progressively pruned.  
+%
+%These are `meta-algorithms' in that they do not provide a way to directly learn structure from data, but rather use the list of conditional independences.  
+%Thus, for practical use one requires a reliable method for detecting conditional independences from samples.
+%Note that errors in doing so will propogate into errors in inferred causal graph and can even result in inconsistent sets of conditional independences. 
+%This is a hard problem which we will not discuss further here, see .... for further details.
 
 \subsection{Structural Equation based methods}
 
-The conditional independence approach outlined in the previous section makes rather weak assumptions about the data generating process, namely only that the conditional independences should agree with those implied by the causal graphical structure (Markov and faithfulness). 
-As a result of such weak assumptions, it is often not possible to uniquely identify the causal structure using only observational data. 
-Indeed, in the very simple case of a two variable system, the graphs $X \rightarrow Y$ and $Y \rightarrow X$ cannot be distinguished:
-both graphs exhibit the same (trivial) set of d-separations, thus are Markov equivalent. 
+%The conditional independence approach outlined in the previous section makes rather weak assumptions about the data generating process, namely only that the conditional independences should agree with those implied by the causal graphical structure (Markov and faithfulness). 
+%As a result of such weak assumptions, it is often not possible to uniquely identify the causal structure using only observational data. 
+%Indeed, in the very simple case of a two variable system, the graphs $X \rightarrow Y$ and $Y \rightarrow X$ cannot be distinguished:
+%both graphs exhibit the same (trivial) set of d-separations, thus are Markov equivalent. 
 
-One way in which we can specify further assumptions is to use the language of SEMs. 
-By placing suitable restrictions on the functional forms of the structural equations, we can make further assumptions that lead to identifiability - that is, unambiguous recovery of the SEM from the observational distribution. In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. 
+One way in which further assumptions can be specified is to use the language of SEMs. 
+By placing suitable restrictions on the functional forms of the structural equations, additional assumptions can lead to identifiability results - that is, unambiguous recovery of the SEM from the observational distribution, in contrast to recovery only up to an equivalence class. 
+In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. 
 The main restricted model class that has been studied are \emph{additive noise models}.
+
+\medskip
 
 \begin{definition}
 	An SEM is an \emph{additive noise model} if the structural equations are deterministic functions of the parent variables with additive noise, i.e.
-	\[f_i(\mathbf{X}_i,E_i) = g_i(\mathbf{X}_i) + E_i \]
-	
-	for some functions $g_i$, with the noise variables $E_i$ being jointly independent.
+\begin{align*}
+X_i = f_i(X_{\pa(i)},E_i) = g_i(X_{\pa(i)}) + E_i 
+\end{align*}
+for some functions $g_i$, with the noise variables $E_i$ being jointly independent.
 \end{definition}
 
-In the case that the additive noise model is linear, we can write this model as:
-\[ \mathbf{x} = \mathbf{A}\mathbf{x} + \mathbf{e} \]
 
-where $\mathbf{A}$ is strictly upper triangular\footnote{i.e. the diagonal and anything below/left of it is 0.} for an acyclic SEM. 
-We see that $\mathbf{e}$ induces a density on $\mathbf{x}$ via
-\[\mathbf{x} = (\mathbf{I}-\mathbf{A})^{-1} \mathbf{e}\]
+\subsubsection{Linear additive noise models}
 
-\paragraph{Linear additive noise models:}
-The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} assumes further that the components of $\mathbf{e}$ are jointly independent and that at most one component has a Gaussian marginal distribution. 
-Under these conditions, Independent Component Analysis (ICA) can be applied to recover the both the matrix $\mathbf{I}-\mathbf{A}$ and the distribution over $\mathbf{e}$ from only observational data.
-In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
-LiNGAM then prunes the matrix of linear weights to force small entries to be 0 and finds an ordering on the components by rearranging the matrix to be upper triangular. 
-ICA will be covered in more detail in the next chapter 
-[Remove these citations] \cite{hyvarinen2000independent},  \cite{comon1994independent}.
+If the functions $g_i$ of an additive noise model are linear, the model can be written as
+%
+\begin{align*}
+X = AX + E,
+\end{align*}
+%
+where $A$ is a strictly upper triangular matrix\footnote{The diagonal and anything below or left of it is 0.} for an acyclic SEM. 
+The distribution over $E$ induces a density on the observable variables $X$ via
+%
+\begin{align*}
+X = (I-A)^{-1} E
+\end{align*}
+%
+where $I$ is the identity matrix. 
+This is an instance of linear Independent Component Analysis (ICA), a problem class that will be discussed in detail in Chapter \ref{chapter:ica}.
+In brief, identification of $A$ and the distribution of $E$ is known to be possible if at most one of the components of $E$ has Gaussian distribution.
+The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} uses ICA to recover the both the matrix $I-A$ and the distribution over $E$ from only observational data.
+%In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
+%LiNGAM then prunes the matrix of linear weights to force small entries to be 0 and finds an ordering on the components by rearranging the matrix to be upper triangular. 
+%ICA will be covered in more detail in the next chapter.
+%[Remove these citations] \cite{hyvarinen2000independent},  \cite{comon1994independent}.
 
-\cite{peters2013identifiability} consider linear additive noise models under the assumption that the noise variables are independent Gaussians with equal (unknown) variance.
-It is shown that all model parameters are identifiable from observational data under this assumption. 
-Intuitively, the idea is that in this model, graphs in the same Markov equivalence class would be distinguishable from one another given the variances of the observed variables. 
-Therefore, at least in principle, any technique could be used to first identify the set of graphs satisfying the conditional independence relations of the observed variables. 
-Then, the correct graph amongst these can be identified by considering the variances. 
-The method proposed by \cite{peters2013identifiability} to learn the SEM in practice works by performing a greedy search over graphical structures. 
-A score for each graph is evaluated by optimising the model likelihood subject to the constraints on the parameters imposed by the graph.
+\cite{peters2013identifiability} instead consider linear additive noise models under the assumption that all noise variables are independent Gaussians with equal (unknown) variance.
+It is shown that all model parameters are identifiable from observational data in this case. 
+%Intuitively, the idea is that in this model, graphs in the same Markov equivalence class would be distinguishable from one another given the variances of the observed variables. 
+%Therefore, at least in principle, any technique could be used to first identify the set of graphs satisfying the conditional independence relations of the observed variables. 
+%Then, the correct graph amongst these can be identified by considering the variances. 
+%The method proposed by \cite{peters2013identifiability} to learn the SEM in practice works by performing a greedy search over graphical structures. 
+%A score for each graph is evaluated by optimising the model likelihood subject to the constraints on the parameters imposed by the graph.
 
 \paragraph{Nonlinear additive noise models:}
 When the linearity assumption is dropped, the possible model complexity grows enormously. As such, much of the work that has been done on inferring casual structure from observational data in \emph{non-linear} additive noise models has considered the bivariate case, as this is the simplest non-trivial problem. Inferring causal structure in this case is often referred to as the problem of \emph{distinguishing between cause and effect}. A variety of different approaches have been taken to this problem, including using ideas from information theory \citep{janzing2012information, janzing2010causal, janzing2009telling}, ICA \citep{hyvarinen2013pairwise, zhang2008distinguishing}, Bayesian methods \citep{mooij2010distinguishing, stegle2010probabilistic} and RKHS theory \citep{lopez2015towards}.
