@@ -11,36 +11,36 @@
     \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
 \fi
 
-\emph{This chapter is largely based on the paper:}
-
-
-\begin{quote}
-\fullcite{rubenstein2017causal_fullcite}.
-\end{quote}
-
-%\citep{rubenstein2017causal}
-%\cite{rubenstein2017causal}
-%\citet{rubenstein2017causal}
-
-\emph{Additional, the following paper on theme of causality was published during my PhD but is not included in this thesis:}
-
-\begin{quote}
-\fullcite{rubenstein2018deterministic}
-\end{quote}
-
-\emph{as well as the following workshop papers:}
-
-\begin{quote}
-\fullcite{rubenstein2017probabilistic}
-\end{quote}
-
-\begin{quote}
-\fullcite{von2019optimal}
-\end{quote}
-
-\emph{Sections ... are an in-depth introduction to causality, motivating and explaining the setting considered by the paper.
-Sections ... are mostly based on the paper. 
-Section ... discusses how this work has influenced the research community and briefly discusses work that builds on it.}
+%\emph{This chapter is largely based on the paper:}
+%
+%
+%\begin{quote}
+%\fullcite{rubenstein2017causal_fullcite}.
+%\end{quote}
+%
+%%\citep{rubenstein2017causal}
+%%\cite{rubenstein2017causal}
+%%\citet{rubenstein2017causal}
+%
+%\emph{Additional, the following paper on theme of causality was published during my PhD but is not included in this thesis:}
+%
+%\begin{quote}
+%\fullcite{rubenstein2018deterministic}
+%\end{quote}
+%
+%\emph{as well as the following workshop papers:}
+%
+%\begin{quote}
+%\fullcite{rubenstein2017probabilistic}
+%\end{quote}
+%
+%\begin{quote}
+%\fullcite{von2019optimal}
+%\end{quote}
+%
+%\emph{Sections ... are an in-depth introduction to causality, motivating and explaining the setting considered by the paper.
+%Sections ... are mostly based on the paper. 
+%Section ... discusses how this work has influenced the research community and briefly discusses work that builds on it.}
 
 
 
@@ -66,15 +66,21 @@ As the examples above demonstrate, this can be highly non-trivial, with the well
 Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship between two variables can never be inferred without other prior knowledge. 
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
-While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics \citep{scholkopf2016modeling, ding200617, hicks1980causality}, the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail. 
+While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics \citep{scholkopf2016modeling, ding200617, hicks1980causality}, the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail.
+ 
 In particular, this work seeks to understand the implications of modelling causal structure at a different level of \emph{abstraction} compared to the `truth'. For instance, causal influence between variables of interest may be mediated by irrelevant variables that are ignored; interactions between low-level variables may instead be modelled at a macroscopic level, similar to the manner in which temperature and pressure arise as macroscopic properties of a large number of gaseous particles; and though time invariably plays a role in any causal influence in the real world, mathematical models of causal structure may often omit explicit reference to it.
-This work additionally sheds new light on \emph{cyclic} SEMs, a previously poorly understood family of causal models, and has implications to existing causal inference algorithms by providing a framework for understanding the limitations of previous approaches.
+%This work additionally sheds new light on \emph{cyclic} SEMs, a previously poorly understood family of causal models, and has implications to existing causal inference algorithms by providing a framework for understanding the limitations of previous approaches.
 
-REWRITE:
-The next sections provide a comprehensive background sufficient to understand the novel contribution of this chapter.
-In Section ??, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
-In Section ?? we will discuss the implicit assumptions in these approaches to causal inference, which will lead us to discussing causal abstractions in Sections ?? to ??.
-Section ?? discusses the influence that this work has had on the research community in the $\sim 2$ years since its publication as well as recent work by others that directly builds on it.
+This chapter is structured as follows.
+Sections \ref{sec:causality-structural-equation-models} and \ref{section:causality-causal-inference} are an overview of the causality literature, providing context for this chapter.
+Section \ref{sec:causality-what-are-causal-vars} discusses issues involved in defining causal variables in practice, as well as modelling the same system at different levels of details,
+followed by Section \ref{sec:causality-transformations-between-sems} which extends the definition of SEMs and provides a framework to analyse when two causal models at different levels of detail are consistent with one another.
+Section \ref{sec:causality-causal-examples-of-transformations} provides examples of consistent models in a variety of settings.
+Section \ref{sec:causality-discussion} discusses the implications of this work to the literature, as well as papers that have build on this since its original publication. 
+
+%, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
+%In Section ?? we will discuss the implicit assumptions in these approaches to causal inference, which will lead us to discussing causal abstractions in Sections ?? to ??.
+%Section ?? discusses the influence that this work has had on the research community in the $\sim 2$ years since its publication as well as recent work by others that directly builds on it.
 
 %Best summarised by the well known phrase ``correlation does not imply causation'', while causal influence between two random variables typically implies statistical dependence, the reverse is not true.
 %At its heart, causality and statistical machine learning differ in that the former concerns itself with interventions in the world. 
@@ -90,13 +96,13 @@ Section ?? discusses the influence that this work has had on the research commun
 %\end{itemize}
 
 
-\section{Structural Equation Models: A Language for Causality}
+\section{Structural Equation Models: A Language for Causality}\label{sec:causality-structural-equation-models}
 
-\emph{This section introduces Structural Equations Models (SEMs), a mathematical formalism used to model causal influence. Later in the chapter an extension to the classical SEM will be presented.
-We will avoid going into measure-theoretic detail here, and point the reader to \cite{bongers2016structural} for a more rigorous measure theoretic introduction to SEMs.}
-\\
+This section introduces Structural Equations Models (SEMs), a mathematical formalism used to model causal influence. In Section \ref{sec:causality-transformations-between-sems}, an extension to this definition will be presented.
+We will avoid going into measure-theoretic detail, and point the reader to \cite{bongers2016structural} for a more rigorous measure theoretic introduction to SEMs.
 
-\noindent An SEM over a tuple of random variables $X = (X_1, \ldots, X_N)$ consists of equations so that each $X_i$ is written as a function of a subset of the other $X_j$ and an \emph{exogenous noise variable} $E_i$. More formally:
+
+An SEM over a tuple of random variables $X = (X_1, \ldots, X_N)$ consists of equations so that each $X_i$ is written as a function of a subset of the other $X_j$ and an \emph{exogenous noise variable} $E_i$. More formally:
 
 \medskip
 
@@ -123,11 +129,15 @@ An SEM implies a well-defined observational distribution $P_X$ over $X$.
 
 \begin{proof}
 For any particular value $e$ of the noise variables $E$, there is a unique vector $x_e$ so that $(x_e, e)$ solves the structural equations $\mathcal{S}_X$. To see this, observe that acyclicity of $\mathcal{G}$ means that the structural equations can be solved recursively, beginning with variables with no parents. It follows that each $x_i$ can be written as a function of $e_{\text{anc}(i)}$, where $\text{anc}(i)$ are the indices of the \emph{ancestors} of $X_i$ in $\mathcal{G}$, that is the $X_j$ for which there exists a path $X_j \to X_i$ using the edges in $\mathcal{G}$. 
-Denote by $f(e) = x_e$ the function mapping from values of $e$ to the unique solution $x_e$.
-Then $f$ in combination with $P_E$ induces the push-forward distribution $P_X := f_\# P_E$ over the $X$-variables, i.e.\:$P_X$ is the distribution of the random variable $f(E)$, a function of the random variables $E$.
+Denote by $g(e) = x_e$ the function mapping from values of $e$ to the unique solution $x_e$.
+Then $g$ in combination with $P_E$ induces the push-forward distribution $P_X := g_\# P_E$ over the $X$-variables, i.e.\:$P_X$ is the distribution of the random variable $g(E)$, a function of the random variables $E$.
 \end{proof}
 
-As discussed in the introduction, an important part of causal relationships is a notion of behaviour under \emph{interventions}. SEMs are equipped with a formal notion of such interventions which we call \emph{perfect interventions}. The idea is that intervening on a variable makes a change to the function determining its value in the observational setting.  Although there may be an effect on the distributions over variables downstream of the intervened variable, the functions determining those variables are unchanged. Such an intervention is realised simply by replacing the structural equation of the intervened variable. This notion is easily generalised to interventions on multiple variables by replacing all of the corresponding equations. 
+As discussed in the introduction, an important part of causal relationships is a notion of behaviour under \emph{interventions}. 
+SEMs are equipped with a formal notion of such interventions which are termed \emph{perfect interventions}. 
+Intervening on a variable makes a change to the structural equation determining its value in the observational setting.
+Although there may be an effect on the distributions over variables downstream of the intervened variable, the structural equations determining those variables are unchanged. 
+Such an intervention is realised by altering the structural equation of the intervened variable. This notion is easily generalised to interventions on multiple variables by replacing all of the corresponding equations. 
 
 \medskip
 
@@ -149,11 +159,14 @@ An intervened SEM is still just a SEM, since it has structural equations and a d
 	Any perfect intervention $\doop(\cdot)$ on a SEM (i.e. any subset of variables set to any particular values) implies a well-defined interventional distribution $P^{\doop(\cdot)}_X$ over $X$.
 \end{lemma}
 \begin{proof}
-	As discussed in the remark above, $\mathcal{M}_X^{\doop(\cdot)}$ is a valid SEM. Thus, Lemma \ref{lemma:acyclic-sem-well-defined-obs-dist} applies to $\mathcal{M}_X^{\doop(\cdot)}$.
+	As discussed in the remark above, $\mathcal{M}_X^{\doop(\cdot)}$ is a valid SEM. Thus, Lemma \ref{lemma:acyclic-sem-well-defined-obs-dist} applies to $\mathcal{M}_X^{\doop(\cdot)}$ and so it has a well-defined observational distribution. 
+	The interventional distribution $P_X^{\doop(\cdot)}$ of $\mathcal{M}_X$ is equal to the observational distribution of $\mathcal{M}_X^{\doop(\cdot)}$.
 \end{proof}
 	
 SEMs can thus be thought of as a way to model not just a single distribution over the variables of interest, but an entire family of related distributions, one for each possible perfect intervention.
 This is illustrated in the following simple example.
+
+\medskip
 
 \begin{example}\label{example:causality-simple-sem}
 Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X, P_E\}$ where
@@ -222,7 +235,7 @@ where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an
 Since any product distribution can always be decomposed as $p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{j<i})$, it is the \emph{absence} of edges in $\mathcal{G}$ that imposes structure on the probability distribution.
 
 Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution $\delta_{X_i = x_i}$. 
-Bayesian networks equipped with such a notion are often referred to as \emph{causal} Bayesian networks. 
+Bayesian networks equipped with such a notion are sometimes referred to as \emph{causal} Bayesian networks. 
 In the following, we will simply refer to them as Bayesian networks.
 
 
@@ -272,10 +285,10 @@ As discussed in \cite{pearl2009causality}, this corresponds to a quasi-determini
 %This difference is largely academic and we will not concern ourselves with it further.
 
 As a consequence of the noise variables being explicitly modelled, SEMs are equipped with \emph{counterfactual reasoning}. 
-That is, once the variables have been observed, the noise values for the variables can generally be inferred. 
+That is, once the variables $X$ have been observed, the values for the exogenous variables $E$ can generally be inferred. 
 This means that one can answer questions such as ``what would have happened had the intervention $\doop(X_i=x_i)$ been performed?''
 %\paragraph{Example:} todo.
-Whether or not this is useful in practice is debatable, since different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be it in the observational or interventional setting. Therefore one cannot hope to be able to answer counterfactual questions based 
+Whether or not this is useful in practice is debatable, since different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be from observational or interventional settings. Therefore one cannot hope to be able to answer counterfactual questions based 
 on data without prior knowledge to distinguish between counterfactually non-equivalent models.
 %We will not discuss counterfactual reasoning further.
 
@@ -287,7 +300,7 @@ Second, it is also conceptually simple to extend the SEM framework to express cy
 
 %Next, we discuss the relaxation of the acyclicity contraint in the definition
 
-Mention latent confounders and that independent noise variables corresponds to no latent confounders?
+%Mention latent confounders and that independent noise variables corresponds to no latent confounders?
 
 \subsection{Cyclic Structural Equation Models}
 
@@ -324,7 +337,7 @@ Thus the interventional distribution $P_X^{\doop(X_1 = x_1, X_2=x_2)}$ is well d
 
 %\todo{\paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.}
 
-The literature on cyclic SEMs has not settled on a set of criteria for which cyclic SEMs should be considered `valid'. 
+The literature has not settled on a set of criteria for which cyclic SEMs should be considered `valid'. 
 All agree on the fact that observational distributions must be well-defined, but there is significant disagreement on interventional distributions.
 Notable works include \cite{hyttinen2010causal}, which requires well-defined distributions after any intervention, and \cite{mooij2011causal}, which state that for any cyclic SEM, any intervention leading to a well-defined interventional distribution may be given a causal interpretation. Other works in this area such as \cite{lacerda2012discovering} avoid discussion of this issue.
 
@@ -336,7 +349,7 @@ It will be argued in Sections \ref{sec:causality-what-are-causal-vars} and \ref{
 %This interpretation breaks down for cyclic models. Existing works have interpreted them as dynamical systems that equilibrate quickly. 
 
 %\iffalse
-\section{Methods of Causal Inference}
+\section{Methods of Causal Inference}\label{section:causality-causal-inference}
 %\todo{The contents of this section aren't really relevant to the rest of the chapter. It seems weird to have a chapter on causality without mentioning causal inference though. I'm inclined to just remove it but leaving it visible for the meantime. I will not polish it further until I decide whether or not to keep it.}
 The problem that is typically of greatest interest to practitioners in the context of causality is that of \emph{causal inference}, sometimes referred to as \emph{causal discovery}.
 The goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$, 
@@ -350,9 +363,10 @@ All methods focus on the acyclic case unless otherwise stated.
 %In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. As such, we will only discuss methods for identifying $\mathcal{G}$, though some of these may estimate the functional relationships as an intermediate step.
 %These methods focus on the acyclic case unless otherwise stated.
 
-Formally, the problem can be stated thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
+The problem is usually formalised thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
 Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $P_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $P_E$ and functions $f_i$.
-The former category will be briefly outlined in the next section, followed by a more detailed exposition of the latter.
+These are briefly outlined next.
+%The former category will be briefly outlined in the next section, followed by a more detailed exposition of the latter.
 
 \subsection{Conditional independence based methods}
 
@@ -360,6 +374,8 @@ The key idea of this family of approaches is to relate \emph{conditional indepen
 This line of work is historically important, but only tangentially related to the topic of this chapter.
 As such, only a brief outline follows; see \cite{pearl2009causality} or \cite{peters2017elements} for an in-depth explanation.
 
+d-separation is a relation between triples of disjoint subsets of nodes in directed acyclic graphs. 
+Informally, if a subset of nodes $A$ d-separates subsets $B$ and $C$, then $A$ blocks any information flow between $B$ and $C$. 
 Graphs exhibiting the same set of d-separations form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
 Subject to mild assumptions, there is a one-one correspondence between possible sets of conditional independences present in $P_X$, and Markov equivalence classes of $\mathcal{G}$. 
 It is thus possible to identify $\mathcal{G}$ up to its Markov equivalence class by inferring the conditional independences present in $P_X$.
@@ -369,6 +385,7 @@ In practice, one may have access only to a finite number of samples from $P_X$, 
 Methods for causal inference using conditional independences have the advantage that they make few assumptions on the underlying distribution.
 This comes at the cost of needing to perform conditional independence tests, a hard problem in the general case \citep{shah2018hardness}, as well only being able to identify $\mathcal{G}$ up to an equivalence class of graphs. 
 In particular, it is impossible to distinguish between the two models $X \to Y$ and $Y \to X$ using only conditional independences since both exhibit the same (trivial) set of conditional independences.
+The fact that even this simple case cannot be solved using conditional independences has led to other approaches in which further assumptions are made.
 %SEMs provide a language and framework to make further assumptions, leading to other approaches to causal inference.
 
 %
@@ -470,28 +487,29 @@ In particular, it is impossible to distinguish between the two models $X \to Y$ 
 %both graphs exhibit the same (trivial) set of d-separations, thus are Markov equivalent. 
 
 One way in which further assumptions can be specified is to use the language of SEMs. 
-By placing suitable restrictions on the functional forms of the structural equations, additional assumptions can lead to identifiability results - that is, unambiguous recovery of the SEM from the observational distribution, in contrast to recovery only up to an equivalence class. 
-In the following, we will outline some methods for inferring SEMs and the assumptions they require for identifiability. 
+Placing suitable restrictions on the functional forms of the structural equations or the distribution over the exogenous variables can lead to identifiability results: unambiguous recovery of the SEM from the observational distribution, in contrast to recovery only up to an equivalence class. 
+Of course, such identifiability results usually hold in the limit of infinite data, and so practical performance in realistic cases will differ even between methods for which identifiability holds under the same assumptions.
+In the following, some methods for inferring SEMs and the assumptions they require for identifiability are outlined. 
 The main restricted model class that has been studied are \emph{additive noise models}.
 
 \medskip
 
 \begin{definition}
-	An SEM is an \emph{additive noise model} if the structural equations are deterministic functions of the parent variables with additive noise, i.e.
-\begin{align*}
-X_i = f_i(X_{\pa(i)},E_i) = g_i(X_{\pa(i)}) + E_i 
-\end{align*}
-for some functions $g_i$, with the noise variables $E_i$ being jointly independent.
+	An SEM is an \emph{additive noise model} if the structural equations are deterministic functions of the parent variables with additive noise, 
+\begin{align}\label{eqn:causality-additive-noise-model}
+X_i = f_i(X_{\pa(i)},E_i) = g_i(X_{\pa(i)}) + E_i,
+\end{align}
+for some functions $g_i$.
 \end{definition}
 
 
 \subsubsection{Linear additive noise models}
 
-If the functions $g_i$ of an additive noise model are linear, the model can be written as
+If the functions $g_i$ in Equation~\ref{eqn:causality-additive-noise-model} are linear, the model can be written as
 %
-\begin{align*}
+\begin{align}\label{eqn:causality-linear-additive-noise-model}
 X = AX + E,
-\end{align*}
+\end{align}
 %
 where $A$ is a strictly upper triangular matrix\footnote{The diagonal and anything below or left of it is 0.} for an acyclic SEM. 
 The distribution over $E$ induces a density on the observable variables $X$ via
@@ -501,58 +519,86 @@ X = (I-A)^{-1} E
 \end{align*}
 %
 where $I$ is the identity matrix. 
-This is an instance of linear Independent Component Analysis (ICA), a problem class that will be discussed in detail in Chapter \ref{chapter:ica}.
+This is an instance of linear Independent Component Analysis (ICA), a problem class that will be discussed in detail in Chapter \ref{chapter:ica}.\footnote{\todo{If this chapter gets put after ICA chapter, change this paragraph (and subsequent places in which ICA is mentioned).}}
 In brief, identification of $A$ and the distribution of $E$ is known to be possible if at most one of the components of $E$ has Gaussian distribution.
 The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} uses ICA to recover the both the matrix $I-A$ and the distribution over $E$ from only observational data.
 %In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
 %LiNGAM then prunes the matrix of linear weights to force small entries to be 0 and finds an ordering on the components by rearranging the matrix to be upper triangular. 
 %ICA will be covered in more detail in the next chapter.
 %[Remove these citations] \cite{hyvarinen2000independent},  \cite{comon1994independent}.
-
-\cite{peters2013identifiability} instead consider linear additive noise models under the assumption that all noise variables are independent Gaussians with equal (unknown) variance.
-It is shown that all model parameters are identifiable from observational data in this case. 
+\cite{peters2013identifiability} instead consider linear additive noise models under the assumption that all noise variables are independent Gaussians with equal (unknown) variance and prove identifiability from observational data in this case. 
 %Intuitively, the idea is that in this model, graphs in the same Markov equivalence class would be distinguishable from one another given the variances of the observed variables. 
 %Therefore, at least in principle, any technique could be used to first identify the set of graphs satisfying the conditional independence relations of the observed variables. 
 %Then, the correct graph amongst these can be identified by considering the variances. 
 %The method proposed by \cite{peters2013identifiability} to learn the SEM in practice works by performing a greedy search over graphical structures. 
 %A score for each graph is evaluated by optimising the model likelihood subject to the constraints on the parameters imposed by the graph.
 
-\paragraph{Nonlinear additive noise models:}
-When the linearity assumption is dropped, the possible model complexity grows enormously. As such, much of the work that has been done on inferring casual structure from observational data in \emph{non-linear} additive noise models has considered the bivariate case, as this is the simplest non-trivial problem. Inferring causal structure in this case is often referred to as the problem of \emph{distinguishing between cause and effect}. A variety of different approaches have been taken to this problem, including using ideas from information theory \citep{janzing2012information, janzing2010causal, janzing2009telling}, ICA \citep{hyvarinen2013pairwise, zhang2008distinguishing}, Bayesian methods \citep{mooij2010distinguishing, stegle2010probabilistic} and RKHS theory \citep{lopez2015towards}.
+\subsubsection{Nonlinear additive noise models}
 
-The key to all of the above approaches is to make assumptions on the data-generating process, and then exploit these to reconstruct the model. In particular, a prominent assumption is that the noise variables are independent\footnote{This assumption is often referred to as `causal sufficiency' or that there are `no latent confounders'.}, which can be incorporated as part of an optimisation objective or to test model fit. For example, the main idea of \cite{hoyer2009nonlinear}, \cite{peters2014causal}, \cite{peters2010identifying} and \cite{mooij2010distinguishing} is to perform regression using both models $X \longrightarrow Y$ and $Y \longrightarrow X$ and to choose between these using one of a variety of independence scores to test that the `regressor' or `parent' variable is independent of the residuals. \cite{zhang2008distinguishing} and \cite{zhang2009identifiability} extend the additive noise model by considering the \emph{post-nonlinear (PNL)} model where $x = f_2(f_1(y+e))$ and $f_2$ is invertible. The notable exception to the above ideas is \cite{lopez2015towards}, which treats the identification of cause and effect as a classification problem: artificial data is generated by additive noise models which is used to train a classifier. This classifier, perhaps somewhat surprisingly, is able to generalise to perform well on real data that does not obviously satisfy the additive noise model.
+If the $g_i$ in Equation~\ref{eqn:causality-additive-noise-model} are allowed to be nonlinear, the possible model complexity grows enormously compared to the linear case. 
+As such, much of the literature on \emph{nonlinear} additive noise models has considered the bivariate case, as this is the simplest non-trivial problem. 
+Causal inference in this case is often referred to as the problem of \emph{distinguishing between cause and effect}. 
 
-We note in passing that distinguishing between cause and effect in the presence of confounders is significantly more challenging than without confounders; \cite{hoyer2008estimation} and \cite{janzing2009identifying} consider this problem.  For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
+A common approach to this case is to assume that the $g_i$ belong to some restricted class of functions and that the noise variables satisfy some statistical properties such as independence.
+For example, \cite{hoyer2009nonlinear, peters2010identifying, mooij2010distinguishing} and \cite{peters2014causal} perform regression under both $X \longrightarrow Y$ and $Y \longrightarrow X$ and choose between these using one of a variety of independence scores to test that the `regressor' or `parent' variable is independent of the residuals. 
+\cite{zhang2008distinguishing} and \cite{zhang2009identifiability} extend the additive noise model by considering the \emph{post-nonlinear (PNL)} model where $x = f_2(f_1(y+e))$ and $f_2$ is invertible. 
+
+Other approaches include using information theory \citep{janzing2012information, janzing2010causal, janzing2009telling} and treating the problem as one of binary classification between $X \longrightarrow Y$ and $Y \longrightarrow X$, for which a classifier is trained using artificial data \citep{lopez2015towards}.
+This problem is more challenging in the presence of confounders, corresponding to the noise variables being dependent, see \cite{hoyer2008estimation, janzing2009identifying} for more details.  
+%For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
+
+%A variety of different approaches have been taken to this problem, including using information theory \citep{janzing2012information, janzing2010causal, janzing2009telling}, ICA \citep{hyvarinen2013pairwise, zhang2008distinguishing}, Bayesian methods \citep{mooij2010distinguishing, stegle2010probabilistic} and RKHS theory \citep{lopez2015towards}.
 
 
-\paragraph{Cyclic additive noise models:}
-As previously discussed, different works in the literature consider different variations on definitions for cyclic SEMs. 
-Nonetheless, work has been done on causal inference in different models. 
-The basic assumption core to many of the methods is that the causal model is linear with additive noise, and that the observations are the solution to the equation to the following equation for fixed realisations of the noise variables:
-\[ \mathbf{x} = \mathbf{B}\mathbf{x} + \mathbf{e}\]
+%The key to all of the above approaches is to make assumptions on the data-generating process, and then exploit these to reconstruct the model. In particular, a prominent assumption is that the noise variables are independent\footnote{This assumption is often referred to as `causal sufficiency' or that there are `no latent confounders'.}, which can be incorporated as part of an optimisation objective or to test model fit. 
+%For example, the main idea of \cite{hoyer2009nonlinear}, \cite{peters2014causal}, \cite{peters2010identifying} and \cite{mooij2010distinguishing} is to perform regression using both models $X \longrightarrow Y$ and $Y \longrightarrow X$ and to choose between these using one of a variety of independence scores to test that the `regressor' or `parent' variable is independent of the residuals. \cite{zhang2008distinguishing} and \cite{zhang2009identifiability} extend the additive noise model by considering the \emph{post-nonlinear (PNL)} model where $x = f_2(f_1(y+e))$ and $f_2$ is invertible. 
+%The notable exception to the above ideas is \cite{lopez2015towards}, which treats the identification of cause and effect as a classification problem: artificial data is generated by additive noise models which is used to train a classifier. This classifier, perhaps somewhat surprisingly, is able to generalise to perform well on real data that does not obviously satisfy the additive noise model.
 
-The fundamental problem is to learn the matrix $\mathbf{B}$ and the distribution over the noise variables $\mathbf{e}$.
+%We note in passing that distinguishing between cause and effect in the presence of confounders is significantly more challenging than without confounders; \cite{hoyer2008estimation} and \cite{janzing2009identifying} consider this problem.  For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
 
 
-Variations on this model, including different assumptions on the noise structure and the types of interventions, are considered in different lines of research. 
-For example, \cite{hyttinen2010causal} \cite{hyttinen2012learning} \cite{hyttinen2013discovering} and \cite{scheines2010combining} consider the case that the errors $\mathbf{e}$ are not independent (equivalently that there are latent confounders) and that interventions correspond to perfectly randomising the intervened variables. 
-The essence of their idea is to first estimate $\mathbf{B}$ and then use this to estimate the joint distribution on the error terms via the equation $\mathbf{e} = (I-B)\mathbf{x}$. 
-Their method to estimate $\mathbf{B}$ exploits the fact that the observed correlations between pairs of variables can be decomposed into weighted sums of elements of $\mathbf{B}$, meaning that estimating $\mathbf{B}$ boils down to solving a simple linear algebraic problem.
+\subsubsection{Cyclic additive noise models}
 
-\todo{Check ricardo / aapo UAI causality paper}
+Linear cyclic additive noise models, corresponding to Equation \ref{eqn:causality-linear-additive-noise-model} in which the matrix $A$ need not be strictly upper diagonal, may be learned using ICA methods provided that $I-A$ is invertible.
+This is done by \cite{lacerda2012discovering}, generalising the LiNGAM method, though identifiability holds here only up to SEMs that induce the same observational distribution.
+\cite{scheines2010combining, hyttinen2010causal, hyttinen2012learning} and \cite{hyttinen2013discovering} extend this setting to consider dependent noise variables, additionally assuming access to interventional data.
 
-\cite{lacerda2012discovering} take a different approach, and assume that the noise variables are jointly independent. 
-Their method generalises LiNGAM \cite{shimizu2006linear} to the cyclic case by exploiting ICA. 
-This method, however, is only able to identify the SEM up to the equivalence class of those that induce the same observational distribution, and so in general will not be able to correctly predict the result of interventions.
 
 Another line of research tries to relax the linearity assumption. 
-As was the case for acyclic SEMS, removing this assumption leads to the possible model complexity growing significantly with the challenge of learning structure growing correspondingly. \cite{mooij2011causal} considers the following model class:
-\[\mathbf{x} = \mathbf{f}(\mathbf{x}) + \mathbf{e}\] 
-where $\mathbf{e}$ is Gaussian distributed. 
-They assume a Gaussian Process prior over $\mathbf{f}$ and find sufficient conditions for identifiability in the bivariate case. \cite{mooij2013cyclic} assume the same model but make a locally linear approximation in order to reduce model complexity.
+As is the case for acyclic SEMs, removing this assumption leads to significant increase in possible model complexity, with the challenge of causal inference growing correspondingly. \cite{mooij2011causal} and \cite{mooij2013cyclic} consider Gaussian distributed noise variables and use Gaussian processes to model the functions $g_i$.
 
-
-We note in passing that there are also methods \cite{richardson1996automated} \cite{richardson1996discovery} that exploit the conditional independences present and try to connect this to graphical structures that are consistent with these.
+%following model class:
+%\[\mathbf{x} = \mathbf{f}(\mathbf{x}) + \mathbf{e}\] 
+%where $\mathbf{e}$ is Gaussian distributed. 
+%They assume a Gaussian Process prior over $\mathbf{f}$ and find sufficient conditions for identifiability in the bivariate case. \cite{mooij2013cyclic} assume the same model but make a locally linear approximation in order to reduce model complexity.
+%
+%As previously discussed, different works in the literature consider different variations on definitions for cyclic SEMs. 
+%Nonetheless, work has been done on causal inference in different models. 
+%The basic assumption core to many of the methods is that the causal model is linear with additive noise, and that the observations are the solution to the equation to the following equation for fixed realisations of the noise variables:
+%\[ \mathbf{x} = \mathbf{B}\mathbf{x} + \mathbf{e}\]
+%
+%The fundamental problem is to learn the matrix $\mathbf{B}$ and the distribution over the noise variables $\mathbf{e}$.
+%
+%
+%Variations on this model, including different assumptions on the noise structure and the types of interventions, are considered in different lines of research. 
+%For example, \cite{hyttinen2010causal} \cite{hyttinen2012learning} \cite{hyttinen2013discovering} and \cite{scheines2010combining} consider the case that the errors $\mathbf{e}$ are not independent (equivalently that there are latent confounders) and that interventions correspond to perfectly randomising the intervened variables. 
+%The essence of their idea is to first estimate $\mathbf{B}$ and then use this to estimate the joint distribution on the error terms via the equation $\mathbf{e} = (I-B)\mathbf{x}$. 
+%Their method to estimate $\mathbf{B}$ exploits the fact that the observed correlations between pairs of variables can be decomposed into weighted sums of elements of $\mathbf{B}$, meaning that estimating $\mathbf{B}$ boils down to solving a simple linear algebraic problem.
+%
+%\todo{Check ricardo / aapo UAI causality paper}
+%
+%\cite{lacerda2012discovering} take a different approach, and assume that the noise variables are jointly independent. 
+%Their method generalises LiNGAM \cite{shimizu2006linear} to the cyclic case by exploiting ICA. 
+%This method, however, is only able to identify the SEM up to the equivalence class of those that induce the same observational distribution, and so in general will not be able to correctly predict the result of interventions.
+%
+%Another line of research tries to relax the linearity assumption. 
+%As was the case for acyclic SEMS, removing this assumption leads to the possible model complexity growing significantly with the challenge of learning structure growing correspondingly. \cite{mooij2011causal} considers the following model class:
+%\[\mathbf{x} = \mathbf{f}(\mathbf{x}) + \mathbf{e}\] 
+%where $\mathbf{e}$ is Gaussian distributed. 
+%They assume a Gaussian Process prior over $\mathbf{f}$ and find sufficient conditions for identifiability in the bivariate case. \cite{mooij2013cyclic} assume the same model but make a locally linear approximation in order to reduce model complexity.
+%
+%
+%We note in passing that there are also methods \cite{richardson1996automated} \cite{richardson1996discovery} that exploit the conditional independences present and try to connect this to graphical structures that are consistent with these.
 
 
 
@@ -599,7 +645,7 @@ The issue is, however, best illustrated concretely by an example previously used
 		\caption{}\label{fig:cholesterol:b}
 	\end{subfigure}
 	%
-	\caption{Effects of cholesterol on risk of heart disease. As illustrated by~(a), the current consensus is that low-density lipoprotein (LDL) has a negative effect on heart disease (HD), while high-density lipoprotein (HDL) has a positive effect on heart disease. Considering total blood cholesterol (TC = LDL + HDL) to be a causal variable as in~(b) leads to problems: two diets promoting raised LDL levels and raised HDL levels respectively have the same effect on TC but opposite effects on heart disease. Hence different studies come to contradictory conclusions about the effect of TC on heart disease.}
+	\caption{Effects of cholesterol on risk of heart disease. As illustrated by~(a), the current consensus is that low-density lipoprotein (LDL) has a negative effect on heart disease (HD), while high-density lipoprotein (HDL) has a positive effect on heart disease. Considering total blood cholesterol (TC = LDL + HDL) to be a causal variable as in~(b) leads to problems: two diets promoting raised LDL levels and raised HDL levels respectively have the same effect on TC but opposite effects on heart disease. Hence different studies may come to contradictory conclusions about the effect of TC on heart disease.}
 	\label{fig:cholesterol}
 \end{figure}
 
@@ -611,7 +657,7 @@ Historically, the level of total blood cholesterol (TC) in a human subject was t
 To investigate this, many experiments were carried out in which patients were assigned to different diets in order to raise or lower TC\@.
 Conflicting evidence was found by these experiments: some found that higher TC had the effect of lowering HD, while others found the opposite \citep{truswell2010cholesterol,steinberg2011cholesterol}.
 
-The reason for this apparent contradiction is clear with hindsight, but serves to illustrate the care that must be taken when seeking causal relations. 
+The reason for this apparent contradiction is understood with hindsight, but serves to illustrate the care that must be taken when seeking causal relations. 
 The current scientific consensus is that there are two types of blood cholesterol, low-density lipoprotein (LDL) and high-density lipoprotein (HDL), which have a negative and positive effect on HD respectively (Figure \ref{fig:cholesterol:a}).
 A measurement of TC is in fact a measurement of the sum of LDL and HDL.
 Therefore two experiments, one raising LDL levels and the other raising HDL levels, would have the same effect on TC but opposite effects on HD (Figure \ref{fig:cholesterol:b}).
@@ -633,7 +679,7 @@ The second is that whether or not a variable is `causally meaningful' is intrica
 We elaborate on each of these points next, 
 setting the stage to tackle our overarching goal of trying to answer the following questions:
 If the true causal mechanisms of the world operate at a very low level of detail (e.g.~atoms), under what conditions can we speak of causal relations at higher levels (e.g.~objects)?
-How can we formalise such a notion of consistent modelling in the framework of SEMs?
+How can we formalise such a notion of consistent modelling at different levels of abstraction in the framework of SEMs?
 
 
 \subsection{Modelling at different levels of detail}\label{subsec:causality-modelling-different-levels}
@@ -723,7 +769,7 @@ Section \ref{sec:causality-causal-examples-of-transformations} presents practica
 
 %As outlined in the last section, we first extend the usual definition of SEMs to take into account restricted sets of interventions imbued with a natural partial ordering.
 The following definition extends that of the classical definition for SEMs. 
-The main difference is the explicit introduction of the intervention set being modelled.
+The main difference is the explicit introduction of the intervention set being modelled, as well as bringing to attention the structure of a partial ordering it exhibits.
 Additionally, for generality it is not assumed that the distribution $P_E$ factorises.
 For convenience later on, the variables are labelled with an arbitrary index set $\indexset_X$ rather than $\{1,\ldots, N\}$, though this slight notational change has no formal impact on subsequent results.
 All mentions of SEMs henceforth refer to the following definition, rather than the classical definition.
@@ -735,7 +781,7 @@ All mentions of SEMs henceforth refer to the following definition, rather than t
 	An SEM $\mathcal{M}_X$ over  variables ${X = (X_i : i\in\indexset_X )}$ taking value in $\mathcal{X}$ is a triple $\left(\mathcal{S}_X, \mathcal{I}_X, P_{E} \right)$ where
 	\begin{itemize}[noitemsep]
 		\item $\mathcal{S}_X$ is a set of structural equations $X_i = f_i\left( X_{\pa(i)} , E_i \right)\ $ for $i \in \indexset_X$;
-		\item ($\mathcal{I}_X, \leq_X)$ is a subset of all perfect interventions equipped with a natural partial ordering (see below), i.\,e.\ it is an index set where each index corresponds to a particular perfect intervention on some of the $X$ variables;
+		\item $(\mathcal{I}_X, \leq_X)$ is a subset of all perfect interventions equipped with a natural partial ordering (see below), i.\,e.\ it is an index set where each index corresponds to a particular perfect intervention on some of the $X$ variables;
 		\item $P_{E}$ is a (not necessarily factorised) distribution over $E = ( E_i : i\in\indexset_X)$;
 		\item with $P_E$-probability one, under any intervention ${i \in \mathcal{I}_X}$ there is a unique solution $x\in\mathcal{X}$ to the intervened structural equations. 
 	\end{itemize}
@@ -750,7 +796,7 @@ $\mathcal{I}_X$ is equipped with the natural partial ordering $\leq_X$ in which,
 For example, ${\doop(X_i=x_i) \leq_X \doop(X_i=x_i, X_j=x_j)}$.
 Informally, this means that $j$ can be performed after $i$ without having to change or undo any of the changes to the structural equations made by $i$.
 Not all pairs of elements must be comparable: for instance, if $i= \doop(X_1=x_1)$ and $j = \doop(X_2=x_2)$, then neither $i\leq_X j$ nor $j \leq_X i$. 
-The observation that this structure is important and crucial use of it will be made use of in the next sections.
+This structure is important and crucial use of it will be made use of in the next sections.
 
 Aside from the treatment of interventions, Definition \ref{def:causality-updated-sem} additionally relaxes the usual assumption of acyclicity of the causal graph, 
 Instead, the final condition in the definition ensures that for any intervention ${i \in \mathcal{I}_X}$, $\mathcal{M}_X$ induces a well-defined distribution over $\mathcal{X}$. 
@@ -789,28 +835,27 @@ Throughout, we will denote the empty- or null-intervention corresponding to the 
 For notational convenience, we will use $P_X$ and $P_X^{\doop(i)}$ interchangeably for the observational distribution.
 
 $\mathcal{M}_X$ induces a set of joint distributions over $\mathcal{X}$, one for each intervention in $\mathcal{I}_X$, which moreover inherits the partial ordering from $\mathcal{I}_X$. 
-We can write this poset of distributions as
+This poset of distributions can be written as
 \[\mathcal{P}_X := \left( \left\{ P_X^{\doop(i)} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
 where $\leq_X$ is the partial ordering inherited from $\mathcal{I}_X$, i.\,e.\ ${P_X^{\doop(i)} \leq_X P_X^{\doop(j)} \iff i \leq_X j}$.%
 %\footnote{More formally, one would need to define $\mathcal{P}_X$ to be the poset of \emph{tuples} $\left(i, P_X^{\doop(i)}\right)$ to avoid problems in the case that $P_X^{\doop(i)} = P_X^{\doop(j)}$ for some $i\not=_X j$. Doing so would not require a change to Definition **???** or affect the results of this chapter. To avoid notational burden in our exposition, we omit this treatment.}
 
 Note that $\mathcal{P}_X$ contains all of the information in $\mathcal{M}_X$ about the different distributions implied by the SEM and, importantly, how they are related via the interventions.
-For example, the distribution over the variables $X$ in the observational setting, $P_X^\nulli$, changes to $P_X^{\doop(i)}$ if we implement the intervention ${\doop(i)}$, and the partial ordering contains all information about which distributions are subsequently attainable by composing with other interventions.
+For example, the distribution over the variables $X$ in the observational setting, $P_X^\nulli$, changes to $P_X^{\doop(i)}$ under the intervention ${\doop(i)}$, and the partial ordering contains all information about which distributions are subsequently attainable by composing with other interventions.
 
 
 \subsection{Exact transformations of SEMs}
 
-Suppose we have a function ${\tau: \mathcal{X} \to \mathcal{Y}}$ which maps the variables of the SEM $\mathcal{M}_X$ to another space $\mathcal{Y}$.
-Observe that since $X$ is a random variable, $\tau(X)$ is also a random variable.
+Suppose the function ${\tau: \mathcal{X} \to \mathcal{Y}}$ maps the variables of the SEM $\mathcal{M}_X$ to another space $\mathcal{Y}$.
+Since $X$ is a random variable, $\tau(X)$ is also a random variable.
 For any distribution $P_X$ on $\mathcal{X}$ we thus obtain the distribution of the variable $\tau(X)$ on $\mathcal{Y}$ as $P_{\tau(X)} = \tau_{\#}P_X$ via the push-forward measure. 
 
 %\todo{Possibly change push-forward notation to use hash. Check compatibility with WAE section.}
 
-In particular, for each intervention $i \in \mathcal{I}_X$ we can define the induced distribution $P_{\tau(X)}^{i} = \tau_{\#}P_X^{\doop(i)}$.
+In particular, any intervention $i \in \mathcal{I}_X$ induces the distribution $P_{\tau(X)}^{i} = \tau_{\#}P_X^{\doop(i)}$.
 We can write the poset of distributions on $\mathcal{Y}$ that are induced by the original SEM $\mathcal{M}_X$ and the transformation $\tau$ as
 \[\mathcal{P}_{\tau(X)} := \left( \left\{ P_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
 where $\leq_X$ is the partial ordering inherited from $\mathcal{P}_X$ (in turn inherited from $\mathcal{I}_X$).
-
 $\mathcal{P}_{\tau(X)}$ is just a structured collection of distributions over $\mathcal{Y}$, indexed by interventions $\mathcal{I}_X$ on the $\mathcal{X}$-level; importantly, the indices are \emph{not} interventions on the $\mathcal{Y}$-level.
 
 
@@ -833,7 +878,7 @@ Order-preserving means that ${i \leq_X j \implies \omega(i) \leq_Y \omega(j)}$.
 It is important that the converse need not in general hold as this would imply that $\omega$ is injective,%
 \footnote{Since ${\omega(i)=\omega(j) \iff \left(\omega(i) \leq_Y \omega(j)\right) \land \left(\omega(j) \leq_Y \omega(i)\right)}$, which, if the converse held, would imply that $\left(i \leq_X j\right) \land \left(j \leq_X i\right)$, which is equivalent to $i=j$.}
 and hence also bijective.
-This would constrain the ways in which $\mathcal{M}_Y$ can be `simpler' than $\mathcal{M}_X$.\footnote{For instance, if it were necessary that $\omega$ be bijective, Theorems~\ref{theorem:childless} and \ref{theorem:micro-macro} would not hold.}
+This would constrain the ways in which $\mathcal{M}_Y$ can be `simpler' than $\mathcal{M}_X$.\footnote{For instance, if it were necessary for $\omega$ to be bijective, Theorems~\ref{theorem:childless} and \ref{theorem:micro-macro} would not hold.}
 That $\omega$ is surjective ensures that for any $\doop$-intervention $j \in \mathcal{I}_Y$ on $\mathcal{M}_Y$ there is at least one corresponding intervention on the $\mathcal{M}_X$ level, namely an element of $\omega^{-1}(\{j\}) \subseteq \mathcal{I}_X$.
 
 The following two results give elementary properties of exact transformations following immediately from the definition.
@@ -947,7 +992,7 @@ Furthermore, it ensures that compositionality of $\doop$-interventions on the $\
 That is, if the intervention $j$ on the $\mathcal{M}_X$-level can be performed additionally to the intervention $i$ in $\mathcal{M}_X$ (i.\,e.\ $i\leq_X j$), then the same is true of their representations in $\mathcal{M}_Y$.
 
 If $\mathcal{M}_X$ and $\mathcal{M}_Y$ are models of the same system and it has been established that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$ for some mapping $\tau$, then the commutativity of the whole diagram in Theorem~\ref{lemma:commuting} ensures that they are causally consistent with one another in the sense described in the preceding paragraphs.
-If we wish to reason about the effects of interventions on the $\mathcal{Y}$-variables then it suffices to use the model $\mathcal{M}_Y$, rather than the (possibly more complex) model $\mathcal{M}_X$.
+If we wish to reason about the effects of interventions on the $\mathcal{Y}$-variables then it suffices to use the model $\mathcal{M}_Y$, rather than the possibly more complex model $\mathcal{M}_X$.
 In particular, this means that we can view the $\mathcal{Y}$-variables as causal entities, rather than only functions of underlying `truly' causal entities.
 Only if this is the case, causal statements such as `raising temperature increases pressure' or `LDL causes heart disease' are meaningful.
 
@@ -1425,13 +1470,13 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 
 
 
-This theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.
-This supports one interpretation of SEMs as a description of a dynamical process that equilibrates quickly compared to its external environment, corresponding to the assumption that the noise in the dynamical model is constant through time.
-This understanding of SEMs is used by \cite{lacerda2012discovering,Mooij_et_al_NIPS_11,hyttinen2012learning,mooij2013ode} and \cite{mooij2013cyclic} to meaningfully interpret cyclic SEMs.
-The framework of exact transformations allows us to explain in a precise way the sense in which such equilibrium models can be used as causal descriptions of an underlying dynamical process.
+%This theorem demonstrates how a linear additive SEM can arise as a result of making observations of a dynamical process.
+%This supports one interpretation of SEMs as a description of a dynamical process that equilibrates quickly compared to its external environment, corresponding to the assumption that the noise in the dynamical model is constant through time.
+%This understanding of SEMs is used by \cite{lacerda2012discovering,Mooij_et_al_NIPS_11,hyttinen2012learning,mooij2013ode} and \cite{mooij2013cyclic} to meaningfully interpret cyclic SEMs.
+%The framework of exact transformations allows us to explain in a precise way the sense in which such equilibrium models can be used as causal descriptions of an underlying dynamical process.
 
 
-\section{Discussion}
+\section{Discussion}\label{sec:causality-discussion}
 
 This section discusses the implications of this work to the causality literature, future directions for extending this work as well as outlining other papers have already built directly upon it since the publication of the paper on which this chapter is in part based \citep{rubenstein2017causal}.
 
@@ -1441,7 +1486,7 @@ This section discusses the implications of this work to the causality literature
 The example of cholesterol and heart disease discussed in Section \ref{sec:causality-what-are-causal-vars} was adapted from \cite{spirtes2004causal}, who illustrate the problem of \emph{ambiguous manipulations} of variables that are functions of underlying causal entities (e.g. TC = HDL + LDL).
 Although their work was primarily concerned with causal discovery in such a context, \cite{eberhardt2016green} demonstrated broader problematic implications to the idea of causal variable definition: in general, functions of causal variables cannot be considered to be themselves causal.
 
-The framework of exact transformations between SEMs provides a partial solution to this issue, as it has been argued that if a higher level SEM $\mathcal{M}_Y$ is an exact transformation of a SEM $\mathcal{M}_X$, they are causally consistent. 
+The framework of exact transformations between SEMs provides a partial solution to this issue, as it has been argued that if a higher level SEM $\mathcal{M}_Y$ is an exact transformation of a SEM $\mathcal{M}_X$ of causal variables, then variables in $\mathcal{M}_Y$ can also be considered causal entities. 
 The key idea missing in previous work was to consider not simply individual variables in isolation, but the entire SEM \emph{along with the interventions being modelled} as the object being transformed.
 
 
@@ -1449,10 +1494,10 @@ The key idea missing in previous work was to consider not simply individual vari
 
 As previously discussed, there is no settled consensus within the causality literature on what constitutes a `valid' cyclic SEM.
 Acyclic SEMs are usually interpreted as corresponding to a temporally ordered series of mechanisms by which data are generated; this is not possible for cyclic SEMs since there is no partial ordering on the variables.
-
 The most common interpretation is that they correspond to a dynamical system that converges quickly relative to its environment, represented by the exogenous noise variables \citep{mooij2013ode}.
-This is problematic because most real physical systems exhibit feedback, and many of these do not satisfy this assumption.
+This is supported by Theorem \ref{theorem:identical}.
 
+However, most real physical systems exhibit feedback, and many of these do not satisfy this assumption. This work provides a framework to also consider such cases.
 Since all physical systems evolve in time, they can be represented as an acyclic model $\mathcal{M}_X$.
 In general our ability to make measurements is imperfect, and can be represented by the function $\tau$. 
 Whether or not the observed variables $\tau(X)$ admit a causal interpretation is equivalent to asking whether there exists an $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$.
@@ -1460,15 +1505,16 @@ The framework of exact transformations between SEMs thus provides a way to think
 
 \subsection{Extensions}
 
-A high level model need not be a perfectly accurate and faithful representation of lower-level model in order to be useful. 
-Indeed, in all models are an approximation to some degree.
+A high-level model need not be a perfectly accurate and faithful representation of low-level model in order to be useful. 
+Indeed, all models are an approximation to some degree.
 In this regard, the theory of exact transformations is perhaps too strict because of the requirement that $\tau_{\#}P_X^{\doop(i)} = P_Y^{\doop(\omega(i))}$ should hold for all interventions $i\in \mathcal{I}_X$.
 
 In the original publication from which this chapter is in part based \citep{rubenstein2017causal}, one of the proposals for future directions of enquiry was to generalise the notion of an exact transformation to an \emph{approximate} transformation in which the requirement of equality is relaxed to hold only approximately, something that could be rigorously formalised in a variety of ways.
 
 
-Since its publication, \cite{beckers2019approximate} have investigated precisely this question, exploring several subtleties. 
-For instance, for a pair of distributions the nearness of the approximation can be defined in multiple ways, and this must hold in some sense over a set of interventions. 
+Since publication of this work, \cite{beckers2019approximate} have investigated precisely this question, exploring several subtleties. 
+For instance, for a pair of distributions, the nearness of the approximation can be defined in multiple ways,\footnote{\todo{if ordering of chapters is moved and divergences have already been introduced, rephrase this.}}
+and this must hold in some sense over a set of interventions. 
 They propose two ways of defining approximate abstractions and show how they are related, providing a way to quantify the trade-off between accuracy and abstraction.
 These ideas are illustrate in practice with application to climate models, showing how the El Ni\~no event arises as a macroscopic property of wind and sea temperatures.
 
@@ -1476,12 +1522,12 @@ These ideas are illustrate in practice with application to climate models, showi
 In a second paper, \cite{beckers2019abstracting} consider in great detail the notion of casual consistency proposed in this work. 
 They argue that there exist examples of exact transformations that would nonetheless generally be considered to be inconsistent (or even unrelated) causal models. 
 In essence, the issue is that it is possible to use arbitrary distributions $P_E$ over the exogenous noise variables in order to construct pairs of SEMs for which an exact transformation can be established, even though the models have little in common.
-In the paper they propose a sequence of increasingly restrictive definitions for transformations between SEMs, the weakest of which corresponds to the exact transformations of this chapter.
+In the paper they propose a sequence of increasingly restrictive definitions for transformations between SEMs, the weakest of which corresponds to the exact transformations of this chapter, and the strongest of which rules out the aforementioned pathologies.
 
-The most interesting of their definitions is called an \emph{abstraction}, in which case the authors argue the coarser model really can be thought of as a higher level description of the finer one. 
-The main ideas are that if $\mathcal{M}_Y$ is a $\tau$-abstraction of $\mathcal{M}_X$, then regardless of the choice of noise distribution $P_{E_X}$ in $\mathcal{M}_X$, there should exist a noise distribution $P_{E_Y}$ in $\mathcal{M}_Y$ such that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$. 
-Moreover, $\tau$ should be surjective, in which case they show that it induces a natural mapping between interventions $\omega_\tau$.
-These extra requirements rule out the pathological cases mentioned previously.
+%The most interesting of their definitions is called an \emph{abstraction}, in which case the authors argue the coarser model really can be thought of as a higher level description of the finer one. 
+%The main ideas are that if $\mathcal{M}_Y$ is a $\tau$-abstraction of $\mathcal{M}_X$, then regardless of the choice of noise distribution $P_{E_X}$ in $\mathcal{M}_X$, there should exist a noise distribution $P_{E_Y}$ in $\mathcal{M}_Y$ such that $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$. 
+%Moreover, $\tau$ should be surjective, in which case they show that it induces a natural mapping between interventions $\omega_\tau$.
+%These extra requirements rule out the pathological cases mentioned previously.
 
 
 
