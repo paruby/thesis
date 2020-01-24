@@ -39,7 +39,7 @@
 %\end{itemize}
 
 Independent Component Analysis (ICA) is often motivated by the so-called \emph{cocktail-party problem}.
-When two conversations at a party are happening simultaneously, a listener will hear in each of their ears different mixtures of the two audio streams produced by the speakers.
+When two conversations at a party are happening simultaneously, a listener will hear different mixtures of the two audio streams produced by the speakers in each of their ears.
 Despite both ears receiving mixtures of the conversations, the listener is able to focus on either of the conversations separately, hearing and understanding one while ignoring the other.
 This is due to the brain's ability to separate out the mixed audio streams into the separate underlying sources, one for each conversation.
 
@@ -52,29 +52,64 @@ The ICA problem can be written formally by defining the generative model
 \bm{x} &= \bm{f}(\bm{s}) \label{eqn:ica-basic-1}\\
 p(\bm{s}) &= \prod_{i} p_i(s_i) \label{eqn:ica-basic-2}
 \end{align}
+
+\begin{align}
+Z \sim &P_Z = \prod_i P_{Z_i}  \\
+X &= f(Z) \\
+%p(z) &= \prod_i p(z_i)
+\end{align}
+
+
 where $\bm{s}$ is a vector of independent \emph{sources}, $\bm{x}$ are the vector of \emph{observations} or \emph{mixtures} and $\bm{f}$ is the vector of \emph{mixing functions} expressing how each coordinate of $\bm{x}$ depends on all of the coordinates of $\bm{s}$. 
 %Generally, it is assumed that the number of sources and observations (i.e. the dimension of $\bm{s}$ and $\bm{x}$ respectively) are equal, which we will take to be the case throughout this chapter unless specified otherwise. 
 %If there are more observations than sources, the problem is called \emph{overdetermined} or \emph{undercomplete}, while if there more sources than observations it is called \emph{underdetermined} or \emph{overcomplete} \cite{citation_needed}.
 Given a dataset of observations of $\bm{x}$, the goal of ICA is to recover the corresponding unknown values of $\bm{s}$ by learning to invert the unknown $\bm{f}$.
 
 An ICA problem is known as \emph{identifiable} when it is possible to recover the sources $\bm{s}$ up to tolerable ambiguities. 
-For instance, it will generally be acceptable to recover $\bm{s}$ up to linear rescaling or permuted coordinates.
-Proofs of identifiability are crucial for the characterization of reliable ICA methods; in absence of these, there is no guarantee that a proposed method will successfully reconstruct the true sources, even in controlled settings.
-The basic ICA problem as presented in Equations \ref{eqn:ica-basic-1} and \ref{eqn:ica-basic-2}, in which only independence of the sources is assumed, was proven to be \emph{non-identifiable} \citep{hyvarinen1999nonlinear}.
-Thus, much research in this field has attempted to characterize the assumptions under which identifiability holds.
+For instance, it is generally acceptable to recover $\bm{s}$ up to linear rescaling or permuted coordinates.
+Although identifiability results generally assume access to unlimited samples of data, they are crucial to ensuring the reliability of ICA methods in practical scenarios; in the absence of these, there is no guarantee that a proposed method will successfully reconstruct the true sources, even in controlled settings.
+
+It was proven by \cite{hyvarinen1999nonlinear} that the `vanilla' ICA setting, in which the only assumptions made are independence of the sources and invertibility of $\bm{f}$, is \emph{non-identifiable}.
+Thus, much of the research in this field has attempted to characterise the assumptions under which identifiability holds.
 Such assumptions may be made either on the mixing functions or on the distributions of the sources. 
 
-In the rest of this section we give an overview of the different cases for which identifiability results are known. 
-%Note that the ICA literature also includes a variety of methods for implementing solutions to the problem with real data, as well as a variety of application areas. 
-%Since the contribution of this chapter is to prove identifiability results in a novel setting, only the essentials required to understand the novel results in full context will be provided in this section.
-In brief, the case of linear mixing functions has been extensively studied and is well understood, while the non-linear case is more challenging.
-Recently, many papers have used a novel proof technique to derive identifiability results in slight modifications to the standard ICA problem setting.
-The contribution of this chapter (Sections ??-??) is similar, proving identifiability in the case of \emph{multiple nonlinear views}. 
-That is, the given dataset consists of observations $\bm{x}^{(1)}$ and $\bm{x}^{(2)}$ of the same sources $\bm{s}$.
+The central contribution of the work presented in this chapter is the derivation of identifiability results in a novel \emph{multi-view} setting, in which multiple observations of the same underlying sources through different mixing functions are given.
+In this setting, identifiability holds subject to much weaker assumptions than are required for the single-view setting.
+These results are of practical importance for applications in which multiple data modalities may be simultaneously available.
+
+For a high-level intuition of the results, consider the perception of 3D structure through eyesight.
+Each of our eyes only sees a 2D projection of the true state of the 3D world.
+With only a single eye available, it may be possible to infer the 3D structure present in a scene by exploiting known cues, such as the objects in the scene being familiar to the viewer or the presence of shadows.
+But with two eyes together, a human can perceive 3D structure immediately, even without such cues. 
+Analogously, the results presented in this work show that inference of latent structure can be performed under much weaker assumptions when more than a single view is available.
+
+
+The remainder of this chapter is structured as follows.
+Section \ref{sec:ica-literature-overview} provides an introduction to ICA and the literature surrounding it, as well as literature from other areas that is relevant to the setting considered in this work.
+Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} presents the main results.
+Section ?? discusses the assumptions we make, and Section ?? concludes.
+
+
+%In the rest of this section we give an overview of the different cases for which identifiability results are known. 
+%%Note that the ICA literature also includes a variety of methods for implementing solutions to the problem with real data, as well as a variety of application areas. 
+%%Since the contribution of this chapter is to prove identifiability results in a novel setting, only the essentials required to understand the novel results in full context will be provided in this section.
+%In brief, the case of linear mixing functions has been extensively studied and is well understood, while the non-linear case is more challenging.
+%Recently, many papers have used a novel proof technique to derive identifiability results in slight modifications to the standard ICA problem setting.
+%The contribution of this chapter (Sections ??-??) is similar, proving identifiability in the case of \emph{multiple nonlinear views}. 
+%That is, the given dataset consists of observations $\bm{x}^{(1)}$ and $\bm{x}^{(2)}$ of the same sources $\bm{s}$.
 
 
 
-\subsection{Linear ICA}
+\section{Overview of ICA and related literature}\label{sec:ica-literature-overview}
+
+Sections \ref{subsec:ica-literature-linear-ica} - \ref{subsec:ica-literature-nonlinear-ica-with-aux} provide an overview of different ICA settings for which identifiability results are known.
+In brief, the linear case has been extensively studied and is well understood, while the nonlinear case is more challenging.
+Recently, a novel proof technique has been used to derive identifiability results in slight modifications to the standard ICA problem setting.
+Section \ref{sec:related-work} discusses other literature that is not about ICA but is nonetheless relevant to the setting considered in this work.
+
+
+
+\subsection{Linear ICA}\label{subsec:ica-literature-linear-ica}
 
 %\begin{itemize}
 %	\item The linear case has been studied extensively and is identifiable if at most one of the components is Gaussian
@@ -91,29 +126,26 @@ p(\bm{s}) &= \prod_{i} p_i(s_i)
 \end{align*}
 where $\bm{A}$ is a square matrix.
 This problem has been extensively studied and has been shown to be identifiable if at most one of the latent components is Gaussian~\citep{darmois1953analyse, skitovich1954linear, comon1994independent}.
-Non-identifiability in the case of more than one Gaussian component is a consequence of the fact that an isotropic Gaussian is invariant under orthogonal linear mappings.
+Nonidentifiability in the case of more than one Gaussian component is a consequence of the fact that an isotropic Gaussian is invariant under orthogonal linear mappings.
 Thus if the diagonal matrix $\bm{\Lambda}$ rescales the Gaussian components of $\bm{s}$ to be unit variance, and $\bm{U}$ is an orthogonal matrix mixing these components, $\bm{x}$ can be rewritten
 %
 \begin{align*}
-\bm{x} = \left(\bm{A}\bm{\Lambda}^{-1}\bm{U}^{-1} \right) \left(\bm{U}\bm{\Lambda} \bm{s}\right)
+\bm{x} = \left(\bm{A}\bm{\Lambda}^{-1}\bm{U}^{-1} \right) \left(\bm{U}\bm{\Lambda} \bm{s}\right).
 \end{align*}
 %
-and so it is impossible to tell which of $\bm{s}$ and $\bm{U}\bm{\Lambda} \bm{s}$ corresponds to the true source distribution. 
+Since both $\bm{s}$ and $\bm{U}\bm{\Lambda} \bm{s}$ have independent components, it is impossible to tell which of $\bm{s}$ and $\bm{U}\bm{\Lambda} \bm{s}$ corresponds to the true source distribution. 
 
 The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking linear maps $\bm{W}$ such that the transformed data $\bm{W}\bm{x}$ have maximally non-Gaussian components.
 Intuition for why such approaches might work can be seen in the Central Limit Theorem, which, informally, states that an average of \iid~random variables becomes more Gaussian as the number of variables in the average increases. 
 Similarly, in sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables will always make them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
 
-
-
-
-We recall in passing that linear ICA methods can be used for causal discovery in linear cyclic models, as discussed in Section ??.
+We recall in passing that linear ICA methods can be used for causal discovery in linear cyclic models, as discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.\footnote{\todo{rewrite if order of chapters is changed}}
 
 
 
 
 
-\subsection{Nonlinear ICA}
+\subsection{Nonlinear ICA}\label{subsec:ica-literature-nonlinear-ica}
 
 It was proven by \cite{hyvarinen1999nonlinear} that if no assumptions are made on the mixing functions $\bm{f}$ or the distributions of the sources other than independence, then the (nonlinear) ICA problem is unidentifiable.
 We briefly review this proof here. 
@@ -123,7 +155,7 @@ Existence of a solution is demonstrated by providing a constructive method that,
 $\bm{g}$ is constructed coordinate-wise in an iterative process that is similar to Gram-Schmidt orthogonalisation. See Theorem 1 of \cite{hyvarinen1999nonlinear} and the preceding paragraphs for details.
 $\bm{y}$ has independent components and, since this method works for any $\bm{x}$ with non-degenerate distribution, a solution to the ICA problem therefore always exists.
 
-Non-uniqueness of this solution is demonstrated by observing that there exists a infinite class of functions $\bm{h}$ which are \emph{measure-preserving} maps $[0,1]^n \to [0,1]^n$. 
+Non-uniqueness of this solution is demonstrated by observing that there exists an infinite class of functions $\bm{h}$ which are \emph{measure-preserving} maps $[0,1]^n \to [0,1]^n$. 
 That is, if $\bm{y}$ is uniformly distributed on $[0,1]^n$ then so is  $\bm{y}' = \bm{h}(\bm{y})$.
 It follows that $\bm{h}\circ \bm{g}$ thus provides a valid solution to the nonlinear ICA problem and thus there are infinitely many solutions. 
 Such a class of measure-preserving functions is given explicitly in the case of $n=2$ dimensions; by extending such functions to the identity mapping on extra dimensions and composing, such a class can be generated for any $n$.
@@ -132,7 +164,7 @@ Note that any function $\bm{k}: \mathbb{R}^n \to \mathbb{R}^n$ that acts coordin
 This is in some sense a `trivial' indeterminacy of nonlinear ICA, analogous to the scalar indeterminacy of linear ICA.
 
 Other works have shown that identifiability is possible when additional assumptions are made.
-Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure that can be exploited \cite{cardoso2001three, singer2008non, sprekeler2014extension}.
+Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure that can be exploited \citep{cardoso2001three, singer2008non, sprekeler2014extension}.
 In contrast, \cite{taleb1999source} prove identifiability under the \emph{post-nonlinear mixing} assumption on the mixing functions, though this is rather strong, corresponding to linear mixing followed by a nonlinear invertible function that acts coordinate-wise.
 
 
@@ -147,7 +179,7 @@ In contrast, \cite{taleb1999source} prove identifiability under the \emph{post-n
 %	\item In the past two decades some work has been done on this. Some works making assumptions on the sources as time series, some restricting the mixing function classes.
 %\end{itemize}
 
-\subsection{Nonlinear ICA with auxiliary variables}
+\subsection{Nonlinear ICA with auxiliary variables}\label{subsec:ica-literature-nonlinear-ica-with-aux}
 
 \cite{hyvarinen19a} study a modification of the typical ICA setting where an additional observed auxiliary variable $\bm{u}$ is introduced.
 Rather than being unconditionally independent, the sources $\bm{s}$ are \emph{conditionally} independent given $\bm{u}$, so that the model becomes
@@ -158,21 +190,70 @@ p(\bm{s}|\bm{u}) &= \prod_{i} p_i(s_i | \bm{u}).
 \end{align}
 
 Crucially, the variables $\bm{u}$ are presumed to be observed. 
-This is a general model that includes temporally dependent sources as a special case.
+This is a general model that includes temporally dependent sources as a special case, taking $(\bm{u}, \bm{x})= (\bm{x}_t,\bm{x}_{t+1})$
 %For notational convenience later on, let $q_i(s_i, \bm{u}) = \log p_i(s_i | \bm{u})$.
 \cite{hyvarinen19a} prove identifiability results for this model under conditions on both the functions $p_i$, i.e. the relationships between sources and auxiliary variables, and subject to $\bm{u}$ having a sufficiently diverse influence on the $\bm{x}$ in a sense that is formalised as the \emph{assumption of variability}.
 
 
-A constructive proof of identifiability is attained by exploiting a technique known as \emph{contrastive learning}~\cite{gutmann2010noise}.
-This is a method to transform a density ratio estimation problem into one of supervised function approximation. This idea has a long history~\cite{friedman2001elements}, and has more recently attracted attention in machine learning the machine learning community \cite{goodfellow2014generative, gutmann2010noise}. This will be discussed in more detail in the next chapter. 
+A constructive proof of identifiability is attained by exploiting a technique known as \emph{contrastive learning}~\citep{gutmann2010noise}.
+This is a method to transform a density ratio estimation problem into one of supervised function approximation. This idea has a long history~\citep{friedman2001elements}, and has more recently attracted attention in machine learning the machine learning community \citep{goodfellow2014generative, gutmann2010noise}. 
+This will be discussed in more detail in the next chapter.\footnote{\todo{rewrite if chapters are moved or if separate literature review covering this is put at the beginning.}}
 
-In the setting of nonlinear ICA with auxiliary variables, contrastive learning can be exploited by training a classifier to distinguish between a tuple sampled from the joint distribution, which we denote as $(\bm{x}, \bm{u})$, and one where $\bm{u}^*$ is a sample generated from the marginal $p(\bm{u})$ independently of $\bm{x}$, $(\bm{x}, \bm{u}^*)$.
+In the setting of nonlinear ICA with auxiliary variables, contrastive learning can be exploited by training a classifier to distinguish between a tuple sampled from the joint distribution, which we denote as $(\bm{x}, \bm{u})$, and one where $\bm{u}^*$ is a sample generated from the marginal $p(\bm{u})$ independently of $\bm{x}$, $(\bm{x}, \bm{u}^*)$.\footnote{\todo{Discuss density estimation in earlier literature review and reference it here.}}
 Intuitively, tuples drawn from the former distribution correspond to the same sources $\bm{s}$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
 Since the marginals of both distributions are equal, the classifier must learn to distinguish between them based on the common information shared by $\bm{x}$ and $\bm{u}$; that is, ultimately, $\bm{s}$.
 
 With this method, the reconstruction of $\bm{s}$ is again possible only up to invertible scalar ``gauge'' transformations. 
 
-\section{Nonlinear ICA with multiple views}
+
+\subsection{Other related work}\label{sec:related-work}
+A central concept in our work is that of multiple simultaneous views and joint extraction of features from them. We briefly review some related work considering similar settings.
+\subsubsection{Canonical Correlation Analysis}
+\label{sec:probacca}
+Given two (or more) random variables, the goal of Canonical Correlation Analysis (CCA) \citep{hotelling1992relations} is to find a corresponding pair of linear subspaces that have high cross-correlation, so that each component within one of the subspaces is correlated with a single component from the other subspace~\citep{bishop2006pattern}.
+In dealing with correlation instead of independence, CCA is more closely related to Principal Component Analysis (PCA) than to ICA.
+
+CCA can be interpretated probabilistically~\citep{bach2005probabilistic} and is equivalent to maximum likelihood estimation in a graphical model which is a special case of that depicted in Figure \ref{fig:classic_hsr}.
+The differences compared to our setting are (i) the latent components retrieved in CCA are forced to be uncorrelated, whereas our method retrieves independent components; (ii) in CCA, mappings between the sources $\bm{s}$ and $\bm{x}$ are linear, whereas our method allows for nonlinear mappings.
+
+At a high level, the two noisy views model we consider in Section \ref{sec:constrained} is to CCA as nonlinear ICA is to PCA.
+Nonlinear extensions of the basic CCA framework have been proposed~\citep{lai2000kernel, fukumizu2007statistical, andrew2013deep, michaeli2016nonparametric}, but identifiability results in the sense we consider in this paper are lacking.
+
+
+
+\subsubsection{Multi-view latent variable models}
+
+
+%Bearing a strong resemblance to our considered setting,~\cite{lederman2018learning} proposes a sequence of diffusion maps to find the common source of variability captured by multiple sensors, discarding irrelevant sensor-specific effects.
+%It computes the distance among the samples measured by different sensors to form a similarity matrix for the measurements of each sensor; each similarity matrix is then associated to a diffusion operator, which is a Markov matrix by construction. A Markov chain is then run by alternately applying these Markov matrices on the initial state. During these Markovian dynamics, sensor specific information will eventually vanish, and the final state will only contain information on the common source.
+%While the method focuses on recovering the common information in the form of a parametrization of the common variable, our method both inverts the mixing mechanisms of each view and recovers the common latent variables.
+
+\cite{song2014nonparametric} proves identifiability for multi-view, latent variable models, unifying previously proposed spectral techniques~\cite{anandkumar2014tensor}. However, while the setting is similar to the one considered in this work, both the objectives and the employed methods are different.
+The paper considers the setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are observed; additionally, there exists an unobserved latent variable $H$, such that conditional distributions $P(X_l|H)$ are independent. While the setting bears obvious similarities with our multi-view ICA, the method proposed in~\cite{song2014nonparametric} is aimed at learning the mixture parameters, rather than the exact realization of latent variables.
+Their method is based on the mean embedding of distributions in a Reproducing Kernel Hilbert Space and a result of identifiability for the parameters of the mean embeddings of $P(H)$ and $P(X|H)$ is proved.
+Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. While related to our setting, this line of work is different from it in two key ways.
+Firstly, clustering can be thought of as assigning a discrete latent label per datapoint. In contrast, our setting seeks to recover a continuous latent vector per datapoint.
+Second, since no underlying generative model with discrete latent variable is assumed, identifiability results are not given.
+
+
+
+\subsubsection{Half-sibling regression}
+\label{sec:hsr}
+Half-sibling regression~\citep{scholkopf2016modeling} is a method to reconstruct a source from noisy observations by exploiting other sources that are affected by the same noise process but otherwise independent from it.
+
+Suppose that a latent variable of interest $Q$ is not directly available, and that we can only observe corrupted versions of it, denoted as  $Y$, where the corruption is due to a noise $N$.
+Without knowledge of $N$, it is impossible to reconstruct $Q$. However, if one or more additional variables $X$, also influenced by $N$, are observed, we can exploit them to model the effect of $N$ on $Y$ by regressing $Y$ on $X$.
+
+Subtracting this from the observed $Y$ recovers the latent variable $Q$ up to a constant offset,
+provided that (1) the additivity assumption
+\[
+Y = Q + f(N)
+\]
+holds, and (2) that $Y$ contains sufficient information about $f(N)$.
+Analogous to our aim of recovering $\bm{s}$,
+the goal of half-sibling regression is not to infer only the distribution of $Q$, but rather the random variable itself (almost surely).
+
+\section{Nonlinear ICA with multiple views}\label{sec:ica-nonlinear-ica-with-mulitple-views}
 
 In this chapter we consider another variation on the nonlinear ICA setting, described by the following generative model    
 \begin{align}
@@ -273,7 +354,7 @@ In all of these cases, the Jacobians introduced by a change of variables cancel 
 For brevity these Jacobians are omitted henceforth.
 
 The proof of Theorem \ref{thm:noiseless1} can be found in Appendix \ref{appendix:proof-thm1}.
-The assumption of invertibility for $\bm{h}$ could be satisfied by, e.g., the use of normalizing flows~\cite{rezende2015variational, chen2018neural} or deep invertible networks~\cite{jacobsen_hal-01712808}.
+The assumption of invertibility for $\bm{h}$ could be satisfied by, e.g., the use of normalizing flows~\citep{rezende2015variational, chen2018neural} or deep invertible networks~\citep{jacobsen_hal-01712808}.
 
 
 If $\bm{x}_1$ and $\bm{x}_2$ were always equal, the multiple view setting would reduce to the normal nonlinear ICA setting.
@@ -304,7 +385,7 @@ This result can be extended to learn the inverse of $\bm{f}_2$ up to component-w
 
 \begin{corollary}
 	\label{crl:noiseless1}
-	Consider the setting of Theorem \ref{thm:noiseless1}, and the alternative factorization of the log joint probability given by
+	Consider the setting of Theorem \ref{thm:noiseless1}, and the alternative factorisation of the log joint probability given by
 	\begin{align}
 	&\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1) p(\bm{x}_2) \nonumber \\
 	&= \log p(\bm{x}_1 | \bm{x}_2) - \log p(\bm{x}_1)\nonumber \\
@@ -375,7 +456,7 @@ where all variables take value in $\mathbb{R}^D$, and $\bm{f}_{1}$ and $\bm{f}_{
 $\bm{g}_{1}$ and $\bm{g}_{2}$ are component-wise corrupters, and $\bm{s}$ and the $\bm{n}_i$ are independent with independent components.
 This class of models generalizes the setting of Section \ref{sec:onenoisless} since by taking $\bm{g}_1(\bm{s}, \bm{n}_1) = \bm{s}$ we reduce to the case of one noiseless observation.
 
-The difference $\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1)p(\bm{x}_2)$ admits similar factorizations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
+The difference $\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1)p(\bm{x}_2)$ admits similar factorisations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
 \begin{align}
 &\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1) p(\bm{x}_2) \nonumber\\
 &= \log p(\bm{x}_1 | \bm{x}_2) - \log p(\bm{x}_1)\nonumber\\
@@ -423,8 +504,8 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 The proof can be found in Appendix \ref{appendix:thm2}.
 
 Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $\bm{s}$ can be recovered exactly.
-Condition \textit{i)} upper bounds the influence of $\bm{n}$ on the corruption: we can not hope to retrieve $\bm{s}$ if $\bm{g}(\bm{s}, \bm{n})$ contains too little signal.
-Condition \textit{ii)} ensures that the function $\bm{g}$ is invertible with respect to $\bm{s}$ when $\bm{n}$ is equal to zero.
+Condition \textit{1} upper bounds the influence of $\bm{n}$ on the corruption: we can not hope to retrieve $\bm{s}$ if $\bm{g}(\bm{s}, \bm{n})$ contains too little signal.
+Condition \textit{2} ensures that the function $\bm{g}$ is invertible with respect to $\bm{s}$ when $\bm{n}$ is equal to zero.
 If this were not satisfied, some information about $\bm{s}$ would be washed out by $\bm{g}$ even in absence of noise.
 This would make recovery of $\bm{s}$ trivially impossible.
 
@@ -432,7 +513,7 @@ This would make recovery of $\bm{s}$ trivially impossible.
 \subsection{Multiple noisy views}
 \label{sec:multiple}
 
-The results of Section \ref{sec:constrained} state that in the two noisy view setting, $\bm{s}$ can be recovered up to the corruptions.
+The results of Section \ref{sec:constrained} state that in the two noisy views setting, $\bm{s}$ can be recovered up to the corruptions.
 In the limit that the magnitude of the noises goes to zero, the uncorrupted $\bm{s}$ can be recovered.
 The intuition is that the less noise there is, the more information each observation provides about $\bm{s}$.
 
@@ -469,7 +550,7 @@ As a first step in this direction, we consider the special case that each $\bm{g
 \left.
 \begin{array}{ll}
 &\bm{x}_{i}=\bm{f}_{i}(\bm{s} + \bm{n}_{i}) \\
-&\mathbb{E}\bm{n}_i= 0
+&\mathbb{E}[\bm{n}_i]= 0
 \end{array}
 \right\rbrace \quad i \in \mathbb{N}
 \end{align}
@@ -493,7 +574,7 @@ Subject to mild conditions, the dependence of these quantities on most or all of
 \medskip
 
 \begin{lemma}\label{lem:last-lemma}
-	Suppose that the sequence $\mathbb{E}_{\bm{n}}[\Omega_{\eb}^N(\bm{s}, \bm{n})] = \frac{1}{N}\sum_{i=1}^N \mathbb{E}_{\bm{n}_i}[\bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i)] $ converges as $N \to \infty$ for almost all $\bm{s}$, and write
+	Suppose that the sequence $\mathbb{E}_{\bm{n}}[\Omega_{\eb}^N(\bm{s}, \bm{n})] = \frac{1}{N}\sum_{i=1}^N \mathbb{E}_{\bm{n}_i}[\bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i)] $ converges as $N \to \infty$ for almost all $\bm{s}$, and write this limit as
 	\begin{align*}
 	\Omega_\eb(\bm{s}) = \lim_{N\to\infty}\mathbb{E}_{\bm{n}}[\Omega_{\eb}^N(\bm{s}, \bm{n})].
 	\end{align*}
@@ -547,58 +628,14 @@ In contrast to previous results in Sections \ref{sec:onenoisless} and \ref{sec:c
 
 
 
-\section{Related work}
-\label{sec:related-work}
-A central concept in our work is that of multiple simultaneous views and joint extraction of features from them. We briefly review some related work considering similar settings.
-\subsection{Canonical Correlation Analysis}
-\label{sec:probacca}
-Given two (or more) random variables, the goal of Canonical Correlation Analysis (CCA)~\cite{hotelling1992relations} is to find a corresponding pair of linear subspaces that have high cross-correlation, so that each component within one of the subspaces is correlated with a single component from the other subspace~\cite{bishop2006pattern}.
-In dealing with correlation instead of independence, CCA is more closely related to Principal Component Analysis (PCA) than to ICA.
-
-CCA can be interpretated probabilistically~\cite{bach2005probabilistic} and is equivalent to maximum likelihood estimation in a graphical model which is a special case of that depicted in Figure \ref{fig:classic_hsr}.
-The differences compared to our setting are (i) the latent components retrieved in CCA are forced to be uncorrelated, whereas our method is retrieves independent components; (ii) in CCA, mappings between the sources $\bm{s}$ and $\bm{x}$ are linear, whereas our method allows for nonlinear mappings.
-
-At a high level, the model we consider in Section \ref{sec:constrained} is to CCA as nonlinear ICA is to PCA.
-Nonlinear extensions of the basic CCA framework have been proposed~\cite{lai2000kernel, fukumizu2007statistical, andrew2013deep, michaeli2016nonparametric}, but identifiability results in the sense we consider in this paper are lacking.
 
 
 
-\subsection{Multi-view latent variable models}
-
-
-Bearing a strong resemblance to our considered setting,~\cite{lederman2018learning} proposes a sequence of diffusion maps to find the common source of variability captured by multiple sensors, discarding irrelevant sensor-specific effects.
-It computes the distance among the samples measured by different sensors to form a similarity matrix for the measurements of each sensor; each similarity matrix is then associated to a diffusion operator, which is a Markov matrix by construction. A Markov chain is then run by alternately applying these Markov matrices on the initial state. During these Markovian dynamics, sensor specific information will eventually vanish, and the final state will only contain information on the common source.
-While the method focuses on recovering the common information in the form of a parametrization of the common variable, our method both inverts the mixing mechanisms of each view and recovers the common latent variables.
-
-\cite{song2014nonparametric} proves identifiability for multi-view, latent variable models, unifying previously proposed spectral techniques~\cite{anandkumar2014tensor}. However, while the setting is similar to the one considered in this work, both the objectives and the employed methods are different.
-The paper considers the setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are observed; additionally, there exists an unobserved latent variable $H$, such that conditional distributions $P(X_l|H)$ are independent. While the setting bears obvious similarities with our multi-view ICA, the method proposed in~\cite{song2014nonparametric} is aimed at learning the mixture parameters, rather than the exact realization of latent variables.
-Their method is based on the mean embedding of distributions in a Reproducing Kernel Hilbert Space and a result of identifiability for the parameters of the mean embeddings of $P(H)$ and $P(X|H)$ is proved.
-Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. While related to our setting, this line of work is different from it in two key ways.
-Firstly, clustering can be thought of as assigning a discrete latent label per datapoint. In contrast, our setting seeks to recover a continuous latent vector per datapoint.
-Second, since no underlying generative model with discrete latent variable is assumed, identifiability results are not given.
-
-
-
-\subsection{Half-sibling regression}
-\label{sec:hsr}
-Half-sibling regression~\cite{scholkopf2016modeling} is a method to reconstruct a source from noisy observations by exploiting other sources that are affected by the same noise process but otherwise independent from it.
-
-Suppose that a latent variable of interest $Q$ is not directly available, and that we can only observe corrupted versions of it, denoted as  $Y$, where the corruption is due to a noise $N$.
-Without knowledge of $N$, it is impossible to reconstruct $Q$. However, if one or more additional variables $X$, also influenced by $N$, are observed, we can exploit them to model the effect of $N$ on $Y$ by regressing $Y$ on $X$.
-
-Subtracting this from the observed $Y$ recovers the latent variable $Q$ up to a constant offset,
-provided that (1) the additivity assumption
-\[
-Y = Q + f(N)
-\]
-holds, and (2) that $Y$ contains sufficient information about $f(N)$.
-Analogous to our aim of recovering $\bm{s}$,
-the goal of half-sibling regression is not to infer only the distribution of $Q$, but rather the random variable itself (almost surely).
-
-\section{Classification and stochasticity}
+\section{Discussion about assumptions}
+\subsection{Classification and stochasticity}
 \label{sec:converged}
 Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
-A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realization of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimize
+A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realization of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
 
 \[
 L(D) = \mathbb{E}_{X\sim P_0} \left[ - \log D(X) \right] + \mathbb{E}_{X\sim P_1} \left[ - \log (1 - D(X)) \right].
@@ -634,7 +671,7 @@ It follows that the contrastive learning technique as used in the theorems consi
 It is for this technical reason that the corruptions are necessary.
 
 
-\section{The sufficiently distinct views assumption}
+\subsection{The sufficiently distinct views assumption}
 \label{appendix:sdv}
 
 We give the following two examples to provide intuition about the Sufficiently Distinct Views (SDV) assumption - one regarding a case in which it does not hold, and another one in which it does.
@@ -666,7 +703,7 @@ The idea is that $\bm{w}(\bm{s}, \bm{z})$ can be written as the product of a mat
 Once written in this form, it is straightforward to show that the columns of the matrix are linearly independent for almost all values of $\bm{s}$ and that $2D$ linearly independent vectors can be realized by different choices of $\bm{z}$.
 
 
-\section{Discussion and conclusion}
+\section{Conclusion}
 \label{sec:on_suffistv}
 We presented identifiability results in a novel setting by extending the formalism of nonlinear ICA.
 We have investigated different scenarios of multi-view latent variable models and provided theoretical proofs on the possibility of inverting the mixing function and recovering the sources in each case.

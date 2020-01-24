@@ -557,7 +557,7 @@ This problem is more challenging in the presence of confounders, corresponding t
 %We note in passing that distinguishing between cause and effect in the presence of confounders is significantly more challenging than without confounders; \cite{hoyer2008estimation} and \cite{janzing2009identifying} consider this problem.  For more in-depth reading on the topic of bivariate causal identification, see \cite{mooij2014distinguishing} and for more information on additive noise models, see \cite{peters2014causal}.
 
 
-\subsubsection{Cyclic additive noise models}
+\subsubsection{Cyclic additive noise models}\label{subsubsec:causality-causal-inference-cyclic}
 
 Linear cyclic additive noise models, corresponding to Equation \ref{eqn:causality-linear-additive-noise-model} in which the matrix $A$ need not be strictly upper diagonal, may be learned using ICA methods provided that $I-A$ is invertible.
 This is done by \cite{lacerda2012discovering}, generalising the LiNGAM method, though identifiability holds here only up to SEMs that induce the same observational distribution.
