@@ -64,6 +64,7 @@ X &= f(Z) \label{eqn:ica-basic-2}
 %
 where $Z$ is a vector of independent \emph{sources}, $X$ is a vector of \emph{observations} or \emph{mixtures} and $f$ is the vector of \emph{mixing functions} expressing how each coordinate of $X$ depends on all of the coordinates of $Z$. 
 Given a dataset of observations of $X$, the goal of ICA is to recover the corresponding unknown values of $Z$ by learning to invert the unknown $f$.
+In the general case, no assumptions are made about $p(z)$ other than that it factorises.
 The latent variable model in this setting should thus be thought of as a true descriptive model for the world, 
 in contrast to generative modelling, where latent variable models with factorised priors merely provide a convenient way to specify distributions over the observable variables. 
 
@@ -152,7 +153,11 @@ Thus if the diagonal matrix $\Lambda$ rescales the Gaussian components of $Z$ to
 X = \left(A\Lambda^{-1}U^{-1} \right) \left(U\Lambda Z\right).
 \end{align*}
 %
-Since both $Z$ and $U\Lambda Z$ have independent components, it is impossible to tell which of $Z$ and ${U}{\Lambda} Z$ corresponds to the true source distribution, and thus the problem is nonidentifiable due to the existence of multiple plausible, yet fundamentally different, solutions.
+Since both $Z$ and $U\Lambda Z$ have independent components, it is impossible to tell which of $Z$ and ${U}{\Lambda} Z$ corresponds to the true source distribution.
+For most such $U$, $U\Lambda Z$ nontrivially mixes the components of $Z$, and thus the problem is nonidentifiable due to the existence of multiple plausible, yet fundamentally different, solutions.
+
+Note that even in the non-Gaussian case, taking $U=I$ or a permutation matrix also results in $U\Lambda Z$ being a valid solution. 
+This, however, corresponds to a `trivial' indeterminacy of the linear ICA problem, since in this case $U\Lambda Z$ still recovers the separate components of $Z$, only linearly rescaled and in a different order.
 
 The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking linear maps $W$ such that the transformed data ${W}X$ have maximally non-Gaussian components.
 Intuition for why such an approach works can be seen in the Central Limit Theorem, which, informally, states that an average of \iid~random variables becomes more Gaussian-like as the number of variables in the average increases. 
@@ -192,14 +197,14 @@ Such a class of measure-preserving functions is given explicitly in the case of 
 %It follows that $\bm{h}\circ \bm{g}$ thus provides a valid solution to the nonlinear ICA problem and thus there are infinitely many solutions. 
 %Such a class of measure-preserving functions is given explicitly in the case of $n=2$ dimensions; by extending such functions to the identity mapping on extra dimensions and composing, such a class can be generated for any $n$.
 
-Note that any function ${k}: \mathbb{R}^n \to \mathbb{R}^n$ that acts coordinate-wise and is invertible---that is, ${k}(X)_i = k_i(X_i)$ where $k_i$ is invertible---can be composed with ${g}$ to result in the random vector $Y'={k}\circ {g}(X)$ having any desired factorised distribution. 
-This is in some sense a `trivial' indeterminacy of nonlinear ICA, analogous to the scalar indeterminacy of linear ICA.
-All of the identifiability results presented in Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} hold only up to such functions, which are referred to throughout as \emph{component-wise invertible transformations}.
+Note that any function ${k}: \mathbb{R}^n \to \mathbb{R}^n$ that acts coordinate-wise and is invertible---that is, for each $i$, ${k}(X)_i = k_i(X_j)$ for some $j$ with $k_i$ invertible---can be composed with ${g}$ to result in the random vector $Y'={k}\circ {g}(X)$ having any desired factorised distribution. 
+This is in some sense a `trivial' indeterminacy of nonlinear ICA, analogous to the scalar and permutation indeterminacy of linear ICA.
+All of the novel identifiability results presented in Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} hold only up to such functions, which are referred to throughout as \emph{component-wise invertible transformations}.
 
 
 Other works have shown that identifiability is possible when additional assumptions are made.
-Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure that can be exploited \citep{cardoso2001three, singer2008non, sprekeler2014extension}.
-In contrast, \cite{taleb1999source} prove identifiability under the rather strong \emph{post-nonlinear mixing} assumption on the mixing functions, corresponding to linear mixing followed by a nonlinear invertible function that acts coordinate-wise.
+Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure \citep{cardoso2001three, singer2008non, sprekeler2014extension}.
+In contrast, \cite{taleb1999source} prove identifiability under the rather strong \emph{post-nonlinear mixing} assumption on the mixing functions, corresponding to linear mixing followed by a nonlinear component-wise invertible function.
 
 
 %In the following section we discuss recent developments in the ICA literature that have led to identifiability results with arguably weaker assumptions.
@@ -215,43 +220,59 @@ In contrast, \cite{taleb1999source} prove identifiability under the rather stron
 
 \subsection{Nonlinear ICA with auxiliary variables}\label{subsec:ica-literature-nonlinear-ica-with-aux}
 
-\cite{hyvarinen19a} study a modification of the typical ICA setting where an additional observed auxiliary variable $\bm{u}$ is introduced.
-Rather than being unconditionally independent, the sources $\bm{s}$ are \emph{conditionally} independent given $\bm{u}$, so that the model becomes
+\cite{hyvarinen19a} study a modification of the typical ICA setting where an additional observed auxiliary variable $U$ is introduced.
+$U$ is assumed to be always observed with the sources $Z$ being \emph{conditionally} independent given $U$, resulting in the model
+
+%\begin{align}
+%\bm{x} &= \bm{f}(\bm{s}) \\
+%p(\bm{s}|\bm{u}) &= \prod_{i} p_i(s_i | \bm{u}).
+%\end{align}
 
 \begin{align}
-\bm{x} &= \bm{f}(\bm{s}) \\
-p(\bm{s}|\bm{u}) &= \prod_{i} p_i(s_i | \bm{u}).
+Z | U &\sim p(z|u) = \prod_{i} p_i(z_i | u), \\
+X &= f(Z).
 \end{align}
 
-Crucially, the variables $\bm{u}$ are presumed to be observed. 
-This is a general model that includes temporally dependent sources as a special case, taking $(\bm{u}, \bm{x})= (\bm{x}_t,\bm{x}_{t+1})$.
+%Crucially, the variables $\bm{u}$ are presumed to be observed. 
+This general model includes temporally dependent sources as a special case, taking $(U, X)= (X_t,X_{t+1})$.
 %For notational convenience later on, let $q_i(s_i, \bm{u}) = \log p_i(s_i | \bm{u})$.
-\cite{hyvarinen19a} prove identifiability results for this model under conditions on both the functions $p_i$, i.e. the relationships between sources and auxiliary variables, and subject to $\bm{u}$ having a sufficiently diverse influence on the $\bm{x}$ in a sense that is formalised as the \emph{assumption of variability}.
+\cite{hyvarinen19a} prove identifiability results under conditions on both the conditional distributions $p_i(s_i | u)$, the relationships between sources and auxiliary variables, and subject to $U$ having a sufficiently diverse influence on the $X$ in a sense that is formalised as the \emph{assumption of variability}.
 
+Identifiability in this model is proved constructively by considering classification between tuples $(x, u)$, sampled from the joint distribution $p(x, u)$, and tuples $(x, u^*)$ sampled from the product of marginals $p(u)p(x)$.
+Tuples from the former distribution correspond to the same value of the sources $z$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
+By appropriately constraining the form of the regression function used in this classification, it is shown that the optimal classifier extracts $z$ up to component-wise invertible functions.
 
-A constructive proof of identifiability is attained by exploiting a technique known as \emph{contrastive learning}~\citep{gutmann2010noise}.
-This is a method to transform a density ratio estimation problem into one of supervised function approximation. This idea has a long history~\citep{friedman2001elements}, and has more recently attracted attention in machine learning the machine learning community \citep{goodfellow2014generative, gutmann2010noise}. 
-This will be discussed in more detail in the next chapter.\footnote{\todo{rewrite if chapters are moved or if separate literature review covering this is put at the beginning.}}
+The results presented in Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} build on this approach, extending the results to a novel multi-view setting.
 
-In the setting of nonlinear ICA with auxiliary variables, contrastive learning can be exploited by training a classifier to distinguish between a tuple sampled from the joint distribution, which we denote as $(\bm{x}, \bm{u})$, and one where $\bm{u}^*$ is a sample generated from the marginal $p(\bm{u})$ independently of $\bm{x}$, $(\bm{x}, \bm{u}^*)$.\footnote{\todo{Discuss density estimation in earlier literature review and reference it here.}}
-Intuitively, tuples drawn from the former distribution correspond to the same sources $\bm{s}$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
-Since the marginals of both distributions are equal, the classifier must learn to distinguish between them based on the common information shared by $\bm{x}$ and $\bm{u}$; that is, ultimately, $\bm{s}$.
+%A constructive proof of identifiability is attained by exploiting a technique known as \emph{contrastive learning}~\citep{gutmann2010noise}.
+%This is a method to transform a density ratio estimation problem into one of supervised function approximation. This idea has a long history~\citep{friedman2001elements}, and has more recently attracted attention in machine learning the machine learning community \citep{goodfellow2014generative, gutmann2010noise}. 
+%This will be discussed in more detail in the next chapter.\footnote{\todo{rewrite if chapters are moved or if separate literature review covering this is put at the beginning.}}
 
-With this method, the reconstruction of $\bm{s}$ is again possible only up to invertible scalar ``gauge'' transformations. 
+%In the setting of nonlinear ICA with auxiliary variables, contrastive learning can be exploited by training a classifier to distinguish between a tuple sampled from the joint distribution, which we denote as $(\bm{x}, \bm{u})$, and one where $\bm{u}^*$ is a sample generated from the marginal $p(\bm{u})$ independently of $\bm{x}$, $(\bm{x}, \bm{u}^*)$.\footnote{\todo{Discuss density estimation in earlier literature review and reference it here.}}
+%Intuitively, tuples drawn from the former distribution correspond to the same sources $\bm{s}$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
+%Since the marginals of both distributions are equal, the classifier must learn to distinguish between them based on the common information shared by $\bm{x}$ and $\bm{u}$; that is, ultimately, $\bm{s}$.
+%
+%With this method, the reconstruction of $\bm{s}$ is again possible only up to invertible scalar ``gauge'' transformations. 
 
 
 \subsection{Other related work}\label{sec:related-work}
-A central concept in our work is that of multiple simultaneous views and joint extraction of features from them. We briefly review some related work considering similar settings.
+A central concept of the work presented in this chapter is the extraction of features from multiple simultaneous views. 
+This section briefly reviews some related work considering similar settings outside of the ICA literature.
 \subsubsection{Canonical Correlation Analysis}
 \label{sec:probacca}
-Given two (or more) random variables, the goal of Canonical Correlation Analysis (CCA) \citep{hotelling1992relations} is to find a corresponding pair of linear subspaces that have high cross-correlation, so that each component within one of the subspaces is correlated with a single component from the other subspace~\citep{bishop2006pattern}.
+Given two vector-valued random variables, the goal of Canonical Correlation Analysis (CCA) is to find a pair of linear subspaces that have high cross-correlation, so that each component within one of the subspaces is correlated with a single component from the other subspace~\citep{hotelling1992relations, bishop2006pattern}.
+CCA admits a probabilistic interpretation \citep{bach2005probabilistic} and is equivalent to maximum likelihood estimation in a graphical model which is a special case of that depicted in Figure 
+%\ref{fig:classic_hsr}
+\ref{multiview-ica-model-in-intro}\footnote{\todo{fill in once figure has been made}}.
+
+The main differences compared to the setting of this chapter are that the latent components retrieved in CCA are forced to be uncorrelated, whereas ICA is concerned with independent components; and in CCA, mappings between the sources and observations are linear, whereas we are interested in nonlinear mappings.
 In dealing with correlation instead of independence, CCA is more closely related to Principal Component Analysis (PCA) than to ICA.
-
-CCA can be interpretated probabilistically~\citep{bach2005probabilistic} and is equivalent to maximum likelihood estimation in a graphical model which is a special case of that depicted in Figure \ref{fig:classic_hsr}.
-The differences compared to our setting are (i) the latent components retrieved in CCA are forced to be uncorrelated, whereas our method retrieves independent components; (ii) in CCA, mappings between the sources $\bm{s}$ and $\bm{x}$ are linear, whereas our method allows for nonlinear mappings.
-
-At a high level, the two noisy views model we consider in Section \ref{sec:constrained} is to CCA as nonlinear ICA is to PCA.
 Nonlinear extensions of the basic CCA framework have been proposed~\citep{lai2000kernel, fukumizu2007statistical, andrew2013deep, michaeli2016nonparametric}, but identifiability results in the sense we consider in this paper are lacking.
+
+
+%
+
+%At a high level, the two noisy views model we consider in Section \ref{sec:constrained} is to CCA as nonlinear ICA is to PCA.
 
 
 
@@ -260,50 +281,58 @@ Nonlinear extensions of the basic CCA framework have been proposed~\citep{lai200
 
 %Bearing a strong resemblance to our considered setting,~\cite{lederman2018learning} proposes a sequence of diffusion maps to find the common source of variability captured by multiple sensors, discarding irrelevant sensor-specific effects.
 %It computes the distance among the samples measured by different sensors to form a similarity matrix for the measurements of each sensor; each similarity matrix is then associated to a diffusion operator, which is a Markov matrix by construction. A Markov chain is then run by alternately applying these Markov matrices on the initial state. During these Markovian dynamics, sensor specific information will eventually vanish, and the final state will only contain information on the common source.
-%While the method focuses on recovering the common information in the form of a parametrization of the common variable, our method both inverts the mixing mechanisms of each view and recovers the common latent variables.
+%While the method focuses on recovering the common information in the form of a parametrisation of the common variable, our method both inverts the mixing mechanisms of each view and recovers the common latent variables.
 
-\cite{song2014nonparametric} proves identifiability for multi-view, latent variable models, unifying previously proposed spectral techniques~\cite{anandkumar2014tensor}. However, while the setting is similar to the one considered in this work, both the objectives and the employed methods are different.
-The paper considers the setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are observed; additionally, there exists an unobserved latent variable $H$, such that conditional distributions $P(X_l|H)$ are independent. While the setting bears obvious similarities with our multi-view ICA, the method proposed in~\cite{song2014nonparametric} is aimed at learning the mixture parameters, rather than the exact realization of latent variables.
+\cite{song2014nonparametric} prove identifiability for multi-view, discrete latent variable models.
+%, unifying previously proposed spectral techniques~\cite{anandkumar2014tensor}. 
+While the setting they consider is similar to that of this work, their proposed method is aimed at estimating model parameters with the goal of performing density estimation, rather than estimating the values of (continuous) latent variables.
+%However, while the setting is similar to the one considered in this work, both the objectives and the employed methods are different.
+The paper considers a setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are observed; additionally, there exists an unobserved discrete latent variable $H$, such that conditional distributions $P(X_l|H)$ are independent. 
 Their method is based on the mean embedding of distributions in a Reproducing Kernel Hilbert Space and a result of identifiability for the parameters of the mean embeddings of $P(H)$ and $P(X|H)$ is proved.
+
 Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. While related to our setting, this line of work is different from it in two key ways.
-Firstly, clustering can be thought of as assigning a discrete latent label per datapoint. In contrast, our setting seeks to recover a continuous latent vector per datapoint.
+Firstly, clustering can be thought of as assigning a discrete latent label per observation. In contrast, our setting seeks to recover a continuous latent vector per observation.
 Second, since no underlying generative model with discrete latent variable is assumed, identifiability results are not given.
 
 
 
 \subsubsection{Half-sibling regression}
 \label{sec:hsr}
-Half-sibling regression~\citep{scholkopf2016modeling} is a method to reconstruct a source from noisy observations by exploiting other sources that are affected by the same noise process but otherwise independent from it.
+Half-sibling regression \citep{scholkopf2016modeling} is a method to reconstruct a source from noisy observations by exploiting observations of other sources that are affected by the same noise process.
+In contrast to the multi-view ICA setting, in which the sources to be reconstructed are common to the multiple views, in half-sibling regression it is the \emph{noise} that is common to both views, with the desired sources being separate for each observation.
 
-Suppose that a latent variable of interest $Q$ is not directly available, and that we can only observe corrupted versions of it, denoted as  $Y$, where the corruption is due to a noise $N$.
-Without knowledge of $N$, it is impossible to reconstruct $Q$. However, if one or more additional variables $X$, also influenced by $N$, are observed, we can exploit them to model the effect of $N$ on $Y$ by regressing $Y$ on $X$.
+\cite{scholkopf2016modeling} study this problem under an additive noise assumption. 
+By regressing one observation against the other, this common noise can be identified and hence subtracted, recovering the desired sources.
 
-Subtracting this from the observed $Y$ recovers the latent variable $Q$ up to a constant offset,
-provided that (1) the additivity assumption
-\[
-Y = Q + f(N)
-\]
-holds, and (2) that $Y$ contains sufficient information about $f(N)$.
-Analogous to our aim of recovering $\bm{s}$,
-the goal of half-sibling regression is not to infer only the distribution of $Q$, but rather the random variable itself (almost surely).
+%Suppose that a latent variable of interest $Q$ is not directly available, and that we can only observe corrupted versions of it, denoted as  $Y$, where the corruption is due to a noise $N$.
+%Without knowledge of $N$, it is impossible to reconstruct $Q$. However, if one or more additional variables $X$, also influenced by $N$, are observed, we can exploit them to model the effect of $N$ on $Y$ by regressing $Y$ on $X$.
+%
+%Subtracting this from the observed $Y$ recovers the latent variable $Q$ up to a constant offset,
+%provided that (1) the additivity assumption
+%\[
+%Y = Q + f(N)
+%\]
+%holds, and (2) that $Y$ contains sufficient information about $f(N)$.
+%Analogous to our aim of recovering $\bm{s}$,
+%the goal of half-sibling regression is not to infer only the distribution of $Q$, but rather the random variable itself (almost surely).
 
 \section{Nonlinear ICA with multiple views}\label{sec:ica-nonlinear-ica-with-mulitple-views}
 
 This section presents the main contribution of this chapter, in which identifiability results for variations on the following setting are given:
 \begin{align}
-\bm{x}_1 &= \bm{f}_1(\bm{s}) \label{eq:nonlinear-ica-1}\\
-\bm{x}_2 &= \bm{f}_2(\bm{s}) \label{eq:nonlinear-ica-2}\\
-p(\bm{s}) &= \prod_{i} p_i(s_i) \label{eq:firstind}\,,
+Z &\sim p(z) = \prod_{i} p_i(z_i) \label{eq:firstind}\\
+X_1 &= f_1(Z) \label{eq:nonlinear-ica-1}\\
+X_2 &= f_2(Z) \label{eq:nonlinear-ica-2}
 \end{align}
-where $\bm{x}_1, \bm{x}_2, \bm{s} \in \mathbb{R}^D$ and $\bm{f}_1, \bm{f}_2$ are arbitrary smooth and invertible transformations of the latent variable $\bm{s} = (s_1, \ldots, s_D)$ with mutually independent components.
-$\bm{x}_1$ and $\bm{x}_2$ are referred to as different \emph{views} of the sources $\bm{s}$.
-Given observations of $\bm{x}_1$ and $\bm{x}_2$, the goal is to recover $\bm{s}$, undoing the mixing induced by the $\bm{f}_i$.
+where $X_1, X_2, Z \in \mathbb{R}^D$ and $f_1, f_2$ are arbitrary smooth and invertible transformations of the latent variable $Z = (Z_1, \ldots, Z_D)$ with mutually independent components.
+$X_1$ and $X_2$ are referred to as different \emph{views} of the sources $Z$.
+Given observations of $X_1$ and $\X_2$, the goal is to recover $Z$, undoing the mixing induced by the $f_i$.
 
 %the goal is to recover $\bm{s}$, undoing the mixing induced by the $\bm{f}_i$, in the case where only observations of $\bm{x}_1$ and $\bm{x}_2$ are available.
 %correspondingly build on the methods introduced in that work. 
 %The main difference between the setting is that do not assume that the $\bm{s}$ are conditionally independent given one of the $\bm{x}_i$.
-The two problems defined by separately considering the pairs of Equations \ref{eq:nonlinear-ica-1}, \ref{eq:firstind} and \ref{eq:nonlinear-ica-2}, \ref{eq:firstind} are instances of the usual single-view nonlinear ICA setting.
-As previously discussed, unless strong assumptions are made on the $\bm{f}_i$ or the distribution of $\bm{s}$, these problems are separately unidentifiable. 
+The two problems defined by separately considering the pairs of Equations \ref{eq:firstind}, \ref{eq:nonlinear-ica-1} and \ref{eq:firstind}, \ref{eq:nonlinear-ica-2} are instances of the usual single-view nonlinear ICA setting.
+As previously discussed, unless strong assumptions are made on the $f_i$ or the distribution of $Z$, these problems are separately unidentifiable. 
 
 The key contribution of this chapter is 
 %to show that 
@@ -312,8 +341,8 @@ identifiability results
 %can be obtained 
 with relaxed assumptions by exploiting the fact that the 
 %the structure of the generative model, in which observations of the 
-two views are connected through the shared latent variable $\bm{s}$. 
-That is, observing $\bm{x}_1$ and $\bm{x}_2$ together provides sufficient information to remove the ambiguities present in the vanilla nonlinear ICA setting.
+two views are connected through the shared latent variable $Z$. 
+That is, observing $X_1$ and $X_2$ together provides sufficient information to remove the ambiguities present in the vanilla nonlinear ICA setting.
 
 
 
@@ -321,40 +350,41 @@ This section considers three instances of the general setting described above, p
 Specifically:
 %
 \begin{itemize}
-	\item Section \ref{sec:onenoisless} considers the case that only one of the observations, $\bm{x}_2$, is corrupted with noise, showing that it is possible to fully reconstruct $\bm{s}$ using the noiseless variable. 
+	\item Section \ref{sec:onenoisless} considers the case that only one of the observations, $X_2$, is corrupted with noise, showing that it is possible to fully reconstruct $Z$ using the noiseless variable. 
 	This corresponds to a setting in which one accurate measurement device is supplemented with a second noisy device. 
-	\item Section \ref{sec:constrained} considers the case that both variables are corrupted with noise, showing that it is possible to recover $\bm{s}$ up to the corruptions. 
-	Furthermore, it is shown that $\bm{s}$ can be recovered with arbitrary precision in the limit that the corruptions go to zero.
-	\item Section \ref{sec:multiple} considers the case of $N$ simultaneous views of the source $\bm{s}$ rather than just two.
-	When considering the limit $N \rightarrow \infty$, sufficient conditions are provided under which it is possible to reconstruct $\bm{s}$ even if each observation is corrupted by noise.
+	\item Section \ref{sec:constrained} considers the case that both variables are corrupted with noise, showing that it is possible to recover $Z$ up to the corruptions. 
+	Furthermore, it is shown that $Z$ can be recovered with arbitrary precision in the limit that the corruptions go to zero.
+	\item Section \ref{sec:multiple} considers the case of $N$ simultaneous views of the source $Z$ rather than just two.
+	When considering the limit $N \rightarrow \infty$, sufficient conditions are provided under which it is possible to reconstruct $Z$ even if each observation is corrupted by noise.
 \end{itemize}
 %
 %To the best of our knowledge, no result of identifiability of latent sources in the case in which only corrupted, mixed versions are observed has been given before.
 
 
-%We consider a contrastive learning task in which a classifier is trained to distinguish between pairs $(\bm{x}_1, \bm{x}_2)$ corresponding to the same $\bm{s}$ and $(\bm{x}_1, \bm{x}^*_2)$ corresponding to different realizations of $\bm{s}$.
+%We consider a contrastive learning task in which a classifier is trained to distinguish between pairs $(\bm{x}_1, \bm{x}_2)$ corresponding to the same $\bm{s}$ and $(\bm{x}_1, \bm{x}^*_2)$ corresponding to different realisations of $\bm{s}$.
 %The classifier is forced to employ the information shared by the simultaneous views in order to distinguish the two classes.
 %By placing constraints on the form of this classifier, this ultimately results in recovering $\bm{s}$ (up to unavoidable ambiguities).
 
 The setting considered in this work is related to that of \cite{hyvarinen19a}, discussed in Section \ref{subsec:ica-literature-nonlinear-ica-with-aux},
-and the approach to proving the identifiability results presented here builds on the novel techniques presented in that work.
+and the approach to proving the identifiability results presented here builds on the technique presented in that work.
 %A crucial difference between the two settings is that here it is not assumed that the sources $\bm{s}$ are conditionally independent given one of the $\bm{x}_i$.
 This approach 
 %to recovering $\bm{s}$ 
-is to classify between pairs $(\bm{x}_1, \bm{x}_2)$ corresponding to the same $\bm{s}$ and $(\bm{x}_1, \bm{x}^*_2)$ corresponding to different realisations of $\bm{s}$.
+is to classify between pairs $(X_1, X_2)$ corresponding to the same $Z$ and $(X_1, X^*_2)$ corresponding to different realisations of $Z$.
 This classification problem can only be solved by employing the information shared by the simultaneous views in order to distinguish the two classes.
-By placing architectural constraints on the form of such a classifier, it can be shown that an intermediate layer recovers $\bm{s}$ (up to unavoidable ambiguities).
+By placing constraints on the regression function used in such a classifier, it can be shown that an intermediate layer recovers $Z$ up to unavoidable ambiguities.
 
 For technical reasons discussed in Section
-\ref{sec:converged}, the results require some stochasticity in the relationship between $\bm{s}$ and at least one of the $\bm{x}_i$.
-This is not a significant constraint in practice; in most real settings observations are corrupted by noise, and a truly deterministic relationship between $\bm{s}$ and the $\bm{x}_i$ would be unrealistic.
-A component-wise independent corruption of the sources is considered, i.e.~$\bm{x}_1 = \bm{f}_1 \circ \bm{g}_1(\bm{s}, \bm{n}_1)$ with $g_{1i}(\bm{s}, \bm{n}_1) = g_{1i}(s_i, n_{1i})$, where the components of $\bm{n}_{1}$ are mutually independent, and similar for $\bm{x}_2$. The noise variables $\bm{n}_1$, $\bm{n}_2$ and the sources $\bm{s}$ are assumed to be mutually independent.
-Note that this only constrains the way the source is corrupted by noise, namely $\bm{g}$, and not on the mixing $\bm{f}$.
-In the the vanilla ICA setting, inverting the mixing and recovering the sources $\bm{s}$ are equivalent; in the setting considered here, inversion of the mixing $\bm{f}$ only implies recovering the sources up to the effect of the corrupter $\bm{g}$.
+\ref{sec:converged}, the results require some stochasticity in the relationship between $Z$ and at least one of the $X_i$.
+This is not a significant constraint in practice; in most real settings observations are corrupted by noise, and a truly deterministic relationship between $Z$ and the $X_i$ would be unrealistic.
+Component-wise independent corruptions of the sources is considered, i.e. $\mathbb{R}^D$-valued noise vectors $N_1$ and $N_2$ are introduced, and $X_1 = f_1 \circ g_1(Z, N_1)$ with $g_{1i}(Z, N_1) = g_{1i}(Z_i, N_{1i})$, where the components of $N_{1}$ are mutually independent, and similar for $N_2$ and $X_2$. 
+The noise variables $N_1$, $N_2$ and the sources $Z$ are assumed to be mutually independent.
+Note that this constrains the way the source is corrupted by noise, namely the $g_i$, and not the mixing functions $f_i$.
+In the the vanilla ICA setting, inversion of the mixing function and recovery of the sources $Z$ are equivalent; in the setting considered here, inversion of the mixing $f_i$ only implies recovering the sources up to the effect of the corrupter $g_i$.
 
-Such $\bm{g}$ as described in the previous paragraph are referred to as \emph{component-wise corrupters} throughout, and the corresponding output as \emph{corruptions}. 
+Such $g_i$ as described in the previous paragraph are referred to as \emph{component-wise corrupters} throughout, and the corresponding output as \emph{corruptions}. 
 All identifiability results hold only up to \emph{component-wise invertible transformations}, meaning that the components of $Z$ are recovered, but possibly reparametrised and in a permuted order. 
-Formally, the estimate $h(Z)$ of $Z$ is such that for any $i$, $h_i(Z)=h_i(Z_j)$ for some $j$ where $h_i$ is an invertible function. 
+%Formally, the estimate $h(Z)$ of $Z$ is such that for any $i$, $h_i(Z)=h_i(Z_j)$ for some $j$ where $h_i$ is an invertible function. 
 
 
 
@@ -362,16 +392,24 @@ Formally, the estimate $h(Z)$ of $Z$ is such that for any $i$, $h_i(Z)=h_i(Z_j)$
 
 \subsection{One noiseless view}
 \label{sec:onenoisless}
-Consider the following model, represented in Figure \ref{fig:generalized_hsr_basic},
+Consider the following model in which one noiseless and one noisy view of the sources are given, represented in Figure \ref{fig:generalized_hsr_basic}, 
+%\begin{align}
+%\bm{x}_{1}&=\bm{f}_{1}(\bm{s}) \label{eq:sem2_1}\\
+%\bm{x}_{2}&=\bm{f}_{2}(\bm{g}(\bm{s}, \bm{n})) \label{eq:sem2_2} \\
+%p(\bm{s}) &= \prod_{i} p_i(s_i) \nonumber \\
+%p(\bm{n}) &= \prod_{i} p_i(n_i), \label{eq:indep}
+%\end{align}
+%
 \begin{align}
-\bm{x}_{1}&=\bm{f}_{1}(\bm{s}) \label{eq:sem2_1}\\
-\bm{x}_{2}&=\bm{f}_{2}(\bm{g}(\bm{s}, \bm{n})) \label{eq:sem2_2} \\
-p(\bm{s}) &= \prod_{i} p_i(s_i) \nonumber \\
-p(\bm{n}) &= \prod_{i} p_i(n_i), \label{eq:indep}
+Z &\sim p(z) = \prod_{i} p(z_i), \label{eq:indep}\\
+N &\sim p(n) = \prod_{i} p(n_i), \nonumber  \\
+X_{1}&= f_{1}(Z) \label{eq:sem2_1}, \\
+X_{2}&= f_{2}( g(Z, N)) \label{eq:sem2_2},
 \end{align}
-where $\bm{f}_1$ and $\bm{f}_2$ are invertible, $\bm{g}$ is a component-wise corrupter, $\bm{n} \independent \bm{s}$ and $\bm{x}_1$ and $\bm{x}_2$ are observed.
-Subject to some assumptions, it is possible to recover $\bm{s}$ up to the
-component-wise invertible ambiguity.
+%
+where $f_1$ and $f_2$ are invertible, $g$ is a component-wise corrupter, $N \independent Z$ and $X_1$ and $X_2$ are observed.
+The following theorem demonstrates assumptions under which identifiability in this model holds.
+This result is quite involved; we will first state it, and then discuss it.
 
 \begin{figure}[t!]
 	\centering
@@ -385,42 +423,41 @@ component-wise invertible ambiguity.
 
 \begin{theorem}
 	\label{thm:noiseless1}
-	The difference of the log joint probability and log product of marginals of the observed variables in the generative model specified by Equations \ref{eq:sem2_1}-\ref{eq:indep} admits the following factorisation:
+	The difference between the log joint probability and log product of marginals of the observed variables in the model given in Equations \ref{eq:indep}-\ref{eq:sem2_1} admits the following factorisation:
 	\begin{align}
-	&\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1) p(\bm{x}_2) \nonumber \\
-	&= \log p(\bm{x}_2 | \bm{x}_1) - \log p(\bm{x}_2) \nonumber\\
+	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
+	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
 	&= \left(\sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(s_i, n_i)) + \log \det J\right) \nonumber\\
 	&= \sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) - \sum_i \delta_i(g_i(s_i, n_i))\label{eq:logdens_noiesless_1} \,
 	\end{align}
-	where $s_i=f^{-1}_{1i}(\bm{x}_1)$, $g_i=f^{-1}_{2i}(\bm{x}_2)$,
-	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel).
+	where $s_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
+	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel\footnote{Several subsequent results in this section consider the difference between two log-probabilities.
+In all of these cases, the Jacobians introduced by a change of variables cancel out as in Equation \ref{eq:logdens_noiesless_1}.
+For brevity these Jacobians are omitted henceforth.}).
 	Suppose that
 	\begin{enumerate}
-		\item $\bm{\alpha}$ satisfies the \emph{Sufficiently Distinct Views} assumption (see after this theorem).
+		\item $\alpha$ satisfies the \emph{Sufficiently Distinct Views} assumption (see after this theorem).
 		\item A classifier is trained to discriminate between
 		\begin{align*}
-		(\bm{x}_{1},\bm{x}_{2}) \text{ vs. } (\bm{x}_{1},\bm{x}_{2}^{*})\,,
+		(X_{1},X_{2}) \text{ vs. } (X_{1},X_{2}^{*})\,,
 		\end{align*}
-		where $(\bm{x}_{1},\bm{x}_{2})$ correspond to the same realization of $\bm{s}$ and $(\bm{x}_{1},\bm{x}_{2}^{*})$ correspond to different realizations of $\bm{s}$.
-		\item The classifier is constrained to use a regression function of the form
+		where $({X}_{1},{X}_{2})$ correspond to the same realisation of $Z$ and $({X}_{1},{X}_{2}^{*})$ correspond to different realisations of ${Z}$.
+		\item The classifier minimises the logistic regression loss, and is constrained to use a regression function of the form
 		\begin{equation*}
-		r(\bm{x}_{1},\bm{x}_{2})=\sum_{i}\psi_{i}(h_{i}(\bm{x}_{1}),\bm{x}_{2})
+		r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2})
 		\end{equation*}
-		where $\bm{h} =(h_{1}, \ldots, h_{n})$  are invertible, smooth and have smooth inverse.
+		where ${h} =(h_{1}, \ldots, h_{n})$  is invertible, smooth and has smooth inverse.
 	\end{enumerate}
 	
-	Then, in the limit of infinite data and with universal approximation capacity, $\bm{h}$ inverts $\bm{f}_1$ in the sense that the $h_{i}(\bm{x}_1)$ recover the independent  components of $\bm{s}$ up to component-wise invertible transformations.
+	Then, in the limit of infinite data and with universal approximation capacity, $h$ inverts ${f}_1$ in the sense that the $h_{i}(X_1)$ recover the independent components of $Z$ up to component-wise invertible transformations.
 \end{theorem}
-We remark in passing that in several subsequent results we consider the difference between two log-probabilities.
-In all of these cases, the Jacobians introduced by a change of variables cancel out as in Equation \ref{eq:logdens_noiesless_1}.
-For brevity these Jacobians are omitted henceforth.
+An outline of the proof for this result is provided below after discussing some of the assumptions; full proof can be found in Appendix \ref{appendix:proof-thm1}.
 
-The proof of Theorem \ref{thm:noiseless1} can be found in Appendix \ref{appendix:proof-thm1}.
-The assumption of invertibility for $\bm{h}$ could be satisfied by, e.g., the use of normalizing flows~\citep{rezende2015variational, chen2018neural} or deep invertible networks~\citep{jacobsen_hal-01712808}.
+The assumption of invertibility for $h$ could be satisfied by, e.g., the use of normalizing flows~\citep{rezende2015variational, chen2018neural} or deep invertible networks~\citep{jacobsen_hal-01712808}.
 
 
-If $\bm{x}_1$ and $\bm{x}_2$ were always equal, the multiple view setting would reduce to the normal nonlinear ICA setting.
+If $X_1$ and $X_2$ were always equal, the multiple view setting would reduce to the normal nonlinear ICA setting.
 The \emph{Sufficiently Distinct Views (SDV)} assumption formalises a sense in which the two views must be sufficiently different from one another,
 resulting in more information being available in totality than from each view individually.
 In the context of Theorem~\ref{thm:noiseless1}, it is an assumption about the log-probability of the \emph{corruption} conditioned on the source.
@@ -430,40 +467,67 @@ Informally, it demands that the probability distribution of the corruption shoul
 
 \begin{definition}[Sufficiently Distinct Views]\label{suff_dist_assumption}
 	Let $\alpha_i(y_i, t_i)$, $i=1,\ldots, N$ be functions of two arguments.
-	Denote by $\bm\alpha$ the vector of functions and define
+	Denote by $\alpha$ the vector of functions and define
 	\begin{align}
-	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial t, \label{eq:convention1}\\
-	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial t^2\, \label{eq:convention2}\\
-	\bm{w}_{\bm\alpha}(\bm{y}, \bm{t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
+	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial y_i, \label{eq:convention1}\\
+	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2\, \label{eq:convention2}\\
+	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
 	\end{align}
-	We say that $\bm{\alpha}$ satisfies the assumption of \emph{Sufficiently Distinct Views (SDV)} if for any value of $\bm{y}$, there exist $2D$ distinct values $\bm{t}_j$, $j=1, \ldots, 2D$ such that the vectors $\bm{w}(\bm{y},\bm{t}_j)$ are linearly independent.
+	We say that ${\alpha}$ satisfies the assumption of \emph{Sufficiently Distinct Views (SDV)} if for any value of ${y}$, there exist $2D$ distinct values ${t}^j$, $j=1, \ldots, 2D$ such that the vectors ${w}({y},{t}^j)$ are linearly independent.
 	\\    \end{definition}
 This is closely related to the Assumption of Variability in~\cite{hyvarinen19a}.
-Simple cases of conditional log-probability density functions satisfying and violating the SDV assumption in Section \ref{appendix:sdv}.
+The SDV assumption is discussed in further detail in Section \ref{appendix:sdv}, where simple cases of conditional log-probability density functions satisfying and violating the assumption are presented.
 
-Theorem \ref{thm:noiseless1} shows that by jointly considering the two views, it is possible to recover $\bm{s}$, in contrast to the single-view setting.
-This result can be extended to learn the inverse of $\bm{f}_2$ up to component-wise invertible functions.
+\begin{proof}[Sketch proof of Theorem \ref{thm:noiseless1}]
+The first observation to be made is that for logistic regression, the optimal regression function for the logit $r(x_1, x_2)$ is equal to the log density-ratio between the two distributions being distinguished.
+Thus, in the limit of infinite data and with universal approximation capacity, the following equality holds:
+%
+\begin{align*}
+\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2}) = \sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) - \sum_i \delta_i(g_i(s_i, n_i)).
+\end{align*}
+%
+By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and defining $v(y) := f_1^{-1}(h^{-1}(y)) = s$, this equation can be rewritten
+%
+\begin{align}
+\sum_{i}\psi_{i}(y_i,f_2(t)) = \sum_i \alpha_i(v_i(y), t_i) - \sum_i \delta_i(t_i). \label{eqn:ica-first-theorem-proof}
+\end{align}
+%
+The goal is to show that $v_i(y)$ depends on exactly one coordinate of $y$, so that $v_i(y) = v_i(y_j)$ for some $j$. 
+Since $s = v(y)$, this implies that $s_i = v_i(y_j)$ is a function only of $y_j$, which in turn implies that $s_i$ is a function only of $h_j(x_1)$. 
+Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions, it is itself invertible, and since each component of $v$ depends only one one component of its input, each of the components are also invertible.
+It follows that $s_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $s$ up to permutations and coordinate-wise invertible transformations.
+
+Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, and it is here that the SDV assumption is required.
+It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_i$ and $y_j$ for $j\not=i$. 
+This results in an expression involving first- and second-order derivatives of $\alpha_i$ and $v_i$ in which the expressions in the SDV assumption appear. 
+If the SDV assumption holds, it follows that the derivative of $v_i$ with respect to $y_j$ is everywhere zero, meaning that $v_i$ does not depend on $y_j$. 
+See the full proof in Appendix \ref{appendix:proof-thm1} for further details.
+\end{proof}
+
+Theorem \ref{thm:noiseless1} shows that by jointly considering the two views, it is possible to recover $Z$, in contrast to the single-view setting.
+This result can be extended to learn the inverse of ${f}_2$ up to component-wise invertible functions.
 
 \medskip
 
 \begin{corollary}
 	\label{crl:noiseless1}
-	Consider the setting of Theorem \ref{thm:noiseless1}, and the alternative factorisation of the log joint probability given by
+	Consider the setting of Theorem \ref{thm:noiseless1} with the alternative factorisation of the log joint probability
 	\begin{align}
-	&\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1) p(\bm{x}_2) \nonumber \\
-	&= \log p(\bm{x}_1 | \bm{x}_2) - \log p(\bm{x}_1)\nonumber \\
+	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
+	&= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber \\
 	&= \sum_i \gamma_i(s_{i}, g_i(s_i, n_i)) - \sum_i \beta_i(s_i)) \label{eq:logdens_noiesless_2}\,.
 	\end{align}
-	Suppose that $\bm{\gamma}$ satisfies the SDV assumption.
+	Suppose that ${\gamma}$ satisfies the SDV assumption.
 	Replacing the regression function with
 	\begin{equation*}
-	r(\bm{x}_{1},\bm{x}_{2})=\sum_{i}\psi_{i}(\bm{x}_{1}, h_{i}(\bm{x}_{2}))
+	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}({x}_{1}, h_{i}({x}_{2}))
 	\end{equation*}
-	results in $\bm{h}$ inverting $\bm{f}_2$ in the sense that the $h_{i}(\bm{x}_2)$ recover the independent components of $\bm{g}(\bm{s}, \bm{n})$ up  to component-wise invertible transformations.
-\end{corollary}The proof can be found in Appendix \ref{appendix:proof-cor2}.
-These two results together mean that it is possible to learn inverses $\bm{h}_1$ and $\bm{h}_2$ of $\bm{f}_1$ and $\bm{f}_2$, and therefore to recover $\bm{s}$ and $\bm{g}(\bm{s}, \bm{n})$, up to component-wise intertible functions.
+	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({x}_2)$ recover the independent components of ${g}({s}, {n})$ up  to component-wise invertible transformations.
+\end{corollary}
+The proof is similar to that of Theorem \ref{thm:noiseless1} and can be found in Appendix \ref{appendix:proof-cor2}.
+These two results together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${s}$ and ${g}({s}, {n})$, up to component-wise intertible functions.
 Note, however, that doing so requires running two separate algorithms.
-Furthermore, there is no guarantee that the learned inverses $\bm{h}_1$ and $\bm{h}_2$ are `aligned' in the sense that for each $i$ the components $\bm{h}_{1i}(\bm{x}_1)$ and $\bm{h}_{2i}(\bm{x}_2)$ correspond to the same components of $\bm{s}$.
+Furthermore, there is no guarantee that the learned inverses ${h}_1$ and ${h}_2$ are `aligned' in the sense that for each $i$ the components ${h}_{1i}({x}_1)$ and ${h}_{2i}({x}_2)$ correspond to the same components of ${s}$.
 
 This problem of misalignment can be resolved by changing the form of the regression function.
 
@@ -471,23 +535,22 @@ This problem of misalignment can be resolved by changing the form of the regress
 
 \begin{theorem}\label{thm:demixing}
 	Consider the settings of Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1}.
-	Suppose that both $\bm{\alpha}$ and $\bm{\gamma}$ satisfy the SDV assumption.
+	Suppose that both ${\alpha}$ and ${\gamma}$ satisfy the SDV assumption.
 	Replacing the regression function with
 	\begin{equation}\label{eqn:double-regression-fn}
-	r(\bm{x}_{1},\bm{x}_{2})=\sum_{i}\psi_{i}(h_{1,i}(\bm{x}_{1}),h_{2,i}(\bm{x}_{2}))
+	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{1,i}({x}_{1}),h_{2,i}({x}_{2}))
 	\end{equation}
-	results in $\bm{h}_1$, $\bm{h}_2$ inverting $\bm{f}_1$, $\bm{f}_2$ in the sense that the $h_{1,i}(\bm{x}_1)$ and $h_{2,i}(\bm{x}_2)$ recover the independent components of $\bm{s}$ and $\bm{g}(\bm{s}, \bm{n})$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
+	results in ${h}_1$, ${h}_2$ inverting ${f}_1$, ${f}_2$ in the sense that the $h_{1,i}({x}_1)$ and $h_{2,i}({x}_2)$ recover the independent components of ${s}$ and ${g}({s}, {n})$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
 	h_{1,i}(\mathbf{x}_{1})\independent h_{2,j}(\mathbf{x}_{2})
 	\end{equation*}
 \end{theorem}
-The proof can be found in Appendix \ref{appendix:thm1}.
+The proof is similar to that of Theorem \ref{thm:noiseless1} and can be found in Appendix \ref{appendix:thm1}.
 
-Note that Theorem \ref{thm:demixing} is \emph{not} a generalisation of Theorem \ref{thm:noiseless1} or Corollary \ref{crl:noiseless1}, since it makes stricter assumptions by imposing the SDV assumption on both $\bm{\alpha}$ and $\bm{\gamma}$.
+Note that Theorem \ref{thm:demixing} is \emph{not} a generalisation of Theorem \ref{thm:noiseless1} or Corollary \ref{crl:noiseless1}, since it makes stricter assumptions by imposing the SDV assumption on both ${\alpha}$ and ${\gamma}$.
 In contrast, Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1} require that only one is valid for each.
-
-For cases in which finding aligned representations for $\bm{s}$ and $\bm{g}(\bm{s}, \bm{n})$ are desired, Theorem \ref{thm:demixing} should be applied.
-If the only goal is recovery of $\bm{s}$, the assumptions of Theorem \ref{thm:noiseless1} are simpler to verify.
+For cases in which finding aligned representations for ${s}$ and ${g}({s}, {n})$ are desired, Theorem \ref{thm:demixing} should be applied.
+If the only goal is recovery of ${s}$, the assumptions of Theorem \ref{thm:noiseless1} are easier to satisfy.
 
 
 In practical applications, the multi-view scenario is useful in multimodal datasets where one of the two acquisition modalities has much higher signal to noise ratio than the other one (e.g., in neuroimaging, when simultaneous fMRI and Optical Imaging recordings are compared). In such cases, jointly exploiting the multiple modalities would help to discern a meaningful and identifiable latent representation which could not be attained through analysis of the more reliable modality alone.
@@ -509,32 +572,31 @@ In practical applications, the multi-view scenario is useful in multimodal datas
 	\label{fig:classic_hsr}
 \end{figure}
 
-We next consider the setting in which both variables are corrupted by noise.
-Consider the following generative model (represented in Figure \ref{fig:classic_hsr}):
+Consider next the setting in which both variables are corrupted by noise, depicted in Figure \ref{fig:classic_hsr} and described by the following model:
 \begin{align*}
-\bm{x}_{1}&=\bm{f}_{1}(\bm{g}_{1}(\bm{s},\bm{n}_{1}))  \\
-\bm{x}_{2}&=\bm{f}_{2}(\bm{g}_{2}(\bm{s},\bm{n}_{2}))  \,,
+X_{1}&={f}_{1}({g}_{1}({Z},N_{1}))  \\
+X_{2}&={f}_{2}({g}_{2}({Z},N_{2}))  \,,
 \end{align*}
-where all variables take value in $\mathbb{R}^D$, and $\bm{f}_{1}$ and $\bm{f}_{2}$ are nonlinear, invertible, deterministic functions,
-$\bm{g}_{1}$ and $\bm{g}_{2}$ are component-wise corrupters, and $\bm{s}$ and the $\bm{n}_i$ are independent with independent components.
-This class of models generalizes the setting of Section \ref{sec:onenoisless} since by taking $\bm{g}_1(\bm{s}, \bm{n}_1) = \bm{s}$ we reduce to the case of one noiseless observation.
+where all variables take value in $\mathbb{R}^D$, ${f}_{1}$ and ${f}_{2}$ are nonlinear, invertible, deterministic functions,
+${g}_{1}$ and ${g}_{2}$ are component-wise corrupters, and $Z$ and the $N_i$ are independent with independent components.
+This class of models generalises the setting of Section \ref{sec:onenoisless}, since by taking ${g}_1(Z, N_1) = Z$ it reduces to the case of one noiseless observation.
 
-The difference $\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1)p(\bm{x}_2)$ admits similar factorisations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
+The log density ratio $\log p({x}_1, {x}_2) - \log p({x}_1)p({x}_2)$ admits similar factorisations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
 \begin{align}
-&\log p(\bm{x}_1, \bm{x}_2) - \log p(\bm{x}_1) p(\bm{x}_2) \nonumber\\
-&= \log p(\bm{x}_1 | \bm{x}_2) - \log p(\bm{x}_1)\nonumber\\
+&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber\\
+&= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber\\
 &= \sum_i \eta_i(g_{1i}(s_i, n_{i1}), g_{2i}(s_i, n_{2i})) - \sum_i \theta_i(g_{1i}(s_i, n_{1i}) \label{eq:noisylogdens_1}\\
-&= \log p(\bm{x}_2 | \bm{x}_1) - \log p(\bm{x}_2) \nonumber\\
+&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
 &= \sum_i \lambda_i(g_{2i}(s_i, n_{2i}), g_{1i}(s_i, n_{1i})) - \sum_i \mu_i(g_{2i}(s_i, n_{2i})) \label{eq:noisylogdens_2}
 \end{align}
-Since we only have access to corrupted observations, exact recovery of $\bm{s}$ is not possible.
-Nonetheless, a generalization of Theorem \ref{thm:demixing} holds showing that the $\bm{f}_i$ can be inverted and $\bm{s}$ recovered up to the corruptions induced by the $\bm{n}_i$ via $\bm{g}_i$.
+Since access is only given to corrupted observations, exact recovery of $Z$ is not possible.
+Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that the ${f}_i$ can be inverted and $Z$ recovered up to the corruptions induced by the $N_i$ via the ${g}_i$.
 
 \medskip
 
 \begin{theorem}\label{thm:two-noisy-views}
-	Suppose that $\bm{\eta}$ and $\bm{\lambda}$ satisfy the SDV assumption.
-	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in $\bm{h}_1$ and $\bm{h}_2$ inverting $\bm{f}_1$ and $\bm{f}_2$ in the sense that the $h_{1,i}(\bm{x}_1)$ and $h_{2,i}(\bm{x}_2)$ recover the independent components of $\bm{g}_1(\bm{s}, \bm{n}_1)$ and $\bm{g}_2(\bm{s}, \bm{n}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
+	Suppose that ${\eta}$ and ${\lambda}$ satisfy the SDV assumption.
+	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in ${h}_1$ and ${h}_2$ inverting ${f}_1$ and ${f}_2$ in the sense that the $h_{1,i}({x}_1)$ and $h_{2,i}(\bm{x}_2)$ recover the independent components of $\bm{g}_1(\bm{s}, \bm{n}_1)$ and $\bm{g}_2(\bm{s}, \bm{n}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
 	h_{1,i}(\mathbf{x}_{1})\independent h_{2,j}(\mathbf{x}_{2})
 	\end{equation*}
@@ -698,7 +760,7 @@ In contrast to previous results in Sections \ref{sec:onenoisless} and \ref{sec:c
 \subsection{Classification and stochasticity}
 \label{sec:converged}
 Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
-A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realization of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
+A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realisation of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
 
 \[
 L(D) = \mathbb{E}_{X\sim P_0} \left[ - \log D(X) \right] + \mathbb{E}_{X\sim P_1} \left[ - \log (1 - D(X)) \right].
@@ -746,7 +808,7 @@ A simple case in which the assumption does not hold is when the conditional prob
 p(\bm{z}|\bm{s}) = \frac{1}{Z} \exp\left[ -\sum_i (z_i - s_i)^2/(2\sigma_i^2) \right]\,, \label{eq:unsatisfied}
 \end{equation}
 
-where $Z$ is the normalization factor, $Z = (2\pi)^{n/2}  \prod_i \sigma_i$.
+where $Z$ is the normalisation factor, $Z = (2\pi)^{n/2}  \prod_i \sigma_i$.
 Since taking second derivatives of the log-probability with respect to $s_i$ results in constants,
 it can be easily shown that there is no way to find $2D$ vectors $\bm{z}_j$, $j=1, \ldots, 2D$, such that the corresponding $\bm{w}(\bm{s}, \bm{z}_j)$ (see Definition 1) are linearly independent.
 
@@ -760,10 +822,10 @@ An example in which the SDV assumption does hold is a conditional pdf given by
 p(\bm{z}|\bm{s}) = \frac{1}{Z(\bm{s})} \exp \left[ - \sum_i (z_i^2  s_i^2 + z_i^4 s_i^4  ) \right]\,, \label{eq:satisfied}
 \end{equation}
 
-where $Z(\bm{s})$ is again a normalization function.
+where $Z(\bm{s})$ is again a normalisation function.
 Proving that this distribution satisfies the SDV assumption requires a few lines of computation.
 The idea is that $\bm{w}(\bm{s}, \bm{z})$ can be written as the product of a matrix and vector which are functions only of $\bm{s}$ and $\bm{z}$ respectively.
-Once written in this form, it is straightforward to show that the columns of the matrix are linearly independent for almost all values of $\bm{s}$ and that $2D$ linearly independent vectors can be realized by different choices of $\bm{z}$.
+Once written in this form, it is straightforward to show that the columns of the matrix are linearly independent for almost all values of $\bm{s}$ and that $2D$ linearly independent vectors can be realised by different choices of $\bm{z}$.
 
 
 \section{Conclusion}
