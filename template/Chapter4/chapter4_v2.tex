@@ -427,11 +427,11 @@ This result is quite involved; we will first state it, and then discuss it.
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
-	&= \left(\sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) + \log \det J \right) \nonumber\\
-	&\qquad - \left( \sum_i \delta_i(g_i(s_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) - \sum_i \delta_i(g_i(s_i, n_i))\label{eq:logdens_noiesless_1} \,
+	&= \left(\sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
+	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
+	&= \sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
 	\end{align}
-	where $s_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
+	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel\footnote{Several subsequent results in this section consider the difference between two log-probabilities.
 In all of these cases, the Jacobians introduced by a change of variables cancel out as in Equation \ref{eq:logdens_noiesless_1}.
 For brevity these Jacobians are omitted henceforth.}).
@@ -478,12 +478,14 @@ Informally, it demands that the probability distribution of the corruption shoul
 This is closely related to the Assumption of Variability in~\cite{hyvarinen19a}.
 The SDV assumption is discussed in further detail in Section \ref{appendix:sdv}, where simple cases of conditional log-probability density functions satisfying and violating the assumption are presented.
 
+
+
 \begin{proof}[Sketch proof of Theorem \ref{thm:noiseless1}]
-The first observation to be made is that for logistic regression, the optimal regression function for the logit $r(x_1, x_2)$ is equal to the log density-ratio between the two distributions being distinguished.
+The first observation to be made is that for logistic regression, the optimal regression function for the logit $r(x_1, x_2)$ is equal to the log density-ratio between the two distributions being distinguished, namely $\log\left( p(x_1, x_2) / p(x_1)p(x_2)\right) = \log p(x_1, x_2) - \log p(x_1)p(x_2)$.
 Thus, in the limit of infinite data and with universal approximation capacity, the following equality holds:
 %
 \begin{align*}
-\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2}) = \sum_i \alpha_i(s_{i}, g_i(s_i, n_i)) - \sum_i \delta_i(g_i(s_i, n_i)).
+\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2}) = \sum_i \alpha_i(z_i, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)).
 \end{align*}
 %
 By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and defining $v(y) := f_1^{-1}(h^{-1}(y)) = s$, this equation can be rewritten
@@ -493,15 +495,15 @@ By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and definin
 \end{align}
 %
 The goal is to show that $v_i(y)$ depends on exactly one coordinate of $y$, so that $v_i(y) = v_i(y_j)$ for some $j$. 
-Since $s = v(y)$, this implies that $s_i = v_i(y_j)$ is a function only of $y_j$, which in turn implies that $s_i$ is a function only of $h_j(x_1)$. 
+Since $z = v(y)$, this implies that $z_i = v_i(y_j)$ is a function only of $y_j$, which in turn implies that $z_i$ is a function only of $h_j(x_1)$. 
 Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions, it is itself invertible, and since each component of $v$ depends only one one component of its input, each of the components are also invertible.
-It follows that $s_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $s$ up to permutations and coordinate-wise invertible transformations.
+It follows that $z_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $s$ up to permutations and coordinate-wise invertible transformations.
 
 Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, and it is here that the SDV assumption is required.
 It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_i$ and $y_j$ for $j\not=i$. 
 This results in an expression involving first- and second-order derivatives of $\alpha_i$ and $v_i$ in which the expressions in the SDV assumption appear. 
 If the SDV assumption holds, it follows that the derivative of $v_i$ with respect to $y_j$ is everywhere zero, meaning that $v_i$ does not depend on $y_j$. 
-See the full proof in Appendix \ref{appendix:proof-thm1} for further details.
+See the full proof in Appendix \ref{appendix:proof-thm1} for further details; proofs of subsequent results Corollary \ref{crl:noiseless1} and Theorems \ref{thm:demixing} and \ref{thm:two-noisy-views} proceed similarly to this, and thus sketches of these results will be omitted.
 \end{proof}
 
 Theorem \ref{thm:noiseless1} shows that by jointly considering the two views, it is possible to recover $Z$, in contrast to the single-view setting.
@@ -515,19 +517,19 @@ This result can be extended to learn the inverse of ${f}_2$ up to component-wise
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber \\
-	&= \sum_i \gamma_i(s_{i}, g_i(s_i, n_i)) - \sum_i \beta_i(s_i)) \label{eq:logdens_noiesless_2}\,.
+	&= \sum_i \gamma_i(z_i, g_i(z_i, n_i)) - \sum_i \beta_i(z_i)) \label{eq:logdens_noiesless_2}\,.
 	\end{align}
 	Suppose that ${\gamma}$ satisfies the SDV assumption.
 	Replacing the regression function with
 	\begin{equation*}
 	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}({x}_{1}, h_{i}({x}_{2}))
 	\end{equation*}
-	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({x}_2)$ recover the independent components of ${g}({s}, {n})$ up  to component-wise invertible transformations.
+	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({X}_2)$ recover the independent components of ${g}({Z}, {N})$ up  to component-wise invertible transformations.
 \end{corollary}
-The proof is similar to that of Theorem \ref{thm:noiseless1} and can be found in Appendix \ref{appendix:proof-cor2}.
-These two results together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${s}$ and ${g}({s}, {n})$, up to component-wise intertible functions.
+The proof can be found in Appendix \ref{appendix:proof-cor2}.
+These two results together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${Z}$ and ${g}({Z}, {N})$, up to component-wise intertible functions.
 Note, however, that doing so requires running two separate algorithms.
-Furthermore, there is no guarantee that the learned inverses ${h}_1$ and ${h}_2$ are `aligned' in the sense that for each $i$ the components ${h}_{1i}({x}_1)$ and ${h}_{2i}({x}_2)$ correspond to the same components of ${s}$.
+Furthermore, there is no guarantee that the learned inverses ${h}_1$ and ${h}_2$ are `aligned' in the sense that for each $i$ the components ${h}_{1i}({X}_1)$ and ${h}_{2i}({X}_2)$ correspond to the same components of ${Z}$.
 
 This problem of misalignment can be resolved by changing the form of the regression function.
 
@@ -540,17 +542,17 @@ This problem of misalignment can be resolved by changing the form of the regress
 	\begin{equation}\label{eqn:double-regression-fn}
 	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{1,i}({x}_{1}),h_{2,i}({x}_{2}))
 	\end{equation}
-	results in ${h}_1$, ${h}_2$ inverting ${f}_1$, ${f}_2$ in the sense that the $h_{1,i}({x}_1)$ and $h_{2,i}({x}_2)$ recover the independent components of ${s}$ and ${g}({s}, {n})$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
+	results in ${h}_1$, ${h}_2$ inverting ${f}_1$, ${f}_2$ in the sense that the $h_{1,i}({X}_1)$ and $h_{2,i}({X}_2)$ recover the independent components of ${Z}$ and ${g}({Z}, {N})$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
-	h_{1,i}(\mathbf{x}_{1})\independent h_{2,j}(\mathbf{x}_{2})
+	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2})
 	\end{equation*}
 \end{theorem}
-The proof is similar to that of Theorem \ref{thm:noiseless1} and can be found in Appendix \ref{appendix:thm1}.
+The proof can be found in Appendix \ref{appendix:thm1}.
 
 Note that Theorem \ref{thm:demixing} is \emph{not} a generalisation of Theorem \ref{thm:noiseless1} or Corollary \ref{crl:noiseless1}, since it makes stricter assumptions by imposing the SDV assumption on both ${\alpha}$ and ${\gamma}$.
 In contrast, Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1} require that only one is valid for each.
-For cases in which finding aligned representations for ${s}$ and ${g}({s}, {n})$ are desired, Theorem \ref{thm:demixing} should be applied.
-If the only goal is recovery of ${s}$, the assumptions of Theorem \ref{thm:noiseless1} are easier to satisfy.
+For cases in which finding aligned representations for ${Z}$ and ${g}({Z}, {N})$ are desired, Theorem \ref{thm:demixing} should be applied.
+If the only goal is recovery of ${Z}$, the assumptions of Theorem \ref{thm:noiseless1} are easier to satisfy.
 
 
 In practical applications, the multi-view scenario is useful in multimodal datasets where one of the two acquisition modalities has much higher signal to noise ratio than the other one (e.g., in neuroimaging, when simultaneous fMRI and Optical Imaging recordings are compared). In such cases, jointly exploiting the multiple modalities would help to discern a meaningful and identifiable latent representation which could not be attained through analysis of the more reliable modality alone.
@@ -581,13 +583,13 @@ where all variables take value in $\mathbb{R}^D$, ${f}_{1}$ and ${f}_{2}$ are no
 ${g}_{1}$ and ${g}_{2}$ are component-wise corrupters, and $Z$ and the $N_i$ are independent with independent components.
 This class of models generalises the setting of Section \ref{sec:onenoisless}, since by taking ${g}_1(Z, N_1) = Z$ it reduces to the case of one noiseless observation.
 
-The log density ratio $\log p({x}_1, {x}_2) - \log p({x}_1)p({x}_2)$ admits similar factorisations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
+The log density-ratio $\log p({x}_1, {x}_2) - \log p({x}_1)p({x}_2)$ admits similar factorisations to those given in Equations \ref{eq:logdens_noiesless_1} and \ref{eq:logdens_noiesless_2}:
 \begin{align}
 &\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber\\
 &= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber\\
-&= \sum_i \eta_i(g_{1i}(s_i, n_{i1}), g_{2i}(s_i, n_{2i})) - \sum_i \theta_i(g_{1i}(s_i, n_{1i}) \label{eq:noisylogdens_1}\\
+&= \sum_i \eta_i(g_{1i}(z_i, n_{i1}), g_{2i}(z_i, n_{2i})) - \sum_i \theta_i(g_{1i}(z_i, n_{1i}) \label{eq:noisylogdens_1}\\
 &= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
-&= \sum_i \lambda_i(g_{2i}(s_i, n_{2i}), g_{1i}(s_i, n_{1i})) - \sum_i \mu_i(g_{2i}(s_i, n_{2i})) \label{eq:noisylogdens_2}
+&= \sum_i \lambda_i(g_{2i}(z_i, n_{2i}), g_{1i}(z_i, n_{1i})) - \sum_i \mu_i(g_{2i}(z_i, n_{2i})) \label{eq:noisylogdens_2}
 \end{align}
 Since access is only given to corrupted observations, exact recovery of $Z$ is not possible.
 Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that the ${f}_i$ can be inverted and $Z$ recovered up to the corruptions induced by the $N_i$ via the ${g}_i$.
@@ -596,169 +598,247 @@ Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that t
 
 \begin{theorem}\label{thm:two-noisy-views}
 	Suppose that ${\eta}$ and ${\lambda}$ satisfy the SDV assumption.
-	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in ${h}_1$ and ${h}_2$ inverting ${f}_1$ and ${f}_2$ in the sense that the $h_{1,i}({x}_1)$ and $h_{2,i}(\bm{x}_2)$ recover the independent components of $\bm{g}_1(\bm{s}, \bm{n}_1)$ and $\bm{g}_2(\bm{s}, \bm{n}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
+	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in ${h}_1$ and ${h}_2$ inverting ${f}_1$ and ${f}_2$ in the sense that the $h_{1,i}({X}_1)$ and $h_{2,i}({X}_2)$ recover the independent components of ${g}_1({Z}, {N}_1)$ and ${g}_2({Z}, {N}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
-	h_{1,i}(\mathbf{x}_{1})\independent h_{2,j}(\mathbf{x}_{2})
+	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2})
 	\end{equation*}
 \end{theorem}
 The proof can be found in Appendix \ref{appendix:thm1}.
 
-
-
-
-We can thus recover the common source $\bm{s}$ up to the corruptions $\bm{g}_i(\bm{s}, \bm{n}_i)$.
+We can thus recover the common source $Z$ up to the corruptions ${g}_i(Z, N_i)$.
 In the limit of the magnitude of one of the noise variables going to zero, the reconstruction of the sources $\sbm$ attained through the corresponding view is exact up to the component-wise invertible functions, as stated in the following corollary.
 
 \medskip
-
 \begin{corollary}
 	\label{crl:lownoise}
-	Let $\bm{n}_1^{(k)} = \frac{1}{k} \cdot  \Tilde{\bm{n}}$ for $k \in \NN$, where $\Tilde{\bm{n}}\in\mathbb{R}^D$ is a fixed random variable, and $\bm{n}_2$ be a random variable that does not depend on $k$.
-	Let $\bm{h}_1^{(k)}, \bm{h}_2^{(k)}$ be the output of the algorithm specified by Theorem \ref{thm:two-noisy-views} with noise variables $\bm{n}_1^{(k)}$ and $\bm{n}_2$.
+	Let $N_1^{(k)} = \frac{1}{k} \cdot  \Tilde{N}$ for $k \in \NN$, where $\Tilde{N}\in\mathbb{R}^D$ is a fixed random variable with finite variance, and let $N_2$ be a random variable that does not depend on $k$.
+	Let $h_1^{(k)}, h_2^{(k)}$ be the output of the algorithm specified by Theorem \ref{thm:two-noisy-views} with noise variables $N_1^{(k)}$ and $N_2$.
 	
-	Suppose that the corrupters $\bm{g}_i$ satisfy the following two criteria:
+	Suppose that the corrupters $g_i$ satisfy the following two criteria:
 	\begin{enumerate}
-		\item $\exists \bm{a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial \bm{g}_1(\bm{s},\bm{n})}{\partial \bm{n}} \right|_{\bm{n}=0} \leq \bm{a} \: $ for all $\bm{s}$
-		\item $\exists \bm{b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial \bm{g}_1(\bm{s},0)}{\partial \bm{s}} \leq \bm{b}$
+		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$
+		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$
 	\end{enumerate}
-	Then, denoting by $\bm{E}$ the set of all scalar, invertible functions, we have that
+	Then, denoting by $\mathcal{E}$ the set of all component-wise, invertible functions, it holds that
 	\[
-	\lim_{k \to \infty} \inf_{\bm{e}\in \bm{E}} \left \|\bm{s} - \bm{e}(\bm{h}_1^{(k)}(\bm{x}_1)) \right \| = 0
+	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0
 	\]
+	where $p$ denotes convergence in probability.
 \end{corollary}
-The proof can be found in Appendix \ref{appendix:thm2}.
 
-Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $\bm{s}$ can be recovered exactly.
-Condition \textit{1} upper bounds the influence of $\bm{n}$ on the corruption: we can not hope to retrieve $\bm{s}$ if $\bm{g}(\bm{s}, \bm{n})$ contains too little signal.
-Condition \textit{2} ensures that the function $\bm{g}$ is invertible with respect to $\bm{s}$ when $\bm{n}$ is equal to zero.
-If this were not satisfied, some information about $\bm{s}$ would be washed out by $\bm{g}$ even in absence of noise.
-This would make recovery of $\bm{s}$ trivially impossible.
+%\begin{corollary}
+%	Let $\bm{n}_1^{(k)} = \frac{1}{k} \cdot  \Tilde{\bm{n}}$ for $k \in \NN$, where $\Tilde{\bm{n}}\in\mathbb{R}^D$ is a fixed random variable, and $\bm{n}_2$ be a random variable that does not depend on $k$.
+%	Let $\bm{h}_1^{(k)}, \bm{h}_2^{(k)}$ be the output of the algorithm specified by Theorem \ref{thm:two-noisy-views} with noise variables $\bm{n}_1^{(k)}$ and $\bm{n}_2$.
+%	
+%	Suppose that the corrupters $\bm{g}_i$ satisfy the following two criteria:
+%	\begin{enumerate}
+%		\item $\exists \bm{a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial \bm{g}_1(\bm{s},\bm{n})}{\partial \bm{n}} \right|_{\bm{n}=0} \leq \bm{a} \: $ for all $\bm{s}$
+%		\item $\exists \bm{b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial \bm{g}_1(\bm{s},0)}{\partial \bm{s}} \leq \bm{b}$
+%	\end{enumerate}
+%	Then, denoting by $\bm{E}$ the set of all scalar, invertible functions, we have that
+%	\[
+%	\lim_{k \to \infty} \inf_{\bm{e}\in \bm{E}} \left \|\bm{s} - \bm{e}(\bm{h}_1^{(k)}(\bm{x}_1)) \right \| = 0
+%	\]
+%\end{corollary}
+
+The proof can be found in Appendix \ref{appendix:thm2}.
+Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $Z$ can be recovered exactly.
+Condition $1$ upper bounds the influence of $\bm{n}$ on the corruption: one cannot not hope to recover $Z$ if $g_1(Z, N_1)$ contains too little signal.
+This is satisfied, for example, by additive noise.
+Condition $2$ ensures that the function $g_1$ is invertible with respect to $z$ when $n_1$ is equal to zero.
+If this were not satisfied, some information about $Z$ would be washed out by $g_1$ even in absence of noise, which would make recovery of $Z$ trivially impossible.
 
 
 \subsection{Multiple noisy views}
 \label{sec:multiple}
 
-The results of Section \ref{sec:constrained} state that in the two noisy views setting, $\bm{s}$ can be recovered up to the corruptions.
-In the limit that the magnitude of the noises goes to zero, the uncorrupted $\bm{s}$ can be recovered.
-The intuition is that the less noise there is, the more information each observation provides about $\bm{s}$.
+The results of Section \ref{sec:constrained} state that in the two noisy views setting, $Z$ can be recovered up to the corruptions.
+In the limit that the magnitude of the noises goes to zero, the uncorrupted $Z$ can be recovered.
+The intuition is that the less noise there is, the more information each observation provides about $Z$.
 
 \begin{figure}[t!]
 	\centering
 	\includegraphics[scale=0.3]{img_pdf/generalized_hsr_many.pdf}
-	\caption{Setting with $N$ corrupted views of the sources.}
+	\caption{Setting with $M$ corrupted views of the sources.}
 	\label{fig:generalized_hsr_many}
 \end{figure}
 
-In this section we consider the multi-view setting, where $N$ distinct noisy views of $\bm{s}$ are available,
+This section considers the multi-view setting, where $M$ distinct noisy views of $Z$ are available,
 \begin{equation*}
-\bm{x}_{i}=\bm{f}_{i}(\bm{g}_{i}(\bm{s},\bm{n}_{i}))\,\,\,,i=1, \ldots, N\,, \label{eq:multi}\\
+X_{i}={f}_{i}({g}_{i}(Z,N_{i})),\,\,\,i=1, \ldots, M\,, \label{eq:multi}\\
 \end{equation*}
-and the noise variables $\bm{n}_{i}$ are mutually independent, as represented in Figure \ref{fig:generalized_hsr_many}.
-Since each view provides additional information about $\bm{s}$, we ask: in the limit as $N \to \infty$, is it possible to reconstruct $\bm{s}$ exactly?
+and the noise variables $N_{i}$ are mutually independent, as represented in Figure \ref{fig:generalized_hsr_many}.
+Since each view provides additional information about $Z$, the question naturally arises: in the limit as $M \to \infty$, is it possible to reconstruct $\bm{s}$ exactly?
 
 
-By applying Theorem \ref{thm:two-noisy-views} to the pair $(\bm{x}_1,\bm{x}_i)$ it is possible to recover  $(\bm{g}_1(\bm{s},\bm{n}_1),\bm{g}_i(\bm{s},\bm{n}_i))$ such that the components are aligned, but up to different component-wise invertible functions $\bm{k}_1$ and $\bm{k}_i$.
-Running the algorithm on a different pair  $(\bm{x}_1,\bm{x}_{j})$ will result in recovery up to different component-wise invertible functions $\bm{k}'_1$ and $\bm{k}'_j$.
+By applying Theorem \ref{thm:two-noisy-views} to the pair $({X}_1,X_i)$ it is possible to recover  $({g}_1(Z,N_1),{g}_i(Z,N_i))$ such that the components are aligned, but up to different component-wise invertible functions ${k}_1$ and ${k}_i$.
+Running the algorithm on a different pair  $({X}_1,X_{j})$ will result in recovery up to different component-wise invertible functions $k'_1$ and $k'_j$.
 
-Note that these will \emph{not} necessarily result in  $\bm{k}_i\circ\bm{g}_i(\bm{s},\bm{n}_i)$ and $\bm{k}'_j\circ\bm{g}_j(\bm{s},\bm{n}_j)$ being aligned with each other.
-However, the components of $\bm{k}_1\circ\bm{g}_1(\bm{s},\bm{n}_1)$ and $\bm{k}'_1\circ\bm{g}_1(\bm{s},\bm{n}_1)$ are the same, up to permutation and component-wise invertible functions.
+Note that these will \emph{not} necessarily result in  ${k}_i\circ{g}_i(Z,N_i)$ and ${k}'_j\circ{g}_j(Z,N_j)$ being aligned with each other.
+However, the components of ${k}_1\circ{g}_1(Z,N_1)$ and ${k}'_1\circ{g}_1(Z,N_1)$ are the same, up to permutation and component-wise invertible functions.
 This permutation can therefore be undone by performing independence testing between each pair of components.
 Components that are `different' will be independent; those that are the same will be deterministically related.
-Therefore, they can be used as a reference to permute the components of $\bm{k}'_j$ and make it aligned with $\bm{k}_i$.
+Therefore, they can be used as a reference to permute the components of ${k}'_j$ and make it aligned with ${k}_i$.
 
-The problem is then how to combine the information from each aligned $\bm{k}_i \circ \bm{g}_i(\bm{s},\bm{n}_i)$ to more precisely identify $\bm{s}$.
+The problem is then how to combine the information from each aligned ${k}_i \circ {g}_i(Z,N_i)$ to more precisely identify $Z$.
 The fact that the components are recovered up to \emph{different} scalar invertible functions makes combining information from different views non-trivial.
 
 
-As a first step in this direction, we consider the special case that each $\bm{g}_i$ acts additively and each $\bm{n}_i$ is zero mean and each of $\bm{s}$ and the $\bm{n}_i$ are independent with independent components.
+As a first step in this direction, consider the special case that each ${g}_i$ acts additively and each $N_i$ is zero mean and each of $Z$ and the $N_i$ are independent with independent components.
 \begin{align}
 \left.
 \begin{array}{ll}
-&\bm{x}_{i}=\bm{f}_{i}(\bm{s} + \bm{n}_{i}) \\
-&\mathbb{E}[\bm{n}_i]= 0
+&X_{i}={f}_{i}(Z + N_{i}) \\
+&\mathbb{E}[N_i]= 0
 \end{array}
 \right\rbrace \quad i \in \mathbb{N}
 \end{align}
 
-Suppose to begin with that we are able to recover each $\bm{s} + \bm{n}_i$ \emph{without} the usual component-wise invertible functions. Then, writing $\bm{n}$ to denote all of the $\bm{n}_i$, it is possible to estimate $\bm{s}$ as
+Suppose to begin with that it is possible to recover each $Z + N_i$ \emph{without} the usual component-wise invertible functions. Then, writing $N$ to denote all of the $N_i$, it is possible to estimate $Z$ as
 \begin{align*}
-\bm{s} \approx \Omega^N(\bm{s}, \bm{n}) = \frac{1}{N}\sum_{i=1}^N \left(\bm{s} + \bm{n}_i\right).
+Z \approx \Omega^M(Z, N) = \frac{1}{M}\sum_{i=1}^M \left(Z + N_i\right).
 \end{align*}
-Subject to mild conditions on the rate of growth of the variances $\text{Var}(\bm{n}_i)$ as $i\to\infty$, Kolmogorov's strong law implies that $\Omega^N(\bm{s}, \bm{n})$ is a good approximation to $\bm{s}$ as $N\to\infty$ in the sense that  $\Omega^N(\bm{s}, \bm{n}) \overset{a.s.}{\longrightarrow} \bm{s}$.
-This implies moreover that it is possible to reconstruct the $\bm{n}_i$ by considering the residue $R^N_i(\bm{s}, \bm{n}) = (\bm{s} + \bm{n}_i) - \Omega^N(\bm{s}, \bm{n}) \overset{a.s.}{\longrightarrow} \bm{n}_i$.
+Subject to mild conditions on the rate of growth of the variances $\text{Var}(N_i)$ as $i\to\infty$, Kolmogorov's strong law implies that $\Omega^M(Z, N)$ is a good approximation to $Z$ as $M\to\infty$ in the sense that  $\Omega^M(Z, N) \overset{a.s.}{\longrightarrow} Z$.
+This implies moreover that it is possible to reconstruct the $N_i$ by considering the residue $R^N_i(Z, N) = (Z + N_i) - \Omega^M(Z, N) \overset{a.s.}{\longrightarrow} N_i$.
 
-In the presence of the unknown functions $\bm{k}_i$, we would be able to reconstruct $\bm{s}$ and the $\bm{n}_i$ if we were able to identify the inverses $\bm{e}_i = \bm{k}_i^{-1}$ for each $i$.
-For any component-wise invertible functions $\bm{e}_i$, define
+In the presence of the unknown functions ${k}_i$, we would be able to reconstruct $Z$ and the $N_i$ if we were able to identify the inverses ${e}_i = {k}_i^{-1}$ for each $i$.
+For any component-wise invertible functions ${e}_i$, define
 \begin{align*}
-\Omega_{\eb}^N(\bm{s}, \bm{n}) &= \frac{1}{N} \sum_{i=1}^N \bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i) \\
-R_{\bm{e}, i}^N(\bm{s}, \bm{n}) &= \bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i) - \Omega_{\bm{e}}^N(\bm{s}, \bm{n}).\\
+\Omega_{e}^M(Z, N) &= \frac{1}{M} \sum_{i=1}^M {e}_i\circ {k}_i( Z + N_i) \\
+R_{{e}, i}^M(Z, N) &= {e}_i\circ {k}_i( Z + N_i) - \Omega_{{e}}^M(Z, N).\\
 \end{align*}
-$\bm{e}_i$ is something we can choose and $\bm{k}_i(\bm{s}+\bm{n}_i) = \bm{h}_i(\bm{x}_i)$ is the output of the algorithm, and hence $\Omega_{\eb}^N(\bm{s}, \bm{n})$ and $R_{\bm{e}, i}^N(\bm{s}, \bm{n})$ are random variables with known distributions.
-Subject to mild conditions, the dependence of these quantities on most or all of the $\bm{n}_i$ becomes increasingly small as $N$ grows and disappears in the limit $N\to\infty$.
+${e}_i$ is something we can choose and ${k}_i(Z+N_i) = {h}_i({X}_i)$ is the output of the algorithm, and hence $\Omega_{e}^M(Z, N)$ and $R_{{e}, i}^M(Z, N)$ are random variables with known distributions.
+Subject to mild conditions, the dependence of these quantities on most or all of the $N_i$ becomes increasingly small as $M$ grows and disappears in the limit $M\to\infty$.
 
 \medskip
 
 \begin{lemma}\label{lem:last-lemma}
-	Suppose that the sequence $\mathbb{E}_{\bm{n}}[\Omega_{\eb}^N(\bm{s}, \bm{n})] = \frac{1}{N}\sum_{i=1}^N \mathbb{E}_{\bm{n}_i}[\bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i)] $ converges as $N \to \infty$ for almost all $\bm{s}$, and write this limit as
+	Suppose that the sequence $\mathbb{E}_{N}[\Omega_{e}^M(Z, N)] = \frac{1}{M}\sum_{i=1}^M \mathbb{E}_{N_i}[{e}_i\circ {k}_i( Z + N_i)] $ converges as $M \to \infty$ for almost all $Z$, and write this limit as
 	\begin{align*}
-	\Omega_\eb(\bm{s}) = \lim_{N\to\infty}\mathbb{E}_{\bm{n}}[\Omega_{\eb}^N(\bm{s}, \bm{n})].
+	\Omega_e(Z) = \lim_{M\to\infty}\mathbb{E}_{N}[\Omega_{e}^M(Z, N)].
 	\end{align*}
 	
-	Suppose further that there exists $K$ such that $V_{\eb_i} = \mathrm{Var}\left(\bm{e}_i \circ \bm{g}_i(\bm{s} + \bm{n}_i) \right) \leq K$ for all $i$.
+	Suppose further that there exists $K$ such that $V_{e_i} = \mathrm{Var}\left({e}_i \circ {k}_i(Z + N_i) \right) \leq K$ for all $i$.
 	Then
 	\begin{align*}
-	\Omega_{\eb}^N(\bm{s}, \bm{n}) & \overset{a.s.}{\longrightarrow} \Omega_{\eb}(\bm{s}) \\
-	R_{\eb, i}^N(\bm{s}, \bm{n}) & \overset{a.s.}{\longrightarrow} R_{\eb, i}(\bm{s}, \bm{n}_i) = \bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i) - \Omega_{\eb}(\bm{s})
+	\Omega_{e}^M(Z, N) & \overset{a.s.}{\longrightarrow} \Omega_{e}(Z) \\
+	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z)
 	\end{align*}
 \end{lemma}
+\begin{proof}[Sketch; see Appendix \ref{appendix:last-lemma} for full proof]
+The result follows by applying Kolmogorov's strong law to $\Omega_{e}^M(Z, N)$ for each value of $Z$.
+Kolmogorov's strong law says that the average of a sequence of independent random variables converges to the expectation of the average, provided that the variances of the random variables do not grow too quickly. 
+This is ensured by the assumption on the $V_{e_i}$.
+\end{proof}
 
-The proof can be found in Appendix \ref{appendix:last-lemma}.
-Given some choice of $\bm{e}$, we can think of $\Omega_{\eb}(\bm{s})$ and $R_{\eb, i}(\bm{s}, \bm{n}_i)$ as our putative candidates for $\bm{s}$ and $\bm{n}_i$ respectively.
-As discussed earlier, if we could identify $\bm{e}_i=\bm{k}_i^{-1}$, then we would have $\Omega_{\eb}(\bm{s}) = \bm{s}$ and $R_{\eb, i}(\bm{s}, \bm{n}_i) = \bm{n}_i$, and thus $\Omega_{\eb}$ and $R_{\eb, i}$ would satisfy the same independences and other statistical properties as $\bm{s}$ and $\bm{n}_i$ respectively.
-Can we use these properties as criteria to identify good choices of $\bm{e}_i$?
+%The proof can be found in Appendix \ref{appendix:last-lemma}. \todo{give sketch}
 
-The following theorem gives a set of sufficient conditions under which each $\bm{e}_i$ inverts $\bm{k}_i$ up to some affine ambiguity which is the same for every $i$.
+Given some choice of ${e}$, the quantities $\Omega_{e}(Z)$ and $R_{e, i}(Z, N_i)$ can be thought of as putative candidates for $Z$ and $N_i$ respectively.
+As discussed earlier, if it were possible to identify ${e}_i={k}_i^{-1}$, then it would be the case that $\Omega_{e}(Z) = Z$ and $R_{e, i}(Z, N_i) = N_i$, and thus $\Omega_{e}$ and $R_{e, i}$ would satisfy the same independences and other statistical properties as $Z$ and $N_i$ respectively.
+Can these properties be used as criteria to identify good choices of ${e}_i$?
+
+The following theorem gives a set of sufficient conditions under which each ${e}_i$ inverts ${k}_i$ up to some affine ambiguity which is the same for every $i$.
+Under these conditions, the properties discussed in the previous paragraph are sufficient to identify whether a putative choice for $e$ indeed results in recovery of the sources.
 
 \medskip
 
 \begin{theorem}
 	\label{thm:lastthm}
-	Suppose there exists $C>0$ such that $\text{Var}(\bm{n}_i) \leq C$ for all $i$ and let $\mathcal{G}_K = \big\lbrace
-	\{\bm{e}_i \}$ s.t.
+	Suppose there exists $C>0$ such that $\text{Var}(N_i) \leq C$ for all $i$ and let $\mathcal{G}_K = \big\lbrace
+	\{{e}_i \}$ s.t.
 	\begin{align}
-	& V_{\bm{e}_i} \leq K \ \forall i \label{eq:resid_1}\\
-	& \Omega_{\bm{e}}(\bm{s}) < \infty \  \text{ for almost all } \bm{s} \label{eq:resid_2}\\
-	&R_{\bm{e}, i} \independent R_{\bm{e}, j} \ \forall i \not= j, \label{eq:resid_3}\\
-	\\    &\mathbb{E} R_{\bm{e}, i} = 0 \ \forall i \label{eq:resid_5} \\
-	&R_{\bm{e}, i}(\bm{s}, \bm{n}_i) = R_{\bm{e}, i}(\bm{n}_i) \ \forall i \ \big\rbrace \label{eq:resid_6}
+	& V_{{e}_i} \leq K \ \forall i \label{eq:resid_1}\\
+	& \Omega_{{e}}(Z) < \infty \  \text{ for almost all } Z \label{eq:resid_2}\\
+	&R_{{e}, i} \independent R_{{e}, j} \ \forall i \not= j, \label{eq:resid_3}\\
+	\nonumber \\    &\mathbb{E} R_{{e}, i} = 0 \ \forall i \label{eq:resid_5} \\
+	&R_{{e}, i}(Z, N_i) = R_{{e}, i}(N_i) \ \forall i \ \big\rbrace \label{eq:resid_6}
 	\end{align}
 	
 	Then,
 	\begin{align*}
-	\mathcal{G}_K \subseteq\left\lbrace \{ \bm{\alpha} \bm{k}^{-1}_i + \bm{\beta} \} \ : \ \bm{\alpha} \in \mathbb{R}^{D}_{\not=0}, \: \bm{\beta} \in \mathbb{R}^{D} \right\rbrace
+	\mathcal{G}_K \subseteq\left\lbrace \{ {\alpha} {k}^{-1}_i + {\beta} \} \ : \ {\alpha} \in \mathbb{R}^{D}_{\not=0}, \: {\beta} \in \mathbb{R}^{D} \right\rbrace
 	\end{align*}
-	where $\bm\alpha \bm{k}^{-1}_i$ denotes the element-wise product with the scalar elements of $\bm{\alpha}$.
-	If $K \geq \text{Var}(\bm{s}) + C$, then $ \{ \bm{k}^{-1}_i \}  \in \mathcal{G}_K$,
+	where $\alpha {k}^{-1}_i$ denotes the element-wise product with the scalar elements of ${\alpha}$.
+	If $K \geq \text{Var}(Z) + C$, then $ \{ {k}^{-1}_i \}  \in \mathcal{G}_K$,
 	and so $\mathcal{G}_K$ is non-empty for $K$ sufficiently large.
 \end{theorem}
-The proof can be found in Appendix \ref{sec:lasttmpr}.
-It follows that it is possible recover $\bm{s}$ and $\bm{n}_i$ up to $\bm{\alpha}$ and $\bm{\beta}$ via $\Omega_\eb(\bm{s}) = \bm{\alpha}\bm{s} + \bm{\beta}$ and $R_{\bm{e}, i}(\bm{n}_i) = \bm{\alpha}\bm{n}_i$.
+\begin{proof}[Sketch; see Appendix \ref{sec:lasttmpr} for full proof]
+That $\{ {k}^{-1}_i \}  \in \mathcal{G}_K$ can be shown using Lemma \ref{lem:last-lemma}. 
+The fact that $\mathcal{G}_K \subseteq\left\lbrace \{ {\alpha} {k}^{-1}_i + {\beta} \} \ : \ {\alpha} \in \mathbb{R}^{D}_{\not=0}, \: {\beta} \in \mathbb{R}^{D} \right\rbrace$ is proved by showing that for any $e_i$ such that $\{e_i\} \in \mathcal{G}_K$, the composition $e_i \circ k_i$ is affine.
+It follows that $e_i = A_i k_i^{-1} + \beta_i$ for some matrix $A_i$ and vector $\beta_i$. 
+Finally, it is shown that $A_i$ and $\beta_i$ are equal for all choices of $i$, and $A$ is a diagonal matrix, and thus $A k_i^{-1}$ can be written as an elementwise product with a vector $\alpha$.
+\end{proof}
 
-We remark that each of the conditions \ref{eq:resid_1}--\ref{eq:resid_5} can be verified from known information.
-We conjecture that condition \ref{eq:resid_6} can be relaxed to assuming the verifiable condition of independence between $\Omega_{\eb}(\bm{s})$ and $R_{\eb, i}(\bm{s}, \bm{n}_i)$ for all $i$ along with additional regularity assumptions on the functional form of $R_{\eb, i}$ (e.g. smoothness).
+It follows that it is possible recover $Z$ and $N_i$ up to ${\alpha}$ and ${\beta}$ via $\Omega_e(Z) = {\alpha}Z + {\beta}$ and $R_{{e}, i}(N_i) = {\alpha}N_i$.
 
-To conclude, Theorem 8 provides sufficient conditions under which it is possible to fully reconstruct $\bm{s}$ with corrupted views.
+Each of the conditions \ref{eq:resid_1}--\ref{eq:resid_5} can be verified from known information.
+We conjecture that condition \ref{eq:resid_6} can be relaxed to assuming the verifiable condition of independence between $\Omega_{e}(Z)$ and $R_{e, i}(Z, N_i)$ for all $i$ along with additional regularity assumptions on the functional form of $R_{e, i}$ (e.g. smoothness).
+
+To conclude, Theorem \ref{thm:lastthm} provides sufficient conditions under which it is possible to fully reconstruct $Z$ with corrupted views.
 In contrast to previous results in Sections \ref{sec:onenoisless} and \ref{sec:constrained}, this result leverages infinitely many corrupted views rather than vanishingly small corruption of finitely many views.
 
 
 
 
-
-
-
 \section{Discussion about assumptions}
-\subsection{Classification and stochasticity}
-\label{sec:converged}
+
+This section discusses in further detail the Sufficiently Distinct Views assumption and the necessity for source-level noise for at least one of the views.
+
+
+\subsection{The Sufficiently Distinct Views assumption}
+\label{appendix:sdv}
+
+Recall that the SDV assumption is a demand on how much the conditional probability distribution of the source of one view given another varies, e.g. how much $p(z_1 | z_2)$ changes as a function of $z_2$ where $z_i = f_1^{-i}(x_i)$. 
+To provide intuition, this section gives examples of cases in which the SDV assumption does and does not hold.
+
+The SDV assumption is closely related to the \emph{Assumption of Variability} of \cite{hyvarinen19a}, an analogous assumption that occurs in the context a different graphical model from the multi-view setting considered here; see that paper for further details.
+
+%We give the following two examples to provide intuition about the Sufficiently Distinct Views (SDV) assumption - one regarding a case in which it does not hold, and another one in which it does.
+
+\subsubsection{An example violating SDV}
+
+Suppose that conditional distribution is Gaussian, so that
+
+\begin{equation}
+\log p(z_1|z_2) =  -\sum_i (z_{1i} - z_{2i})^2/(2\sigma_i^2) + C \,, \label{eq:unsatisfied}
+\end{equation}
+
+where $C$ is a constant.
+Since taking second derivatives of the log-probability with respect to $s_i$ results in constants,
+there is no way to find $2D$ vectors ${t}_j$, $j=1, \ldots, 2D$, such that the corresponding ${w}(z_1, t_j)$ in Definition \ref{suff_dist_assumption} are linearly independent.
+
+This rules out the case in which one or both views correspond to the source being corrupted by additive Gaussian noise.
+
+Note that this result is distinct from the non-identifiability result in the case of Gaussian sources for ICA.
+The problem here is not that the conditional distribution is rotationally invariant, but that the connection it implies between the two variables is `too simple'.
+In fact, the identifiability results presented here do not demand that the marginal distribution over the uncorrupted source be non-Gaussian.
+
+%The fact that the assumption breaks down in this case is reminiscent of the breakdown in the case of Gaussianity for linear ICA. Interestingly, in our work, the true latent sources \textbf{are} allowed to be Gaussian. In fact, the distribution of $\bm{s}$ does not enter the expression above.
+
+
+\subsubsection{An example satisfying SDV}
+
+By choosing a conditional distribution  that is more comlex, the SDV assumption can be satisfied. Consider
+
+\begin{equation}
+\log p(z_1|z_2) =  - \sum_i (z_i^2  s_i^2 + z_i^4 s_i^4  ) + C(z_2) \,, \label{eq:satisfied}
+\end{equation}
+
+where $C(z_2)$ is a normalisation constant that depends only on $z_2$.
+Proof that this conditional distribution satisfies the SDV assumption requires a few lines of computation.
+
+Since this polynomial expression is of order strictly greater than 2, the second derivatives are not constant.
+${w}(z_1, z_2)$ can be written as the product of a matrix and vector which are functions only of $z_1$ and $z_2$ respectively.
+The columns of this matrix are linearly independent for almost all values of $z_1$ and $2D$ linearly independent vectors can be realised by different choices of $z_2$, and hence the assumption is satisfied.
+
+
+\subsection{Source noise}\label{sec:converged}
+
+Noise on the sources is required for at least one of the views. 
+This is a consequence of training a classifier as a way retrieve the the unmixed signals.
+The reasons for this are explained briefly in this section.\footnote{\todo{Rewrite if density ratio estimation is covered in the literature review}}
+
+
 Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
 A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realisation of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
 
@@ -773,18 +853,20 @@ D(x) &= \frac{1}{1 + p_1(x)/p_0(x)}\\
 &= \frac{1}{1 + \exp ( - \log (p_0(x)/p_1(x))) } \label{eq:density-ratio-classification}
 \end{align}
 
-Recall that in the setting we consider, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $\mathbb{P}_{x_1, x_2}$ (\emph{class $0$}) or the product of marginals $\mathbb{P}_{x_1}\mathbb{P}_{x_2}$ (\emph{class $1$}).
+Recall that in the setting we consider, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $p(x_1, x_2)$ (\emph{class $0$}) or the product of marginals $p(x_1) p(x_2)$ (\emph{class $1$}).
 $r(x_1, x_2)$ is trained so that $\frac{1}{1 + \exp(-r(x_1, x_2))}$ estimates the posterior probability of $(x_1, x_2)$ belonging to class 0.
 By comparing to Equation \ref{eq:density-ratio-classification}, it can be seen that
-
+%
 \begin{align*}
 r(x_1, x_2) &= \log \left( p(x_1, x_2) / p(x_1) p(x_2)\right) \\
 &= \log p(x_1 | x_2)  - \log p(x_1) \\
 &= \log p(x_2 | x_1)  - \log p(x_2) \\
 \end{align*}
+%
+If the variables $x_1$ and $x_2$ are deterministically related, this log-ratio is everywhere either $0$ or $\infty$.
 
-Note that in order for the classification trick of contrastive learning to be useful, the variables $x_1$ and $x_2$ cannot be deterministically related.
-If this is the case, the log-ratio is everywhere either $0$ or $\infty$ and hence the learned features are not useful.
+%In order for the classification trick of contrastive learning to be useful, the variables $x_1$ and $x_2$ cannot be deterministically related.
+%If this is the case, the log-ratio is everywhere either $0$ or $\infty$ and hence the learned features are not useful.
 
 To see why this is the case, suppose that $x_1$, and $x_2$ are each $N$-dimensional vectors.
 If they are deterministically related, $p(x_1, x_2)$ puts mass on an $N$-dimensional submanifold of a $2N$-dimensional space.
@@ -792,40 +874,9 @@ On the other hand, $p(x_1)p(x_2)$ will put mass on a $2N$-dim manifold since it 
 
 In this case, the distributions $p(x_1, x_2)$ and $p(x_1)p(x_2)$ are therefore not absolutely continuous with respect to one another and thus the log-ratio is ill-defined: $p(x_1, x_2)/p(x_1)p(x_2) = \infty$ at any point $(x_1,x_2)$ at which $p(x_1, x_2)$ puts mass and zero at points where $p(x_1)p(x_2)$ puts mass and $p(x_1,x_2)$ does not.
 
-It follows that the contrastive learning technique as used in the theorems considered in this chapter can only be applied when the different views $\bm{x}_1$ and $\bm{x}_2$ are not deterministically related.
-It is for this technical reason that the corruptions are necessary.
+It follows that the method of classification used in the results considered in this chapter can only be applied when the different views $X_1$ and $X_2$ are not deterministically related.
+For this technical reason, the corruptions are necessary.
 
-
-\subsection{The sufficiently distinct views assumption}
-\label{appendix:sdv}
-
-We give the following two examples to provide intuition about the Sufficiently Distinct Views (SDV) assumption - one regarding a case in which it does not hold, and another one in which it does.
-
-
-A simple case in which the assumption does not hold is when the conditional probability of $\bm{z}$ given $\bm{s}$ is Gaussian, as in
-
-\begin{equation}
-p(\bm{z}|\bm{s}) = \frac{1}{Z} \exp\left[ -\sum_i (z_i - s_i)^2/(2\sigma_i^2) \right]\,, \label{eq:unsatisfied}
-\end{equation}
-
-where $Z$ is the normalisation factor, $Z = (2\pi)^{n/2}  \prod_i \sigma_i$.
-Since taking second derivatives of the log-probability with respect to $s_i$ results in constants,
-it can be easily shown that there is no way to find $2D$ vectors $\bm{z}_j$, $j=1, \ldots, 2D$, such that the corresponding $\bm{w}(\bm{s}, \bm{z}_j)$ (see Definition 1) are linearly independent.
-
-
-The fact that the assumption breaks down in this case is reminiscent of the breakdown in the case of Gaussianity for linear ICA. Interestingly, in our work, the true latent sources \textbf{are} allowed to be Gaussian. In fact, the distribution of $\bm{s}$ does not enter the expression above.
-
-
-An example in which the SDV assumption does hold is a conditional pdf given by
-
-\begin{equation}
-p(\bm{z}|\bm{s}) = \frac{1}{Z(\bm{s})} \exp \left[ - \sum_i (z_i^2  s_i^2 + z_i^4 s_i^4  ) \right]\,, \label{eq:satisfied}
-\end{equation}
-
-where $Z(\bm{s})$ is again a normalisation function.
-Proving that this distribution satisfies the SDV assumption requires a few lines of computation.
-The idea is that $\bm{w}(\bm{s}, \bm{z})$ can be written as the product of a matrix and vector which are functions only of $\bm{s}$ and $\bm{z}$ respectively.
-Once written in this form, it is straightforward to show that the columns of the matrix are linearly independent for almost all values of $\bm{s}$ and that $2D$ linearly independent vectors can be realised by different choices of $\bm{z}$.
 
 
 \section{Conclusion}

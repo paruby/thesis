@@ -275,22 +275,31 @@ We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 \label{appendix:thm2}
 
 \begin{proof}
-	Denoting by $\bm{d}^{(k)}_1$ the component-wise invertible ambiguity up to which $\bm{g}(\bm{s}, \bm{n}_1^{(k)})$ is recovered, we have that
+To show that the random variable 
+\begin{align*}
+\inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \|
+\end{align*}
+converges to $0$ in probability, we will prove the stronger statement that it converges in mean to $0$.
+Denoting by ${d}^{(k)}_1$ the component-wise invertible ambiguity up to which ${g}(Z, N_1^{(k)})$ is recovered, we have that
 	\begin{align}
-	&\inf_{\bm{e}\in \bm{E}} \mathbb{E}_{\bm{x}_1} \left[ \left \|\bm{s} - \bm{e}(\bm{h}_1^{(k)}(\bm{x}_1)) \right \|_2^2 \right]\\
-	&=\inf_{\bm{e}\in \bm{E}} \mathbb{E}_{(\bm{n}_1^{(k)}, \bm{s})} \left[ \left \|\bm{s} - \bm{e} \circ \bm{d}^{(k)}_1 \circ \bm{g}_1(\bm{s}, \bm{n}_1^{(k)}) \right \|_2^2 \right]\\
-	&=\inf_{\tilde{\bm{e}}\in \bm{E}} \mathbb{E}_{(\bm{n}_1^{(k)}, \bm{s})} \left[ \left \|\bm{s} - \tilde{\bm{e}} \circ  \bm{g}_1(\bm{s}, \bm{n}_1^{(k)}) \right \|_2^2 \right]  \\
-	&\leq\mathbb{E}_{(\bm{n}_1^{(k)}, \bm{s})} \left[ \left \|\bm{s} - \bm{e^*} \circ  \bm{g}_1(\bm{s}, \bm{n}_1^{(k)}) \right \|_2^2 \right]\label{eq:low_bounded}
+	&\mathbb{E}_{Z, X_1} \left| \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \right| \\
+	& = \mathbb{E}_{Z, X_1} \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \\
+	& \leq \inf_{{e}\in \mathcal{E}} \mathbb{E}_{Z, X_1} \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \\
+	& = \inf_{{e}\in \mathcal{E}} \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - {e} \circ d_1^{(k)} \circ g_1(Z, N_1^{(k)}) \right \| \\
+	& = \inf_{\tilde{e}\in \mathcal{E}} \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - \tilde{e} \circ g_1(Z, N_1^{(k)}) \right \| \\
+	& \leq \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - e^* \circ g_1(Z, N_1^{(k)}) \right \| \label{eq:low_bounded} 
 	\end{align}
-	The lower bound holds for any $\bm{e^*}\in\bm{E}$ by definition of infimum and in particular for $\bm{e^*} = \bm{g}_1 |^{-1}_{\bm{n}=0}$, the existence of which is guaranteed by the assumptions on $\bm{g}_1$.
-	Taking a Taylor expansion of $\bm{e^*} \circ  \bm{g}_1(\bm{s}, \bm{n}_1^{(k)})$ around $\bm{n}_1^{(k)}=0$ yields
+	where the first upper bound holds by concavity, and the second holds for any ${e^*}\in\mathcal{E}$ by definition of infimum and in particular for ${e^*} = {g}_1 |^{-1}_{{n}=0}$, the existence of which is guaranteed by the assumptions on ${g}_1$.
+	Taking a Taylor expansion of ${e^*} \circ  {g}_1(z, {n}_1^{(k)})$ around ${n}_1^{(k)}=0$ yields
 	\begin{align*}
-	&\mathbb{E}_{(\bm{n}_1^{(k)}, \bm{s})} \Bigg[  \Bigg\|\bm{s} - \bm{e^*} \circ \bm{g}_1 (\bm{s}, 0) \\
-	&\quad+ \left.\left.\frac{\partial \bm{e^*}}{\partial \bm{g}_1} \frac{\partial \bm{g}_1 (\bm{s}, 0)}{\partial \bm{n}_1^{(k)}} \cdot \bm{n}_1^{(k)} + \mathcal{O}(\|\bm{n}_1^{(k)}\|^2) \right \|_2^2 \right]\\
-	&=\mathbb{E}_{(\bm{n}_1^{(k)}, \bm{s})} \left[ \left \|\frac{\partial \bm{e^*}}{\partial \bm{g}_1} \frac{\partial \bm{g}_1 (\bm{s}, 0)}{\partial \bm{n}_1^{(k)}} \cdot \bm{n}_1^{(k)} + \mathcal{O}(\|\bm{n}_1^{(k)}\|^2) \right \|_2^2 \right]\\
+	&\mathbb{E}_{(Z, N_1^{(k)})} \Bigg[  \Bigg\|Z - e^* \circ {g}_1 (Z, 0) 
+	+ \left.\left.\frac{\partial e^*}{\partial {g}_1} \frac{\partial {g}_1 (Z, 0)}{\partial {n}_1^{(k)}} \cdot N_1^{(k)} + \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
+	&=\mathbb{E}_{(Z, N_1^{(k)})} \Bigg[  \Bigg\|\left.\left.\frac{\partial e^*}{\partial {g}_1} \frac{\partial {g}_1 (Z, 0)}{\partial {n}_1^{(k)}} \cdot N_1^{(k)} + \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
+%	&\leq \mathbb{E}_{(Z, N_1^{(k)})} \left[  \left\| \frac{\partial e^*}{\partial {g}_1} \right\| \cdot \left\| \frac{\partial {g}_1 (Z, 0)}{\partial {n}_1^{(k)}} \right\| \cdot \left\| N_1^{(k)} \right\| + \left\| \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
+%	&\leq \mathbb{E}_{(Z, N_1^{(k)})} \left[  \frac{b}{a} \left\| N_1^{(k)} \right\| + \left\| \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
 	&\longrightarrow 0 \text{ as $k \longrightarrow \infty$}
 	\end{align*}
-	where the last equality follows from fact that $\bm{e^*} = \bm{g} |^{-1}_{\bm{n}=0}$ and the convergence follows from the fact that $\bm{n}_1^{(k)} \longrightarrow 0$ as $k \to \infty$.
+	where the last equality follows from fact that $e^* = g |^{-1}_{\bm{n}=0}$ and the convergence follows from the fact that $N_1^{(k)} = \frac{1}{k} N_1$ where $N_1$ has finite variance (and thus mean) and from the boundedness conditions on the partial derivatives of $g_1$.
 \end{proof}
 
 
