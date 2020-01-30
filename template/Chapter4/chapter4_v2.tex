@@ -7,7 +7,7 @@
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
 
 
-\chapter{Nonlinear Independent Component Analysis}\label{chapter:ica}
+\chapter{Multi-view Nonlinear Independent Component Analysis}\label{chapter:ica}
 
 % **************************** Define Graphics Path **************************
 \ifpdf
@@ -16,7 +16,22 @@
     \graphicspath{{Chapter4/Figs/Vector/}{Chapter4/Figs/}}
 \fi
 
-\emph{This chapter is largely based on the paper:}
+\emph{%
+This chapter presents identifiability results in a novel multi-view nonlinear ICA setting.
+In the usual single-view setting, identifiability holds only under strong assumptions on the source distribution and mixing function.
+The results presented here show that when multiple distinct views of the sources are available, identifiability holds under much weaker assumptions.
+This work is an important contribution to the literature as it extends the few known identifiability results for nonlinear ICA models.}
+
+%\emph{%
+%Theorems \ref{thm:noiseless1} and \ref{thm:demixing} state that in contrast to the single-view setting, the two-view setting is identifiable when the mixing functions are arbitrary smooth, invertible nonlinear functions with smooth inverse, provided that one of the views is corrupted at the source level by sufficiently `complex' noise so that the Sufficiently Distinct Views assumption is satisfied.}
+%
+%\emph{Identifiability results are also obtained in the case of corruptions on both views. Theorem \ref{thm:two-noisy-views} states that the sources can be recovered up to the corruptions, and Corollary \ref{crl:lownoise} demonstrates that in limit as one of the corruptions becomes small, the uncorrupted sources can be recovered.}
+%
+%\emph{Finally, initial results are presented in Theorem \ref{thm:lastthm} providing conditions under which the uncorrupted sources are identifiable when a large number of views are available, even if these views are all corrupted by source noise.}
+
+
+
+\emph{The main technical content of this chapter has been published in the paper:}
 
 \begin{quote}
 	\fullcite{gresele2019incomplete_fullcite}.
@@ -82,12 +97,47 @@ It was proven by \cite{hyvarinen1999nonlinear} that the `vanilla' ICA setting, i
 Thus, much of the research in this field has attempted to characterise the assumptions under which identifiability holds.
 Such assumptions may be made either on the mixing functions or on the distributions of the sources. 
 
-The central contribution of the work presented in this chapter is the derivation of identifiability results in a novel \emph{multi-view} setting, in which multiple observations of the same underlying sources through different mixing functions are given (see Figure ??\footnote{\todo{Make figure with ICA model and multi-view model side by side to visually explain the setting of this work simply.}}):
+
+\begin{figure}
+\center
+
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{.45\linewidth}
+		\center\
+		\begin{tikzpicture}
+		\node[icavarobs] (X) at(0,-2) {$X$};
+		\node[icavar] (Z) at(0,0) {$Z$};
+		\draw[->] (Z) -- (X);
+		\end{tikzpicture}
+		\caption{}\label{fig:ica-model:a}
+	\end{subfigure}
+	%
+	\hfill
+	%
+	\begin{subfigure}{.45\linewidth}
+		\center\
+		\begin{tikzpicture}
+		\node[icavar] (Z) at(0,0) {$Z$};
+		\node[icavarobs] (X1) at(-1,-2) {$X_1$};
+		\node[icavarobs] (X2) at(1,-2) {$X_2$};
+		\draw[->] (Z) -- (X1);
+		\draw[->] (Z) -- (X2);
+		\end{tikzpicture}
+		\caption{}\label{fig:ica-model:b}
+	\end{subfigure}
+	%
+	\caption{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work.}
+\end{figure}
+
+
+The central contribution of the work presented in this chapter is the derivation of identifiability results in a novel \emph{multi-view} setting, in which multiple observations of the same underlying sources through different mixing functions are given (see Figure \ref{fig:ica-model:b}):
 %
 \begin{align*}
 Z &\sim \prod_i p(z_i) \\
-X^1 &= f^1(Z) \\
-X^2 &= f^2(Z)
+X_1 &= f_1(Z) \\
+X_2 &= f_2(Z)
 \end{align*}
 %
 In this setting, identifiability holds subject to much weaker assumptions than are required for the single-view setting.
@@ -103,7 +153,7 @@ Analogously, the results presented in this work show that inference of latent st
 The remainder of this chapter is structured as follows.
 Section \ref{sec:ica-literature-overview} provides an introduction to ICA and the literature surrounding it, as well as literature from other areas that is relevant to the setting considered in this work.
 Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} presents the main results.
-Section ?? discusses the assumptions we make, and Section ?? concludes.
+Section \ref{sec:ica-assumptions} discusses the assumptions we make, and Section \ref{sec:on_suffistv} concludes.
 
 
 %In the rest of this section we give an overview of the different cases for which identifiability results are known. 
@@ -136,7 +186,7 @@ This section provides an overview of different ICA settings for which identifiab
 %	\item Overview of techniques
 %\end{itemize}
 
-\emph{Linear ICA} refers to the setting in which the vector of mixing functions $f$ is a linear map, 
+Linear ICA refers to the setting in which the vector of mixing functions $f$ is a linear map, 
 in which case the ICA model can be written
 %
 \begin{align*}
@@ -262,12 +312,11 @@ This section briefly reviews some related work considering similar settings outs
 \label{sec:probacca}
 Given two vector-valued random variables, the goal of Canonical Correlation Analysis (CCA) is to find a pair of linear subspaces that have high cross-correlation, so that each component within one of the subspaces is correlated with a single component from the other subspace~\citep{hotelling1992relations, bishop2006pattern}.
 CCA admits a probabilistic interpretation \citep{bach2005probabilistic} and is equivalent to maximum likelihood estimation in a graphical model which is a special case of that depicted in Figure 
-%\ref{fig:classic_hsr}
-\ref{multiview-ica-model-in-intro}\footnote{\todo{fill in once figure has been made}}.
+\ref{fig:ica-model:b}.
 
-The main differences compared to the setting of this chapter are that the latent components retrieved in CCA are forced to be uncorrelated, whereas ICA is concerned with independent components; and in CCA, mappings between the sources and observations are linear, whereas we are interested in nonlinear mappings.
+The main differences compared to the setting of this chapter are that the latent components retrieved in CCA are forced to be uncorrelated, whereas ICA is concerned with independent components; and in CCA, mappings between the sources and observations are linear, whereas this work considers nonlinear mappings.
 In dealing with correlation instead of independence, CCA is more closely related to Principal Component Analysis (PCA) than to ICA.
-Nonlinear extensions of the basic CCA framework have been proposed~\citep{lai2000kernel, fukumizu2007statistical, andrew2013deep, michaeli2016nonparametric}, but identifiability results in the sense we consider in this paper are lacking.
+Nonlinear extensions of the basic CCA framework have been proposed~\citep{lai2000kernel, fukumizu2007statistical, andrew2013deep, michaeli2016nonparametric}, but identifiability results in the sense considered in this work are lacking.
 
 
 %
@@ -290,7 +339,7 @@ While the setting they consider is similar to that of this work, their proposed 
 The paper considers a setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are observed; additionally, there exists an unobserved discrete latent variable $H$, such that conditional distributions $P(X_l|H)$ are independent. 
 Their method is based on the mean embedding of distributions in a Reproducing Kernel Hilbert Space and a result of identifiability for the parameters of the mean embeddings of $P(H)$ and $P(X|H)$ is proved.
 
-Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. While related to our setting, this line of work is different from it in two key ways.
+Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. This line of work differs from the setting considered here in two key ways.
 Firstly, clustering can be thought of as assigning a discrete latent label per observation. In contrast, our setting seeks to recover a continuous latent vector per observation.
 Second, since no underlying generative model with discrete latent variable is assumed, identifiability results are not given.
 
@@ -324,7 +373,7 @@ Z &\sim p(z) = \prod_{i} p_i(z_i) \label{eq:firstind}\\
 X_1 &= f_1(Z) \label{eq:nonlinear-ica-1}\\
 X_2 &= f_2(Z) \label{eq:nonlinear-ica-2}
 \end{align}
-where $X_1, X_2, Z \in \mathbb{R}^D$ and $f_1, f_2$ are arbitrary smooth and invertible transformations of the latent variable $Z = (Z_1, \ldots, Z_D)$ with mutually independent components.
+where $X_1, X_2, Z \in \mathbb{R}^D$ and $f_1, f_2$ are arbitrary smooth and invertible transformations of the latent variable $Z = (Z_1, \ldots, Z_D)$ with smooth inverse.
 $X_1$ and $X_2$ are referred to as different \emph{views} of the sources $Z$.
 Given observations of $X_1$ and $\X_2$, the goal is to recover $Z$, undoing the mixing induced by the $f_i$.
 
@@ -413,8 +462,17 @@ This result is quite involved; we will first state it, and then discuss it.
 
 \begin{figure}[t!]
 	\centering
-	\includegraphics[scale=0.3]{img_pdf/one_noisy.pdf}
-	\caption{The setting considered in Section \ref{sec:onenoisless}. Two views of the sources are available, one of which, $\bm{x}_1$, is not corrupted by noise. In this and all other figures, each node is a deterministic function of all its parents in the graph.
+			\begin{tikzpicture}
+		\node[icavar] (Z) at(0,0) {$Z$};
+		\node[icavar] (N) at(0,-1.5) {$N$};
+		\node[icavarobs] (X2) at(2,-1.5) {$X_2$};
+		\node[icavarobs] (X1) at(2,1.5) {$X_1$};
+		\draw[->] (Z) -- (X1);
+		\draw[->] (Z) -- (X2);
+		\draw[->] (N) -- (X2);
+		\end{tikzpicture}
+%	\includegraphics[scale=0.3]{img_pdf/one_noisy.pdf}
+	\caption{The setting considered in Section \ref{sec:onenoisless}. Two views of the sources are available, one of which, $X_1$, is not corrupted by noise. In this and all subsequent figures in this chapter, each node is a deterministic function of its parents in the graph.
 	}
 	\label{fig:generalized_hsr_basic}
 \end{figure}
@@ -497,7 +555,7 @@ By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and definin
 The goal is to show that $v_i(y)$ depends on exactly one coordinate of $y$, so that $v_i(y) = v_i(y_j)$ for some $j$. 
 Since $z = v(y)$, this implies that $z_i = v_i(y_j)$ is a function only of $y_j$, which in turn implies that $z_i$ is a function only of $h_j(x_1)$. 
 Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions, it is itself invertible, and since each component of $v$ depends only one one component of its input, each of the components are also invertible.
-It follows that $z_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $s$ up to permutations and coordinate-wise invertible transformations.
+It follows that $z_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $z$ up to permutations and coordinate-wise invertible transformations.
 
 Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, and it is here that the SDV assumption is required.
 It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_i$ and $y_j$ for $j\not=i$. 
@@ -524,7 +582,7 @@ This result can be extended to learn the inverse of ${f}_2$ up to component-wise
 	\begin{equation*}
 	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}({x}_{1}, h_{i}({x}_{2}))
 	\end{equation*}
-	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({X}_2)$ recover the independent components of ${g}({Z}, {N})$ up  to component-wise invertible transformations.
+	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({X}_2)$ recover the independent components of the ${g}({Z}, {N})$ up  to component-wise invertible transformations.
 \end{corollary}
 The proof can be found in Appendix \ref{appendix:proof-cor2}.
 These two results together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${Z}$ and ${g}({Z}, {N})$, up to component-wise intertible functions.
@@ -544,7 +602,7 @@ This problem of misalignment can be resolved by changing the form of the regress
 	\end{equation}
 	results in ${h}_1$, ${h}_2$ inverting ${f}_1$, ${f}_2$ in the sense that the $h_{1,i}({X}_1)$ and $h_{2,i}({X}_2)$ recover the independent components of ${Z}$ and ${g}({Z}, {N})$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
-	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2})
+	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2}).
 	\end{equation*}
 \end{theorem}
 The proof can be found in Appendix \ref{appendix:thm1}.
@@ -555,7 +613,10 @@ For cases in which finding aligned representations for ${Z}$ and ${g}({Z}, {N})$
 If the only goal is recovery of ${Z}$, the assumptions of Theorem \ref{thm:noiseless1} are easier to satisfy.
 
 
-In practical applications, the multi-view scenario is useful in multimodal datasets where one of the two acquisition modalities has much higher signal to noise ratio than the other one (e.g., in neuroimaging, when simultaneous fMRI and Optical Imaging recordings are compared). In such cases, jointly exploiting the multiple modalities would help to discern a meaningful and identifiable latent representation which could not be attained through analysis of the more reliable modality alone.
+In practical applications, the multi-view scenario is useful in multimodal datasets where one of the two acquisition modalities has much higher signal to noise ratio than the other one (e.g., in neuroimaging, when simultaneous fMRI and Optical Imaging recordings are compared). In such cases,
+these results show that jointly exploiting the multiple modalities can lead to identification of the true underlying sources in a manner not attainable through use of the more reliable modality alone.
+
+%would help to discern a meaningful and identifiable latent representation which could not be attained through analysis of the more reliable modality alone.
 
 
 %\subsubsection{Equivalence with Permutation Contrastive Learning for Time Dependent Sources}
@@ -569,8 +630,19 @@ In practical applications, the multi-view scenario is useful in multimodal datas
 
 \begin{figure}[t!]
 	\centering
-	\includegraphics[scale=0.3]{img_pdf/classic_hsr.pdf}
-	\caption{Setting with two views of the sources $\bm{s}$, both corrupted by noise.}
+		\begin{tikzpicture}
+		\node[icavar] (Z) at(0,0) {$Z$};
+		\node[icavar] (N1) at(0,1.5) {$N_1$};
+		\node[icavar] (N2) at(0,-1.5) {$N_2$};
+		\node[icavarobs] (X2) at(2,-1.5) {$X_2$};
+		\node[icavarobs] (X1) at(2,1.5) {$X_1$};
+		\draw[->] (Z) -- (X1);
+		\draw[->] (Z) -- (X2);
+		\draw[->] (N2) -- (X2);
+		\draw[->] (N1) -- (X1);
+		\end{tikzpicture}
+%	\includegraphics[scale=0.3]{img_pdf/classic_hsr.pdf}
+	\caption{Setting with two views of the sources $Z$, both corrupted by noise.}
 	\label{fig:classic_hsr}
 \end{figure}
 
@@ -600,13 +672,13 @@ Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that t
 	Suppose that ${\eta}$ and ${\lambda}$ satisfy the SDV assumption.
 	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in ${h}_1$ and ${h}_2$ inverting ${f}_1$ and ${f}_2$ in the sense that the $h_{1,i}({X}_1)$ and $h_{2,i}({X}_2)$ recover the independent components of ${g}_1({Z}, {N}_1)$ and ${g}_2({Z}, {N}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
 	\begin{equation*}
-	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2})
+	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2}).
 	\end{equation*}
 \end{theorem}
 The proof can be found in Appendix \ref{appendix:thm1}.
 
 We can thus recover the common source $Z$ up to the corruptions ${g}_i(Z, N_i)$.
-In the limit of the magnitude of one of the noise variables going to zero, the reconstruction of the sources $\sbm$ attained through the corresponding view is exact up to the component-wise invertible functions, as stated in the following corollary.
+In the limit of the magnitude of one of the noise variables going to zero, the reconstruction of the sources $Z$ attained through the corresponding view is exact up to the component-wise invertible functions, as stated in the following corollary.
 
 \medskip
 \begin{corollary}
@@ -626,6 +698,11 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 	where $p$ denotes convergence in probability.
 \end{corollary}
 
+\begin{proof}[Sketch; see Appendix \ref{appendix:thm2} for full proof.]
+The key idea of the proof is to rewrite ${e}(h_1^{(k)}(X_1))$ as $\tilde{e} \circ g_1(Z, N_1^{(k)})$ for some $\tilde{e} \in \mathcal{E}$, and to Taylor expand $g_1(Z, N_1^{(k)})$ in its second argument.
+Together with the assumptions on $g_1$, it is proved that the random variable converges to $0$ in mean, which implies that it converges to $0$ in probability.
+\end{proof}
+
 %\begin{corollary}
 %	Let $\bm{n}_1^{(k)} = \frac{1}{k} \cdot  \Tilde{\bm{n}}$ for $k \in \NN$, where $\Tilde{\bm{n}}\in\mathbb{R}^D$ is a fixed random variable, and $\bm{n}_2$ be a random variable that does not depend on $k$.
 %	Let $\bm{h}_1^{(k)}, \bm{h}_2^{(k)}$ be the output of the algorithm specified by Theorem \ref{thm:two-noisy-views} with noise variables $\bm{n}_1^{(k)}$ and $\bm{n}_2$.
@@ -641,7 +718,6 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 %	\]
 %\end{corollary}
 
-The proof can be found in Appendix \ref{appendix:thm2}.
 Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $Z$ can be recovered exactly.
 Condition $1$ upper bounds the influence of $\bm{n}$ on the corruption: one cannot not hope to recover $Z$ if $g_1(Z, N_1)$ contains too little signal.
 This is satisfied, for example, by additive noise.
@@ -658,8 +734,17 @@ The intuition is that the less noise there is, the more information each observa
 
 \begin{figure}[t!]
 	\centering
-	\includegraphics[scale=0.3]{img_pdf/generalized_hsr_many.pdf}
-	\caption{Setting with $M$ corrupted views of the sources.}
+		\begin{tikzpicture}
+		\node[icavar] (Z) at(0,0) {$Z$};
+		\node[icavar] (Ni) at(0,1.7) {$N_i$};
+		\node[icavarobs] (Xi) at(3,1.7) {$X_i$};
+		\draw[->] (Z) -- (Xi);
+		\draw[->] (Ni) -- (Xi);
+		\draw[solid] (-.75,2.45) -- (3.75,2.45) -- (3.75,.85) -- (-.75,.85) -- (-.75,2.45);
+		\node[](text) at(0.5,1.05) {\scriptsize $i=1,\ldots,M$};
+		\end{tikzpicture}	
+%	\includegraphics[scale=0.3]{img_pdf/generalized_hsr_many.pdf}
+	\caption{The setting of Section \ref{sec:multiple} with $M$ corrupted views of the sources.}
 	\label{fig:generalized_hsr_many}
 \end{figure}
 
@@ -668,7 +753,7 @@ This section considers the multi-view setting, where $M$ distinct noisy views of
 X_{i}={f}_{i}({g}_{i}(Z,N_{i})),\,\,\,i=1, \ldots, M\,, \label{eq:multi}\\
 \end{equation*}
 and the noise variables $N_{i}$ are mutually independent, as represented in Figure \ref{fig:generalized_hsr_many}.
-Since each view provides additional information about $Z$, the question naturally arises: in the limit as $M \to \infty$, is it possible to reconstruct $\bm{s}$ exactly?
+Since each view provides additional information about $Z$, the question naturally arises: in the limit as $M \to \infty$, is it possible to reconstruct $Z$ exactly?
 
 
 By applying Theorem \ref{thm:two-noisy-views} to the pair $({X}_1,X_i)$ it is possible to recover  $({g}_1(Z,N_1),{g}_i(Z,N_i))$ such that the components are aligned, but up to different component-wise invertible functions ${k}_1$ and ${k}_i$.
@@ -727,7 +812,7 @@ Subject to mild conditions, the dependence of these quantities on most or all of
 \end{lemma}
 \begin{proof}[Sketch; see Appendix \ref{appendix:last-lemma} for full proof]
 The result follows by applying Kolmogorov's strong law to $\Omega_{e}^M(Z, N)$ for each value of $Z$.
-Kolmogorov's strong law says that the average of a sequence of independent random variables converges to the expectation of the average, provided that the variances of the random variables do not grow too quickly. 
+Kolmogorov's strong law states that the average of a sequence of independent, but not necessarily identically distributed, random variables converges to the expectation of the average, provided that the variances of the random variables do not grow too quickly. 
 This is ensured by the assumption on the $V_{e_i}$.
 \end{proof}
 
@@ -737,8 +822,10 @@ Given some choice of ${e}$, the quantities $\Omega_{e}(Z)$ and $R_{e, i}(Z, N_i)
 As discussed earlier, if it were possible to identify ${e}_i={k}_i^{-1}$, then it would be the case that $\Omega_{e}(Z) = Z$ and $R_{e, i}(Z, N_i) = N_i$, and thus $\Omega_{e}$ and $R_{e, i}$ would satisfy the same independences and other statistical properties as $Z$ and $N_i$ respectively.
 Can these properties be used as criteria to identify good choices of ${e}_i$?
 
-The following theorem gives a set of sufficient conditions under which each ${e}_i$ inverts ${k}_i$ up to some affine ambiguity which is the same for every $i$.
-Under these conditions, the properties discussed in the previous paragraph are sufficient to identify whether a putative choice for $e$ indeed results in recovery of the sources.
+The following theorem provides sufficient conditions which, if satisfied by a putative choice for the $e_i$, implies that they invert the $k_i$ up to some affine ambiguity for all $i$. 
+
+%The following theorem gives a set of sufficient conditions under which each ${e}_i$ inverts ${k}_i$ up to some affine ambiguity which is the same for every $i$.
+%Under these conditions, the properties discussed in the previous paragraph are sufficient to identify whether a putative choice for $e$ indeed results in recovery of the sources.
 
 \medskip
 
@@ -780,9 +867,14 @@ In contrast to previous results in Sections \ref{sec:onenoisless} and \ref{sec:c
 
 
 
-\section{Discussion about assumptions}
+\section{Discussion about assumptions}\label{sec:ica-assumptions}
 
-This section discusses in further detail the Sufficiently Distinct Views assumption and the necessity for source-level noise for at least one of the views.
+This section discusses in further detail the Sufficiently Distinct Views (SDV) assumption and the necessity for source-level noise for at least one of the views.
+
+Typically, noise is a nuisance variable that would preferably not exist.
+In the setting considered here however, the presence of some source-level noise is necessary, since without this the classification based approach cannot be applied.
+Furthermore, the SDV assumption is ultimately an assumption about how the corrupted sources corresponding to each view are related, and is by implication an assumption about the source corruptions themselves.
+
 
 
 \subsection{The Sufficiently Distinct Views assumption}
@@ -793,11 +885,14 @@ To provide intuition, this section gives examples of cases in which the SDV assu
 
 The SDV assumption is closely related to the \emph{Assumption of Variability} of \cite{hyvarinen19a}, an analogous assumption that occurs in the context a different graphical model from the multi-view setting considered here; see that paper for further details.
 
+
+
+
 %We give the following two examples to provide intuition about the Sufficiently Distinct Views (SDV) assumption - one regarding a case in which it does not hold, and another one in which it does.
 
 \subsubsection{An example violating SDV}
 
-Suppose that conditional distribution is Gaussian, so that
+Suppose that the conditional distribution of one corrupted source given the other is Gaussian, so that
 
 \begin{equation}
 \log p(z_1|z_2) =  -\sum_i (z_{1i} - z_{2i})^2/(2\sigma_i^2) + C \,, \label{eq:unsatisfied}
@@ -836,7 +931,7 @@ The columns of this matrix are linearly independent for almost all values of $z_
 
 Noise on the sources is required for at least one of the views. 
 This is a consequence of training a classifier as a way retrieve the the unmixed signals.
-The reasons for this are explained briefly in this section.\footnote{\todo{Rewrite if density ratio estimation is covered in the literature review}}
+The reasons for this are explained briefly here.\footnote{\todo{Rewrite if density ratio estimation is covered in the literature review}}
 
 
 Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
@@ -853,7 +948,7 @@ D(x) &= \frac{1}{1 + p_1(x)/p_0(x)}\\
 &= \frac{1}{1 + \exp ( - \log (p_0(x)/p_1(x))) } \label{eq:density-ratio-classification}
 \end{align}
 
-Recall that in the setting we consider, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $p(x_1, x_2)$ (\emph{class $0$}) or the product of marginals $p(x_1) p(x_2)$ (\emph{class $1$}).
+Recall that in the setting considered in this work, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $p(x_1, x_2)$ (\emph{class $0$}) or the product of marginals $p(x_1) p(x_2)$ (\emph{class $1$}).
 $r(x_1, x_2)$ is trained so that $\frac{1}{1 + \exp(-r(x_1, x_2))}$ estimates the posterior probability of $(x_1, x_2)$ belonging to class 0.
 By comparing to Equation \ref{eq:density-ratio-classification}, it can be seen that
 %
@@ -864,13 +959,11 @@ r(x_1, x_2) &= \log \left( p(x_1, x_2) / p(x_1) p(x_2)\right) \\
 \end{align*}
 %
 If the variables $x_1$ and $x_2$ are deterministically related, this log-ratio is everywhere either $0$ or $\infty$.
-
 %In order for the classification trick of contrastive learning to be useful, the variables $x_1$ and $x_2$ cannot be deterministically related.
 %If this is the case, the log-ratio is everywhere either $0$ or $\infty$ and hence the learned features are not useful.
-
 To see why this is the case, suppose that $x_1$, and $x_2$ are each $N$-dimensional vectors.
 If they are deterministically related, $p(x_1, x_2)$ puts mass on an $N$-dimensional submanifold of a $2N$-dimensional space.
-On the other hand, $p(x_1)p(x_2)$ will put mass on a $2N$-dim manifold since it is the product of two distributions each of which are N-dimensional.
+On the other hand, $p(x_1)p(x_2)$ will put mass on a $2N$-dimensional manifold since it is the product of two distributions each of which are N-dimensional.
 
 In this case, the distributions $p(x_1, x_2)$ and $p(x_1)p(x_2)$ are therefore not absolutely continuous with respect to one another and thus the log-ratio is ill-defined: $p(x_1, x_2)/p(x_1)p(x_2) = \infty$ at any point $(x_1,x_2)$ at which $p(x_1, x_2)$ puts mass and zero at points where $p(x_1)p(x_2)$ puts mass and $p(x_1,x_2)$ does not.
 
@@ -881,39 +974,50 @@ For this technical reason, the corruptions are necessary.
 
 \section{Conclusion}
 \label{sec:on_suffistv}
-We presented identifiability results in a novel setting by extending the formalism of nonlinear ICA.
-We have investigated different scenarios of multi-view latent variable models and provided theoretical proofs on the possibility of inverting the mixing function and recovering the sources in each case.
-Our results thus extend the scarce literature on identifiability for nonlinear ICA models.
 
-In the classical noiseless ICA setting, the deterministic relationship between the sources and observations means that inverting the mixing function and recovering the sources are equivalent.
-In contrast, we consider views of corrupted versions of the common sources, resulting in the decoupling of the demixing and retrieval of the sources.
-Remarkably, Theorem \ref{thm:lastthm} points towards the possibility of simultaneously solving the two problems in the limit of infinitely many views.
-
-Classical nonlinear ICA is provably non-identifiable because a single view is not sufficiently informative to resolve non-trivial ambiguities when recovering the sources.
-While many papers in the ICA literature have explored placing restrictions either on the source distribution or on the form of the mixing to resolve these ambiguities, in this paper we consider exploiting additional views to constrain the inverse problem.
-Clearly, if a second view is identical to the first, then nothing is gained by its observation.
-Hence, in order for the second view to assist in resolving ambiguity, it must be sufficiently different from the first.
-This is the intuition behind the technical assumption of \emph{sufficiently distinct views}.
+The main contribution of this chapter was to present identifiability results in a novel multi-view nonlinear ICA setting.
+These results are an important contribution to the field since they extend the scarce literature on identifiability results for nonlinear ICA models.
 
 
-Typically, noise is a nuisance variable that would be preferably non-existent.
-In our setting, however, the noise variables acting on the sources are a crucial component, without which the contrastive learning approach could not be applied.
-Furthermore, the assumption of sufficiently distinct views is ultimately an assumption about the complexity of the joint distribution of the (corrupted) sources corresponding to each view.
-Without the noise variables the sufficiently distinct views assumption could not hold.
+Theorems \ref{thm:noiseless1} and \ref{thm:demixing} state that in contrast to the single-view setting, the two-view setting is identifiable when the mixing functions are arbitrary smooth, invertible nonlinear functions with smooth inverse, provided that one of the views is corrupted at the source level by sufficiently `complex' noise so that the Sufficiently Distinct Views assumption is satisfied. 
+
+Identifiability results are also obtained in the case of corruptions on both views. Theorem \ref{thm:two-noisy-views} states that the sources can be recovered up to the corruptions, and Corollary \ref{crl:lownoise} demonstrates that in limit as one of the corruptions becomes small, the uncorrupted sources can be recovered.
+
+Finally, initial results are presented in Theorem \ref{thm:lastthm} providing conditions under which the uncorrupted sources are identifiable when a large number of views are available, even if these views are all corrupted by source noise.
 
 
-Our setting is relevant in a number of practical real-world applications, namely in all datasets that include multiple distinct measurements of related phenomena.
+%We presented identifiability results in a novel setting by extending the formalism of nonlinear ICA.
+%We have investigated different scenarios of multi-view latent variable models and provided theoretical proofs on the possibility of inverting the mixing function and recovering the sources in each case.
+%Our results thus extend the scarce literature on identifiability for nonlinear ICA models.
+
+%In the classical noiseless ICA setting, the deterministic relationship between the sources and observations means that inverting the mixing function and recovering the sources are equivalent.
+%In contrast, we consider views of corrupted versions of the common sources, resulting in the decoupling of the demixing and retrieval of the sources.
+%Remarkably, Theorem \ref{thm:lastthm} points towards the possibility of simultaneously solving the two problems in the limit of infinitely many views.
+%
+%Classical nonlinear ICA is provably non-identifiable because a single view is not sufficiently informative to resolve non-trivial ambiguities when recovering the sources.
+%While many papers in the ICA literature have explored placing restrictions either on the source distribution or on the form of the mixing to resolve these ambiguities, in this paper we consider exploiting additional views to constrain the inverse problem.
+%Clearly, if a second view is identical to the first, then nothing is gained by its observation.
+%Hence, in order for the second view to assist in resolving ambiguity, it must be sufficiently different from the first.
+%This is the intuition behind the technical assumption of \emph{sufficiently distinct views}.
+
+
+
+
+The multi-view setting is relevant in a number of real-world applications, namely in all datasets that include multiple distinct measurements of related phenomena.
 In practice, it may be better to think of the noise variables rather as intrinsic sources of variability specific to each view.
 In most practical applications this would probably not be a significant limitation due to the prevalence of stochasticity in real-world systems.
 
-An exemplary application of our method can be found in the field of neuroimaging.
-Consider a study involving a cohort of subjects (perceivers), measuring their response to the presentation of the same stimulus.
-One of the key problems in the field is how to extract a shared response from all subjects despite high inter-subject variability and complex nonlinear mappings between latent source and observation~\cite{chen2015reduced, haxby2011common}.
-Our results provide principled ways to extract and decompose the components of the shared response.
-In particular, the setting described in our model is suited to account for the high variability of the responses throughout the cohort, since the measurement corresponding to each subject is given by a combination of individual variability and shared response.
+A specific example application of the work presented here can be found in the field of neuroimaging.
+Consider a study involving a cohort of subjects whose response to the presentation of the same stimulus is measured.
+One of the key problems in this field is how to extract a shared response from all subjects despite high inter-subject variability and complex nonlinear mappings between latent source and observation~\citep{haxby2011common, chen2015reduced}.
+The results presented here provide principled approaches to the extraction and decomposition of the components of the shared response, by considering the measurements to be different views of an underlying shared response that is corrupted by inter-subject variability.
 
-Looking to the future, we note that Theorem \ref{thm:lastthm} builds on the setting of Theorem \ref{thm:two-noisy-views} which only makes use of pairwise information from the observations.
-A natural extension of this work should investigate algorithms that explicitly make use of $N>2$ views, which we conjecture would allow relaxation of the additivity assumption on the corruptions.
+
+%In particular, the setting described in our model is suited to account for the high variability of the responses throughout the cohort, since the measurement corresponding to each subject is given by a combination of individual variability and shared response.
+
+There are further directions to explore.
+Observe that Theorem \ref{thm:lastthm} builds on the setting of Theorem \ref{thm:two-noisy-views}, which only makes use of pairwise information from the observations.
+A natural extension of this work would be to investigate algorithms that explicitly make use of $N>2$ views, which may allow relaxation of the additivity assumption on the corruptions.
 Furthermore, Theorem \ref{thm:lastthm} provides results that only hold for the asymptotic limit as the number of views becomes large.
 Other extensions to this result could include analysis of the case of finitely many views.
 

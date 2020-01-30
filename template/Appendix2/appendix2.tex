@@ -1,174 +1,241 @@
 %!TEX root = ../thesis.tex
 % ******************************* Thesis Appendix B ********************************
 
-\chapter{Proofs for ICA chapter}
+\chapter{Additional Materials for Chapter \ref{chapter:ica}}
 
-\section{Proof of Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1}}
+\section{Proofs for one noiseless view results (Section \ref{sec:onenoisless})}
+%\section{Proof of Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1}}
 \label{appendix:thm_noiseless}
 
 \subsection{Proof of Theorem \ref{thm:noiseless1}}\label{appendix:proof-thm1}
-This proof is mainly inspired by the techniques employed by \cite{hyvarinen19a}.
+
+\begin{reptheorem}{thm:noiseless1}
+	The difference between the log joint probability and log product of marginals of the observed variables in the model given in Equations \ref{eq:indep}-\ref{eq:sem2_1} admits the following factorisation:
+	\begin{align}
+	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
+	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
+	&= \left(\sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
+	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
+	&= \sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
+	\end{align}
+	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
+	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel).
+	Suppose that
+	\begin{enumerate}
+		\item $\alpha$ satisfies the \emph{Sufficiently Distinct Views} assumption (see after this theorem).
+		\item A classifier is trained to discriminate between
+		\begin{align*}
+		(X_{1},X_{2}) \text{ vs. } (X_{1},X_{2}^{*})\,,
+		\end{align*}
+		where $({X}_{1},{X}_{2})$ correspond to the same realisation of $Z$ and $({X}_{1},{X}_{2}^{*})$ correspond to different realisations of ${Z}$.
+		\item The classifier minimises the logistic regression loss, and is constrained to use a regression function of the form
+		\begin{equation*}
+		r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2})
+		\end{equation*}
+		where ${h} =(h_{1}, \ldots, h_{n})$  is invertible, smooth and has smooth inverse.
+	\end{enumerate}
+	
+	Then, in the limit of infinite data and with universal approximation capacity, $h$ inverts ${f}_1$ in the sense that the $h_{i}(X_1)$ recover the independent components of $Z$ up to component-wise invertible transformations.
+\end{reptheorem}
+
+This proof is inspired by the techniques employed by \cite{hyvarinen19a}.
 
 \begin{proof}
-	We have to
-	show that, upon convergence, $h_{i}(\bm{x}_{1})$ are s.t.
-	\begin{align*}
-	h_{i}(\bm{x}_{1})\independent h_{j}(\bm{x}_{1}),\forall i\neq j
-	\end{align*}
+
+The goal is to show that for the optimal classifier, $h_i(X_1)$ depends on exactly one component of $Z$. 
+
+%	We have to
+%	show that, upon convergence, $h_{i}(\bm{x}_{1})$ are s.t.
+%	\begin{align*}
+%	h_{i}(\bm{x}_{1})\independent h_{j}(\bm{x}_{1}),\forall i\neq j
+%	\end{align*}
 	
-	We start by writing the difference in log-densities of the two classes:
+We begin by writing the difference in log-densities of the two classes
 	\begin{align*}
-	\sum_{i}\psi_{i}(h_{i}(\bm{x}_{1}),\bm{x}_{2})  &=\sum_{i}\alpha_{i}(\bm{f}_{1,i}^{-1}(\bm{x}_{1}), \bm{f}_{2,i}^{-1}(\bm{x}_{2}))+\\
-	&-\sum_{i}\delta_{i}( \bm{f}_{2,i}^{-1}(\bm{x}_{2}))
+	\sum_{i}\psi_{i}(h_{i}(x_{1}),x_{2})  &=\sum_{i}\alpha_{i}({f}_{1,i}^{-1}({x}_{1}), {f}_{2,i}^{-1}({x}_{2})) -\sum_{i}\delta_{i}( {f}_{2,i}^{-1}({x}_{2})).
 	\end{align*}
-	We now make the change of variables
+Making the change of variables
 	\begin{align*}
-	\bm{y} & =\bm{h}(\bm{x}_{1})\\
-	\bm{v}(\bm{y}) & =\bm{f}_{1}^{-1}(\bm{h}^{-1}(\bm{y}))\\
-	\bm{t} & = \bm{f}_{2}^{-1}(\bm{x}_{2}))
+	{y} & ={h}({x}_{1}),\\
+	{v}({y}) & ={f}_{1}^{-1}({h}^{-1}({y})),\\
+	{t} & = {f}_{2}^{-1}({x}_{2})),
 	\end{align*}
-	and rewrite the first equation in the following form:
+means that the first equation can be rewritten in the following form:
 	\begin{align}
-	\sum_{i}\psi_{i}(y_{i},\bm{x}_{2})=&\sum_{i}\alpha_{i}(v_{i}(\bm{y}), t_{i})\\
-	-&\sum_{i}\delta_{i}( t_{i})
+	\sum_{i}\psi_{i}(y_{i},{x}_{2})=&\sum_{i}\alpha_{i}(v_{i}({y}), t_{i}) -\sum_{i}\delta_{i}( t_{i}). \label{eqn:ica-appendix:1}
 	\end{align}
 	
-	We take derivatives with respect to $y_j$, $y_{j'}$, $j \neq j'$,  of the LHS and RHS of equation \ref{eq:logistic}. Adopting the conventions in \ref{eq:convention1} and \ref{eq:convention2} and
-	\begin{align}
-	v^j_i(\bm{y})&=\partial v_i(\bm{y})/\partial y_j\\
-	v^{jj'}_i(\bm{y})&= \partial^2 v_i(\bm{y})/\partial y_j \partial y_{j'}\,,
-	\end{align}
+Take derivatives with respect to $y_j$, $y_{j'}$, $j \neq j'$,  of each side of this equation. 
+Adopting the notation from the SDV assumption definition
+	\begin{align*}
+	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial y_i,\\
+	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2, \\
+	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
+	\end{align*}
+ and furthermore defining 
+	\begin{align*}
+	v^j_i({y})&=\partial v_i({y})/\partial y_j\\
+	v^{jj'}_i({y})&= \partial^2 v_i({y})/\partial y_j \partial y_{j'}\,,
+	\end{align*}
 	we have
 	\begin{align*}
-	&\sum_{i} \alpha''_{i}(v_{i}(\bm{y}), t_{i})v^j_i(\bm{y})v^{j'}_i(\bm{y}) \\
-	&+ \alpha'_{i}(v_{i}(\bm{y}),  t_{i})v^{jj'}(\bm{y})=0\,,
+	0 = \sum_{i} \alpha''_{i}(v_{i}({y}), t_{i})v^j_i({y})v^{j'}_i({y}) + \alpha'_{i}(v_{i}({y}),  t_{i})v^{jj'}({y}).
 	\end{align*}
-	where taking derivative w.r.t. $y_j$ and $y_j'$ for $j \neq j'$ makes LHS equal to zero, since the LHS has functions which depend only one $y_i$ each.
-	If we now rearrange our variables by defining vectors $\bm{a}_i(\bm{y})$ collecting all entries $v_i^j(\bm{y})v_i^{j'}(\bm{y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, and vectors $\bm{b}_i(\bm{y})$ with the variables $v_i^j(\bm{y})v_i^{j'}(\bm{y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, the above equality can be rewritten as
+	The left-hand side of this equation is $0$ because each term $\psi_i$ in Equation \ref{eqn:ica-appendix:1} depends on exactly one $y_i$, and partial derivatives are taken with respect to two different $y_i$ and $y_j$.
+
+	If we now rearrange our variables by defining vectors ${a}_i({y})$ collecting all entries $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, and vectors ${b}_i({y})$ with the variables $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, the above equality can be rewritten as
 	\begin{align*}
-	&\sum_{i} \alpha''_{i}(v_{i}(\bm{y}), t_{i})\bm{a}_i(\bm{y}) \\
-	&+ \alpha'_{i}(v_{i}(\bm{y}),  t_{i}))\bm{b}_i(\bm{y})=0\,.
+	\sum_{i} \alpha''_{i}(v_{i}({y}), t_{i}){a}_i({y}) + \alpha'_{i}(v_{i}({y}),  t_{i})){b}_i({y})=0\,.
 	\end{align*}
-	The above expression can be recast in matrix form,
-	\[
-	\bm{M}(\bm{y})\bm{w}(\bm{y}, \bm{t})=0\,,
-	\]
-	where $\bm{M}(\bm{y}) = (\bm{a}_1(\bm{y}), \ldots,  \bm{a}_n(\bm{y}), \bm{b}_1(\bm{y}), \ldots, \bm{b}_n(\bm{y})) $ and $\bm{w}(\bm{y}, \bm{t}) = (\alpha''_{1}, \ldots, \alpha''_{n}, \alpha'_{1}, \ldots,\alpha'_{n})$. $\bm{M}(\bm{y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and $\bm{w}(\bm{y}, \bm{t})$ is a $2n$ dimensional vector.
 	
-	To show that $\bm{M}(\bm{y})$ is equal to zero, we invoke the SDV assumption.
-	This implies the existence of $2n$ linearly independent $\bm{w}(\bm{y}, \bm{t}_j)$.
+This can in turn be rewritten in matrix form,
+	\[
+	{M}({y}){w}({y}, {t})=0\,,
+	\]
+	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_n({y}), {b}_1({y}), \ldots, {b}_n({y})) $ and ${w}({y}, {t}) = (\alpha''_{1}, \ldots, \alpha''_{n}, \alpha'_{1}, \ldots,\alpha'_{n})$. ${M}({y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and ${w}({y}, {t})$ is a $2n$ dimensional vector.
+	
+	To show that ${M}({y})$ is equal to zero, we invoke the SDV assumption.
+	This implies the existence of $2n$ linearly independent ${w}({y}, {t}_j)$.
 	It follows that
 	
 	\[
-	\bm{M}(\bm{y})[\bm{w}(\bm{y}, \bm{t}_1), \ldots, \bm{w}(\bm{y}, \bm{t}_{2n})]=0\,,
+	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2n})]=0\,,
 	\]
 	
-	and hence $\bm{M}(\bm{y})$ is zero by elementary linear algebraic results.
-	It follows that $v_i^j(\bm{y})\not=0$ for at most one value of $j$, since otherwise the product of two non-zero terms would appear in one of the entries of $\bm{M}(\bm{y})$, thus rendering it non-zero.
+	and hence ${M}({y})$ is zero by elementary linear algebraic results.
+	It follows that $v_i^j({y})\not=0$ for at most one value of $j$, since otherwise the product of two non-zero terms would appear in one of the entries of ${M}({y})$, thus rendering it non-zero.
 	Thus $v_i$ is a function only of one $y_j$.
 	
-	Observe that $\bm{v}(\bm{y}) = \bm{s}$.
-	We have just proven that $v_i(y_{\pi(i)}) = s_i$.
-	Since $v_i$ is invertible, it follows that $h_{\pi(i)}(\bm{x}_{1}) = y_{\pi(i)} = v_i^{-1}(s_i)$ and hence the components of $\bm{h}(\bm{x}_{1})$ recover the components of $\bm{s}$ up to the invertible component-wise ambiguity given by $\bm{v}$, and the permutation ambiguity.
+	Observe that ${v}({y}) = {z}$.
+	We have just proven that $v_i(y_{\pi(i)}) = z_i$ where $\pi$ is some permutation.
+	Since $v_i$ is invertible, it follows that $h_{\pi(i)}({x}_{1}) = y_{\pi(i)} = v_i^{-1}(z_i)$ and hence the components of ${h}({x}_{1})$ recover the components of ${z}$ up to the invertible component-wise ambiguity given by ${v}$, and the permutation ambiguity.
 	
 \end{proof}
 
 \subsection{Proof of Corollary \ref{crl:noiseless1}}\label{appendix:proof-cor2}
+
+\begin{repcorollary}{crl:noiseless1}
+	Consider the setting of Theorem \ref{thm:noiseless1} with the alternative factorisation of the log joint probability
+	\begin{align}
+	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
+	&= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber \\
+	&= \sum_i \gamma_i(z_i, g_i(z_i, n_i)) - \sum_i \beta_i(z_i)) \label{eq:logdens_noiesless_2}\,.
+	\end{align}
+	Suppose that ${\gamma}$ satisfies the SDV assumption.
+	Replacing the regression function with
+	\begin{equation*}
+	r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}({x}_{1}, h_{i}({x}_{2}))
+	\end{equation*}
+	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({X}_2)$ recover the independent components of the ${g}({Z}, {N})$ up  to component-wise invertible transformations.
+\end{repcorollary}
+
 \begin{proof}
-	This follows exactly by repeating the proof of Theorem \ref{thm:noiseless1} where the roles of $\bm{x}_1$ and $\bm{x}_2$ are exchanged and the regression function in the statement of the corollary is used.
+	This follows exactly by repeating the proof of Theorem \ref{thm:noiseless1} where the roles of $x_1$ and ${x}_2$ are exchanged and the regression function in the statement of the corollary is used.
 \end{proof}
 
-\section{Proof of Theorems \ref{thm:demixing} AND \ref{thm:two-noisy-views}}
+
+\section{Proofs for two noisy view results (Section \ref{sec:constrained})}
+
+\subsection{Proof of Theorems \ref{thm:demixing} and \ref{thm:two-noisy-views}}
 \label{appendix:thm1}
 
-Theorem \ref{thm:demixing} is a special case of Theorem \ref{thm:two-noisy-views} by considering the case $\bm{g}_1(\bm{s}, \bm{n}_1) = \bm{s}$.
+Theorem \ref{thm:demixing} is a special case of Theorem \ref{thm:two-noisy-views} by considering the case $\bm{g}_1(\bm{z}, \bm{n}_1) = \bm{z}$.
 We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 
+\medskip
+
+\begin{reptheorem}{thm:two-noisy-views}
+	Suppose that ${\eta}$ and ${\lambda}$ satisfy the SDV assumption.
+	The algorithm described in Theorem \ref{thm:noiseless1} with regression function specified in Equation \ref{eqn:double-regression-fn} results in ${h}_1$ and ${h}_2$ inverting ${f}_1$ and ${f}_2$ in the sense that the $h_{1,i}({X}_1)$ and $h_{2,i}({X}_2)$ recover the independent components of ${g}_1({Z}, {N}_1)$ and ${g}_2({Z}, {N}_2)$ up to two different component-wise invertible transformations. Furthermore, the two representations are aligned, i.e. for $i\not=j$,
+	\begin{equation*}
+	h_{1,i}({X}_{1})\independent h_{2,j}({X}_{2}).
+	\end{equation*}
+\end{reptheorem}
+
+
 \begin{proof}
-	We have to
-	show that, upon convergence, $h_{i}(\bm{x}_{1})$ and $k_{i}(\bm{x}_{2})$
-	are such that
+This proof is similar to that of Theorem \ref{thm:noiseless1}.
+
+The goal is to show that for the optimal classifier, $h_{1i}(X_1)$ and $h_{2i}(X_2)$ each depend on exactly one component of $Z$. 
+Moreover, in order to show that the representations are aligned, we will show that 
 	\begin{align}
-	h_{1,i}(\bm{x}_{1})\independent h_{1,j}(\bm{x}_{1}),\forall i\neq j \label{eq:inds_twov_1} \\
-	h_{2,i}(\bm{x}_{2})\independent h_{2,j}(\bm{x}_{2}),\forall i\neq j \label{eq:inds_twov_2}\\
-	h_{1,i}(\bm{x}_{1})\independent h_{2,j}(\bm{x}_{2}),\forall i\neq j. \label{eq:inds_twov_3}
+	h_{1,i}({x}_{1})\independent h_{2,j}({x}_{2}),\forall i\neq j. \label{eq:inds_twov_3}
 	\end{align}
 	
 	We start by exploiting Equations \ref{eq:noisylogdens_1} and \ref{eq:noisylogdens_2} to write the difference in log-densities of the two classes
 	\begin{align}
-	&\sum_{i}\psi_{i}(h_{1,i}(\bm{x}_{1}),h_{2,i}(\bm{x}_{2}))\nonumber\\
-	=&\sum_{i}\eta_{i}(\bm{f}_{1,i}^{-1}(\bm{x}_{1}), \bm{f}_{2,i}^{-1}(\bm{x}_{2})) - \sum_{i}\theta_{i}(\bm{f}_{1,i}^{-1}(\bm{x}_{1})) \label{eq:first_factorization}\\
-	=&\sum_{i}\lambda_{i}(\bm{f}_{2,i}^{-1}(\bm{x}_{2}), \bm{f}_{1,i}^{-1}(\bm{x}_{1})) - \sum_{i}\mu_{i}(\bm{f}_{2,i}^{-1}(\bm{x}_{2}))\label{eq:2nd_factorization}
+	\sum_{i}\psi_{i}(h_{1,i}({x}_{1}),h_{2,i}({x}_{2}))
+	=&\sum_{i}\eta_{i}({f}_{1,i}^{-1}({x}_{1}), {f}_{2,i}^{-1}({x}_{2})) - \sum_{i}\theta_{i}({f}_{1,i}^{-1}({x}_{1})) \label{eq:first_factorization}\\
+	=&\sum_{i}\lambda_{i}({f}_{2,i}^{-1}({x}_{2}), {f}_{1,i}^{-1}({x}_{1})) - \sum_{i}\mu_{i}({f}_{2,i}^{-1}({x}_{2}))\label{eq:2nd_factorization}
 	\end{align}
-	We now make the change of variables
+	and make the change of variables
 	\begin{align*}
-	\bm{y} & =\bm{h}_1(\bm{x}_{1})\\
-	\bm{t} & =\bm{h}_2(\bm{x}_{2})\\
-	\bm{v}(\bm{y}) & =\bm{f}_{1}^{-1}(\bm{h}_1^{-1}(\bm{y}))\\
-	\bm{u}(\bm{t}) & =\bm{f}_{2}^{-1}(\bm{h}_2^{-1}(\bm{t}))
+	{y} & ={h}_1({x}_{1}),\\
+	{t} & ={h}_2({x}_{2}),\\
+	{v}({y}) & ={f}_{1}^{-1}({h}_1^{-1}({y})),\\
+	{u}({t}) & ={f}_{2}^{-1}({h}_2^{-1}({t})).
 	\end{align*}
-	and rewrite equation \ref{eq:first_factorization} in the following form:
+	Equation \ref{eq:first_factorization} can thus be rewritten as
 	\begin{align}
-	&\sum_{i}\psi_{i}(y_{i},t_{i}) \nonumber \\
-	&=\sum_{i}\eta_{i}(v_i(\bm{y}), u_i(\bm{t}))
-	-\sum_{i}\theta_{i}(v_i(\bm{y}))\label{eq:logistic}
+	\sum_{i}\psi_{i}(y_{i},t_{i}) 
+	&=\sum_{i}\eta_{i}(v_i({y}), u_i({t}))
+	-\sum_{i}\theta_{i}(v_i({y}))\label{eq:logistic}
 	\end{align}
-	We first want to prove the condition in Equation \ref{eq:inds_twov_1}.
-	We will show this is true by proving that
+noiseless1
+	To show that $h_{1i}(X_1)$ depends on exactly one component of $Z$, we will show that
 	\begin{equation}
 	\label{eq:v_onev}
-	v_{i}(\bm{y})  \equiv v_{i}(y_{\pi(i)})\\
+	v_{i}({y})  = v_{i}(y_{\pi(i)})\\
 	\end{equation}
-	for some permutation of the indices $\pi$ with respect to the indexing of the sources $\bm{s} = (s_1, \ldots, s_D)$.
+	for some permutation of the indices $\pi$ with respect to the indexing of the sources ${z} = (s_1, \ldots, s_D)$.
 	
-	We take derivatives with respect to $y_j$, $y_{j'}$, $j \neq j'$,  of the LHS and RHS of equation \ref{eq:logistic}, yielding
+	Taking derivatives with respect to $y_j$, $y_{j'}$, $j \neq j'$,  of equation \ref{eq:logistic} yields
 	\begin{align*}
-	&\sum_{i} \eta''_{i}(v_{i}(\bm{y}),u_{i}(\bm{t}))v^j_i(\bm{y})v^{j'}_i(\bm{y}) \\
-	&\ + \sum_{i}\eta'_{i}(v_{i}(\bm{y}), u_{i}(\bm{t}))v^{jj'}(\bm{y})=0
+	0 = \sum_{i} \eta''_{i}(v_{i}({y}),u_{i}({t}))v^j_i({y})v^{j'}_i({y}) + \sum_{i}\eta'_{i}(v_{i}({y}), u_{i}({t}))v^{jj'}({y}).
 	\end{align*}
-	If we now rearrange our variables by defining vectors $\bm{a}_i(\bm{y})$ collecting all entries $v_i^j(\bm{y})v_i^{j'}(\bm{y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, and vectors $\bm{b}_i(\bm{y})$ with the variables $v_i^j(\bm{y})v_i^{j'}(\bm{y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, the above equality can be rewritten as
+	Define vectors ${a}_i({y})$ collecting all entries $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, and vectors ${b}_i({y})$ with the variables $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, the above equality can be rewritten as
 	
 	\begin{align*}
-	&\sum_{i} \eta''_{i}(v_{i}(\bm{y}),u_{i}(\bm{t}))\bm{a}_i(\bm{y}) \\
-	&+ \eta'_{i}(v_{i}(\bm{y}), u_{i}(\bm{t}))\bm{b}_i(\bm{y})=0\,.
+	0 = \sum_{i} \eta''_{i}(v_{i}({y}),u_{i}({t})){a}_i({y}) + \eta'_{i}(v_{i}({y}), u_{i}({t})){b}_i({y}).
 	\end{align*}
 	
-	Again following \cite{hyvarinen19a}, we recast the above formula in matrix form,
+	As in the proof of Theorem \ref{thm:noiseless1}, this can be rewritten in matrix form as
 	
 	\begin{equation}
 	\label{eq:matrixmult}
-	\bm{M}(\bm{y})\bm{w}(\bm{y}, \bm{t})=0\,,
+	{M}({y}){w}({y}, {t})=0\,,
 	\end{equation}
 	
-	where $\bm{M}(\bm{y}) = (\bm{a}_1(\bm{y}), \ldots,  \bm{a}_n(\bm{y}), \bm{b}_1(\bm{y}), \ldots, \bm{b}_n(\bm{y})) $ and $\bm{w}(\bm{y}, \bm{t}) = (\eta''_{1}, \ldots, \eta''_{n}, \eta'_{1}, \ldots,\eta'_{n})$. $\bm{M}(\bm{y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and $\bm{w}(\bm{y}, \bm{t})$ is a $2n$ dimensional vector.
+	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_n({y}), {b}_1({y}), \ldots, {b}_n({y})) $ and ${w}({y}, {t}) = (\eta''_{1}, \ldots, \eta''_{n}, \eta'_{1}, \ldots,\eta'_{n})$. ${M}({y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and ${w}({y}, {t})$ is a $2n$ dimensional vector.
 	
-	To show that $\bm{M}(\bm{y})$ is equal to zero, we invoke the SDV assumption on $\bm{\eta}$.
-	This implies the existence of $2n$ linearly independent $\bm{w}(\bm{y}, \bm{t}_j)$.
+	To show that ${M}({y})$ is equal to zero, we invoke the SDV assumption on ${\eta}$.
+	This implies the existence of $2n$ linearly independent ${w}({y}, {t}_j)$.
 	It follows that
 	
 	\[
-	\bm{M}(\bm{y})[\bm{w}(\bm{y}, \bm{t}_1), \ldots, \bm{w}(\bm{y}, \bm{t}_{2n})]=0\,,
+	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2n})]=0\,,
 	\]
 	
-	and hence $\bm{M}(\bm{y})$ is zero by elementary linear algebraic results.
-	It follows that $v_i^j(\bm{y})\not=0$ for at most one value of $j$, since otherwise the product of two non-zero terms would appear in one of the entries of $\bm{M}(\bm{y})$, thus rendering it non-zero.
+	and hence ${M}({y})$ is zero by elementary linear algebraic results.
+	It follows that $v_i^j({y})\not=0$ for at most one value of $j$, since otherwise the product of two non-zero terms would appear in one of the entries of ${M}({y})$, thus rendering it non-zero.
 	Thus $v_i$ is a function only of one $y_j = y_{\pi(i)}$.
 	
-	Observe that $\bm{v}(\bm{y}) = \bm{s}$.
-	We have just proven that $v_i(y_{\pi(i)}) = s_i$.
-	Since $v_i$ is invertible, it follows that $h_{\pi(i)}(\bm{x}_{1}) = y_{\pi(i)} = v_i^{-1}(s_i)$ and hence the components of $\bm{h}(\bm{x}_{1})$ recover the components of $\bm{s}$ up to the invertible component-wise ambiguity given by $\bm{v}$, and the permutation ambiguity.
+	Observe that ${v}({y}) = {z}$.
+	We have just proven that $v_i(y_{\pi(i)}) = z_i$.
+	Since $v_i$ is invertible, it follows that $h_{\pi(i)}({x}_{1}) = y_{\pi(i)} = v_i^{-1}(z_i)$ and hence the components of ${h}({x}_{1})$ recover the components of ${z}$ up to the invertible component-wise ambiguity given by ${v}$, and the permutation ambiguity.
 	
-	For the condition in Equation \ref{eq:inds_twov_2}, we need
+To prove that $h_{2i}(X_2)$ depends on exactly one component of $Z$, exactly the same argument can be applied, replacing $({v},{y}, {\eta}, {\theta})$ with $({u},{t}, {\lambda}, {\mu})$, noting that the SDV assumption is also assumed for ${\lambda}$.
+We thus see that 
 	\begin{equation}
 	\label{eq:u_onev}
-	u_{i}(\bm{t})  \equiv u_{i}(t_{\tilde{\pi}(i)})\,,
+	u_{i}({t})  = u_{i}(t_{\tilde{\pi}(i)})\,,
 	\end{equation}
-	where the permutation $\tilde{\pi}$ doesn't need to be equal to $\pi$.
-	By symmetry, exactly the same argument as used to prove the condition in Equation \ref{eq:v_onev} holds, by replacing $(\bm{v},\bm{y}, \bm{\eta}, \bm{\theta})$ with $(\bm{u},\bm{t}, \bm{\lambda}, \bm{\mu})$, noting that the SDV assumption is also assumed for $\bm{\lambda}$.
-	\\
-	We have shown that $\bm{y}=\bm{h}_1(\bm{x}_1)$ and $\bm{t}=\bm{h}_2(\bm{x}_2)$ estimate $\bm{g}_1(\bm{s}, \bm{n}_1)$ and $\bm{g}_2(\bm{s}, \bm{n}_2)$ up to two different gauges of all possible scalar invertible functions.
+	where the permutation $\tilde{\pi}$ may be different from $\pi$.
+
+
+We have shown that ${y}={h}_1({x}_1)$ and ${t}={h}_2({x}_2)$ estimate ${g}_1({z}, {n}_1)$ and ${g}_2({z}, {n}_2)$ up to two different gauges of all possible scalar invertible functions.
 	
-	A remaining ambiguity could be that the two representations might be misaligned; that is, defining $\bm{z}_1=\bm{g}_1(\bm{s}, \bm{n}_1)$ and $\bm{z}_2=\bm{g}_2(\bm{s}, \bm{n}_2)$, while
+A remaining ambiguity could be that the two representations might be misaligned; that is, defining ${z}_1={g}_1({z}, {n}_1)$ and ${z}_2={g}_2({z}, {n}_2)$, while
 	\begin{equation}
 	z_{1,i} \independent z_{2,j} \forall i \neq j \label{eq:fact}
 	\end{equation}
@@ -176,9 +243,10 @@ We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 	\[
 	y_{\pi(i)} \independent t_{\tilde{\pi}(j)} \forall i \neq j\,,
 	\]
-	where $\pi(i)$, $\tilde{\pi}(i)$ are two different permutations of the indices $i=1, \ldots, n$. We want to show that this ambiguity is also resolved; that means, our goal is to show that
+	where $\pi(i)$, $\tilde{\pi}(i)$ are two different permutations of the indices $i=1, \ldots, n$. 
+To show that this ambiguity is also resolved, we will show that
 	\begin{equation}
-	y_{i} \independent t_{j},\;\;\forall i \neq j \label{eq:aim_lastpart}
+	y_{i} \independent t_{j},\;\;\forall i \neq j. \label{eq:aim_lastpart}
 	\end{equation}
 	
 	
@@ -224,14 +292,11 @@ We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 	
 	In order to do so, we rewrite equation \ref{eq:logistic}, yielding
 	\begin{align}
-	&\sum_{m}\psi_{m}(y_{m},t_{m}) \nonumber \\
-	=&\sum_{m}\eta_{m}(v_m(y_{\pi(m)}), u_m(t_{\tilde{\pi}(m)}))
-	-\sum_{m}\theta_{i}(v_m(y_{\pi(m)}))
+\sum_{m}\psi_{m}(y_{m},t_{m}) \nonumber	= \sum_{m}\eta_{m}(v_m(y_{\pi(m)}), u_m(t_{\tilde{\pi}(m)}))	-\sum_{m}\theta_{i}(v_m(y_{\pi(m)}))
 	\end{align}
 	We now take derivative with respect to $y_i$ and $t_l$ in \ref{eq:ref_indices}; noting that $\tilde{\pi}^{-1}(l) = \pi^{-1}(i) $, we get
 	\begin{align}
-	0 = & \frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) \nonumber \\
-	\times & \frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) \frac{\partial }{\partial t_l} u_{\pi^{-1}(i)}(t_l) \label{eq:perm_deriv}
+	0 = \frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) \times \frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) \frac{\partial }{\partial t_l} u_{\pi^{-1}(i)}(t_l) \label{eq:perm_deriv}
 	\end{align}
 	
 	Since $v_{\pi^{-1}(i)}(y_i)$ is a smooth and invertible function of its argument, the set of $y_i$ such that $\frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) = 0$ has measure zero.
@@ -246,13 +311,13 @@ We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 	\frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = 0\,. \label{eq:additive_eta}
 	\end{equation}
 	almost everywhere.
-	We can thus conclude that
+	It thus follows that
 	\begin{align*}
-	&\eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = \\ &\eta_{\pi^{-1}(i)}^y(v_{\pi^{-1}(i)}(y_i))+ \eta_{\pi^{-1}(i)}^t(u_{\pi^{-1}(i)}(t_l))
+	\eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = \eta_{\pi^{-1}(i)}^y(v_{\pi^{-1}(i)}(y_i))+ \eta_{\pi^{-1}(i)}^t(u_{\pi^{-1}(i)}(t_l))
 	\end{align*}
-	This in turn implies that, for some functions $A$ and $B$, we can write
+	which in turn implies that, for some functions $A$ and $B$, we can write
 	\begin{align*}
-	&\log p(z_{1, \pi^{-1}(i)}|z_{2, \pi^{-1}(i)}) - \log p(z_{1, \pi^{-1}(i)}) \\ &= A(v_{\pi^{-1}(i)}(y_i)) + B(u_{\pi^{-1}(i)}(t_l))
+	\log p(z_{1, \pi^{-1}(i)}|z_{2, \pi^{-1}(i)}) - \log p(z_{1, \pi^{-1}(i)}) = A(v_{\pi^{-1}(i)}(y_i)) + B(u_{\pi^{-1}(i)}(t_l))
 	\end{align*}
 	and therefore
 	\begin{align*}
@@ -267,12 +332,29 @@ We therefore prove only the more general Theorem \ref{thm:two-noisy-views}.
 	\end{align*}
 	where the last implication holds due to invertibility of $v_{\pi^{-1}(i)}$ and $u_{\tilde{\pi}^{-1}(l)}$.
 	
-	We have thus concluded the proof.
+	This concludes the proof.
 	
 \end{proof}
 
-\section{Proof of Corollary \ref{crl:lownoise}}
+\subsection{Proof of Corollary \ref{crl:lownoise}}
 \label{appendix:thm2}
+
+
+\begin{repcorollary}{crl:lownoise}
+	Let $N_1^{(k)} = \frac{1}{k} \cdot  \Tilde{N}$ for $k \in \NN$, where $\Tilde{N}\in\mathbb{R}^D$ is a fixed random variable with finite variance, and let $N_2$ be a random variable that does not depend on $k$.
+	Let $h_1^{(k)}, h_2^{(k)}$ be the output of the algorithm specified by Theorem \ref{thm:two-noisy-views} with noise variables $N_1^{(k)}$ and $N_2$.
+	
+	Suppose that the corrupters $g_i$ satisfy the following two criteria:
+	\begin{enumerate}
+		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$
+		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$
+	\end{enumerate}
+	Then, denoting by $\mathcal{E}$ the set of all component-wise, invertible functions, it holds that
+	\[
+	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0
+	\]
+	where $p$ denotes convergence in probability.
+\end{repcorollary}
 
 \begin{proof}
 To show that the random variable 
@@ -303,153 +385,192 @@ Denoting by ${d}^{(k)}_1$ the component-wise invertible ambiguity up to which ${
 \end{proof}
 
 
+\section{Proofs for multiple noisy views results}
 
-\section{Proof of Lemma \ref{lem:last-lemma}}
+\subsection{Proof of Lemma \ref{lem:last-lemma}}
 \label{appendix:last-lemma}
 
-
-We will make crucial use of \emph{Kolmogorov's strong law}:
-\begin{theorem}
-	Suppose that $X_n$ is a sequence of independent (but not necessarily identically distributed) random variables with
+\begin{replemma}{lem:last-lemma}
+	Suppose that the sequence $\mathbb{E}_{N}[\Omega_{e}^M(Z, N)] = \frac{1}{M}\sum_{i=1}^M \mathbb{E}_{N_i}[{e}_i\circ {k}_i( Z + N_i)] $ converges as $M \to \infty$ for almost all $Z$, and write this limit as
 	\begin{align*}
-	\sum_{n=1}^\infty \frac{1}{n^2}\mathrm{Var} [X_n] < \infty
+	\Omega_e(Z) = \lim_{M\to\infty}\mathbb{E}_{N}[\Omega_{e}^M(Z, N)].
+	\end{align*}
+	
+	Suppose further that there exists $K$ such that $V_{e_i} = \mathrm{Var}\left({e}_i \circ {k}_i(Z + N_i) \right) \leq K$ for all $i$.
+	Then
+	\begin{align*}
+	\Omega_{e}^M(Z, N) & \overset{a.s.}{\longrightarrow} \Omega_{e}(Z) \\
+	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z)
+	\end{align*}
+\end{replemma}
+
+In proving this, we will make crucial use of \emph{Kolmogorov's strong law}:
+
+\medskip
+
+\begin{theorem}
+	Suppose that $X_m$ is a sequence of independent (but not necessarily identically distributed) random variables with
+	\begin{align*}
+	\sum_{m=1}^\infty \frac{1}{m^2}\mathrm{Var} [X_m] < \infty
 	\end{align*}
 	Then,
 	\begin{align*}
-	\frac{1}{N}\sum_{n=1}^N X_n - \mathbb{E}[X_n] \overset{a.s.}{\longrightarrow} 0
+	\frac{1}{M}\sum_{m=1}^M X_m - \mathbb{E}[X_m] \overset{a.s.}{\longrightarrow} 0
 	\end{align*}
 \end{theorem}
 
-Fix $\bm{s}$ and consider $\Omega_{\eb}^N(\bm{s}, \bm{n})$ as a random variable with randomness induced by $\bm{n}$.
-We will show that for almost all $\bm{s}$ this converges $\bm{n}$-almost surely to a constant, and hence $\Omega_{\eb}^N(\bm{s}, \bm{n})$ converges almost surely to a function of $\bm{s}$.
+\begin{proof}[Proof of Lemma \ref{lem:last-lemma}]
+Fix ${z}$ and consider $\Omega_{e}^M({z}, {n})$ as a random variable with randomness induced by ${n}=(n_1,n_2,\ldots)$.
+We will show that for almost all ${z}$ this converges ${n}$-almost surely to a constant, and hence $\Omega_{e}^M({z}, {n})$ converges almost surely to a function of ${z}$.
 
 The law of total expectation says that
 \begin{align*}
-&\mathrm{Var}_{\bm{s}, \bm{n}_i} [\bm{e}_i\circ \bm{k}_i(\bm{s} + \bm{n}_i)] \\
-&= \mathbb{E}_{\bm{s}}\left[ V_i(\bm{s}) \right] + \mathrm{Var}_{\bm{s}}\left[ \mathbb{E}_{\bm{n}_i} [\bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i)] \right] \\
-& \geq \mathbb{E}_{\bm{s}}\left[ V_i(\bm{s}) \right].
+&\mathrm{Var}_{{z}, {n}_i} [{e}_i\circ {k}_i({z} + {n}_i)] \\
+&= \mathbb{E}_{{z}}\left[ V_i({z}) \right] + \mathrm{Var}_{{z}}\left[ \mathbb{E}_{{n}_i} [{e}_i\circ {k}_i( {z} + {n}_i)] \right] \\
+& \geq \mathbb{E}_{{z}}\left[ V_i({z}) \right].
 \end{align*}
-Since by assumption $\mathrm{Var}_{\bm{s}, \bm{n}_i} [\bm{e}_i\circ \bm{k}_i(\bm{s} + \bm{n}_i)] \leq K$, we have that
+Since by assumption $\mathrm{Var}_{{z}, {n}_i} [{e}_i\circ {k}_i({z} + {n}_i)] \leq K$, we have that
 \begin{align*}
-\mathbb{E}_{\bm{s}}\left[ \sum_{i=1}^\infty  \frac{V_i(\bm{s})}{i^2} \right] \leq \frac{ K \pi^2}{6}
+\mathbb{E}_{{z}}\left[ \sum_{i=1}^\infty  \frac{V_i({z})}{i^2} \right] \leq \frac{ K \pi^2}{6}
 \end{align*}
-and therefore  $\sum_{i=1}^\infty  \frac{V_i(\bm{s})}{i^2} < \infty$ with probability $1$ over $\bm{s}$, else the expectation above would be unbounded since $V_i(\bm{s})\geq 0$.
+and therefore  $\sum_{i=1}^\infty  \frac{V_i({z})}{i^2} < \infty$ with probability $1$ over ${z}$, else the expectation above would be unbounded since $V_i({z})\geq 0$.
 
-We have further that for almost all $\bm{s}$,
+We have further that for almost all ${z}$,
 \begin{align*}
-\Omega_{\bm{e}}(\bm{s}) = \lim_{N\to\infty}\frac{1}{N}\sum_{i=1}^N E_{\bm{e}_i}(\bm{s})
+\Omega_{{e}}({z}) = \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M E_{{e}_i}({z})
 \end{align*}
 exists.
-Therefore, for almost all $s$ the conditions of Kolmogorov's strong law are met by $\Omega_{\bm{e}}^N(\bm{s}, \bm{n})$ and so
+Therefore, for almost all $s$ the conditions of Kolmogorov's strong law are met by $\Omega_{{e}}^M({z}, {n})$ and so
 \begin{align*}
-\Omega_{\bm{e}}^N(\bm{s}, \bm{n}) - \mathbb{E}_{\bm{n}}[\Omega_{\bm{e}}^N(\bm{s}, \bm{n})] \overset{\bm{n}-a.s.}{\longrightarrow} 0
+\Omega_{{e}}^M({z}, {n}) - \mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] \overset{{n}-a.s.}{\longrightarrow} 0
 \end{align*}
 
-Since $\mathbb{E}_{\bm{n}}[\Omega_{\bm{e}}^N(\bm{s}, \bm{n})] \overset{\bm{n}-a.s.}{\longrightarrow} \Omega_{\bm{e}}(\bm{s})$, it follows that
+Since $\mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] \overset{{n}-a.s.}{\longrightarrow} \Omega_{{e}}({z})$, it follows that
 \begin{align*}
-\Omega_{\bm{e}}^N(\bm{s}, \bm{n}) \overset{\bm{n}-a.s.}{\longrightarrow} \Omega_{\bm{e}}(\bm{s}).
+\Omega_{{e}}^M({z}, {n}) \overset{{n}-a.s.}{\longrightarrow} \Omega_{{e}}({z}).
 \end{align*}
-Since this holds with probability $1$ over $\bm{s}$, we have that
+Since this holds with probability $1$ over ${z}$, we have that
 \begin{align*}
-\Omega_{\bm{e}}^N(\bm{s}, \bm{n}) \overset{\bm{n}-a.s.}{\longrightarrow} \Omega_{\bm{e}}(\bm{s}).
+\Omega_{{e}}^M({z}, {n}) \overset{{n}-a.s.}{\longrightarrow} \Omega_{{e}}({z}).
 \end{align*}
 
 It follows that we can write
 
 \begin{align*}
-R_{\bm{e}, i}^N(\bm{s}, \bm{n}) &= \bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i) - \Omega_{\bm{e}}^N(\bm{s}, \bm{n}) \\
-&\overset{a.s.}{\longrightarrow} R_{\bm{e}, i}(\bm{s}, \bm{n}_i):= \bm{e}_i\circ \bm{k}_i( \bm{s} + \bm{n}_i) - \Omega_{\bm{e}}(\bm{s})
+R_{{e}, i}^M({z}, {n}) &= {e}_i\circ {k}_i( {z} + {n}_i) - \Omega_{{e}}^M({z}, {n}) \\
+&\overset{a.s.}{\longrightarrow} R_{{e}, i}({z}, {n}_i):= {e}_i\circ {k}_i( {z} + {n}_i) - \Omega_{{e}}({z})
 \end{align*}
+\end{proof}
 
-
-\section{Proof of Theorem \ref{thm:lastthm}}
+\subsection{Proof of Theorem \ref{thm:lastthm}}
 \label{sec:lasttmpr}
 
-We will begin by showing that if $K \geq \mathrm{Var}(\bm{s}) + C$ then $\{ \bm{k}^{-1}_i \}  \in \mathcal{G}_K$.
 
-For $\bm{e}_i = \bm{k}_i^{-1}$, we have that
+\begin{reptheorem}{thm:lastthm}
+	Suppose there exists $C>0$ such that $\text{Var}(N_i) \leq C$ for all $i$ and let $\mathcal{G}_K = \big\lbrace
+	\{{e}_i \}$ s.t.
+	\begin{align}
+	& V_{{e}_i} \leq K \ \forall i \tag{\ref{eq:resid_1}}\\
+	& \Omega_{{e}}(Z) < \infty \  \text{ for almost all } Z \tag{\ref{eq:resid_2}}\\
+	&R_{{e}, i} \independent R_{{e}, j} \ \forall i \not= j, \tag{\ref{eq:resid_3}}\\
+	\nonumber \\    &\mathbb{E} R_{{e}, i} = 0 \ \forall i \tag{\ref{eq:resid_5}} \\
+	&R_{{e}, i}(Z, N_i) = R_{{e}, i}(N_i) \ \forall i \ \big\rbrace \tag{\ref{eq:resid_6}}
+	\end{align}
+	
+	Then,
+	\begin{align*}
+	\mathcal{G}_K \subseteq\left\lbrace \{ {\alpha} {k}^{-1}_i + {\beta} \} \ : \ {\alpha} \in \mathbb{R}^{D}_{\not=0}, \: {\beta} \in \mathbb{R}^{D} \right\rbrace
+	\end{align*}
+	where $\alpha {k}^{-1}_i$ denotes the element-wise product with the scalar elements of ${\alpha}$.
+	If $K \geq \text{Var}(Z) + C$, then $ \{ {k}^{-1}_i \}  \in \mathcal{G}_K$,
+	and so $\mathcal{G}_K$ is non-empty for $K$ sufficiently large.
+\end{reptheorem}
+
+We will begin by showing that if $K \geq \mathrm{Var}({z}) + C$ then $\{ {k}^{-1}_i \}  \in \mathcal{G}_K$.
+
+For ${e}_i = {k}_i^{-1}$, we have that
 \begin{align*}
-\Omega_{\bm{e}}^N(\bm{s}, \bm{n}) = \frac{1}{N} \sum_{i=1}^N \bm{s} + \bm{n}_i &\overset{a.s.}{\longrightarrow} \bm{s} = \Omega_{\bm{e}}^N(\bm{s})\\
-R_i^N = \bm{s} + \bm{n}_i - \Omega_{\bm{e}}(\bm{s}, \bm{n})  &\overset{a.s.}{\longrightarrow} \bm{n}_i = R_{\bm{e}, i}(\bm{n}_i)
+\Omega_{{e}}^M({z}, {n}) = \frac{1}{M} \sum_{i=1}^M {z} + {n}_i &\overset{a.s.}{\longrightarrow} {z} = \Omega_{{e}}^M({z})\\
+R_i^M = {z} + {n}_i - \Omega_{{e}}({z}, {n})  &\overset{a.s.}{\longrightarrow} {n}_i = R_{{e}, i}({n}_i)
 \end{align*}
-where the convergences follow from application of Kolmogorov's strong law, using the fact that $\mathrm{Var}(\bm{n}_i) \leq C$ for all $i$.
-Satisfaction of condition \ref{eq:resid_1} follows from the fact that $\mathrm{Var}_{\bm{s}, \bm{n}_i} (\bm{s} + \bm{n}_i) \leq C + \mathrm{Var}(\bm{s}) \leq K$.
-Since $\bm{s}$ is a well-defined random variable,  $\Omega_{\bm{e}}(\bm{s}) < \infty$ with probability $1$, satisfying condition \ref{eq:resid_2}.
-It follows from the mutual independence of $\bm{n}_i$ and $\bm{n}_j$ that $R_{\bm{e}, i}$ and $R_{\bm{e}, j}$ satisfy condition \ref{eq:resid_3}.
-Condition \ref{eq:resid_5} follows from the fact that $\mathbb{E}[\bm{n}_i]=0$
-Condition \ref{eq:resid_6} follows from $R_{\bm{e}, i}$ being constant as a function of $\bm{s}$.
+where the convergences follow from application of Kolmogorov's strong law, using the fact that $\mathrm{Var}({n}_i) \leq C$ for all $i$.
+Satisfaction of condition \ref{eq:resid_1} follows from the fact that $\mathrm{Var}_{{z}, {n}_i} ({z} + {n}_i) \leq C + \mathrm{Var}({z}) \leq K$.
+Since ${z}$ is a well-defined random variable,  $\Omega_{{e}}({z}) < \infty$ with probability $1$, satisfying condition \ref{eq:resid_2}.
+It follows from the mutual independence of ${n}_i$ and ${n}_j$ that $R_{{e}, i}$ and $R_{{e}, j}$ satisfy condition \ref{eq:resid_3}.
+Condition \ref{eq:resid_5} follows from the fact that $\mathbb{E}[{n}_i]=0$
+Condition \ref{eq:resid_6} follows from $R_{{e}, i}$ being constant as a function of ${z}$.
 
-It therefore follows that $\{ \bm{k}^{-1}_i \}  \in \mathcal{G}_K$ for $K$ sufficiently large.
+It therefore follows that $\{ {k}^{-1}_i \}  \in \mathcal{G}_K$ for $K$ sufficiently large.
 
 
-We will next show that if $\{ \bm{e}_i\} \in \mathcal{G}_K$ then there exist a matrix $\bm{\alpha}$ and vector $\bm{\beta}$ such that $\bm{e}_i = \bm{\alpha} \bm{k}_i^{-1} + \bm{\beta}$ for all $i$.
-Since $\bm{e}_i$ acts coordinate-wise, it moreover follows that $\bm{\alpha}$ is diagonal.
+We will next show that if $\{ {e}_i\} \in \mathcal{G}_K$ then there exist a matrix ${\alpha}$ and vector ${\beta}$ such that ${e}_i = {\alpha} {k}_i^{-1} + {\beta}$ for all $i$.
+Since ${e}_i$ acts coordinate-wise, it moreover follows that ${\alpha}$ is diagonal.
 
-First, we will show that each $\bm{e}_i\circ\bm{k}_i$ is affine, i.e. there exist potentially different $\bm{\alpha}_i, \bm{\beta}_i$ such that $\bm{e}_i = \bm{\alpha}_i \bm{k}_i^{-1} + \bm{\beta}_i$ for each $i$.
+First, we will show that each ${e}_i\circ{k}_i$ is affine, i.e. there exist potentially different ${\alpha}_i, {\beta}_i$ such that ${e}_i = {\alpha}_i {k}_i^{-1} + {\beta}_i$ for each $i$.
 
-Then we will show that we must have $\bm{\alpha}_i = \bm{\alpha}_j$ and $\bm{\beta}_i = \bm{\beta}_j$ for all $i,j$.
+Then we will show that we must have ${\alpha}_i = {\alpha}_j$ and ${\beta}_i = {\beta}_j$ for all $i,j$.
 
-To see that $\bm{e}_i$ is affine, we make use of that fact that $R_{\bm{e},i}$ is constant as a function of $\bm{s}$.
+To see that ${e}_i$ is affine, we make use of that fact that $R_{{e},i}$ is constant as a function of ${z}$.
 It follows that for any $x$ and $y$
 \begin{align*}
-\bm{e}_i\circ\bm{k}_i(x + y) &= R_{\bm{e},i}(x) + \Omega_{\bm{e}}(y) \\
-&= R_{\bm{e},i}(x) + \Omega_{\bm{e}}(0) + R_{\bm{e},i}(0) + \Omega_{\bm{e}}(y) \\
-& \qquad- \left(R_{\bm{e},i}(0) +  \Omega_{\bm{e}}(0)\right) \\
-&= \bm{e}_i\circ\bm{k}_i(x) + \bm{e}_i\circ\bm{k}_i(y) - \bm{e}_i\circ\bm{k}_i(0)
+{e}_i\circ{k}_i(x + y) &= R_{{e},i}(x) + \Omega_{{e}}(y) \\
+&= R_{{e},i}(x) + \Omega_{{e}}(0) + R_{{e},i}(0) + \Omega_{{e}}(y) \\
+& \qquad- \left(R_{{e},i}(0) +  \Omega_{{e}}(0)\right) \\
+&= {e}_i\circ{k}_i(x) + {e}_i\circ{k}_i(y) - {e}_i\circ{k}_i(0)
 \end{align*}
-It therefore follows that $\bm{e}_i\circ\bm{k}_i$ is affine, since if we define
+It therefore follows that ${e}_i\circ{k}_i$ is affine, since if we define
 \begin{align*}
-L(x + y) &= \bm{e}_i\circ\bm{k}_i(x + y) - \bm{e}_i\circ\bm{k}_i(0) \\
-&= \left(\bm{e}_i\circ\bm{k}_i(x) - \bm{e}_i\circ\bm{k}_i(0)\right) \\
-& \qquad+ \left(\bm{e}_i\circ\bm{k}_i(y) - \bm{e}_i\circ\bm{k}_i(0)\right) \\
+L(x + y) &= {e}_i\circ{k}_i(x + y) - {e}_i\circ{k}_i(0) \\
+&= \left({e}_i\circ{k}_i(x) - {e}_i\circ{k}_i(0)\right) \\
+& \qquad+ \left({e}_i\circ{k}_i(y) - {e}_i\circ{k}_i(0)\right) \\
 &= L(x) + L(y)
 \end{align*}
-then $L$ is linear and we can write $\bm{e}_i\circ\bm{k}_i(x)$ as the sum of a linear function and a constant:
+then $L$ is linear and we can write ${e}_i\circ{k}_i(x)$ as the sum of a linear function and a constant:
 \begin{align*}
-\bm{e}_i\circ\bm{k}_i(x) = L(x) + \bm{e}_i\circ\bm{k}_i(0)
+{e}_i\circ{k}_i(x) = L(x) + {e}_i\circ{k}_i(0)
 \end{align*}
-Thus $\bm{e}_i\circ\bm{k}_i$ is affine, and we have some (diagonal) matrix $\bm{\alpha}_i$ and vector $\bm{\beta}_i$ such that for any $x$
+Thus ${e}_i\circ{k}_i$ is affine, and we have some (diagonal) matrix ${\alpha}_i$ and vector ${\beta}_i$ such that for any $x$
 \begin{align*}
-&\bm{e}_i\circ\bm{k}_i(x) = \bm{\alpha}_i x  + \bm{\beta}_i \\
-\implies& \bm{e}_i \left(x \right) = \bm{\alpha}_i \bm{k}_i^{-1} x + \bm{\beta}_i.
+&{e}_i\circ{k}_i(x) = {\alpha}_i x  + {\beta}_i \\
+\implies& {e}_i \left(x \right) = {\alpha}_i {k}_i^{-1} x + {\beta}_i.
 \end{align*}
 
 
 
-Next we show that for the set of $\{\bm{e}_i = \bm{\alpha}_i \bm{k}_i^{-1} + \bm{\beta}_i\}$, it must be the case that each $\bm{\alpha}_i = \bm{\alpha}_j$ and $\bm{\beta}_i = \bm{\beta}_j$.
+Next we show that for the set of $\{{e}_i = {\alpha}_i {k}_i^{-1} + {\beta}_i\}$, it must be the case that each ${\alpha}_i = {\alpha}_j$ and ${\beta}_i = {\beta}_j$.
 
 Observe that
 \begin{align*}
-\Omega_{\bm{e}}^N(\bm{s}, \bm{n}) &= \frac{1}{N} \sum_{i=1}^N \bm{\alpha}_i \bm{s} + \bm{\alpha}_i \bm{n}_i + \bm{\beta}_i \\
-&= \left( \frac{1}{N} \sum_{i=1}^N \bm{\alpha}_i \right)\bm{s} + \frac{1}{N} \sum_{i=1}^N \bm{\beta}_i  + \frac{1}{N} \sum_{i=1}^N \bm{\alpha}_i \bm{\bm{n}}_i \\
-\mathbb{E}_{\bm{n}}[\Omega_{\bm{e}}^N(\bm{s}, \bm{n})] &= \left( \frac{1}{N} \sum_{i=1}^N \bm{\alpha}_i \right)\bm{s} +  \frac{1}{N} \sum_{i=1}^N \bm{\beta}_i
+\Omega_{{e}}^M({z}, {n}) &= \frac{1}{M} \sum_{i=1}^M {\alpha}_i {z} + {\alpha}_i {n}_i + {\beta}_i \\
+&= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} + \frac{1}{M} \sum_{i=1}^M {\beta}_i  + \frac{1}{M} \sum_{i=1}^M {\alpha}_i {{n}}_i \\
+\mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] &= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} +  \frac{1}{M} \sum_{i=1}^M {\beta}_i
 \end{align*}
 
 Define
 \begin{align*}
-\bm{\alpha} &= \lim_{N\to\infty}\frac{1}{N}\sum_{i=1}^N \bm{\alpha}_i \\
-\bm{\beta} &= \lim_{N\to\infty}\frac{1}{N}\sum_{i=1}^N \bm{\beta}_i \\
+{\alpha} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\alpha}_i \\
+{\beta} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\beta}_i \\
 \end{align*}
-which exist by the assumption that $\Omega_{\bm{e}}^N(\bm{s}, \bm{n})$ converges as $N\to\infty$.
+which exist by the assumption that $\Omega_{{e}}^M({z}, {n})$ converges as $M\to\infty$.
 Thus
 \begin{align*}
-\Omega_{\bm{e}}(\bm{s}) &= \bm{\alpha} \bm{s} + \bm{\beta} \\
-R_{\bm{e}, i}(\bm{s}, \bm{n}_i) &= (\bm{\alpha}_i - \bm{\alpha})\bm{s} + \bm{\alpha}_i\bm{n}_i + \bm{\beta}_i - \bm{\beta}
+\Omega_{{e}}({z}) &= {\alpha} {z} + {\beta} \\
+R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta}
 \end{align*}
-Now, suppose that there exist $i$ and $j$ such that such that $\bm{\alpha}_i \not= \bm{\alpha}_j$.
+Now, suppose that there exist $i$ and $j$ such that such that ${\alpha}_i \not= {\alpha}_j$.
 It follows that
 \begin{align*}
-R_{\bm{e}, i}(\bm{s}, \bm{n}_i) &= (\bm{\alpha}_i - \bm{\alpha})\bm{s} + \bm{\alpha}_i\bm{n}_i + \bm{\beta}_i - \bm{\beta} \\
-R_{\bm{e}, j}(\bm{s}, \bm{n}_j) &= (\bm{\alpha}_j - \bm{\alpha})\bm{s} + \bm{\alpha}_j\bm{n}_j + \bm{\beta}_j - \bm{\beta}
+R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta} \\
+R_{{e}, j}({z}, {n}_j) &= ({\alpha}_j - {\alpha}){z} + {\alpha}_j{n}_j + {\beta}_j - {\beta}
 \end{align*}
 There are two cases.
-If $\bm{\alpha}_i \not=\bm{\alpha}$, then $R_{\bm{e}, i}(\bm{s}, \bm{n}_i)$ is not a constant function of $\bm{s}$.
-But if $\bm{\alpha}_i =\bm{\alpha}$, then $\bm{\alpha}_j \not=\bm{\alpha}$ and so $R_{\bm{e}, j}(\bm{s}, \bm{n}_j)$ is not a constant function of $\bm{s}$.
-This is a contradiction, and so $\bm{\alpha}_i = \bm{\alpha}_j$ for all $i,j$.
+If ${\alpha}_i \not={\alpha}$, then $R_{{e}, i}({z}, {n}_i)$ is not a constant function of ${z}$.
+But if ${\alpha}_i ={\alpha}$, then ${\alpha}_j \not={\alpha}$ and so $R_{{e}, j}({z}, {n}_j)$ is not a constant function of ${z}$.
+This is a contradiction, and so ${\alpha}_i = {\alpha}_j$ for all $i,j$.
 
-Suppose similarly that there exist $\bm{\beta}_i \not=\bm{\beta}_j$.
-If $\bm{\beta}_i \not=\bm{\beta}$, then $\mathbb{E}[R_{\bm{e}, i}(\bm{n}_i)] = \bm{\beta}_i - \bm{\beta}$ which is non-zero.
-If $\bm{\beta}_i =\bm{\beta}$, then $\bm{\beta}_j \not=\bm{\beta}$ and so $\mathbb{E}[R_{\bm{e}, j}(\bm{n}_j)] = \bm{\beta}_j - \bm{\beta}$ is non-zero.
-This is a contradiction, and so $\bm{\beta}_i = \bm{\beta}_j$ for all $i,j$.
+Suppose similarly that there exist ${\beta}_i \not={\beta}_j$.
+If ${\beta}_i \not={\beta}$, then $\mathbb{E}[R_{{e}, i}({n}_i)] = {\beta}_i - {\beta}$ which is non-zero.
+If ${\beta}_i ={\beta}$, then ${\beta}_j \not={\beta}$ and so $\mathbb{E}[R_{{e}, j}({n}_j)] = {\beta}_j - {\beta}$ is non-zero.
+This is a contradiction, and so ${\beta}_i = {\beta}_j$ for all $i,j$.
 
-We have thus proven that set $\{ \bm{e}_i \} \in \mathcal{G}_K$ is of the form $\bm{e}_i = \bm{\alpha} \bm{k}_i^{-1} + \bm{\beta}$ for all $i$.
+We have thus proven that set $\{ {e}_i \} \in \mathcal{G}_K$ is of the form ${e}_i = {\alpha} {k}_i^{-1} + {\beta}$ for all $i$.

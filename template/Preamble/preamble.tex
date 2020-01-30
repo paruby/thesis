@@ -249,6 +249,8 @@
 \definecolor{docolour}{gray}{.75}
 
 \tikzstyle{keep}=[circle,draw,minimum size=2em]
+\tikzstyle{icavar}=[circle,draw,minimum size=2.5em, inner sep=0em]
+\tikzstyle{icavarobs}=[circle,draw,minimum size=2.5em, inner sep=0em, fill=gray!30!white]
 \tikzstyle{drop1}=[circle,fill=green!50!white]
 \tikzstyle{drop2a}=[circle,fill=red!50!white]
 \tikzstyle{drop2b}=[circle,fill=blue!50!white]
@@ -885,5 +887,26 @@
  {\end{rep@theorem}}}
 \makeatother
 
+% allow repeating corollarys
+\makeatletter
+\newtheorem*{rep@corollary}{\rep@title}
+\newcommand{\newrepcorollary}[2]{%
+\newenvironment{rep#1}[1]{%
+ \def\rep@title{#2 \ref{##1}}%
+ \begin{rep@corollary}}%
+ {\end{rep@corollary}}}
+\makeatother
+
+% allow repeating lemmas
+\makeatletter
+\newtheorem*{rep@lemma}{\rep@title}
+\newcommand{\newreplemma}[2]{%
+\newenvironment{rep#1}[1]{%
+ \def\rep@title{#2 \ref{##1}}%
+ \begin{rep@lemma}}%
+ {\end{rep@lemma}}}
+\makeatother
+
 \newreptheorem{theorem}{Theorem}
-\newreptheorem{lemma}{Lemma}
+\newreplemma{lemma}{Lemma}
+\newrepcorollary{corollary}{Corollary}
