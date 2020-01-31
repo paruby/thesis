@@ -235,9 +235,9 @@ We thus see that
 
 We have shown that ${y}={h}_1({x}_1)$ and ${t}={h}_2({x}_2)$ estimate ${g}_1({z}, {n}_1)$ and ${g}_2({z}, {n}_2)$ up to two different gauges of all possible scalar invertible functions.
 	
-A remaining ambiguity could be that the two representations might be misaligned; that is, defining ${z}_1={g}_1({z}, {n}_1)$ and ${z}_2={g}_2({z}, {n}_2)$, while
+A remaining ambiguity could be that the two representations might be misaligned; that is, defining ${s}_1={g}_1({z}, {n}_1)$ and ${s}_2={g}_2({z}, {n}_2)$, while
 	\begin{equation}
-	z_{1,i} \independent z_{2,j} \forall i \neq j \label{eq:fact}
+	s_{1,i} \independent s_{2,j} \forall i \neq j \label{eq:fact}
 	\end{equation}
 	we might have
 	\[
@@ -250,7 +250,7 @@ To show that this ambiguity is also resolved, we will show that
 	\end{equation}
 	
 	
-	We recall that, by definition, we have $v_i(y_{\pi(i)}) = z_{1,i}$ and $u_j(t_{\tilde{\pi}(j)}) = z_{2,j}$. Then, due to equation \ref{eq:fact},
+	We recall that, by definition, we have $v_i(y_{\pi(i)}) = s_{1,i}$ and $u_j(t_{\tilde{\pi}(j)}) = s_{2,j}$. Then, due to equation \ref{eq:fact},
 	\begin{align}
 	v_i(y_{\pi(i)}) & \independent u_j(t_{\tilde{\pi}(j)}) \,\,\, \forall i \neq j \label{eq:permutind_1}\\
 	\implies y_{\pi(i)} & \independent t_{\tilde{\pi}(j)} \,\,\, \forall i \neq j \label{eq:permutindep}\\
@@ -317,16 +317,16 @@ To show that this ambiguity is also resolved, we will show that
 	\end{align*}
 	which in turn implies that, for some functions $A$ and $B$, we can write
 	\begin{align*}
-	\log p(z_{1, \pi^{-1}(i)}|z_{2, \pi^{-1}(i)}) - \log p(z_{1, \pi^{-1}(i)}) = A(v_{\pi^{-1}(i)}(y_i)) + B(u_{\pi^{-1}(i)}(t_l))
+	\log p(s_{1, \pi^{-1}(i)}|s_{2, \pi^{-1}(i)}) - \log p(s_{1, \pi^{-1}(i)}) = A(v_{\pi^{-1}(i)}(y_i)) + B(u_{\pi^{-1}(i)}(t_l))
 	\end{align*}
 	and therefore
 	\begin{align*}
-	\log p(z_{1, \pi^{-1}(i)},z_{2, \pi^{-1}(i)}) = C(v_{\pi^{-1}(i)}(y_i)) + D(u_{\pi^{-1}(i)}(t_l))
+	\log p(s_{1, \pi^{-1}(i)},s_{2, \pi^{-1}(i)}) = C(v_{\pi^{-1}(i)}(y_i)) + D(u_{\pi^{-1}(i)}(t_l))
 	\end{align*}
 	for some functions $C$ and $D$. This decomposition of the log-pdf implies
 	\begin{align*}
-	z_{1, \pi^{-1}(i)} &\independent z_{2, \pi^{-1}(i)}\\
-	\implies z_{1, \pi^{-1}(i)} &\independent z_{2, \tilde{\pi}^{-1}(l)}  \\
+	s_{1, \pi^{-1}(i)} &\independent s_{2, \pi^{-1}(i)}\\
+	\implies s_{1, \pi^{-1}(i)} &\independent s_{2, \tilde{\pi}^{-1}(l)}  \\
 	\implies v_{\pi^{-1}(i)}(y_i)  &\independent u_{\tilde{\pi}^{-1}(l)}(t_l) \\
 	\implies y_i  &\independent t_l \,,
 	\end{align*}
