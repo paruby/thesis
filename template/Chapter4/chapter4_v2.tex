@@ -128,7 +128,7 @@ Such assumptions may be made either on the mixing functions or on the distributi
 		\caption{}\label{fig:ica-model:b}
 	\end{subfigure}
 	%
-	\caption{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work.}
+	\caption{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work. $Z$ is a vector of unobserved latent sources and the $X_i$ are observed mixtures of the components of $Z$.}
 \end{figure}
 
 
@@ -286,7 +286,7 @@ X &= f(Z).
 %Crucially, the variables $\bm{u}$ are presumed to be observed. 
 This general model includes temporally dependent sources as a special case, taking $(U, X)= (X_t,X_{t+1})$.
 %For notational convenience later on, let $q_i(s_i, \bm{u}) = \log p_i(s_i | \bm{u})$.
-\cite{hyvarinen19a} prove identifiability results under conditions on both the conditional distributions $p_i(s_i | u)$, the relationships between sources and auxiliary variables, and subject to $U$ having a sufficiently diverse influence on the $X$ in a sense that is formalised as the \emph{assumption of variability}.
+\cite{hyvarinen19a} prove identifiability results under conditions on both the conditional distributions $p_i(z_i | u)$, the relationships between sources and auxiliary variables, and subject to $U$ having a sufficiently diverse influence on the $X$ in a sense that is formalised as the \emph{assumption of variability}.
 
 Identifiability in this model is proved constructively by considering classification between tuples $(x, u)$, sampled from the joint distribution $p(x, u)$, and tuples $(x, u^*)$ sampled from the product of marginals $p(u)p(x)$.
 Tuples from the former distribution correspond to the same value of the sources $z$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
@@ -340,8 +340,9 @@ The paper considers a setting in which $L$ variables $X_l$, $l=1, \ldots, L$ are
 Their method is based on the mean embedding of distributions in a Reproducing Kernel Hilbert Space and a result of identifiability for the parameters of the mean embeddings of $P(H)$ and $P(X|H)$ is proved.
 
 Another related field of study is multi-view clustering, which considers a multiview setting and aims at performing clustering on a given dataset, see e.g.~\cite{de2005spectral} and~\cite{kumar2011co}. This line of work differs from the setting considered here in two key ways.
-Firstly, clustering can be thought of as assigning a discrete latent label per observation. In contrast, our setting seeks to recover a continuous latent vector per observation.
-Second, since no underlying generative model with discrete latent variable is assumed, identifiability results are not given.
+First, clustering can be thought of as assigning a discrete latent label per observation. 
+In contrast, the setting considered here is concerned with recovery of a continuous latent vector for each observation.
+Second, since no underlying generative model with discrete latent variables is assumed, identifiability results are not given.
 
 
 
@@ -375,7 +376,7 @@ X_2 &= f_2(Z) \label{eq:nonlinear-ica-2}
 \end{align}
 where $X_1, X_2, Z \in \mathbb{R}^D$ and $f_1, f_2$ are arbitrary smooth and invertible transformations of the latent variable $Z = (Z_1, \ldots, Z_D)$ with smooth inverse.
 $X_1$ and $X_2$ are referred to as different \emph{views} of the sources $Z$.
-Given observations of $X_1$ and $\X_2$, the goal is to recover $Z$, undoing the mixing induced by the $f_i$.
+Given observations of $X_1$ and $X_2$, the goal is to recover $Z$, undoing the mixing induced by the $f_i$.
 
 %the goal is to recover $\bm{s}$, undoing the mixing induced by the $\bm{f}_i$, in the case where only observations of $\bm{x}_1$ and $\bm{x}_2$ are available.
 %correspondingly build on the methods introduced in that work. 
@@ -403,8 +404,8 @@ Specifically:
 	This corresponds to a setting in which one accurate measurement device is supplemented with a second noisy device. 
 	\item Section \ref{sec:constrained} considers the case that both variables are corrupted with noise, showing that it is possible to recover $Z$ up to the corruptions. 
 	Furthermore, it is shown that $Z$ can be recovered with arbitrary precision in the limit that the corruptions go to zero.
-	\item Section \ref{sec:multiple} considers the case of $N$ simultaneous views of the source $Z$ rather than just two.
-	When considering the limit $N \rightarrow \infty$, sufficient conditions are provided under which it is possible to reconstruct $Z$ even if each observation is corrupted by noise.
+	\item Section \ref{sec:multiple} considers the case of $M$ simultaneous views of the source $Z$ rather than just two.
+	When considering the limit $M \rightarrow \infty$, sufficient conditions are provided under which it is possible to reconstruct $Z$ even if each observation is corrupted by noise.
 \end{itemize}
 %
 %To the best of our knowledge, no result of identifiability of latent sources in the case in which only corrupted, mixed versions are observed has been given before.
@@ -426,9 +427,9 @@ By placing constraints on the regression function used in such a classifier, it 
 For technical reasons discussed in Section
 \ref{sec:converged}, the results require some stochasticity in the relationship between $Z$ and at least one of the $X_i$.
 This is not a significant constraint in practice; in most real settings observations are corrupted by noise, and a truly deterministic relationship between $Z$ and the $X_i$ would be unrealistic.
-Component-wise independent corruptions of the sources is considered, i.e. $\mathbb{R}^D$-valued noise vectors $N_1$ and $N_2$ are introduced, and $X_1 = f_1 \circ g_1(Z, N_1)$ with $g_{1i}(Z, N_1) = g_{1i}(Z_i, N_{1i})$, where the components of $N_{1}$ are mutually independent, and similar for $N_2$ and $X_2$. 
+Component-wise independent corruptions of the sources are considered, i.e. $\mathbb{R}^D$-valued noise vectors $N_1$ and $N_2$ are introduced, and $X_1 = f_1 \circ g_1(Z, N_1)$ with $g_{1i}(Z, N_1) = g_{1i}(Z_i, N_{1i})$, where the components of $N_{1}$ are mutually independent, and similar for $N_2$ and $X_2$. 
 The noise variables $N_1$, $N_2$ and the sources $Z$ are assumed to be mutually independent.
-Note that this constrains the way the source is corrupted by noise, namely the $g_i$, and not the mixing functions $f_i$.
+This constrains the way the source is corrupted by noise, namely the $g_i$, and not the mixing functions $f_i$.
 In the the vanilla ICA setting, inversion of the mixing function and recovery of the sources $Z$ are equivalent; in the setting considered here, inversion of the mixing $f_i$ only implies recovering the sources up to the effect of the corrupter $g_i$.
 
 Such $g_i$ as described in the previous paragraph are referred to as \emph{component-wise corrupters} throughout, and the corresponding output as \emph{corruptions}. 
@@ -485,9 +486,9 @@ This result is quite involved; we will first state it, and then discuss it.
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
-	&= \left(\sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
+	&= \left(\sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
+	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
 	\end{align}
 	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel\footnote{Several subsequent results in this section consider the difference between two log-probabilities.
@@ -524,7 +525,7 @@ Informally, it demands that the probability distribution of the corruption shoul
 \medskip
 
 \begin{definition}[Sufficiently Distinct Views]\label{suff_dist_assumption}
-	Let $\alpha_i(y_i, t_i)$, $i=1,\ldots, N$ be functions of two arguments.
+	Let $\alpha_i(y_i, t_i)$, $i=1,\ldots, D$ be functions of two arguments.
 	Denote by $\alpha$ the vector of functions and define
 	\begin{align}
 	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial y_i, \label{eq:convention1}\\
@@ -546,7 +547,7 @@ Thus, in the limit of infinite data and with universal approximation capacity, t
 \sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2}) = \sum_i \alpha_i(z_i, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)).
 \end{align*}
 %
-By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and defining $v(y) := f_1^{-1}(h^{-1}(y)) = s$, this equation can be rewritten
+By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and defining $v(y) := f_1^{-1}(h^{-1}(y)) = z$, this equation can be rewritten
 %
 \begin{align}
 \sum_{i}\psi_{i}(y_i,f_2(t)) = \sum_i \alpha_i(v_i(y), t_i) - \sum_i \delta_i(t_i). \label{eqn:ica-first-theorem-proof}
@@ -561,8 +562,9 @@ Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, 
 It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_i$ and $y_j$ for $j\not=i$. 
 This results in an expression involving first- and second-order derivatives of $\alpha_i$ and $v_i$ in which the expressions in the SDV assumption appear. 
 If the SDV assumption holds, it follows that the derivative of $v_i$ with respect to $y_j$ is everywhere zero, meaning that $v_i$ does not depend on $y_j$. 
-See the full proof in Appendix \ref{appendix:proof-thm1} for further details; proofs of subsequent results Corollary \ref{crl:noiseless1} and Theorems \ref{thm:demixing} and \ref{thm:two-noisy-views} proceed similarly to this, and thus sketches of these results will be omitted.
 \end{proof}
+
+See the full proof in Appendix \ref{appendix:proof-thm1} for further details; proofs of subsequent results Corollary \ref{crl:noiseless1} and Theorems \ref{thm:demixing} and \ref{thm:two-noisy-views} proceed similarly to this, and thus sketches of these results will be omitted.
 
 Theorem \ref{thm:noiseless1} shows that by jointly considering the two views, it is possible to recover $Z$, in contrast to the single-view setting.
 This result can be extended to learn the inverse of ${f}_2$ up to component-wise invertible functions.
@@ -585,7 +587,7 @@ This result can be extended to learn the inverse of ${f}_2$ up to component-wise
 	results in ${h}$ inverting ${f}_2$ in the sense that the $h_{i}({X}_2)$ recover the independent components of the ${g}({Z}, {N})$ up  to component-wise invertible transformations.
 \end{corollary}
 The proof can be found in Appendix \ref{appendix:proof-cor2}.
-These two results together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${Z}$ and ${g}({Z}, {N})$, up to component-wise intertible functions.
+Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1} together mean that it is possible to learn inverses ${h}_1$ and ${h}_2$ of ${f}_1$ and ${f}_2$, and therefore to recover ${Z}$ and ${g}({Z}, {N})$, up to component-wise intertible functions.
 Note, however, that doing so requires running two separate algorithms.
 Furthermore, there is no guarantee that the learned inverses ${h}_1$ and ${h}_2$ are `aligned' in the sense that for each $i$ the components ${h}_{1i}({X}_1)$ and ${h}_{2i}({X}_2)$ correspond to the same components of ${Z}$.
 
@@ -606,7 +608,6 @@ This problem of misalignment can be resolved by changing the form of the regress
 	\end{equation*}
 \end{theorem}
 The proof can be found in Appendix \ref{appendix:thm1}.
-
 Note that Theorem \ref{thm:demixing} is \emph{not} a generalisation of Theorem \ref{thm:noiseless1} or Corollary \ref{crl:noiseless1}, since it makes stricter assumptions by imposing the SDV assumption on both ${\alpha}$ and ${\gamma}$.
 In contrast, Theorem \ref{thm:noiseless1} and Corollary \ref{crl:noiseless1} require that only one is valid for each.
 For cases in which finding aligned representations for ${Z}$ and ${g}({Z}, {N})$ are desired, Theorem \ref{thm:demixing} should be applied.
@@ -719,10 +720,10 @@ Together with the assumptions on $g_1$, it is proved that the random variable co
 %\end{corollary}
 
 Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $Z$ can be recovered exactly.
-Condition $1$ upper bounds the influence of $\bm{n}$ on the corruption: one cannot not hope to recover $Z$ if $g_1(Z, N_1)$ contains too little signal.
-This is satisfied, for example, by additive noise.
+Condition $1$ upper bounds the influence of $N_1$ on the corruption: one cannot not hope to recover $Z$ if $g_1(Z, N_1)$ contains too little signal.
 Condition $2$ ensures that the function $g_1$ is invertible with respect to $z$ when $n_1$ is equal to zero.
 If this were not satisfied, some information about $Z$ would be washed out by $g_1$ even in absence of noise, which would make recovery of $Z$ trivially impossible.
+These conditions are satisfied, for example, by additive noise.
 
 
 \subsection{Multiple noisy views}

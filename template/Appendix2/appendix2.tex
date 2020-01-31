@@ -14,15 +14,15 @@
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
-	&= \left(\sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
+	&= \left(\sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(s_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
+	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
 	\end{align}
 	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel).
 	Suppose that
 	\begin{enumerate}
-		\item $\alpha$ satisfies the \emph{Sufficiently Distinct Views} assumption (see after this theorem).
+		\item $\alpha$ satisfies the \emph{Sufficiently Distinct Views} assumption.
 		\item A classifier is trained to discriminate between
 		\begin{align*}
 		(X_{1},X_{2}) \text{ vs. } (X_{1},X_{2}^{*})\,,
@@ -70,12 +70,12 @@ Adopting the notation from the SDV assumption definition
 	\begin{align*}
 	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial y_i,\\
 	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2, \\
-	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
+	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}),
 	\end{align*}
  and furthermore defining 
 	\begin{align*}
-	v^j_i({y})&=\partial v_i({y})/\partial y_j\\
-	v^{jj'}_i({y})&= \partial^2 v_i({y})/\partial y_j \partial y_{j'}\,,
+	v^j_i({y})&=\partial v_i({y})/\partial y_j,\\
+	v^{jj'}_i({y})&= \partial^2 v_i({y})/\partial y_j \partial y_{j'},
 	\end{align*}
 	we have
 	\begin{align*}
@@ -92,14 +92,14 @@ This can in turn be rewritten in matrix form,
 	\[
 	{M}({y}){w}({y}, {t})=0\,,
 	\]
-	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_n({y}), {b}_1({y}), \ldots, {b}_n({y})) $ and ${w}({y}, {t}) = (\alpha''_{1}, \ldots, \alpha''_{n}, \alpha'_{1}, \ldots,\alpha'_{n})$. ${M}({y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and ${w}({y}, {t})$ is a $2n$ dimensional vector.
+	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_D({y}), {b}_1({y}), \ldots, {b}_D({y})) $ and ${w}({y}, {t}) = (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D})$. ${M}({y})$ is therefore a $D(D-1)/2 \times 2D$ matrix, and ${w}({y}, {t})$ is a $2D$ dimensional vector.
 	
 	To show that ${M}({y})$ is equal to zero, we invoke the SDV assumption.
-	This implies the existence of $2n$ linearly independent ${w}({y}, {t}_j)$.
+	This implies the existence of $2D$ linearly independent ${w}({y}, {t}_j)$.
 	It follows that
 	
 	\[
-	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2n})]=0\,,
+	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2D})]=0\,,
 	\]
 	
 	and hence ${M}({y})$ is zero by elementary linear algebraic results.
@@ -181,13 +181,13 @@ Moreover, in order to show that the representations are aligned, we will show th
 	&=\sum_{i}\eta_{i}(v_i({y}), u_i({t}))
 	-\sum_{i}\theta_{i}(v_i({y}))\label{eq:logistic}
 	\end{align}
-noiseless1
+
 	To show that $h_{1i}(X_1)$ depends on exactly one component of $Z$, we will show that
 	\begin{equation}
 	\label{eq:v_onev}
 	v_{i}({y})  = v_{i}(y_{\pi(i)})\\
 	\end{equation}
-	for some permutation of the indices $\pi$ with respect to the indexing of the sources ${z} = (s_1, \ldots, s_D)$.
+	for some permutation of the indices $\pi$ with respect to the indexing of the sources ${z} = (z_1, \ldots, z_D)$.
 	
 	Taking derivatives with respect to $y_j$, $y_{j'}$, $j \neq j'$,  of equation \ref{eq:logistic} yields
 	\begin{align*}
@@ -206,14 +206,14 @@ noiseless1
 	{M}({y}){w}({y}, {t})=0\,,
 	\end{equation}
 	
-	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_n({y}), {b}_1({y}), \ldots, {b}_n({y})) $ and ${w}({y}, {t}) = (\eta''_{1}, \ldots, \eta''_{n}, \eta'_{1}, \ldots,\eta'_{n})$. ${M}({y})$ is therefore a $n(n-1)/2 \times 2n$ matrix, and ${w}({y}, {t})$ is a $2n$ dimensional vector.
+	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_D({y}), {b}_1({y}), \ldots, {b}_D({y})) $ and ${w}({y}, {t}) = (\eta''_{1}, \ldots, \eta''_{D}, \eta'_{1}, \ldots,\eta'_{D})$. ${M}({y})$ is therefore a $D(D-1)/2 \times 2D$ matrix, and ${w}({y}, {t})$ is a $2D$ dimensional vector.
 	
 	To show that ${M}({y})$ is equal to zero, we invoke the SDV assumption on ${\eta}$.
-	This implies the existence of $2n$ linearly independent ${w}({y}, {t}_j)$.
+	This implies the existence of $2D$ linearly independent ${w}({y}, {t}_j)$.
 	It follows that
 	
 	\[
-	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2n})]=0\,,
+	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2D})]=0\,,
 	\]
 	
 	and hence ${M}({y})$ is zero by elementary linear algebraic results.
