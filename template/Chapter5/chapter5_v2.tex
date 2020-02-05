@@ -11,75 +11,96 @@
     \graphicspath{{Chapter5/Figs/Vector/}{Chapter5/Figs/}}
 \fi
 
-\emph{This chapter is largely based on the paper:}
+\emph{This chapter presents and analyses RAM-MC, an estimator for f-divergences between particular distributions in the latent spaces of autoencoder models such as Variational Autoencoders and Wasserstein Autoencoders. 
+Learning theoretic analyses of sampled-based $f$-divergence estimators usually yield poor rates of convergence unless strong assumptions are made.
+By exploiting the natural structure present in the autoencoder setting, RAM-MC exhibits fast rates under mild assumptions.}
+
+\emph{This work is an important contribution to the literature for two main reasons. 
+First, it demonstrates that the $f$-divergences considered can be estimated with a practical number of samples.
+Second, it provides a rigorous foundation to related methods that have been heuristically proposed elsewhere in the literature.}
+
+\emph{The main technical content of this chapter has been published in the paper:}
 
 \begin{quote}
 \fullcite{rubenstein2019practical}
 \end{quote}
 
-\emph{Additionally, the following related workshop papers were published during my PhD but are not included in this thesis:}
-
-\begin{quote}
-\fullcite{rubenstein2018wasserstein}
-\end{quote}
-
-\begin{quote}
-\fullcite{rubenstein2018learning}
-\end{quote}
-
-\emph{The main contribution of this chapter is a learning theoretic analysis of estimating divergences between distributions. 
-The setting considered by this work occurs naturally in and has application to the latent variable models used in the generative modelling community, in particular Wasserstein Autoencoders.
-Sections ?? - ?? are a review of generative modelling, setting the stage for Sections ?? - ?? which is based on} \cite{rubenstein2019practical}.
-
-\todo{replace $D(.\|.)$ with $D(.,.)$}
+%\emph{Additionally, the following related workshop papers were published during my PhD but are not included in this thesis:}
+%
+%\begin{quote}
+%\fullcite{rubenstein2018wasserstein}
+%\end{quote}
+%
+%\begin{quote}
+%\fullcite{rubenstein2018learning}
+%\end{quote}
+%
+%\emph{The main contribution of this chapter is a learning theoretic analysis of estimating divergences between distributions. 
+%The setting considered by this work occurs naturally in and has application to the latent variable models used in the generative modelling community, in particular Wasserstein Autoencoders.
+%Sections ?? - ?? are a review of generative modelling, setting the stage for Sections ?? - ?? which is based on} \cite{rubenstein2019practical}.
+%
+%\todo{replace $D(.\|.)$ with $D(.,.)$}
 
 \section{Introduction}
 
-The estimation and minimization of divergences between probability distributions based on samples are fundamental problems of machine learning.
+The estimation and minimisation of divergences between probability distributions based on samples are fundamental problems of machine learning.
+The previous chapter discussed generative modelling, but there are numerous other applications across the literature.
 For example, maximum likelihood learning can be viewed as minimizing the Kullback-Leibler divergence $D_{\text{KL}}(P_{\text{data}}, P_{\text{model}})$ with respect to the model parameters.
-More generally, generative modelling
-%---most famously Variational Autoencoders and Generative Adversarial Networks \cite{kingma2013auto, goodfellow2014generative} discussed in the next section---
-can be viewed as minimizing a divergence $\smash{D(P_{\text{data}}, P_{\text{model}})}$ where $\smash{P_{\text{model}}}$ may be intractable.
+%More generally, generative modelling
+%%---most famously Variational Autoencoders and Generative Adversarial Networks \cite{kingma2013auto, goodfellow2014generative} discussed in the next section---
+%can be viewed as minimizing a divergence $\smash{D(P_{\text{data}}, P_{\text{model}})}$ where $\smash{P_{\text{model}}}$ may be intractable.
 In variational inference, an intractable posterior $p(z|x)$ is approximated with a tractable distribution $q(z)$ chosen to minimize $\smash{D_{\text{KL}}\bigl(q(z) , p(z|x)\bigr)}$.
 The mutual information between two variables $\smash{I(X,Y)}$, core to information theory and Bayesian machine learning, is equivalent to $\smash{D_{\text{KL}}(P_{X,Y} , P_X P_Y)}$. 
 Independence testing often involves estimating a divergence $\smash{D(P_{X,Y} , P_X P_Y)}$, while two-sample testing (does $P=Q$?) involves estimating a divergence $D(P,Q)$.
-Additionally, one approach to domain adaptation, in which a classifier is learned on a distribution $P$ but tested on a distinct distribution $Q$, involves learning a feature map $\phi$ such that a divergence $\smash{D\left( \phi_\# P , \phi_\# Q \right)}$ is minimized, where $\smash{\phi_\#}$ represents the push-forward operation \cite{ben2007analysis,ganin2016domain}.
+Additionally, one approach to domain adaptation, in which a classifier is learned on a distribution $P$ but tested on a distinct distribution $Q$, involves learning a feature map $\phi$ such that a divergence $\smash{D\left( \phi_\# P , \phi_\# Q \right)}$ is minimized, where $\smash{\phi_\#}$ represents the push-forward operation \citep{ben2007analysis,ganin2016domain}.
 
-This chapter considers the well-known family of $f$-divergences \cite{csiszar2004information, liese2006divergences} that includes amongst others the $\KL$, Jensen-Shannon ($\JS$), $\chi^2$, and $\alpha$-divergences as well as the Total Variation ($\TV$) and squared Hellinger ($\Hsq$) distances, the latter two of which play an important role in the statistics literature \cite{tsybakov2009}.
-A significant body of work exists studying the estimation of the $f$-divergence $D_f(Q , P)$ between general probability distributions $Q$ and $P$.
+This chapter concerns the estimation of $f$-divergences, introduced in Section \ref{subsec:f-divergences-intro}.
+%This chapter considers the well-known family of $f$-divergences \cite{csiszar2004information, liese2006divergences} that includes amongst others the $\KL$, Jensen-Shannon ($\JS$), $\chi^2$, and $\alpha$-divergences as well as the Total Variation ($\TV$) and squared Hellinger ($\Hsq$) distances, the latter two of which play an important role in the statistics literature \cite{tsybakov2009}.
+A significant body of work exists studying estimation of $D_f(P , Q)$ for general probability distributions $P$ and $Q$.
 While the majority of this focuses on $\alpha$-divergences and closely related R\'enyi-$\alpha$ divergences \citep{poczos11alpha, singh14alpha, krishnamurthy14icml},
 many works address specifically the KL-divergence \citep{perez08kl, wang09kl}
-with fewer considering $f$-divergences in full generality \cite{nguyen10ratio, kanamori12ratio, moon14ensemble, moon14followup}.
-Although the $\KL$-divergence is the most frequently encountered $f$-divergence in the machine learning literature, in recent years there has been a growing interest in other $f$-divergences \cite{nowozin2016f}, 
-in particular in the variational inference community where they have been employed to derive alternative evidence lower bounds \cite{pmlr-v80-chen18k, li2016renyi, dieng2017variational}.
+with fewer considering $f$-divergences in full generality \citep{nguyen10ratio, kanamori12ratio, moon14ensemble, moon14followup}.
+Although the $\KL$-divergence is the most frequently encountered $f$-divergence in the machine learning literature, in recent years there has been a growing interest in other $f$-divergences \citep{nowozin2016f,zhang2019variational}, 
+in particular in the variational inference community where they have been employed to derive alternative evidence lower bounds \citep{pmlr-v80-chen18k, li2016renyi, dieng2017variational}.
 
 
-The main challenge in computing $D_f(Q , P)$ is that it requires knowledge of either the densities of both $Q$ and $P$, or the density ratio $dQ/dP$.
+The main challenge in computing $D_f(P , Q)$ is that it requires knowledge of either both densities $p(x)$ and $q(x)$, or the density ratio $p(x)/q(x)$.
 In studying this problem, assumptions of differing strength can be made about $P$ and $Q$. 
-In the weakest \emph{agnostic} setting, one may be given only a finite number of i.i.d\:samples from the distributions without any further knowledge about their densities.
+In the weakest \emph{agnostic} setting, one may be given only a finite number of \iid~samples from the distributions without any further knowledge about their densities.
 As an example of stronger assumptions,
-both distributions may be mixtures of Gaussians \cite{hershey2007approximating, durrieu2012lower}, 
-or one may have access to samples from $Q$ and have full knowledge of $P$ \citep{heroma2001techrep, heroma2002ieee} as in e.g.\:model fitting.
+both distributions may be mixtures of Gaussians \citep{hershey2007approximating, durrieu2012lower}, 
+or one may have access to samples from $Q$ and have full knowledge of $P$ as in e.g.~model fitting \citep{heroma2001techrep, heroma2002ieee}.
 
 Most of the literature on $f$-divergence estimation considers the weaker agnostic setting.
-The lack of assumptions makes such work widely applicable, but comes at the cost of needing to work around estimation of either the densities of $P$ and $Q$ \cite{singh14alpha, krishnamurthy14icml} or the density ratio $dQ/dP$ \citep{nguyen10ratio, kanamori12ratio} from samples.
+The lack of assumptions makes such work widely applicable, but comes at the cost of needing to work around estimation of either the densities $p(x)$ and $q(x)$ \citep{singh14alpha, krishnamurthy14icml} or the density ratio $p(x)/q(x)$ \citep{nguyen10ratio, kanamori12ratio} from samples.
 Both of these estimation problems are provably hard \citep{tsybakov2009, nguyen10ratio} and suffer rates---the speed at which the error of an estimator decays as a function of the number of samples $N$---of order $\smash{N^{-1/d}}$ when $P$ and $Q$ are defined over $\R^d$ unless their densities are sufficiently smooth.
 This is a manifestation of the \emph{curse of dimensionality} and rates of this type are often called \emph{nonparametric}.
 One could hope to estimate $D_f(P,Q)$ without explicitly estimating the densities or their ratio and thus avoid suffering nonparametric rates, however a lower bound of the same order $\smash{N^{-1/d}}$ was recently proved for $\alpha$-divergences \citep{krishnamurthy14icml}, a sub-family of $f$-divergences.
-While some works considering the agnostic setting provide rates for the bias and variance of the proposed estimator \cite{nguyen10ratio, krishnamurthy14icml} or even exponential tail bounds \citep{singh14alpha},
-it is more common to only show that the estimators are asymptotically unbiased or consistent without proving specific rates of convergence \cite{wang09kl, poczos11alpha, kanamori12ratio}.
+While some works considering the agnostic setting provide rates for the bias and variance of the proposed estimator \citep{nguyen10ratio, krishnamurthy14icml} or even exponential tail bounds \citep{singh14alpha},
+it is more common to only show that the estimators are asymptotically unbiased or consistent without proving specific rates of convergence \citep{wang09kl, poczos11alpha, kanamori12ratio}.
 
 
-Motivated by recent advances in machine learning, this chapter studies a setting in which much stronger structural assumptions are made about the distributions.
+Motivated by recent advances in machine learning, this chapter studies a setting in which structural assumptions are made about the distributions.
+Although the assumptions are strong, they are naturally satisfied in the setting of autoencoders such as Wasserstein Autoencoders and Variational Autoencoders.
+
+
 Let $\X$ and $\Z$ be two finite dimensional Euclidean spaces.
-We consider estimation of the divergence $D_f(Q_Z, P_Z)$ between two probability distributions $P_Z$ and $Q_Z$, both defined over $\Z$.
-$P_Z$ has known density $p(z)$, while $Q_Z$ with density  $q(z)$ admits the factorization $\smash{q(z) := \int_\X q(z|x)q(x) dx}$ where access to independent samples from the distribution $Q_X$ with unknown density $q(x)$ and full knowledge of the conditional distribution $\smash{Q_{Z|X}}$ with density $q(z|x)$ are assumed.
-In most cases $Q_Z$ is intractable due to the integral and so is $D_f(Q_Z , P_Z)$.
-As a concrete example, these assumptions are often satisfied in applications of modern unsupervised generative modeling with deep autoencoder architectures,
-where $\X$ and $\Z$ would be \emph{data} and \emph{latent} spaces, $\smash{P_Z}$ the \emph{prior}, $\smash{Q_X}$ the \emph{data distribution}, $\smash{Q_{Z|X}}$ the \emph{encoder}, and $\smash{Q_Z}$ the \emph{aggregate posterior}.
+This chapter studies estimation of the divergence $D_f(Q_Z, P_Z)$ between two probability distributions $P_Z$ and $Q_Z$, both defined over $\Z$.
+It is assumed that $P_Z$ has known density $p(z)$, while $Q_Z$ with density  $q(z)$ admits the factorization $\smash{q(z) = \int q(z|x)q(x) dx}$.
+Access to independent samples from the distribution $Q_X$ with unknown density $q(x)$ and full knowledge of the conditional distribution $\smash{Q_{Z|X}}$ with density $q(z|x)$ are assumed.
+%The true density $q(z)$ is unknown due to the integral over the unknown $q(x)$ and so is $D_f(Q_Z , P_Z)$.
+In the language of autoencoders,
+%As a concrete example, these assumptions are often satisfied in applications of modern unsupervised generative modeling with deep autoencoder architectures,
+%where 
+$\X$ and $\Z$ would be \emph{data} and \emph{latent} spaces, $\smash{P_Z}$ the \emph{prior}, $\smash{Q_X}$ the \emph{data distribution}, $\smash{Q_{Z|X}}$ the \emph{encoder}, and $\smash{Q_Z}$ the \emph{aggregate posterior}, though the theory presented in this work does not apply exclusively to this setting.
 
-Given independent observations $\smash{X_1, \ldots, X_N}$ from $\smash{Q_X}$, the finite mixture $\smash{\hat{Q}_Z^N := \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i}}$ can be used to approximate the continuous mixture $\smash{Q_Z}$. 
-The main contribution of this chapter is to approximate the intractable $\smash{D_f(Q_Z , P_Z)}$ with $\smash{D_f(\hat{Q}_Z^N , P_Z)}$, a quantity that can be estimated to arbitrary precision using Monte-Carlo sampling since both distributions have known densities, and to theoretically study conditions under which this approximation is reasonable.
+Given independent observations $\smash{X_1, \ldots, X_N}$ from $\smash{Q_X}$, the goal is to estimate $\smash{D_f(Q_Z , P_Z)}$.
+The main contribution of this chapter is to use the finite mixture $\smash{\hat{Q}_Z^N := \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i}}$ as a surrogate for the continuous mixture $\smash{Q_Z}$, 
+to use this to approximate $\smash{D_f(Q_Z , P_Z)}$ with $\smash{D_f(\hat{Q}_Z^N , P_Z)}$,
+%a quantity that can be estimated to arbitrary precision using Monte-Carlo sampling since both distributions have known densities, 
+and to theoretically study conditions under which this approximation is reasonable.
+
+
 $\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is denoted the Random Mixture (RAM) estimator and rates at which it converges to $\smash{D_f(Q_Z , P_Z)}$ as $N$ grows are derived.
 Similar guarantees are also provided for RAM-MC---a practical Monte-Carlo based version of RAM.
 By side-stepping the need to perform density estimation, one obtains \emph{parametric} rates of order $N^{-\gamma}$, where $\gamma$ is independent of the dimension (see Tables \ref{table:convergence} and \ref{table:concentration}), although the constants may still in general show exponential dependence on dimension.
