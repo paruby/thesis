@@ -59,7 +59,7 @@ In the ICA community, the goal is the use the learned model $P_X^\theta$ to infe
 Since latent variables are by definition unknown, it is important that if multiple solutions to the generative modelling problem exist, they should correspond to similar models with regard to the use of the latent variables.
 That is, if distinct parameters $\theta_1 \not= \theta_2$ are such that  $P_X^{\theta_1} = P_X^{\theta_2} = Q_X$, the corresponding models should be strongly related; for instance, corresponding to the same model but with permuted coordinates over the latent variables.
 Such results are known as \emph{identifiability results} and are important in the theoretical study of ICA algorithms. 
-ICA will be discussed in more detail in Chapter \ref{chapter:ica}, in which identifiability results are presented.
+ICA will be discussed in more detail in Chapter \ref{chapter:ica}, in which novel identifiability results are presented.
 
 %One of the main families of methods for solving this problem, autoencoders, involve the introduction of a latent space and encoder, a mapping from the data to the latent space.
 %The main contribution of Chapter \ref{chapter:latent-space-learning-theory} is a learning theoretic analysis of the estimation of divergences in this latent space. 
@@ -74,8 +74,8 @@ In the following, two sets of nomenclature will be introduced for the neural sam
 \medskip
 
 \begin{definition}[Latent Variable Model]
-A Latent Variable Model (LVM) over a space $\mathcal{X}$ consists of a distribution $P_Z$ over a low dimensional space $\mathcal{Z}$ together with conditional distributions $P_{X|Z}$. 
-Together, these induce a distribution $P_X$ over the data-space. 
+A Latent Variable Model (LVM) over a data space $\mathcal{X}$ consists of a distribution $P_Z$ over a low dimensional latent space $\mathcal{Z}$ together with conditional distributions $P_{X|Z}$. 
+Together, these induce a distribution $P_X$ over the data space. 
 \end{definition}
 
 %In practice, an LVM may be parametrised, either by parametrising the prior as $P_Z^\theta$, or the conditional distributions as $P_{X|Z}^\theta$, or both.
@@ -85,18 +85,19 @@ In the neural sampler community, $P_Z$ is referred to as a \emph{prior} or \emph
 In the ICA community, $P_Z$ is referred to as a \emph{source distribution} and may be specified only implicitly through some assumed properties, such as being a factorised distribution.
 
 The conditional distributions can be thought of as a mapping $g:\mathcal{Z}\to\mathcal{P}(\mathcal{X})$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$,
-and may in general be dirac-delta distributions, in which case the associated mapping $g$ is well-defined as a function $g:\mathcal{Z}\to\mathcal{X}$. 
+and may in general be Dirac delta distributions (where all probability mass is placed at a single point), in which case the associated mapping $g$ is well-defined as a function $g:\mathcal{Z}\to\mathcal{X}$. 
 
 In the neural sampler community, the conditional distributions are referred to as \emph{generators} or \emph{decoders}, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
-If the conditional distributions they correspond to are dirac-delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
+If the conditional distributions they correspond to are Dirac delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
 In the ICA community, the generators are generally deterministic and are known as \emph{mixing functions}, and are usually denoted by $f$.
 
 When practically implemented in modern applications, generators are often realised as neural networks.
 This is straightforward in the deterministic case: $g^\theta$ is simply a function and can thus be represented as a deep network with parameters $\theta$.
-If the generator is stochastic, it can still be represented simply as a neural network provided that the conditional distributions are sufficiently structured. 
+If the generator is stochastic, it can still be explicitly represented as a neural network provided that the conditional distributions are sufficiently structured. 
 For instance, if the conditional distributions are Gaussian with varying mean and covariance, $g^\theta$ can be represented as a neural network with two outputs, one for the mean and one for the covariance.
 
-For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data-space $\mathcal{X}$. 
+
+For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data space $\mathcal{X}$. 
 For simplicity, it will be assumed that densities of all relevant distributions exist, so that this is equivalent to specifying $P_X^\theta$ via the integral
 %
 \begin{align*}
@@ -121,18 +122,18 @@ A divergence $D$ is a mapping $D: \mathcal{P}(\mathcal{X}) \times \mathcal{P}(\m
 
 \begin{itemize}
 \item $D(P, Q)  \geq 0$ for any distributions $P, Q \in \mathcal{P}(\mathcal{X})$,
-\item $D(P, Q) = 0$ if and only if $P = Q$.
+\item $D(P, Q) = 0$ if and only if $P = Q$,
 \end{itemize}
 
 where $\mathcal{P}(\mathcal{X})$ denotes the set of all distributions on $\mathcal{X}$.
 \end{definition}
 
 
-A metric is additionally symmetric and must obey the triangle inequality.
+A metric is additionally symmetric and obeys the triangle inequality.
 For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimize it with respect to the parameters $\theta$. 
 There are two main families of divergences that are used in the machine learning literature generally, which are discussed in the rest of this section.
 
-\subsection{Integral Probability Metrics (IPMs)}\label{subsec:intro-ipm}
+\subsection{Integral Probability Metrics}\label{subsec:intro-ipm}
 
 \begin{definition}
 An Integral Probability Metric (IPM) is a divergence that can be written as
@@ -170,7 +171,7 @@ Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
 \begin{itemize}	
 \item Wasserstein or optimal transport distances, where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$ with respect to some base metric;
 \item The Total Variation distance, where $\mathcal{H}$ is the set of all functions with infinity norm $1$; and
-\item The Maximum Mean Discrepancy (MMD) where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \citep{gretton2012kernel}.
+\item The Maximum Mean Discrepancy, where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \citep{gretton2012kernel}.
 \end{itemize}
  
 %Optimal transport distances will be discussed further in Section, making use of a different formulation of these distances than as IPMs.
@@ -194,6 +195,10 @@ Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
 
 %\todo{flesh out this section, give more properties of $f$-divergences?}
 
+$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio. 
+They are specified through choice of the function $f$.
+
+\medskip
 
 \begin{definition}
 Let $f$ be a convex real-valued function defined on $(0, \infty)$ such that $f(1)=0$, and let $P$ and $Q$ be distributions with densities $p(x)$ and $q(x)$.
@@ -204,7 +209,7 @@ D_f(P, Q) = \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx.
 \end{align*}
 %
 \end{definition}
-This is defined for distributions $P$ and $Q$ for which $P$ is absolutely continuous with respect to $Q$, meaning that the density ratio $p(x)/q(x)$ is finite for all $x$, and is usually taken to be $\infty$ otherwise.
+This is defined for distributions $P$ and $Q$ for which $P$ is absolutely continuous with respect to $Q$, meaning informally that the density ratio $p(x)/q(x)$ is finite for all $x$ with mass under $Q$, and is usually taken to be $\infty$ otherwise.
 
 A useful property of $f$-divergences is that for any constant $c$, replacing $f(u)$ by $\tilde{f}(u) = f(u) + c(u-1)$ does not change the divergence $D_f$:
 %
@@ -214,26 +219,29 @@ D_{\tilde{f}}(P, Q) &= \int \left[ f\left(\frac{p(x)}{q(x)}\right) + c\left(\fra
 &= D_f(P, Q)
 \end{align*}
 %
-since $p(x)$ and $q(x)$ integrate to $1$.
+where the last equality holds since $p(x)$ and $q(x)$ integrate to $1$.
 It is often convenient to work with $f_0(u) := f(u) - f'(1)(u-1)$ which is decreasing on $(0, 1)$, increasing on $(1, \infty)$ and satisfies $f'_0(1)=0$.
 
 
-To see that this $f$-divergences are indeed divergences, consider first positivity, which follows from convexity of $f$ and Jensen's inequality:
+To see that $f$-divergences are indeed divergences, consider first non-negativity, which follows from convexity of $f$ and Jensen's inequality:
 %
 \begin{align}
-D_f(P, Q) &= \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx \\ 
+D_f(P, Q) &= \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx \nonumber \\ 
 &\geq f\left(\int \frac{p(x)}{q(x)} q(x) dx\right) \label{eqn:f-divergece-jensen}\\
-&= f(1) = 0.
+&= f(1) = 0. \nonumber
 \end{align}
 %
 
 To show that $D_f(P,Q) = 0$ if and only if $P=Q$, note first that if $P=Q$ then $D_f(P,Q) = 0$, since $f(1)=0$.
 To see that $D_f(P,Q) > 0$ for any $P \not= Q$, observe that Inequality \ref{eqn:f-divergece-jensen} above is strict for any $f$ that is strictly convex.
-It is also strict for any $f$ that does not have constant gradient in any neighbourhood of $1$, since the $f_0$ associated to any such $f$ is strictly positive on $\mathbb{R}_+\setminus \{1\}$.
+%
+This also holds for any $f$ that does not have constant gradient in any neighbourhood of $1$, since the $f_0$ associated to any such $f$ is strictly positive on $\mathbb{R}_+\setminus \{1\}$.
+For any $P\not= Q$, the distribution $Q$ must put positive mass in areas for which $p(x)/q(x) \not= 1$ and so  $D_{f_0}(P,Q)$ must be positive.
+It follows that $D_f = D_{f_0}$ is also positive.
 Hence `most' choices of $f$ lead to valid $f$-divergences.
 
 
-By selecting different choices for $f$, several commonly encountered divergences can be recovered, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
+Different choices of $f$ yield several commonly encountered divergences, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
 This family of symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$ and include as special cases the squared-Hellinger $({\beta=\frac{1}{2}})$,  Jensen-Shannon $(\beta=1)$ and Total Variation $(\beta=\infty)$. 
 Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences considered in Chapter \ref{chapter:latent-space-learning-theory}.
 
@@ -270,12 +278,12 @@ Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences consid
  $\chi^2$ & $x^2 - 2x$\\
  Squared-Hellinger ($\text{H}^2$) & $2(1-\sqrt{x})$\\
  Jensen-Shannon (JS) & $(1+x)\log(\frac{2}{1+x}) + x\log x$\\
- $\beta$-divergence, \,
-% $D_{f_\beta}$, 
- $\beta > 0,$ $\beta\not=\frac{1}{2}$ & $\frac{1}{1-\frac{1}{\beta}}\left[ (1+x^\beta)^{\frac{1}{\beta}} - 2^{\frac{1}{\beta}-1}(1+x) \right]$\\
  $\alpha$-divergence, \,
 % $D_{f_\alpha}$, 
  $-1<\alpha < 1$ & $\frac{4}{1-\alpha^2}\left( 1 - x^{\frac{1+\alpha}{2}} \right) - \frac{2(x-1)}{\alpha-1}$ \\
+ $\beta$-divergence, \,
+% $D_{f_\beta}$, 
+ $\beta > 0,$ $\beta\not=\frac{1}{2}$ & $\frac{1}{1-\frac{1}{\beta}}\left[ (1+x^\beta)^{\frac{1}{\beta}} - 2^{\frac{1}{\beta}-1}(1+x) \right]$\\
  \bottomrule
 \end{tabular}
 \end{table}
@@ -297,15 +305,15 @@ Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences consid
 \section{Density Ratio Estimation}\label{sec:literature-density-ratio-estimation}
 
 A natural way to distinguish between two distributions $P$ and $Q$ with overlapping support is to consider the problem of classifying between draws from each distribution.
-Suppose that samples from $P$ are labelled as class $1$, and samples from $Q$ are labelled as class $0$. 
-This can be implemented as logistic regression, in which case a function $c:\mathcal{X}\to [0,1]$ is introduced and trained to minimise the objective 
+Suppose that samples from $P$ are labelled as class $1$, and samples from $Q$ as class $0$. 
+This classification problem implemented as logistic regression, in which case a function $c:\mathcal{X}\to [0,1]$ is introduced and trained to minimise the objective 
 %
 \begin{align*}
 L(c) &=  \mathbb{E}_{x\sim P}\left[ - \log c(x) \right] + \mathbb{E}_{x \sim Q} \left[ - \log(1 - c(x)) \right] \\
 &= \int -\log c(x) p(x) - \log (1 - c(x)) q(x) dx
 \end{align*}
 %
-For any particular $x$, the integrand is minimised by $c^*(x) = \frac{p(x)}{q(x) + p(x)}$ \citep{goodfellow2014generative}, and so the optimal classifier assigns to $x$ the posterior probability that it was drawn from $P$.
+For any particular $x$, the integrand is minimised by $c^*(x) = \frac{p(x)}{q(x) + p(x)}$ \citep{goodfellow2014generative}, and so the optimal classifier assigns $x$ to class $1$ with the posterior probability that it was drawn from $P$.
 If $c$ parametrised as $\frac{1}{1+\exp( -r(x))}$ where $r:\mathcal{X}\to\mathbb{R}$, then the optimal  $c^*$ corresponds to $r^*(x) = \log\left(p(x) / q(x)\right)$.
 
 This is a useful trick for cases in which only samples from two distributions are available and estimation of their density ratio is desired, as is the case in Chapter \ref{chapter:ica}.
@@ -323,7 +331,7 @@ D_{\text{JS}}(P, Q) \geq \log 2 - \frac{L(c)}{2}.
 \end{align*}
 
 Recall that the Jensen-Shannon divergence is an $f$-divergence. 
-In fact, it can be similarly shown that any $f$-divergence between two distributions can be estimated by maximisation of a lower bound corresponding to a classification problem, and that doing so results in a function of the density ratio being estimated.
+It can be similarly shown that any $f$-divergence between two distributions can be estimated by maximisation of a lower bound corresponding to a classification problem, and that doing so results in a function of the density ratio being estimated.
 All $f$-divergences admit a variational form as a result of convex conjugacy \citep{nguyen10ratio}.
 Any convex function $f(u)$ has a conjugate $f^*(t)$ defined as
 %
@@ -380,6 +388,7 @@ The remainder of this section discusses GANs and two types of autoencoders, Vari
 
 Generative Adversarial Networks (GANs) are a family of methods that approximately minimise any $f$-divergence and some choices of IPMs. 
 In the case of $f$-divergences, the key ideas have been already introduced in Section \ref{sec:literature-density-ratio-estimation}.
+
 \cite{goodfellow2014generative} introduced the idea of training a discriminator $d^\phi: \mathcal{X} \to [0,1]$ to classify between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$, which then provides a surrogate loss for a generator $g^\theta$, trained simultaneously to maximise the loss of the discriminator. 
 In \cite{goodfellow2014generative}, the loss is implemented as logistic regression
 %
@@ -409,7 +418,7 @@ Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractabl
 L_f(\phi, \theta) = \mathbb{E}_{x \sim Q_X} \left[ T^\phi(x) \right] - \mathbb{E}_{z \sim P_Z} \left[ f^*(T^\phi(g^\theta(x))) \right] \leq D_f(P^\theta_X, Q_X)
 \end{align*}
 %
-where the set of functions $\mathcal{T}$ is implemented as a neural network.
+where the function $T^\phi$ is implemented as a neural network.
 As with the original GAN objective, stochastic gradients of this surrogate loss can be computed. 
 The function $T^\phi$ plays the role of the discriminator introduced by \cite{goodfellow2014generative}. %but the above derivation holds for arbitrary choices of $f$. 
 \cite{nowozin2016f} thus demonstrated how the GAN `trick' can be applied to other $f$-divergences to approximately minimise $D_f(P^\theta_X, Q_X)$ with respect to the LVM parameters $\theta$.
@@ -426,8 +435,8 @@ D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x
 where the inequality holds for any $h \in \mathcal{H}$, where $h$ now plays the role of the discriminator. 
 If the elements of $\mathcal{H}$ can be differentiably parametrised, stochastic gradients of the loss can be obtained with respect its parameters.
 In contrast to the $f$-divergence case, the discriminator $h$ must belong to a particular class of functions, which can complicate specifying the parametrisation.
-One example of an IPM-GAN is the Wasserstein GAN of \cite{AB17}. 
-Here, the Wasserstein distance is used, corresponding to $h$ having Lipschitz constant at most $1$. 
+One example of an IPM-based GAN is the Wasserstein GAN of \cite{AB17}. 
+Here, the 1-Wasserstein distance is used, corresponding to $h$ having Lipschitz constant at most $1$. 
 For certain neural network architectures, including those composed of fully-connected and convolutional layers, this can be enforced by weight clipping.
 
 \subsection{Variational Autoencoders}
@@ -441,7 +450,7 @@ D_{\text{KL}}(Q_X, P^\theta_X) &= \int q(x) \log \left( \frac{q(x)}{p^\theta(x)}
 %
 The first term above, the negative of the \emph{differential entropy} of $Q_X$, often written $H(Q_X)$, cannot be estimated without knowledge of the density $q(x)$.
 However, since it is constant as a function of $\theta$, it can be ignored.
-The term $\log p^\theta(x)$ inside the second integral is known as the \emph{log-likelihood} or \emph{evidence}. 
+The term $\log p^\theta(x)$ inside the second integral is known as the \emph{log-likelihood} or \emph{evidence}, and maximisation of this quantity is known as \emph{maximum likelihood estimation}. 
 Although the density $p^\theta(x)$ is intractable, the evidence can be tractably lower bounded leading to the so-called \emph{evidence lower bound} (ELBO), which in turn leads to a tractable \emph{upper} bound on $D_{\text{KL}}(Q_X, P^\theta_X)$. 
 
 First, observe that the log-likelihood can be written 
@@ -462,7 +471,7 @@ This leads to
 %
 where the inequality follows from Jensen's inequality due to the concavity of $\log$.
 The distribution $q^\phi(z|x)$ is a variational approximation to the true posterior $p^\theta(z|x)$; it can be shown that the gap introduced by Jensen's inequality is equal to $D_{\text{KL}}\left(q^\phi(z|x), p^\theta(z|x)\right)$. 
-$q^\phi(z|x)$ is often referred to as an encoder as it maps elements of the data-space $\mathcal{X}$ to distributions over the latent space $\mathcal{Z}$.
+$q^\phi(z|x)$ is often referred to as an encoder as it maps elements of the data space $\mathcal{X}$ to distributions over the latent space $\mathcal{Z}$.
 Putting things together yields
 %
 \begin{align*}
@@ -477,11 +486,11 @@ L_{\text{VAE}}(\theta, \phi) =  \underbrace{\mathbb{E}_{q(x)} \mathbb{E}_{q^\phi
 %
 which (up to constants) is an upper bound on $D_{\text{KL}}(Q_X, P^\theta_X)$.
 It is common for the prior to be a standard Gaussian, the generator to output Gaussians with mean $\mu^\theta(z)$ and fixed isotropic covariance, and the encoder to map to Gaussians with mean $\mu^\phi(x)$ and diagonal covariance $\Sigma^\phi(x)$.
-In this case, term (i) above can be interpreted as an average reconstruction loss and (ii) as a regulariser, hence making the model a type of regularised autoencoder\footnote{Note however that the interpretation of VAEs as a sort of autoencoder breaks down when more powerful classes of generators are used, as discussed in \href{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}.}.
+In this case, term (i) above can be interpreted as an average reconstruction loss and (ii) as a regulariser, hence making the model a type of regularised autoencoder\footnote{Note however that the interpretation of VAEs as a type of autoencoder breaks down when more powerful classes of generators are used, as discussed in \href{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}.}.
 
 The encoder $Q^\phi_{Z|X}$ together with the data distribution $Q_X$ induce the push-forward distribution $Q^\phi_Z$ known as the \emph{aggregate posterior}.
 The term (ii) was shown by \cite{hoffman2016elbo} to be equivalent to $D_{\text{KL}}(Q^\phi_Z , P_Z) + I(X,Z)$ where $I(X,Z) = D_{\text{KL}}(Q^\phi_{XZ} , Q_XQ^\phi_{Z})$ is the mutual information of a data sample and its encoding.
-Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-divergences (and the KL-divergence in particular) between priors and aggregate posteriors, and so is directly relevant mutual information estimation via this equivalence.
+Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-divergences (and hence the KL-divergence) between priors and aggregate posteriors, and so is directly relevant mutual information estimation via this equivalence.
 
 %All distributions involved can be chosen so this can be unbiasedly estimated, meaning that it can be minimised with respect to the parameters $\theta$ and $\phi$ using stochastic gradient methods.
 %It is common that the encoder, generator and prior are chosen to be Gaussians, 
@@ -490,16 +499,15 @@ Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-di
 
 %\todo{discuss the fact that the aggregate posterior and prior satisfy the setting we consider and mention that some works consider divergences between them?}
 
-\subsection{Wasserstein Autoencoders (WAEs)}
+\subsection{Wasserstein Autoencoders}
 
-WAEs \citep{tolstikhin2017wasserstein} are concerned with optimal transport or Wasserstein distances.
-These were discussed briefly in Section \ref{subsec:intro-ipm} as they admit a formulation as IPMs. 
-In this section we will make use of a different formulation of these distances.
+Wasserstein Autoencoders (WAEs) \citep{tolstikhin2017wasserstein} approximately minimise optimal transport distances, also known as 1-Wasserstein distances, between model and data distributions.
+These were discussed briefly in Section \ref{subsec:intro-ipm} as they can be expressed as IPMs, but here an alternative formulation of these distances will be used.
 
 Let $c$ be any metric on $\mathcal{X}$.
 For intuition, $c(x, x')$ may be thought of as a function specifying the cost of transporting a point from $x$ to $x'$.
 The optimal transport distance between two distributions $P$ and $Q$ over $\mathcal{X}$ is then the minimal cost incurred by transporting the probability mass of $P$ to that of $Q$.
-For simplicity in the following, we will assume $P$ and $Q$ have densities $p$ and $q$. 
+%For simplicity in the following, we will assume $P$ and $Q$ have densities $p$ and $q$. 
 
 Formally, let $\Gamma$ be the set of joint distributions over $\mathcal{X} \times \mathcal{X}$ with marginals $P$ and $Q$. 
 That is, any element $\gamma(x, x') \in \Gamma$ is a joint distribution satisfying $\gamma(x) = p(x)$ and $\gamma(x') = q(x')$.
@@ -515,15 +523,15 @@ This can equivalently be written as
 OT_c(P, Q) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right],
 \end{align*}
 %
-where instead we think of the $\gamma$ as a conditional distribution that specifies how an element of probability mass at $x$ should be spread over the points $x'$. 
+where $\gamma$ can be though of as a conditional distribution specifying how an element of probability mass at $x$ should be moved and spread over the points $x'$. 
 Specified this way, each element of $\Gamma$ should satisfy $\int \gamma(x'|x) q(x) dx = p(x')$.
-In our case of interest, we thus have
+In the generative modelling setting, we thus have
 %
 \begin{align*}
 OT_c(P_X^\theta, Q_X) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right].
 \end{align*}
 %
-In practice, this minimisation problem cannot be solved directly: given a candidate conditional distribution $\gamma(x'|x)$ it is not practically possible to verify whether or not $\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$ holds since only samples from $Q_X$ are available and the density $p^\theta_X(x)$ is intractable.
+In practice, this minimisation problem cannot be solved directly: given a candidate conditional distribution $\gamma(x'|x)$ it is not practically possible to verify whether or not $\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$ since only samples from $Q_X$ are available and the density $p^\theta_X(x)$ is intractable.
 
 \cite{tolstikhin2017wasserstein} proved the following result, giving a handle on this problem:
 If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be written as a composition $\gamma(x'|x) = \int p^\theta(x'|z) q^\phi(z|x) dz$ where $q^\phi(z|x)$ is a conditional distribution satisfying $\int q^\phi(z|x) q(x) dx = p(z)$. 
@@ -533,29 +541,30 @@ Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if $Q_X
 While it is clear that the composition of any such encoder and the generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
 This is proved in Theorem 1 of \cite{tolstikhin2017wasserstein}.
 
-Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder, and $g$ for the deterministic generator, we obtain the following alternative statement of the optimal transport distance in the LVM setting:
+Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder and $g$ for the deterministic generator yields the following alternative statement of the optimal transport distance in the LVM setting:
 %
 \begin{align*}
 OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, G(z)) \right].
 \end{align*}
 %
-This optimisation problem is again not feasible to solve due to the hard constraint, 
-but can be made computationally feasible by relaxing the constraint to obtain the WAE objective:
+Again this optimisation problem is not feasible to solve due to the hard constraint, 
+but it can be made computationally feasible by relaxing the constraint to obtain the WAE objective:
 %
 \begin{align}
 L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, G^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}}
 \end{align}
 %
 where $D$ is some divergence, $\lambda$ is a positive scalar and the encoder is given parameter $\phi$.
+While the generator is required to be deterministic, the encoder may be deterministic or stochastic \citep{rubenstein2018latent}.
 For general choices of $\lambda$ and $D$, $\inf_{\phi} L_{\text{WAE}}^{\lambda, D}(\theta, \phi)$ is neither an upper nor lower bound on the original objective $OT_c(P_X^\theta, Q_X)$, but a heuristic approximation due to the relaxation of the constraint. 
 
 %It was, however, proven by \cite{sinkhorn} (Theorem 2.1) that if $G$ is $\lambda$-Lipschitz, , then taking $D$ to be
 
-Observe that term (i) of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and their reconstruction obtained by pushing through the encoder and decoder.
-This is therefore simple to estimate and hence optimise with respect to the parameters $\phi$ and $\theta$.
-The term (ii) is still potentially challenging to estimate depending on the choice of $D$. 
+Term (i) of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and their reconstruction obtained by pushing through the encoder and decoder.
+This is therefore simple to estimate and optimise with respect to the parameters $\phi$ and $\theta$.
+Term (ii) is potentially challenging to estimate depending on the choice of $D$. 
 \cite{tolstikhin2017wasserstein} propose two choices for $D$ which can be estimated based on samples from $P_Z$ and $Q_Z^\phi$: the Maximum Mean Discrepancy (MMD) \citep{gretton2012kernel} which can be estimated directly, leading to WAE-MMD, and a GAN style estimation of the Jensen-Shannon divergence by introducing an additional discriminator to obtain a lower bound on the divergence, leading to WAE-GAN. 
 
-Estimating the discrepancy between $P_Z$ and $Q_Z^\phi$ using sample-based methods does not make use of a significant degree of structure that is present in the problem. $P_Z$ is typically chosen to be a simple distribution with known density. While $Q_Z^\phi$ may be complex, its density can be decomposed as $q^\phi(z) = \mathbb{E}_{x\sim Q_X} q^\phi(z|x)$ where $q^\phi(z|x)$ is also typically chosen to be simple (e.g. Gaussian) and $Q_X$ can be sampled.
-The main contribution of this chapter, beginning in the next section, is to propose and analyse an estimator for the case that $D$ in (ii) is chosen to be an $f$-divergence. 
+Estimating a divergence between $P_Z$ and $Q_Z^\phi$ using sample-based methods does not make use of a significant degree of structure that is present in the problem. $P_Z$ is typically chosen to be a simple distribution with known density. While $Q_Z^\phi$ may be complex, its density can be decomposed as $q^\phi(z) = \mathbb{E}_{x\sim Q_X} q^\phi(z|x)$ where $q^\phi(z|x)$ is also typically chosen to be simple (e.g. Gaussian) and $Q_X$ can be sampled.
+The main contribution of Chapter \ref{chapter:latent-space-learning-theory} is to propose and analyse an estimator making use of this structure for the case that $D$ in (ii) is chosen to be an $f$-divergence. 
 
