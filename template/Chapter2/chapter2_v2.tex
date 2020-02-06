@@ -131,7 +131,9 @@ where $\mathcal{P}(\mathcal{X})$ denotes the set of all distributions on $\mathc
 
 A metric is additionally symmetric and obeys the triangle inequality.
 For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimize it with respect to the parameters $\theta$. 
-There are two main families of divergences that are used in the machine learning literature generally, which are discussed in the rest of this section.
+There are two main families of divergences that are used in the machine learning literature generally.
+At a high level, Integral Probability Metrics (IPMs) can be thought of as comparing distributions by considering the difference between their densities, while $f$-divergences can be thought of as considering the ratio of their densities.
+These two families are discussed in the rest of this section.
 
 \subsection{Integral Probability Metrics}\label{subsec:intro-ipm}
 

@@ -664,7 +664,7 @@ Setting $\gamma_N = \frac{2}{N^\frac{1}{3}}$ and $\delta_N = \frac{1}{N^\frac{1}
 
 We will make use of McDiarmid's theorem in our proof of Theorem \ref{thm:concentration}:
 
-\begin{theorem*}[McDiarmid's inequality]
+\begin{theorem}[McDiarmid's inequality]\label{thm:mcdiarmid}
 Suppose that $X_1, \ldots, X_N \in \mathcal{X}$ are independent random variables and that $\phi : \mathcal{X}^N \to \R$ is a function. 
 If it holds that for all $i\in\{1,\ldots,N\}$ and $x_1, \ldots, x_N, x_{i'}$, 
 \begin{align*}
@@ -678,7 +678,7 @@ and
 \begin{align*}
     \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq -t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
 \end{align*}
-\end{theorem*}
+\end{theorem}
 
 In our setting we will consider $\phi(\XN) = D_f\left( \hat{Q}_Z^N , P_Z\right)$.
 
@@ -1311,29 +1311,8 @@ A set of models satisfying these criteria were selected by hand, but as noted pr
 
 \subsubsection{Additional results for squared Hellinger distance}\label{appendix:sq-hellinger-results}
 
-Figure~\ref{fig:real-exps-hsq} we display similar results to those displayed in Figure~\ref{fig:real-exps} of the main paper but with the $H^2$-divergence instead of the KL.
-An important point is that $H^2(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$,
-and due to considerations of scale we plot the estimated values $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$.
-Decreasing bias in $N$ of RAM-MC therefore manifests itself as the lines \emph{increasing} in Figure~\ref{fig:real-exps-hsq}. 
-Concavity of $\log$ means that the reduction in variance when increasing $M$ results in RAM-MC with $M{=}1000$ being above RAM-MC with $M{=}10$.
-Similar to those presented in the main part of the paper, these results therefore also support the theoretical findings of our work.
+\todo{remove}
 
-We additionally attempted the same experiment using the $\chi^2$-divergence but encountered numerical issues.
-This can be understood as a consequence of the inequality $e^{\KL(A, B)} - 1 \leq \chi^2(A,B)$ for any distributions $A$ and $B$. 
-From Figure~\ref{fig:real-exps} we see that the $\KL$-divergence reaches values higher than $1000$ which makes the corresponding value of the $\chi^2$-divergence larger than can be represented using double-precision floats.
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot_hsq.pdf}
-\end{center}
-\caption{\label{fig:real-exps-hsq}
-Estimating $H^2(Q_Z^\theta , P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
-Lines and error bars represent means and standard deviations over 50 trials.
-Plots depict $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$ since $H^2$ is close to 2 in all models.
-Omitted lower error bars correspond to error bars going to $-\infty$ introduced by $\log$.
-Note that the approximately \emph{increasing} behaviour evident here corresponds to the expectation of RAM-MC \emph{decreasing} as a function of $N$. 
-Due to concavity of $\log$, the decrease in variance when increasing $M$ manifests itself as the {\bf \textcolor{red}{red}} line ($M{=}1000$) being consistently above the {\bf \textcolor{green!65!blue}{green}} line ($M{=}10$).
-}
-\end{figure}
 
 
