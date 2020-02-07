@@ -41,6 +41,8 @@ Second, it provides a rigorous foundation to related methods that have been heur
 %
 %\todo{replace $D(.\|.)$ with $D(.,.)$}
 
+\todo{Consistent use of -divergence and whether $H^2$ is italicised or not}
+
 \section{Introduction}
 
 The estimation and minimisation of divergences between probability distributions based on samples are fundamental problems of machine learning.
@@ -61,12 +63,12 @@ While the majority of this focuses on $\alpha$-divergences and closely related R
 many works address specifically the KL-divergence \citep{perez08kl, wang09kl}
 with fewer considering $f$-divergences in full generality \citep{nguyen10ratio, kanamori12ratio, moon14ensemble, moon14followup}.
 Although the $\KL$-divergence is the most frequently encountered $f$-divergence in the machine learning literature, in recent years there has been growing interest in other $f$-divergences \citep{nowozin2016f,zhang2019variational}, 
-in particular in the variational inference community where they have been employed to derive alternative evidence lower bounds \citep{pmlr-v80-chen18k, li2016renyi, dieng2017variational}.
+in particular in the variational inference community where they have been employed to derive alternative evidence lower bounds \citep{li2016renyi, dieng2017variational, pmlr-v80-chen18k}.
 
 
 The main challenge in computing $D_f(P , Q)$ is that it requires knowledge of either both densities $p(x)$ and $q(x)$, or the density ratio $p(x)/q(x)$.
 In studying this problem, assumptions of differing strength can be made about $P$ and $Q$. 
-In the weakest \emph{agnostic} setting, one may be given only a finite number of \iid~samples from the distributions without any further knowledge about their densities.
+In the weakest \emph{agnostic} setting, one may be given only a finite number of \iid~samples from the distributions without any further knowledge of their densities.
 As an example of stronger assumptions,
 both distributions may be mixtures of Gaussians \citep{hershey2007approximating, durrieu2012lower}, 
 or one may have access to samples from $Q$ and have full knowledge of $P$ as in e.g.~model fitting \citep{heroma2001techrep, heroma2002ieee}.
@@ -101,8 +103,8 @@ to use this to approximate $\smash{D_f(Q_Z , P_Z)}$ with $\smash{D_f(\hat{Q}_Z^N
 and to theoretically study conditions under which this approximation is reasonable.
 
 
-$\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is denoted the Random Mixture (RAM) estimator and rates at which it converges to $\smash{D_f(Q_Z , P_Z)}$ as $N$ grows are derived.
-Similar guarantees are also provided for RAM-MC, a practical Monte-Carlo based version of RAM.
+$\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is denoted the \emph{Random Mixture (RAM)} estimator and rates at which it converges to $\smash{D_f(Q_Z , P_Z)}$ as $N$ grows are derived.
+Similar guarantees are also provided for \emph{RAM-MC}, a practical Monte-Carlo based version of RAM.
 By side-stepping the need to perform density estimation, one obtains \emph{parametric} rates of order $N^{-\gamma}$, where $\gamma$ is independent of the dimension (see Tables \ref{table:convergence} and \ref{table:concentration}), although the constants may still in general show exponential dependence on dimension.
 This is in contrast to the agnostic setting where \emph{both} nonparametric rates and constants are exponential in dimension. 
 
@@ -141,6 +143,12 @@ KL(A,B) \leq e^{KL(A, B)} - 1 \leq \chi^2(A, B)
 \begin{lemma}[Pinsker's inequality]
 \begin{align*}
 TV(A,B)  \leq \sqrt{\frac{1}{2}\KL(A, B)}
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+\begin{align*}
+D_{f_\beta}(A,B) \leq \psi(\beta) \TV
 \end{align*}
 \end{lemma}
 
@@ -184,6 +192,9 @@ The closed form expression for the $\chi^2$-divergence between two $d$-variate n
 (2\Sigma_1^{-1}\mu_1 - \Sigma_2^{-1}\mu_2)
 \right) - 1.
 \end{align*}
+
+\todo{in particular, this is finite when... ref assumptions section which uses this lemma.}
+
 \end{lemma}
 As a corollary, the following also holds:
 \begin{corollary}
@@ -224,7 +235,9 @@ The $\KL$-divergence between two $d$-variate Gaussians is:
 \end{align*}
 \end{lemma}
 
-\subsection{McDiarmid}
+\subsection{Concentration inequalities}
+
+\todo{chebyshev}
 
 We will make use of McDiarmid's theorem in our proof of Theorem \ref{thm:concentration}:
 
@@ -252,7 +265,7 @@ and
 This section introduces the proposed $f$-divergence estimator and presents theoretical guarantees for it.
 The existence is assumed of probability distributions
 ${P_Z}$ and ${Q_Z}$ defined over $\Z$ with known density $p(z)$ and intractable density ${q(z) = \int q(z|x) q(x) dx}$ respectively,  where ${Q_{Z|X}}$ is known. 
-$Q_X$ defined over $\X$ is unknown, a set of i.i.d.\:samples ${\XN=\{X_1, \ldots, X_N\}}$ from $Q_X$ are given.
+$Q_X$ defined over $\X$ is unknown, but a set of i.i.d.\:samples ${\XN=\{X_1, \ldots, X_N\}}$ from $Q_X$ are given.
 The ultimate goal is to estimate the $f$-divergence
 %
 \begin{align*}
@@ -297,7 +310,7 @@ As a function of $N$, the expectation of RAM is a decreasing sequence that is bo
 By the monotone convergence theorem, the sequence converges.
 Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} below give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} , P_Z)$ as $N\to\infty$ for a variety of $f$ and provide rates at which this happens, summarised in Table \ref{table:convergence}.
 The two theorems are proved using different techniques and assumptions. 
-These assumptions, along with those of existing methods (see Table~\ref{table:convergence-other}) are discussed in Section \ref{subsection:discussion-assumptions}.
+These assumptions, along with those of other methods (see Table~\ref{table:convergence-other}) are discussed in Section \ref{subsection:discussion-assumptions}.
 
 
 
@@ -444,7 +457,8 @@ Then,
 &= \frac{1}{N} \sqrt{ \E_{P_Z} \left[ \left( \frac{q(z|X_1) - q(z|X_1')}{p(z)} \right)^2 \right]} \sqrt{ \E_{P_Z} \left[ f'^2\left(\frac{\hat{q}_N(z)}{p(z)}\right) \right]}.
 \end{align*}
 
-A similar lower bound can be derived by swapping the role of $\XN$ and ${\XN}'$.
+A similar bound can be derived by swapping the role of $\XN$ and ${\XN}'$, thus the absolute value of the difference is upper bounded by the maximum of these bounds.
+By symmetry, it suffices to control one of them.
 The left hand term is controlled by the assumption that ${\chi^2\left(Q_{Z|x} , P_Z\right) \leq C < \infty}$.
 The right hand term requires separate treatment for each choice of $f$. 
 Similar to the proof of Theorem \ref{thm:convergence-rate-general}, special care is required for the case that $f$ diverges as the density ratio $\hat{q}_N(z)/p(z)$ goes to zero.
@@ -475,7 +489,7 @@ For any proposal distribution $\pi$, RAM-MC is unbiased:
 \E\bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr] =\E\bigl[D_f( \hat{Q}^N_{Z} , P_Z )\bigr].
 \end{align*}
 %
-If moreover either of the following conditions are satisfied:
+If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either of the following conditions are satisfied:
 \begin{align*}
 &(i) \ \pi(z|\XN) = p(z),& 
 &\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
@@ -498,15 +512,45 @@ then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we
 %    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
 %\end{align*}
 \end{theorem}
-\begin{proof}[Proof sketch ($^\star$full statement and proof in Appendix \ref{appendix:full-statment-proof-mc})]
-By the law of total variance, 
+
+\begin{proof}[Proof sketch (proof in Appendix \ref{appendix:full-statment-proof-mc})]
+For unbiasedness, observe that
+\begin{align*}
+    \E_{\ZM, \XN} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)
+    &=\E_{\XN} \left[ \E_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z | \XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)\right] \\
+    &= \E_{\XN} \left[ \E_{z \sim \pi(z | \XN)} f\left(\frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi(z|\XN)} \right] \\
+    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
+\end{align*}
+
+For the variance, by the law of total variance,
 \begin{align*}
     \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f\bigr] = 
     \mathbb{E}_{\XN} \bigl[\text{Var}\bigl[\hat{D}^M_f\, | \XN\bigr]\bigr] + \text{Var}_{\XN} \bigl[D_f( \hat{Q}_Z^N , P_Z )\bigr].
 \end{align*}
 The first of these terms is ${O( M^{-1})}$ by standard results on MC integration, subject to the finiteness assumptions on the moments.
-Using the fact that ${\text{Var}[Y] = \int_0^\infty\mathbb{P} ( |Y - \mathbb{E} Y| > \sqrt{t}) dt}$ for any random variable $Y$,
-the second term can be bounded by integrating the exponential tail bound of Theorem~\ref{thm:concentration}.
+The concentration results of Theorem \ref{thm:concentration} imply bounds on the second term, since for a random variable $X$,
+\begin{align*}
+    \text{Var}X &= \mathbb{E} (X - EX)^2 \\
+    &= \int_0^\infty \mathbb{P}\left( (X - \mathbb{E} X)^2 > t \right) dt \\
+    &= \int_0^\infty \mathbb{P} \left( \left| X - \mathbb{E} X \right| > \sqrt{t} \right) dt.
+\end{align*}
+The tail bound of Theorem \ref{thm:concentration} can be rewritten as 
+\begin{align*}
+\mathbb{P}\left(\left|D_f\left( \hat{Q}^N_Z , P_Z \right) - \E D_f\left( \hat{Q}^N_Z , P_Z \right) \right| > K\psi(N) \sqrt{\log \frac{2}{\delta}} \right) \leq \delta.
+\end{align*}
+Taking $\sqrt{t} = K\psi(N) \sqrt{\log \frac{2}{\delta}}$ implies $\delta = 2 e^{\frac{-t}{K^2 \psi(N)^2}}$ and so plugging into the above formula for the variance yields
+%It follows therefore that
+\begin{align*}
+    \text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z , P_Z \right)\right] 
+    &\leq \int_0^\infty 2 \exp\left( -\frac{1}{K^2\psi(N)^2}t \right) dt\\
+    &= 2 K^2 \psi(N)^2\\
+    &= O\left(\psi(N)^2 \right).
+\end{align*}
+%where $\psi(N)$ is given by Table~\ref{table:concentration}.
+%
+%
+%Using the fact that ${\text{Var}[Y] = \int_0^\infty\mathbb{P} ( |Y - \mathbb{E} Y| > \sqrt{t}) dt}$ for any random variable $Y$,
+%the second term can be bounded by integrating the exponential tail bound of Theorem~\ref{thm:concentration}.
 \end{proof}
 
 %Through use of the Efron-Stein inequality---rather than integrating the tail bound provided by McDiarmid's inequality---it is possible for some choices of $f$ to weaken the assumptions under which the $O(\psi(N)^2)$ variance is achieved: from uniform boundedness of $\smash{\chi^2(Q_{Z|X},P_Z)}$ to boundedness in expectation.
@@ -528,9 +572,9 @@ This can be done through Chebyshev's inequality, which states that for any rando
  & & & & & & $\scriptstyle{\frac{1}{2}<\beta<1}$ & $\scriptstyle{1<\beta<\infty}$ &
 $\scriptstyle{-1<\alpha<1}$ \\
  \midrule
- \thead{Krishnamurthy et al. [22]} & - & - & - & - & - & - & - & $\scriptstyle{N^{-\frac{1}{2}} + N^{\frac{-3s}{2s + d}}}$ \\ 
- \thead{Nguyen et al. [28]} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & - & - & - & - & - & - \\ 
- \thead{Moon and Hero [26]} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ \\ 
+ \thead{\cite{krishnamurthy14icml}} & - & - & - & - & - & - & - & $\scriptstyle{N^{-\frac{1}{2}} + N^{\frac{-3s}{2s + d}}}$ \\ 
+ \thead{\cite{nguyen10ratio}} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & - & - & - & - & - & - \\ 
+ \thead{\cite{moon14ensemble}} & $\scriptstyle{N^{-\frac{1}{2}}}$ & - & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ & $\scriptstyle{N^{-\frac{1}{2}}}$ \\ 
  \bottomrule
 \end{tabular}
 \end{table}
@@ -538,21 +582,21 @@ $\scriptstyle{-1<\alpha<1}$ \\
 \subsection{Discussion about assumptions}
 
 Although the data distribution $Q_X$ will generally be unknown, in some practical scenarios such as autoencoder models, $P_Z$ may be chosen by design and $Q_{Z|X}$ learned subject to architectural constraints.
-In such cases, the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} can be satisfied by making suitable restrictions (we conjecture also for Theorem~\ref{thm:fast-KL-rate}).
+In such cases, the assumptions of Theorems \ref{thm:convergence-rate-general}, \ref{thm:concentration} and \ref{thm:mc-variance} can be satisfied by making suitable restrictions (we conjecture also for Theorem~\ref{thm:fast-KL-rate}).
 
 For example, a common architectural choice would be to take ${P_Z}={\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}={\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
-If furthermore there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$, then the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} hold.
+If furthermore there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$, then the assumptions of Theorems \ref{thm:convergence-rate-general}, \ref{thm:concentration} and \ref{thm:mc-variance} hold.
 
-Indeed, by Lemma~\ref{lemma:chi-squared-closed-form}, it holds that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) < \infty$ for all $x\in\mathcal{X}$. 
-$\chi^2\bigl( Q_{Z|x}, P_Z\bigr)$ can be written in terms of $\mu(X)$ and $\Sigma(X)$.
-Since these take value in compact sets, it follows that there exists $C<\infty$ such that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) \leq C$ and thus the setting of Theorem~\ref{thm:concentration} holds.
+Indeed, $\chi^2\bigl( Q_{Z|x}, P_Z\bigr)$ can be written in terms of $\mu(X)$ and $\Sigma(X)$ and is finite for all $x\in\mathcal{X}$ by Lemma~\ref{lemma:chi-squared-closed-form}.
+Since both $\mu(X)$ and $\Sigma(X)$ take value in compact sets, it follows that there exists $C<\infty$ such that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) \leq C$ and thus the setting of Theorem~\ref{thm:concentration} holds.
 
 A similar argument based on compactness shows that the density ratio is uniformly bounded in $z$ and $x$, so that $q(z|x)/p(z) \leq C'$ for some $C'<\infty$ for all values of $z$ and $x$. 
-It therefore follows that the condition of Theorem~\ref{thm:convergence-rate-general} holds, since $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$.
+It follows that the conditions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:mc-variance} hold.
+For the former this is because $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$, and for latter this is because the terms inside the $L_2$ norms of condition (i) are bounded and thus the norms and expectations are finite. 
 
 
 %Then the assumptions hold if there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| < K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$ (see Appendix \ref{appendix:discussion-constraints}).
-The existence of such an $\epsilon$ and $K$ are not particularly strong assumptions in practice:
+The existence of such an $\epsilon$ and $K$ are not particularly strong assumptions in practice, since
 numerical stability often requires the diagonal entries of $\Sigma$ to be lower bounded by a small number (e.g. $10^{-6}$), and
 if $\mathcal{X}$ is compact (as is the case for images) then such a $K$ is guaranteed to exist; if not, choosing $K$ very large yields an insignificant constraint.
 
@@ -577,8 +621,8 @@ This would be the case, for instance, if ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii
 
 
 \subsection{Summary}\label{subsection:discussion-assumptions}
-All the rates in this section are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
-However the constants may exhibit some dependence on the dimension.
+All of the rates in this section are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
+However, the constants may exhibit some dependence on the dimension.
 Accordingly, for fixed $N$, the bias and variance may generally grow with the dimension.
 
 
@@ -645,16 +689,16 @@ Then $M{=}128$ points $\ZM$ were drawn from $\hat{Q}_Z^N$ and RAM-MC (Equation \
 For the plug-in estimator, the densities $\hat{q}(z)$ and $\hat{p}(z)$ were estimated by kernel density estimation with 500 samples from $Q_Z$ and $P_Z$ respectively using the default settings of the Python library {\texttt{scipy.stats.gaussian\_kde}}.
 The divergence was then estimated via MC-sampling using $128$ samples from $Q_Z$ and the surrogate densities.
 The M1~estimator involves solving a convex linear program in $N$ variables to maximise a lower bound on the true divergence, see \cite{nguyen10ratio} for more details.
-Although the M1~estimator can in principle be used for arbitrary $f$-divergences, its implementation requires hand-crafted derivations that are supplied only for the $\KL$ in \cite{nguyen10ratio}, which are the ones we use.
+Although the M1~estimator can in principle be used for arbitrary $f$-divergences, its implementation requires hand-crafted derivations that are supplied only for the $\KL$ in \cite{nguyen10ratio}.
 
 %\textbf{Discussion.}
 The results of this experiment empirically support Proposition \ref{prop:upper-bound} and Theorems \ref{thm:fast-KL-rate}, \ref{thm:convergence-rate-general}, and~\ref{thm:mc-variance}:
-(i) in expectation, RAM-MC upper bounds the true divergence; (ii) by increasing $N$ from 1 to 500 we clearly decrease both the bias and the variance of RAM-MC.
+(i) in expectation, RAM-MC upper bounds the true divergence; (ii) increasing $N$ from 1 to 500 clearly decreases both the bias and the variance of RAM-MC.
 When the dimension $d$ increases, the bias for fixed $N$ also increases.
 This is consistent with the theory in that, although the rates are independent of $d$, the constants are not.
 By side-stepping the issue of density estimation, RAM-MC performs favourably compared to the plug-in and M1 estimators, more so in higher dimensions ($d=16$).
 In particular, the shape of the RAM-MC curve follows that of the truth for each divergence, while that of the plug-in estimator does not for larger dimensions.
-In some cases the plug-in estimator can even take negative values because of the large variance.
+In some cases the plug-in estimator can even take negative values due to the large variance.
 
 
 \begin{figure}
@@ -700,7 +744,7 @@ Since all models considered have Gaussian encoders, the resulting \emph{empirica
 is a ${\sim}{20}\text{k}$-component Gaussian mixture for $Q_Z$, one component for each item in the test dataset. 
 Since $Q_Z$ is a finite---not continuous---mixture, the true $D_f(Q_Z,P_Z)$ can be estimated using a large number of MC samples ($10^4$ samples were used).
 This is computationally costly as it involves evaluating $2\cdot 10^4$ Gaussian densities for each of the $10^4$ MC points.
-This evaluation was repeated 10 times, and the means and standard deviations are reported in Figure \ref{fig:real-exps}.
+This evaluation was repeated 10 times, and the means and standard deviations are reported in Figures \ref{fig:real-exps} and \ref{fig:real-exps-hsq}.
 RAM-MC is evaluated using $N \in \{2^0, 2^1,\ldots, 2^{14}\}$ and $M \in \{10, 10^3\}$.
 For each combination $(N,M)$, RAM-MC was computed 50 times with the means plotted as bold lines and standard deviations as error bars.
 This procedure was performed for the KL and $H^2$ divergences on six models that were chosen to have latent dimension $d\in\{32, 64, 128\}$ and were selected from the classes VAE, WAE-MMD and WAE-GAN.
@@ -721,7 +765,7 @@ In contrast, in the top row it is less obvious, because the comparatively larger
 Even in this case, both the bias and variance of RAM-MC with $M{=}1000$ become negligible for large $N$.
 Importantly, the behaviour of RAM-MC does not degrade in higher dimensions.
 
-The baseline estimators (plug-in \cite{moon14ensemble} and M1~\cite{nguyen10ratio}) perform so poorly that 
+The baseline estimators (plug-in of \cite{moon14ensemble} and M1 of \cite{nguyen10ratio}) performed so poorly that 
 %we decided not to include them in the plots (doing so 
 their inclusion would distort the $y$-axis scale.
 In contrast, even with a relatively modest $N{=}2^8$ and $M{=}1000$ samples, RAM-MC behaves reasonably well in all cases.
