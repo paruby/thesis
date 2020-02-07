@@ -59,23 +59,7 @@ with the last line following from the observation that $\mathbf{X}^I \sim \mathb
 
 \subsection{Proof of Theorem \ref{thm:fast-KL-rate}}\label{appendix:subsec:thm1}
 
-\begin{lemma}\label{lemma:hilbertian-triangle}
-Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
-Then for any $\lambda>0$,
-\begin{align*}
-    D_f\left(\hat{Q}^N_Z , P_Z\right) - D_f\left(Q_{Z} , P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z , Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} , P_Z \right)
-\end{align*}
-If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
-for some $k>0$, 
-then
-\begin{align*}
-    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , P_Z\right) \right] - D_f\left(Q_{Z} , P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
-\end{align*}
-\end{lemma}
-\begin{proof}
-The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $\hat{Q}^N_Z$ and $P_Z$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
-The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2}}$.
-\end{proof}
+
 
 
 \todo{sort out theorem numbering} 
@@ -1144,25 +1128,7 @@ Thus $(i) \leq K < \infty$ for some $K$ independent of $N$ in both cases of $\pi
 
 \subsection{Elaboration of Section \ref{subsection:discussion-assumptions}: satisfaction of assumptions of theorems}\label{appendix:discussion-constraints}
 
-Suppose that ${P_Z}$ is  ${\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}$ is  ${\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
-Suppose further that there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$.
-
-By Lemma~\ref{lemma:chi-squared-closed-form}, it holds that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) < \infty$ for all $x\in\mathcal{X}$. 
-By compactness of the sets in which $\mu(X)$ and $\Sigma(X)$ take value, it follows that there exists $C<\infty$ such that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) \leq C$ and thus the setting of Theorem~\ref{thm:concentration} holds.
-
-A similar argument based on compactness shows that the density ratio is uniformly bounded in $z$ and $x$: $q(z|x)/p(z) \leq C'$ for some $C'<\infty$. 
-It therefore follows that the condition of Theorem~\ref{thm:convergence-rate-general} holds: $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$.
-
-We conjecture that the strong boundedness assumptions on $\mu(X)$ and $\Sigma(X)$ also imply the setting of Theorem~\ref{thm:fast-KL-rate} $\E_{X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr] < \infty$.
-Since the divergence $Q_Z$ explicitly depends on the data distribution, this is more difficult to verify than the conditions of Theorems~\ref{thm:convergence-rate-general} and \ref{thm:concentration}.
-
-The crude upper bound provided by convexity
-\[
-\E_{X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr] \leq  \E_{X}\E_{X'}\bigl[\chi^2\bigl(Q_{Z|X}, Q_{Z|X'}\bigr)\bigr]
-\]
-provides a sufficient (but very strong) set of assumptions under which it holds. 
-Finiteness of the right hand side above would be implied, for instance, by demanding that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\frac{1}{2}+\epsilon, 1]}$ for all $i$.
-
+\todo{remove}
 
 
 \section{Empirical evaluation: further details}\label{appendix:empirical-evaluation-details}
@@ -1175,63 +1141,9 @@ In this section with give further details about the synthetic and real-data expe
 
 \subsubsection{Analytical expressions for divergences between two Gaussians}\label{appendix:toy-exps}
 
-The closed form expression for the $\chi^2$-divergence between two $d$-variate normal distributions can be found in Lemma 1 of~\cite{NielsenN14}:
-\begin{lemma}\label{lemma:chi-squared-closed-form}
-\begin{align*}
-&\chi^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
-\mathcal{N}(\mu_2, \Sigma_2)\bigr)
-=
-\frac{\mathrm{det}(\Sigma_1^{-1})}{\sqrt{\mathrm{det}(2\Sigma_1^{-1} - \Sigma_2^{-1})\mathrm{det}(\Sigma_2^{-1})}}
-\exp\left(
-\frac12\mu_2'\Sigma_2^{-1}\mu_2 
--\mu_1'\Sigma_1^{-1}\mu_1 
-\right)
-\times\\
-&\times\exp\left(
--\frac14(2\mu_1' \Sigma_1^{-1} - \mu_2' \Sigma_2^{-1})
-\bigl(\frac12 \Sigma_2^{-1} - \Sigma_1^{-1}\bigr)^{-1}
-(2\Sigma_1^{-1}\mu_1 - \Sigma_2^{-1}\mu_2)
-\right) - 1.
-\end{align*}
-\end{lemma}
-As a corollary, the following also holds:
-\begin{corollary}
-Chi square divergence between two $d$-variate Gaussian distributions both having covariance matrices proportional to identity can be computed as:
-\[
-\chi^2\bigl( \mathcal{N}(\mu, \sigma^2 I_d), \mathcal{N}(0, \beta^2 I_d)\bigr)
-=
-\left(\frac{\beta^2}{\sigma^2\sqrt{2\beta^2/\sigma^2 - 1}}\right)^d
-e^{\frac{\|\mu\|^2}{2\beta^2 - \sigma^2}}
-- 1
-\]
-assuming $2\beta^{2} > \sigma^{2}$. 
-Otherwise the divergence is infinite.
-\end{corollary}
 
-The squared Hellinger divergence between two Gaussians is given in \cite{pardo2005statistical}:
 
-\begin{lemma}
-\begin{align*}
-&H^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
-\mathcal{N}(\mu_2, \Sigma_2)\bigr) \\
-&\qquad = 1 - \frac{ \det (\Sigma_1)^{1/4} \det (\Sigma_2) ^{1/4}} { \det \left( \frac{\Sigma_1 + \Sigma_2}{2}\right)^{1/2} }
-              \exp\left\{-\frac{1}{8}(\mu_1 - \mu_2)^T 
-              \left(\frac{\Sigma_1 + \Sigma_2}{2}\right)^{-1}
-              (\mu_1 - \mu_2)              
-              \right\}.
-\end{align*}
-\end{lemma}
 
-The $\KL$-divergence between two $d$-variate Gaussians is:
- 
-\begin{lemma}
-\begin{align*}
-\KL\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
-\mathcal{N}(\mu_2, \Sigma_2)\bigr) = \frac{1}{2} \left( \text{tr}\left(\Sigma_2^{-1} \Sigma_1\right)
-+ (\mu_2  - \mu_1)^\intercal \Sigma_2^{-1}(\mu_2 - \mu_1) - d + \log\frac{|\Sigma_2|}{|\Sigma_1|}
-\right).
-\end{align*}
-\end{lemma}
 
 \subsubsection{Further experimental details}
 

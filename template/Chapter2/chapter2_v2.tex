@@ -130,7 +130,7 @@ where $\mathcal{P}(\mathcal{X})$ denotes the set of all distributions on $\mathc
 
 
 A metric is additionally symmetric and obeys the triangle inequality.
-For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimize it with respect to the parameters $\theta$. 
+For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimise it with respect to the parameters $\theta$. 
 There are two main families of divergences that are used in the machine learning literature generally.
 At a high level, Integral Probability Metrics (IPMs) can be thought of as comparing distributions by considering the difference between their densities, while $f$-divergences can be thought of as considering the ratio of their densities.
 These two families are discussed in the rest of this section.
@@ -197,7 +197,7 @@ Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
 
 %\todo{flesh out this section, give more properties of $f$-divergences?}
 
-$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009}
+$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009} and are studied in Chapter \ref{chapter:latent-space-learning-theory}.
 
 \medskip
 
@@ -307,7 +307,7 @@ Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences consid
 
 A natural way to distinguish between two distributions $P$ and $Q$ with overlapping support is to consider the problem of classifying between draws from each distribution.
 Suppose that samples from $P$ are labelled as class $1$, and samples from $Q$ as class $0$. 
-This classification problem implemented as logistic regression, in which case a function $c:\mathcal{X}\to [0,1]$ is introduced and trained to minimise the objective 
+This classification problem can be implemented as logistic regression, in which case a function $c:\mathcal{X}\to [0,1]$ is introduced and trained to minimise the objective 
 %
 \begin{align*}
 L(c) &=  \mathbb{E}_{x\sim P}\left[ - \log c(x) \right] + \mathbb{E}_{x \sim Q} \left[ - \log(1 - c(x)) \right] \\
@@ -434,7 +434,7 @@ D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x
 \end{align*}
 %
 where the inequality holds for any $h \in \mathcal{H}$, where $h$ now plays the role of the discriminator. 
-If the elements of $\mathcal{H}$ can be differentiably parametrised, stochastic gradients of the loss can be obtained with respect its parameters.
+If the set $\mathcal{H}$ can be differentiably parametrised, stochastic gradients of the loss can be obtained with respect its parameters.
 In contrast to the $f$-divergence case, the discriminator $h$ must belong to a particular class of functions, which can complicate specifying the parametrisation.
 One example of an IPM-based GAN is the Wasserstein GAN of \cite{AB17}. 
 Here, the 1-Wasserstein distance is used, corresponding to $h$ having Lipschitz constant at most $1$. 
@@ -442,7 +442,7 @@ For certain neural network architectures, including those composed of fully-conn
 
 \subsection{Variational Autoencoders}
 
-Variational Autoencdoers (VAEs) \citep{kingma2013auto, rezende2014stochastic} are a method to minimize the KL-divergence between model and data distributions, defined as
+Variational Autoencdoers (VAEs) \citep{kingma2013auto, rezende2014stochastic} are a method to minimise the KL-divergence between model and data distributions, defined as
 %
 \begin{align*}
 D_{\text{KL}}(Q_X, P^\theta_X) &= \int q(x) \log \left( \frac{q(x)}{p^\theta(x)} \right) dx \\
@@ -491,7 +491,7 @@ In this case, term (i) above can be interpreted as an average reconstruction los
 
 The encoder $Q^\phi_{Z|X}$ together with the data distribution $Q_X$ induce the push-forward distribution $Q^\phi_Z$ known as the \emph{aggregate posterior}.
 The term (ii) was shown by \cite{hoffman2016elbo} to be equivalent to $D_{\text{KL}}(Q^\phi_Z , P_Z) + I(X,Z)$ where $I(X,Z) = D_{\text{KL}}(Q^\phi_{XZ} , Q_XQ^\phi_{Z})$ is the mutual information of a data sample and its encoding.
-Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-divergences (and hence the KL-divergence) between priors and aggregate posteriors, and so is directly relevant mutual information estimation via this equivalence.
+Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-divergences (and hence the KL-divergence) between priors and aggregate posteriors, and so is directly relevant to mutual information estimation via this equivalence.
 
 %All distributions involved can be chosen so this can be unbiasedly estimated, meaning that it can be minimised with respect to the parameters $\theta$ and $\phi$ using stochastic gradient methods.
 %It is common that the encoder, generator and prior are chosen to be Gaussians, 
@@ -524,7 +524,7 @@ This can equivalently be written as
 OT_c(P, Q) = \min_{\gamma \in \Gamma} \mathbb{E}_{x\sim Q} \mathbb{E}_{x'\sim \gamma(x'|x)} \left[ c(x, x') \right],
 \end{align*}
 %
-where $\gamma$ can be though of as a conditional distribution specifying how an element of probability mass at $x$ should be moved and spread over the points $x'$. 
+where $\gamma$ can be thought of as a conditional distribution specifying how an element of probability mass at $x$ should be moved and spread over the points $x'$. 
 Specified this way, each element of $\Gamma$ should satisfy $\int \gamma(x'|x) q(x) dx = p(x')$.
 In the generative modelling setting, we thus have
 %
@@ -538,7 +538,7 @@ In practice, this minimisation problem cannot be solved directly: given a candid
 If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be written as a composition $\gamma(x'|x) = \int p^\theta(x'|z) q^\phi(z|x) dz$ where $q^\phi(z|x)$ is a conditional distribution satisfying $\int q^\phi(z|x) q(x) dx = p(z)$. 
 That is, any $\gamma$ can be `factored through' the latent space by introducing an encoder $q^\phi(z|x)$, replacing the constraint of distribution matching in the data-space ($\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$) with distribution matching in the latent space ($\int q^\phi(z|x) q(x) dx = p(z)$).
 
-Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and the generator will result in $P_X^\theta$. 
+Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and generator will result in $P_X^\theta$. 
 While it is clear that the composition of any such encoder and the generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
 This is proved in Theorem 1 of \cite{tolstikhin2017wasserstein}.
 

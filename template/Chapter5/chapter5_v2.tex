@@ -118,6 +118,134 @@ We conclude in Section \ref{sec:conclusion}.
 Additional details and proofs can be found in Appendix \ref{chapter:appendix-latex-space-learning-theory}.
 
 
+\section{Background}
+
+This section states some results that are used in the proofs of the next section.
+
+
+\subsection{Bounds}
+
+
+\begin{lemma}
+\begin{align*}
+H^2(A, B) \leq KL(A,B) 
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+\begin{align*}
+KL(A,B) \leq e^{KL(A, B)} - 1 \leq \chi^2(A, B)
+\end{align*}
+\end{lemma}
+
+\begin{lemma}[Pinsker's inequality]
+\begin{align*}
+TV(A,B)  \leq \sqrt{\frac{1}{2}\KL(A, B)}
+\end{align*}
+\end{lemma}
+
+\begin{lemma}\label{lemma:hilbertian-triangle}
+Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
+Then for any $\lambda>0$,
+\begin{align*}
+    D_f\left(\hat{Q}^N_Z , P_Z\right) - D_f\left(Q_{Z} , P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z , Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} , P_Z \right)
+\end{align*}
+If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
+for some $k>0$, 
+then
+\begin{align*}
+    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , P_Z\right) \right] - D_f\left(Q_{Z} , P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
+\end{align*}
+\end{lemma}
+\begin{proof}
+The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $\hat{Q}^N_Z$ and $P_Z$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
+The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2}}$.
+\end{proof}
+
+
+\subsection{Closed-form expressions for f-divergences between Gaussians}
+
+
+The closed form expression for the $\chi^2$-divergence between two $d$-variate normal distributions can be found in Lemma 1 of~\cite{NielsenN14}:
+\begin{lemma}\label{lemma:chi-squared-closed-form}
+\begin{align*}
+&\chi^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+\mathcal{N}(\mu_2, \Sigma_2)\bigr)
+=
+\frac{\mathrm{det}(\Sigma_1^{-1})}{\sqrt{\mathrm{det}(2\Sigma_1^{-1} - \Sigma_2^{-1})\mathrm{det}(\Sigma_2^{-1})}}
+\exp\left(
+\frac12\mu_2'\Sigma_2^{-1}\mu_2 
+-\mu_1'\Sigma_1^{-1}\mu_1 
+\right)
+\times\\
+&\times\exp\left(
+-\frac14(2\mu_1' \Sigma_1^{-1} - \mu_2' \Sigma_2^{-1})
+\bigl(\frac12 \Sigma_2^{-1} - \Sigma_1^{-1}\bigr)^{-1}
+(2\Sigma_1^{-1}\mu_1 - \Sigma_2^{-1}\mu_2)
+\right) - 1.
+\end{align*}
+\end{lemma}
+As a corollary, the following also holds:
+\begin{corollary}
+Chi square divergence between two $d$-variate Gaussian distributions both having covariance matrices proportional to identity can be computed as:
+\[
+\chi^2\bigl( \mathcal{N}(\mu, \sigma^2 I_d), \mathcal{N}(0, \beta^2 I_d)\bigr)
+=
+\left(\frac{\beta^2}{\sigma^2\sqrt{2\beta^2/\sigma^2 - 1}}\right)^d
+e^{\frac{\|\mu\|^2}{2\beta^2 - \sigma^2}}
+- 1
+\]
+assuming $2\beta^{2} > \sigma^{2}$. 
+Otherwise the divergence is infinite.
+\end{corollary}
+
+The squared Hellinger divergence between two Gaussians is given in \cite{pardo2005statistical}:
+
+\begin{lemma}
+\begin{align*}
+&H^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+\mathcal{N}(\mu_2, \Sigma_2)\bigr) \\
+&\qquad = 1 - \frac{ \det (\Sigma_1)^{1/4} \det (\Sigma_2) ^{1/4}} { \det \left( \frac{\Sigma_1 + \Sigma_2}{2}\right)^{1/2} }
+              \exp\left\{-\frac{1}{8}(\mu_1 - \mu_2)^T 
+              \left(\frac{\Sigma_1 + \Sigma_2}{2}\right)^{-1}
+              (\mu_1 - \mu_2)              
+              \right\}.
+\end{align*}
+\end{lemma}
+
+The $\KL$-divergence between two $d$-variate Gaussians is:
+ 
+\begin{lemma}
+\begin{align*}
+\KL\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+\mathcal{N}(\mu_2, \Sigma_2)\bigr) = \frac{1}{2} \left( \text{tr}\left(\Sigma_2^{-1} \Sigma_1\right)
++ (\mu_2  - \mu_1)^\intercal \Sigma_2^{-1}(\mu_2 - \mu_1) - d + \log\frac{|\Sigma_2|}{|\Sigma_1|}
+\right).
+\end{align*}
+\end{lemma}
+
+\subsection{McDiarmid}
+
+We will make use of McDiarmid's theorem in our proof of Theorem \ref{thm:concentration}:
+
+\begin{theorem}[McDiarmid's inequality]\label{thm:mcdiarmid}
+Suppose that $X_1, \ldots, X_N \in \mathcal{X}$ are independent random variables and that $\phi : \mathcal{X}^N \to \R$ is a function. 
+If it holds that for all $i\in\{1,\ldots,N\}$ and $x_1, \ldots, x_N, x_{i'}$, 
+\begin{align*}
+    \left| \phi(x_1, \ldots, x_{i-1}, x_i, x_{i+1}, \ldots, x_N) - \phi(x_1, \ldots, x_{i-1}, x_{i'}, x_{i+1}, \ldots, x_N)\right| \leq c_i,
+\end{align*}
+then
+\begin{align*}
+    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
+\end{align*}
+and
+\begin{align*}
+    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq -t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
+\end{align*}
+\end{theorem}
+
+
+
 
 \section{Random mixture estimator and convergence results}\label{sec:theory}
 
@@ -407,20 +535,56 @@ $\scriptstyle{-1<\alpha<1}$ \\
 \end{tabular}
 \end{table}
 
-\subsection{Discussion: assumptions and summary}\label{subsection:discussion-assumptions}
+\subsection{Discussion about assumptions}
+
+Although the data distribution $Q_X$ will generally be unknown, in some practical scenarios such as autoencoder models, $P_Z$ may be chosen by design and $Q_{Z|X}$ learned subject to architectural constraints.
+In such cases, the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} can be satisfied by making suitable restrictions (we conjecture also for Theorem~\ref{thm:fast-KL-rate}).
+
+For example, a common architectural choice would be to take ${P_Z}={\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}={\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
+If furthermore there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$, then the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} hold.
+
+Indeed, by Lemma~\ref{lemma:chi-squared-closed-form}, it holds that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) < \infty$ for all $x\in\mathcal{X}$. 
+$\chi^2\bigl( Q_{Z|x}, P_Z\bigr)$ can be written in terms of $\mu(X)$ and $\Sigma(X)$.
+Since these take value in compact sets, it follows that there exists $C<\infty$ such that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) \leq C$ and thus the setting of Theorem~\ref{thm:concentration} holds.
+
+A similar argument based on compactness shows that the density ratio is uniformly bounded in $z$ and $x$, so that $q(z|x)/p(z) \leq C'$ for some $C'<\infty$ for all values of $z$ and $x$. 
+It therefore follows that the condition of Theorem~\ref{thm:convergence-rate-general} holds, since $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$.
+
+
+%Then the assumptions hold if there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| < K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$ (see Appendix \ref{appendix:discussion-constraints}).
+The existence of such an $\epsilon$ and $K$ are not particularly strong assumptions in practice:
+numerical stability often requires the diagonal entries of $\Sigma$ to be lower bounded by a small number (e.g. $10^{-6}$), and
+if $\mathcal{X}$ is compact (as is the case for images) then such a $K$ is guaranteed to exist; if not, choosing $K$ very large yields an insignificant constraint.
+
+
+%Suppose that ${P_Z}$ is  ${\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}$ is  ${\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
+%Suppose further that there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$.
+%
+%By Lemma~\ref{lemma:chi-squared-closed-form}, it holds that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) < \infty$ for all $x\in\mathcal{X}$. 
+%By compactness of the sets in which $\mu(X)$ and $\Sigma(X)$ take value, it follows that there exists $C<\infty$ such that $\chi^2\bigl( Q_{Z|x}, P_Z\bigr) \leq C$ and thus the setting of Theorem~\ref{thm:concentration} holds.
+%
+%A similar argument based on compactness shows that the density ratio is uniformly bounded in $z$ and $x$: $q(z|x)/p(z) \leq C'$ for some $C'<\infty$. 
+%It therefore follows that the condition of Theorem~\ref{thm:convergence-rate-general} holds: $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$.
+
+We conjecture that the strong boundedness assumptions on $\mu(X)$ and $\Sigma(X)$ also imply the setting of Theorem~\ref{thm:fast-KL-rate} for which it is required that $\E_{X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr] < \infty$.
+Since the divergence $Q_Z$ explicitly depends on the data distribution, this is more difficult to verify than the conditions of Theorems~\ref{thm:convergence-rate-general} and \ref{thm:concentration}.
+The crude upper bound provided by convexity
+\[
+\E_{X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr] \leq  \E_{X}\E_{X'}\bigl[\chi^2\bigl(Q_{Z|X}, Q_{Z|X'}\bigr)\bigr]
+\]
+means that finiteness of the right hand side would imply that the assumptions of Theorem \ref{thm:fast-KL-rate} hold.
+This would be the case, for instance, if ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii}(X) \in [\frac{1}{2}+\epsilon, 1]}$ for all $i$, however this is a rather strong and unrealistic assumption on $\Sigma(X)$.
+
+
+\subsection{Summary}\label{subsection:discussion-assumptions}
 All the rates in this section are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
 However the constants may exhibit some dependence on the dimension.
 Accordingly, for fixed $N$, the bias and variance may generally grow with the dimension.
 
-Although the data distribution $Q_X$ will generally be unknown, in some practical scenarios such as autoencoder models, $P_Z$ may be chosen by design and $Q_{Z|X}$ learned subject to architectural constraints.
-In such cases, the assumptions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:concentration} can be satisfied by making suitable restrictions (we conjecture also for Theorem~\ref{thm:fast-KL-rate}).
-For example, suppose that ${P_Z}$ is  ${\mathcal{N}\left(0, I_d\right)}$ and ${Q_{Z|X}}$ is  ${\mathcal{N}\left( \mu(X), \Sigma(X)\right)}$ with $\Sigma$ diagonal. 
-Then the assumptions hold if there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| < K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$ (see Appendix \ref{appendix:discussion-constraints}).
-In practice, numerical stability often requires the diagonal entries of $\Sigma$ to be lower bounded by a small number (e.g. $10^{-6}$).
-If $\mathcal{X}$ is compact (as is the case for images) then such a $K$ is guaranteed to exist; if not, choosing $K$ very large yields an insignificant constraint.
+
 
 Table~\ref{table:convergence-other} summarises the rates of bias for some existing methods.
-In contrast to our proposal, the assumptions of these estimators may in practice be difficult to verify.
+In contrast to the proposals of this work, the assumptions of these estimators may in practice be difficult to verify.
 For the estimator of \cite{krishnamurthy14icml}, both densities $p$ and $q$ must belong to the H\"older class of smoothness $s$, be supported on $[0,1]^d$ and satisfy $0<\eta_1 < p, q < \eta_2<\infty$ on the support for known constants $\eta_1, \eta_2$.
 For that of \cite{nguyen10ratio}, the density ratio $p/q$ must satisfy $0<\eta_1 < p/q < \eta_2<\infty$ and belong to a function class $G$ whose \emph{bracketing entropy} (a measure of the complexity of a function class) is bounded. The condition on the bracketing entropy is quite strong and ensures that the density ratio is well behaved.
 For the estimator of \cite{moon14ensemble}, both $p$ and $q$ must have the same bounded support and satisfy $0<\eta_1 < p, q < \eta_2<\infty$ on the support. $p$ and $q$ must have \emph{continuous bounded} derivatives of order $d$ (which is stronger than the assumptions of \cite{krishnamurthy14icml}), and $f$ must have derivatives of order at least $d$.
@@ -547,8 +711,8 @@ Figure~\ref{fig:real-exps} shows the result of performing this for the KL diverg
 %See Appendix~\ref{appendix:real-data-experiments-additional} for further details and similar plots for the $H^2$-divergence.
 %\textbf{Discussion.}
 %The results are encouraging. 
-In all cases RAM-MC achieves a reasonable accuracy with $N$ relatively small, even for the bottom right model where the true KL divergence ($\approx 1910$) is very big.
-There is evidence supporting Theorem~\ref{thm:mc-variance}, which says that the variance of RAM-MC is mostly determined by the smaller of $\psi(N)$ and $M$:
+In all cases RAM-MC achieves a reasonable accuracy with $N$ relatively small, even for the bottom right model where the true KL divergence ($\approx 1910$) is large.
+There is evidence supporting Theorem~\ref{thm:mc-variance}, which informally states that the variance of RAM-MC is mostly determined by the smaller of $\psi(N)$ and $M$:
 when $N$ is small, the variance of RAM-MC does not change significantly with $M$, 
 however when $N$ is large, increasing $M$ significantly reduces the variance. 
 It was found that there are two general modes of behaviour of RAM-MC across the six trained models considered. 
@@ -557,19 +721,21 @@ In contrast, in the top row it is less obvious, because the comparatively larger
 Even in this case, both the bias and variance of RAM-MC with $M{=}1000$ become negligible for large $N$.
 Importantly, the behaviour of RAM-MC does not degrade in higher dimensions.
 
-The baseline estimators (plug-in \cite{moon14ensemble} and M1~\cite{nguyen10ratio}) perform so poorly that we decided not to include them in the plots (doing so would distort the $y$-axis scale).
+The baseline estimators (plug-in \cite{moon14ensemble} and M1~\cite{nguyen10ratio}) perform so poorly that 
+%we decided not to include them in the plots (doing so 
+their inclusion would distort the $y$-axis scale.
 In contrast, even with a relatively modest $N{=}2^8$ and $M{=}1000$ samples, RAM-MC behaves reasonably well in all cases.
 
 Figure~\ref{fig:real-exps-hsq} displays similar results for the $H^2$-divergence.
-An important point is that $H^2(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$,
-and due to considerations of scale the estimated values $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$ were plotted instead.
+Since $H^2(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$ and all computed estimates were close to $2$,
+considerations of scale mean that the estimated values $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$ were plotted instead.
 Decreasing bias in $N$ of RAM-MC therefore manifests itself as the lines \emph{increasing} in Figure~\ref{fig:real-exps-hsq}. 
 Concavity of $\log$ means that the reduction in variance when increasing $M$ results in RAM-MC with $M{=}1000$ being above RAM-MC with $M{=}10$.
-Similar to the results for the KL, these also support the theoretical findings of our work.
+Similar to the results for the KL, these also support the theoretical findings presented in the previous section.
 
 Additionally, the same experiment was attempted using the $\chi^2$-divergence but numerical issues were encountered.
 This can be understood as a consequence of the inequality $e^{\KL(A, B)} - 1 \leq \chi^2(A,B)$ for any distributions $A$ and $B$. 
-From Figure~\ref{fig:real-exps} it can be seen that the $\KL$-divergence reaches values higher than $1000$ which makes the corresponding value of the $\chi^2$-divergence larger than can be represented using double-precision floats.
+From Figure~\ref{fig:real-exps} it can be seen that the $\KL$-divergence reaches values higher than $1000$, making the corresponding value of the $\chi^2$-divergence larger than can be represented using double-precision floats.
 
 
 
@@ -601,38 +767,58 @@ Due to concavity of $\log$, the decrease in variance when increasing $M$ manifes
 
 
 
-\section{Applications: total correlation, entropy, and mutual information estimates}\label{sec:applications}
-This section details some direct consequences of the proposed estimator and its guarantees.
-Our theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
-\paragraph{Total correlation and entropy estimation.}
+\section{Applications}\label{sec:applications}
+This section details some direct consequences of the proposed estimator and its theoretical guarantees to existing literature.
+%In addition, this theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
+
+\subsection{Entropy estimation}
 The differential entropy, defined as $H(Q_Z)= -\int_{\mathcal{Z}} q(z) \log q(z)  dz$, is often a quantity of interest in machine learning.
 While this is intractable in general, straightforward computation shows that for \emph{any} $P_Z$
 {\addtolength{\abovedisplayskip}{-0.5mm}
 \addtolength{\belowdisplayskip}{-0.5mm}
 \begin{align*}
-    H(Q_Z) - \mathbb{E}_{\XN} H(\hat{Q}_Z^N) = \mathbb{E}_{\XN} D_{\text{KL}}\left(\hat{Q}_Z^N , P_Z\right) -  D_{\text{KL}}\left(Q_Z , P_Z\right).
-\end{align*}}%
-Therefore, our results provide sufficient conditions under which $\smash{H(\hat{Q}_Z^N)}$ converges to $\smash{H(Q_{Z})}$ and concentrates to its mean.
-This result has consequences for some existing VAE literature.
-The Total Correlation (TC) of a distribution $Q_Z$ is defined as 
+    H(&Q_Z) - \mathbb{E}_{\XN} H(\hat{Q}_Z^N) \\
+    &= - \int q(z) \log q(z) dz + \mathbb{E}_{\XN} \int \hat{q}_N(z) \log \hat{q}_N(z) dz \\
+    &= - \int q(z) \log q(z) dz + \int q(z) \log p(z) dz  \\
+    & \qquad - \int \mathbb{E}_{\XN} \hat{q}_N(z) \log p(z) dz  + \mathbb{E}_{\XN} \int \hat{q}_N(z) \log \hat{q}_N(z) dz \\
+    &= - \int q(z) \log \frac{q(z)}{p(z)} dz  + \mathbb{E}_{\XN} \int \hat{q}_N(z) \log \frac{\hat{q}_N(z)}{p(z)} dz \\
+   	&= \mathbb{E}_{\XN} D_{\text{KL}}\left(\hat{Q}_Z^N , P_Z\right) -  D_{\text{KL}}\left(Q_Z , P_Z\right).
+\end{align*}}
+Therefore, Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} provide sufficient conditions under which $\smash{H(\hat{Q}_Z^N)}$ is an asymptotically unbiased estimator of $\smash{H(Q_{Z})}$.
+Note that it suffices for the assumptions of these results to hold for \emph{any} choice of $P_Z$, suggesting that a more direct analysis of the behaviour of $\smash{H(\hat{Q}_Z^N)}$ could yield milder sufficient conditions.
+
+
+\subsection{Total correlation estimation}
+The results on entropy estimation have consequences for some existing VAE literature.
+The Total Correlation (TC) of a distribution $Q_Z$, defined in terms of the KL-divergence, can be written in terms of differential entropy: 
 %
 \begin{align*}
-TC(Q_Z) := D_{\text{KL}}\left(Q_Z, \prod_{i=1}^{d_Z} Q_{Z_i}\right) = \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
+TC(Q_Z) &:= D_{\text{KL}}\left(Q_Z, \prod_{i=1}^{d_Z} Q_{Z_i}\right)  \\
+&= - \int q(z) \log \left( \frac{q(z)}{\prod_i q(z_i)} \right) dz \\
+&= - \int q(z) \log q(z) dz + \int q(z) \sum_i \log q(z_i) dz \\
+&= - \int q(z) \log q(z) dz + \sum_i \int q(z_i)  \log q(z_i) dz \\
+&= \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
 \end{align*}
 %
 where $Q_{Z_i}$ is the $i$th marginal of $Q_Z$.
-This is considered by \cite{chen2018isolating}, who add it to the VAE loss function to encourage $Q_Z$ to be factorised, resulting in the $\beta$-TC-VAE algorithm.
+This is considered by \cite{chen2018isolating}, who subtract it from the VAE loss function (see Section \ref{sec:literature-gen-models}). 
+Since a non-negative quantity is subtracted from a lower bound on the evidence, the resulting loss function is still an evidence lower bound, with additional encouragement for $Q_Z$ to be factorised. This is named the $\beta$-TC-VAE algorithm.
 By the second equality above, estimation of TC can be reduced to estimation of $H(Q_Z)$ with only slight modifications needed to treat $H(Q_{Z_i})$.
 
 Two methods are proposed by \cite{chen2018isolating} for estimating $\smash{H(Q_Z)}$, both of which assume a finite dataset of size $D$.
 One of these, named \emph{Minibatch Weighted Sample} (MWS), coincides with $\smash{H(\hat{Q}_Z^N) + \log D}$ estimated with a particular form of MC sampling.
-Our results therefore imply \emph{inconsistency} of the MWS method due to the constant $\log D$ offset. 
-In the context of \cite{chen2018isolating} this is not actually problematic since a constant offset does not affect gradient-based optimization techniques.
-Interestingly, although their derivations suppose a data distribution of finite support, our results show that minor modifications result in an estimator suitable for both finite and infinite support data distributions.
+The results presented in this chapter therefore imply \emph{inconsistency} of the MWS method due to the constant $\log D$ offset. 
+In the context of \cite{chen2018isolating}, this is not actually problematic since they are concerned with minimising (not estimating) the TC, and a constant offset does not affect gradient-based optimization techniques.
+Interestingly, although their derivations suppose a data distribution of finite support, the results presented here show that minor modifications result in an estimator suitable for both finite and infinite support data distributions.
 
-\paragraph{Mutual information estimation.}
-The mutual information (MI) between variables with joint distribution $\smash{Q_{Z,X}}$ is defined as $\smash{I(Z, X) := D_{\text{KL}}\left(Q_{Z,X}, Q_Z Q_X \right) = \E_{X} D_{\text{KL}}\left(Q_{Z|X}, Q_Z \right)}$.
-Several recent papers have estimated or optimised this quantity in the context of autoencoder architectures, coinciding with our setting \cite{dieng2018avoiding, hoffman2016elbo, alemi2017fixing, oord2018representation}. In particular, \cite{poolevariational} propose the following estimator based on replacing $Q_Z$ with $\smash{\hat{Q}_{Z}^N}$, proving it to be a lower bound on the true MI:
+\subsection{Mutual information estimation}
+The mutual information (MI) between variables with joint distribution $\smash{Q_{Z,X}}$ is defined as 
+\begin{align*}
+\smash{I(Z, X) := D_{\text{KL}}\left(Q_{Z,X}, Q_Z Q_X \right) = \E_{X} D_{\text{KL}}\left(Q_{Z|X}, Q_Z \right)}.
+\end{align*}
+
+Several recent papers have estimated or optimised this quantity in the context of autoencoder architectures, coinciding with the setting considered here \citep{dieng2018avoiding, hoffman2016elbo, alemi2017fixing, oord2018representation}. 
+In particular, \cite{poolevariational} propose the following estimator based on replacing $Q_Z$ with $\smash{\hat{Q}_{Z}^N}$, proving it to be a lower bound on the true MI:
 %
 \begin{align*}\textstyle
     I_{TCPC}^N(Z,X) = \mathbb{E}_{\XN}\Big[\frac{1}{N} \sum_{i=1}^N D_{\text{KL}}\left( Q_{Z|X_i}, \hat{Q}_{Z}^N \right)\Big] \leq I(Z,X).
@@ -645,14 +831,15 @@ I(Z,X) - I_{TCPC}^N(Z,X) = \E_{\XN} D_{\text{KL}}\left( \hat{Q}_{Z}^N, P_{Z} \ri
 \end{align*}
 %
 where $P_Z$ is \emph{any} distribution. 
-Therefore, our results also provide sufficient conditions under which $\smash{I^N_{TCPC}}$ converges and concentrates to the true mutual information.
+Therefore, the results in this chapter also provide sufficient conditions under which $\smash{I^N_{TCPC}}$ is an asymptotically unbiased estimator of the true mutual information.
 
 
 %\todo{Rewrite section heading to make this next bit fit in, moved from the intro}
-\paragraph{Related, but fundamentally different work}
+\subsection{Related, but fundamentally different work}
 \cite{burda2015importance} propose to reduce the gap introduced by Jensen's inequality in the derivation of the classical evidence lower bound (ELBO) by using multiple Monte-Carlo samples from the approximate posterior $\smash{Q_{Z|X}}$.
-This is similar in flavour to the approach considered in this chapter, but is fundamentally different since we use multiple samples from the \emph{data distribution} to reduce a different Jensen gap.
-To avoid confusion, note that replacing the `regulariser' term $\mathbb{E}_X[D_{\text{KL}}(Q_{Z|X}, P_Z)]$ of the classical ELBO with expectation of our estimator $\E_{\XN}[D_{\text{KL}}(\hat{Q}_Z^N, P_Z)]$ results in an upper bound of the classical ELBO (by Proposition~\ref{prop:upper-bound}) but is itself not in general an evidence lower bound:
+This is similar in flavour to the approach considered in this chapter, but is fundamentally different since the approach taken here uses multiple samples from the \emph{data distribution} to reduce a different Jensen gap.
+
+To avoid confusion, note that replacing the `regulariser' term $\mathbb{E}_X[D_{\text{KL}}(Q_{Z|X}, P_Z)]$ of the classical ELBO with expectation of the proposed estimator $\E_{\XN}[D_{\text{KL}}(\hat{Q}_Z^N, P_Z)]$ results in an upper bound of the classical ELBO (by Proposition~\ref{prop:upper-bound}) but is itself not in general an evidence lower bound:
 %
 \begin{align*}
     \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) - D_{\text{KL}}(Q_{Z|X}, P_Z ) \Big] \leq \mathbb{E}_X \Big[ \mathbb{E}_{Q_{Z|X}} \log p(X|Z) \Big] - \mathbb{E}_{\XN} \Big[ D_{\text{KL}}(\hat{Q}_Z^N, P_Z ) \Big].
@@ -662,11 +849,11 @@ To avoid confusion, note that replacing the `regulariser' term $\mathbb{E}_X[D_{
 \section{Conclusion}\label{sec:conclusion}
 This chapter introduced a practical estimator for the $\smash{f}$-divergence $D_f(Q_Z,P_Z)$ where $Q_Z = \int Q_{Z|X}dQ_X$, samples from $Q_X$ are available, and $P_Z$ and $Q_{Z|X}$ have known density.
 The RAM estimator is based on approximating the true $Q_Z$ with data samples as a random mixture via $\smash{\hat{Q}^N_{Z}=\frac{1}{N}\sum_{n} Q_{Z|X_n}}$.
-We denote by RAM-MC the estimator version where $\smash{D_f(\hat{Q}^N_Z,P_Z)}$ is estimated with MC sampling.
-We proved rates of convergence and concentration for both RAM and RAM-MC, in terms of sample size $N$ and MC samples $M$ under a variety of choices of $\smash{f}$.
-Synthetic and real-data experiments strongly support the validity of our proposal in practice, and our theoretical results provide guarantees for methods previously proposed heuristically in existing literature.
+RAM-MC is the version of this estimator where $\smash{D_f(\hat{Q}^N_Z,P_Z)}$ is estimated with MC sampling.
+Rates of convergence and concentration were proved for both RAM and RAM-MC, in terms of sample size $N$ and MC samples $M$ under a variety of choices of $\smash{f}$.
+Synthetic and real-data experiments strongly support the validity of the proposal in practice, and the theoretical results provide guarantees for methods previously proposed heuristically in existing literature.
 
-Future work could investigate the use of our proposals for optimization loops, in contrast to pure estimation.
+Future work could investigate the use of the proposals for optimization loops, in contrast to pure estimation.
 When $\smash{Q^\phi_{Z|X}}$ depends on parameter $\phi$ and the goal is to minimise $\smash{D_f(Q_Z^\phi , P_Z)}$ with respect to $\phi$ such as is the case for Wasserstein Autoencoders, RAM-MC provides a practical surrogate loss that can be minimised using stochastic gradient methods.
 
 
