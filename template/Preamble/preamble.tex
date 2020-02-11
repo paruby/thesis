@@ -908,6 +908,20 @@
  {\end{rep@lemma}}}
 \makeatother
 
+% allow repeating propositions
+\makeatletter
+\newtheorem*{rep@proposition}{\rep@title}
+\newcommand{\newrepproposition}[2]{%
+\newenvironment{rep#1}[1]{%
+ \def\rep@title{#2 \ref{##1}}%
+ \begin{rep@proposition}}%
+ {\end{rep@proposition}}}
+\makeatother
+
 \newreptheorem{theorem}{Theorem}
 \newreplemma{lemma}{Lemma}
 \newrepcorollary{corollary}{Corollary}
+\newreplemma{proposition}{Proposition}
+
+
+\usepackage{afterpage}

@@ -244,7 +244,7 @@ Hence `most' choices of $f$ lead to valid $f$-divergences.
 
 Different choices of $f$ yield several commonly encountered divergences, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
 This family of symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$ and include as special cases the squared-Hellinger $({\beta=\frac{1}{2}})$,  Jensen-Shannon $(\beta=1)$ and Total Variation $(\beta=\infty)$. 
-Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences considered in Chapter \ref{chapter:latent-space-learning-theory}.
+Table \ref{table:f-fns} lists the $f_0$ and other commonly encountered choices of $f$ for the divergences considered in Chapter \ref{chapter:latent-space-learning-theory}.
 
 %This is similarly the case for any $f$ for which there exists some $c>0$ such that $f(u) > c(u-1)$ for all $u\not=1$. 
 %
@@ -267,24 +267,24 @@ Table \ref{table:f-fns} lists the corresponding $f_0$ for the divergences consid
 {
 \renewcommand{\arraystretch}{2}
 \begin{table}
- \caption{$f_0$ corresponding to divergences referenced in this thesis.}
+ \caption{$f$ and $f_0$ of divergences referenced in this thesis.}
  \label{table:f-fns}
  \centering
- \begin{tabular}{c c} 
+ \begin{tabular}{c c c} 
  \toprule
- $f$-divergence & $f_0(x)$ \\
+ $f$-divergence & $f_0(x)$ & Other typical $f(x)$ \\
  \midrule
- Kullback-Leibler (KL) & $x \log x - x + 1$\\
- Total Variation (TV) & $\frac{1}{2}|1-x|$\\
- $\chi^2$ & $x^2 - 2x$\\
- Squared-Hellinger ($\text{H}^2$) & $2(1-\sqrt{x})$\\
- Jensen-Shannon (JS) & $(1+x)\log(\frac{2}{1+x}) + x\log x$\\
+ Kullback-Leibler (KL) & $x \log x - x + 1$ & $x \log x$\\
+ Total Variation (TV) & $\frac{1}{2}|1-x|$& - \\
+ $\chi^2$ & $x^2 - 2x$& $(x-1)^2$,\: $x^2 -1$\\
+ Squared-Hellinger ($\text{H}^2$) & $2(1-\sqrt{x})$&  $(\sqrt{x} - 1)^2$\\
+ Jensen-Shannon (JS) & $(1+x)\log(\frac{2}{1+x}) + x\log x$& -\\
  $\alpha$-divergence, \,
 % $D_{f_\alpha}$, 
- $-1<\alpha < 1$ & $\frac{4}{1-\alpha^2}\left( 1 - x^{\frac{1+\alpha}{2}} \right) - \frac{2(x-1)}{\alpha-1}$ \\
+ $-1<\alpha < 1$ & $\frac{4}{1-\alpha^2}\left( 1 - x^{\frac{1+\alpha}{2}} \right) - \frac{2(x-1)}{\alpha-1}$ & $\frac{4}{1-\alpha^2}\left( 1 - x^{\frac{1+\alpha}{2}} \right)$\\
  $\beta$-divergence, \,
 % $D_{f_\beta}$, 
- $\beta > 0,$ $\beta\not=\frac{1}{2}$ & $\frac{1}{1-\frac{1}{\beta}}\left[ (1+x^\beta)^{\frac{1}{\beta}} - 2^{\frac{1}{\beta}-1}(1+x) \right]$\\
+ $\beta > 0,$ $\beta\not=\frac{1}{2}$ & $\frac{1}{1-\frac{1}{\beta}}\left[ (1+x^\beta)^{\frac{1}{\beta}} - 2^{\frac{1}{\beta}-1}(1+x) \right]$& -\\
  \bottomrule
 \end{tabular}
 \end{table}

@@ -47,11 +47,12 @@ Second, it provides a rigorous foundation to related methods that have been heur
 
 The estimation and minimisation of divergences between probability distributions based on samples are fundamental problems of machine learning.
 The previous chapter discussed generative modelling, but there are numerous other applications across the literature.
-For example, maximum likelihood learning can be viewed as minimizing the Kullback-Leibler divergence $D_{\text{KL}}(P_{\text{data}}, P_{\text{model}})$ with respect to the model parameters.
+For example, 
+%maximum likelihood learning can be viewed as minimizing the Kullback-Leibler divergence $D_{\text{KL}}(P_{\text{data}}, P_{\text{model}})$ with respect to the model parameters.
 %More generally, generative modelling
 %%---most famously Variational Autoencoders and Generative Adversarial Networks \cite{kingma2013auto, goodfellow2014generative} discussed in the next section---
 %can be viewed as minimizing a divergence $\smash{D(P_{\text{data}}, P_{\text{model}})}$ where $\smash{P_{\text{model}}}$ may be intractable.
-In variational inference, an intractable posterior $p(z|x)$ is approximated with a tractable distribution $q(z)$ chosen to minimise $\smash{D_{\text{KL}}\bigl(q(z) , p(z|x)\bigr)}$.
+in variational inference, an intractable posterior $p(z|x)$ is approximated with a tractable distribution $q(z)$ chosen to minimise $\smash{D_{\text{KL}}\bigl(q(z) , p(z|x)\bigr)}$.
 The mutual information between two variables $\smash{I(X,Y)}$, core to information theory and Bayesian machine learning, is equivalent to $\smash{D_{\text{KL}}(P_{X,Y} , P_X P_Y)}$. 
 Independence testing often involves estimating a divergence $\smash{D(P_{X,Y} , P_X P_Y)}$, while two-sample testing (does $P=Q$?) involves estimating a divergence $D(P,Q)$.
 Additionally, one approach to domain adaptation, in which a classifier is learned on a distribution $P$ but tested on a distinct distribution $Q$, involves learning a feature map $\phi$ such that a divergence $\smash{D\left( \phi_\# P , \phi_\# Q \right)}$ is minimised, where $\smash{\phi_\#}$ represents the push-forward operation \citep{ben2007analysis,ganin2016domain}.
@@ -82,7 +83,7 @@ While some works considering the agnostic setting provide rates for the bias and
 it is more common to only show that the estimators are asymptotically unbiased or consistent without proving specific rates of convergence \citep{wang09kl, poczos11alpha, kanamori12ratio}.
 
 
-Motivated by recent advances in machine learning, this chapter studies a setting in which structural assumptions are made about the distributions.
+Motivated by recent advances in machine learning, this chapter considers a setting in which structural assumptions are made about the distributions.
 Although the assumptions are strong, they are naturally satisfied in the setting of autoencoders such as Wasserstein Autoencoders and Variational Autoencoders.
 
 
@@ -109,112 +110,134 @@ By side-stepping the need to perform density estimation, one obtains \emph{param
 This is in contrast to the agnostic setting where \emph{both} nonparametric rates and constants are exponential in dimension. 
 
 These results have immediate implications to existing literature.
-For the particular case of the $\KL$ divergence, a similar approach has been \emph{heuristically} applied independently by several authors for estimating the mutual information \citep{poolevariational} and total correlation \citep{chen2018isolating}.
-The results presented in this chapter provide strong theoretical grounding for these existing methods by showing sufficient conditions for their consistency.
+For the particular case of the $\KL$ divergence, a similar approach has been heuristically applied in independent works for estimating the mutual information \citep{poolevariational} and total correlation \citep{chen2018isolating}.
+The results presented in this chapter thus provide strong theoretical grounding for these existing methods through rigorous analysis lacking in the original proposals.
 
-Since the setting we consider arises naturally in the study of autoencoder-based generative models, the following Section \ref{sec:generative-modelling-tour} provides an overview of the key concepts in the generative modelling literature in the context of this chapter.
+Section \ref{sec:f-div-background} presents known results from the literature on $f$-divergences and basic results in learning theory that are used in the proofs of novel results presented in this chapter.
+%Since the setting we consider arises naturally in the study of autoencoder-based generative models, the following Section \ref{sec:generative-modelling-tour} provides an overview of the key concepts in the generative modelling literature in the context of this chapter.
 Following this, Section \ref{sec:theory} introduces the RAM and RAM-MC estimators and presents the main theoretical results, including rates of convergence for the bias (Theorems~\ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general}) and tail bounds (Theorems \ref{thm:concentration} and \ref{thm:mc-variance}).
-In Section \ref{sec:experiments} we validate our results in both synthetic and real-data experiments. 
-In Section \ref{sec:applications} we discuss further applications of our results.
-We conclude in Section \ref{sec:conclusion}.
-Additional details and proofs can be found in Appendix \ref{chapter:appendix-latex-space-learning-theory}.
+Section \ref{sec:experiments} validates the results in both synthetic and real-data experiments. 
+Section \ref{sec:applications} discusses applications of these results to the literature, and 
+Section \ref{sec:conclusion} concludes.
+The results presented in Section \ref{sec:theory} have long proofs; short sketches are presented in the main text, while the full proofs can be found in Appendix \ref{chapter:appendix-latex-space-learning-theory}.
 
 
-\section{Background}
+\section{Reference results}\label{sec:f-div-background}
 
-This section states some results that are used in the proofs of the next section.
+This section presents basic results from the literature that are used in the proofs of novel results in this chapter.
+These include bounds relating different $f$-divergences, closed-form expressions for some $f$-divergences in the case of Gaussian probability distributions, and basic concentration inequalities. 
+Proofs are omitted for referenced results.
 
 
-\subsection{Bounds}
+\subsection{$f$-divergence bounds}
 
+The results presented here are inequalities relating the values taken by $f$-divergences. 
+These are mostly used in the proof of Theorem \ref{thm:fast-KL-rate}.
+A comprehensive treatment of the relationships between different $f$-divergences can be found in \cite{tsybakov2009}, from which many of the results below are taken.
 
-\begin{lemma}
+\medskip
+
+\begin{lemma}[Lemma 2.4, \cite{tsybakov2009}]\label{lemma:f-div-hleqkl}
+Let $A$ and $B$ be probability distributions. Then,
 \begin{align*}
-H^2(A, B) \leq KL(A,B) 
+H^2(A, B) \leq KL(A,B).
 \end{align*}
 \end{lemma}
 
-\begin{lemma}
+\medskip
+
+\begin{lemma}[Pinsker's inequality, Lemma 2.5, \cite{tsybakov2009}]\label{lemma:f-div-pinsker}
+Let $A$ and $B$ be probability distributions. Then,
 \begin{align*}
-KL(A,B) \leq e^{KL(A, B)} - 1 \leq \chi^2(A, B)
+TV(A,B)  \leq \sqrt{\frac{1}{2}\KL(A, B)}.
 \end{align*}
 \end{lemma}
 
-\begin{lemma}[Pinsker's inequality]
+\medskip
+
+\begin{lemma}[Lemma 2.7, \cite{tsybakov2009}]\label{lemma:f-div-klleqchi}
+Let $A$ and $B$ be probability distributions. Then,
 \begin{align*}
-TV(A,B)  \leq \sqrt{\frac{1}{2}\KL(A, B)}
+KL(A,B) \leq e^{KL(A, B)} - 1 \leq \chi^2(A, B).
 \end{align*}
 \end{lemma}
 
-\begin{lemma}
+
+\medskip
+
+\begin{lemma}[Theorem 2, \cite{osterreicher2003new}]\label{lemma:f-div-betaleqtv}
+Let $A$ and $B$ be probability distributions. For any value $\beta \geq 0$, there exists a scalar $\psi(\beta)$ such that
 \begin{align*}
-D_{f_\beta}(A,B) \leq \psi(\beta) \TV
+D_{f_\beta}(A,B) \leq \psi(\beta) \TV(A, B).
 \end{align*}
 \end{lemma}
+
+\medskip
+
 
 \begin{lemma}\label{lemma:hilbertian-triangle}
 Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
+Let $A_N$ be a sequence of probability distributions, and let $B$ and $C$ be fixed probability distributions.
 Then for any $\lambda>0$,
 \begin{align*}
-    D_f\left(\hat{Q}^N_Z , P_Z\right) - D_f\left(Q_{Z} , P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z , Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} , P_Z \right)
+    D_f\left(A_N , C\right) - D_f\left(B , C\right) \leq (1+\lambda) D_f\left(A_N , B \right) +  \frac{1}{\lambda} D_f\left(B , C \right)
 \end{align*}
-If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
+If, furthermore, $D_f\left(A_N , B\right) = O\left( \frac{1}{N^k} \right)$ 
 for some $k>0$, 
 then
 \begin{align*}
-    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , P_Z\right) \right] - D_f\left(Q_{Z} , P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
+	D_f\left(A_N , C\right)  - D_f\left(B , C\right) = O\left( \frac{1}{N^{k/2}} \right)
 \end{align*}
 \end{lemma}
 \begin{proof}
-The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $\hat{Q}^N_Z$ and $P_Z$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
+The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $A_N$ and $C$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
 The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2}}$.
 \end{proof}
 
 
-\subsection{Closed-form expressions for f-divergences between Gaussians}
+%\begin{align*}
+%    D_f\left(\hat{Q}^N_Z , P_Z\right) - D_f\left(Q_{Z} , P_Z\right) \leq (1+\lambda) D_f\left(\hat{Q}^N_Z , Q_Z \right) +  \frac{1}{\lambda} D_f\left(Q_{Z} , P_Z \right)
+%\end{align*}
+%If, furthermore, $\E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , Q_Z\right)\right] = O\left( \frac{1}{N^k} \right)$ 
+%for some $k>0$, 
+%then
+%\begin{align*}
+%    \E_{\XN}\left[ D_f\left(\hat{Q}^N_Z , P_Z\right) \right] - D_f\left(Q_{Z} , P_Z\right) = O\left( \frac{1}{N^{k/2}} \right)
+%\end{align*}
+%\end{lemma}
+%\begin{proof}
+%The first inequality follows from the triangle inequality for $D_f^{\frac{1}{2}}$ on $\hat{Q}^N_Z$ and $P_Z$, and the fact that $2\sqrt{ab} \leq \lambda a + \frac{b}{\lambda}$ for ${a, b, \lambda>0}$.
+%The second inequality follows from the first by taking $\lambda = N^{-\frac{k}{2}}$.
+%\end{proof}
 
 
-The closed form expression for the $\chi^2$-divergence between two $d$-variate normal distributions can be found in Lemma 1 of~\cite{NielsenN14}:
-\begin{lemma}\label{lemma:chi-squared-closed-form}
+
+\subsection{Closed-form expressions for f-divergences between Gaussians}\label{subsec:f-div-closed-form-gaussians}
+
+The closed-form expressions for $f$-divergences presented here 
+%This section presents closed-form expressions for $f$-divergences. 
+are used for the experiments in Section \ref{sec:experiments}, as well as to understand cases in which the assumptions of all results hold in practical scenarios, discussed at the end of Section \ref{sec:theory}.
+
+
+
+\medskip
+ 
+\begin{lemma}[Exercise 1.6.11, \cite{pardo2005statistical}]
+The Kullback-Leibler (KL) divergence between two $d$-variate Gaussians is
 \begin{align*}
-&\chi^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
-\mathcal{N}(\mu_2, \Sigma_2)\bigr)
-=
-\frac{\mathrm{det}(\Sigma_1^{-1})}{\sqrt{\mathrm{det}(2\Sigma_1^{-1} - \Sigma_2^{-1})\mathrm{det}(\Sigma_2^{-1})}}
-\exp\left(
-\frac12\mu_2'\Sigma_2^{-1}\mu_2 
--\mu_1'\Sigma_1^{-1}\mu_1 
-\right)
-\times\\
-&\times\exp\left(
--\frac14(2\mu_1' \Sigma_1^{-1} - \mu_2' \Sigma_2^{-1})
-\bigl(\frac12 \Sigma_2^{-1} - \Sigma_1^{-1}\bigr)^{-1}
-(2\Sigma_1^{-1}\mu_1 - \Sigma_2^{-1}\mu_2)
-\right) - 1.
+\KL\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+\mathcal{N}(\mu_2, \Sigma_2)\bigr) = \frac{1}{2} \left( \text{tr}\left(\Sigma_2^{-1} \Sigma_1\right)
++ (\mu_2  - \mu_1)^\intercal \Sigma_2^{-1}(\mu_2 - \mu_1) - d + \log\frac{|\Sigma_2|}{|\Sigma_1|}
+\right).
 \end{align*}
-
-\todo{in particular, this is finite when... ref assumptions section which uses this lemma.}
-
 \end{lemma}
-As a corollary, the following also holds:
-\begin{corollary}
-Chi square divergence between two $d$-variate Gaussian distributions both having covariance matrices proportional to identity can be computed as:
-\[
-\chi^2\bigl( \mathcal{N}(\mu, \sigma^2 I_d), \mathcal{N}(0, \beta^2 I_d)\bigr)
-=
-\left(\frac{\beta^2}{\sigma^2\sqrt{2\beta^2/\sigma^2 - 1}}\right)^d
-e^{\frac{\|\mu\|^2}{2\beta^2 - \sigma^2}}
-- 1
-\]
-assuming $2\beta^{2} > \sigma^{2}$. 
-Otherwise the divergence is infinite.
-\end{corollary}
 
-The squared Hellinger divergence between two Gaussians is given in \cite{pardo2005statistical}:
+\medskip
 
-\begin{lemma}
+\begin{lemma}[Exercise 1.6.14, \cite{pardo2005statistical}]
+The squared Hellinger ($H^2$) divergence between two multivariate Gaussians is
 \begin{align*}
-&H^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+&\mathrm{H}^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
 \mathcal{N}(\mu_2, \Sigma_2)\bigr) \\
 &\qquad = 1 - \frac{ \det (\Sigma_1)^{1/4} \det (\Sigma_2) ^{1/4}} { \det \left( \frac{\Sigma_1 + \Sigma_2}{2}\right)^{1/2} }
               \exp\left\{-\frac{1}{8}(\mu_1 - \mu_2)^T 
@@ -224,24 +247,70 @@ The squared Hellinger divergence between two Gaussians is given in \cite{pardo20
 \end{align*}
 \end{lemma}
 
-The $\KL$-divergence between two $d$-variate Gaussians is:
- 
-\begin{lemma}
+
+\medskip
+
+%The closed form expression for the $\chi^2$-divergence between two $d$-variate normal distributions can be found in Lemma 1 of~\cite{NielsenN14}:
+\begin{lemma}[Lemma 1, \cite{NielsenN14}]\label{lemma:chi-squared-closed-form}
+Suppose that $P_1$ and $P_2$ are members of the same exponential family of distributions with log-partition function $F$ and natural parameters $\theta_1$ and $\theta_2$ respectively. Then
 \begin{align*}
-\KL\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
-\mathcal{N}(\mu_2, \Sigma_2)\bigr) = \frac{1}{2} \left( \text{tr}\left(\Sigma_2^{-1} \Sigma_1\right)
-+ (\mu_2  - \mu_1)^\intercal \Sigma_2^{-1}(\mu_2 - \mu_1) - d + \log\frac{|\Sigma_2|}{|\Sigma_1|}
-\right).
+\chi^2(P_1, P_2) = e^{F(2\theta_2 - \theta_1) - \left(2F(\theta_2) - F(\theta_1) \right) } - 1
 \end{align*}
+and is finite provided that $2\theta_2 - \theta_1$ belongs to the natural parameter space.
+In the particular case of Gaussians,
+\begin{align*}
+\chi^2\bigl( \mathcal{N}(\mu_1, \Sigma_1), 
+&\mathcal{N}(\mu_2, \Sigma_2)\bigr)
+=
+\frac{\mathrm{det}(\Sigma_2^{-1})}{\sqrt{\mathrm{det}(2\Sigma_2^{-1} - \Sigma_1^{-1})\mathrm{det}(\Sigma_1^{-1})}}
+\exp\left(
+\frac12\mu_2'\Sigma_1^{-1}\mu_2 
+-\mu_1'\Sigma_2^{-1}\mu_1 
+\right)\\
+&\times\exp\left(
+-\frac14(2\mu_1' \Sigma_2^{-1} - \mu_2' \Sigma_1^{-1})
+\bigl(\frac12 \Sigma_1^{-1} - \Sigma_2^{-1}\bigr)^{-1}
+(2\Sigma_2^{-1}\mu_1 - \Sigma_1^{-1}\mu_2)
+\right) - 1.
+\end{align*}
+%\todo{in particular, this is finite when... ref assumptions section which uses this lemma.}
 \end{lemma}
+%As a corollary, the following also holds:
+%\begin{corollary}
+%Chi square divergence between two $d$-variate Gaussian distributions both having covariance matrices proportional to identity can be computed as:
+%\[
+%\chi^2\bigl( \mathcal{N}(\mu, \sigma^2 I_d), \mathcal{N}(0, \beta^2 I_d)\bigr)
+%=
+%\left(\frac{\beta^2}{\sigma^2\sqrt{2\beta^2/\sigma^2 - 1}}\right)^d
+%e^{\frac{\|\mu\|^2}{2\beta^2 - \sigma^2}}
+%- 1
+%\]
+%assuming $2\beta^{2} > \sigma^{2}$. 
+%Otherwise the divergence is infinite.
+%\end{corollary}
+
 
 \subsection{Concentration inequalities}
 
-\todo{chebyshev}
+Concentration inequalities provide bounds on the probability with which a random variable deviates from its expectation.
+Here two such results are outlined; a comprehensive study can be found in \cite{boucheron2013concentration}. 
+One basic such result is \emph{Chebyshev's inequality}.
 
-We will make use of McDiarmid's theorem in our proof of Theorem \ref{thm:concentration}:
+\medskip
 
-\begin{theorem}[McDiarmid's inequality]\label{thm:mcdiarmid}
+\begin{lemma}[Chebyshev's inequality, Section 2.1, \cite{boucheron2013concentration}]\label{lemma:chebyshev}
+Let $X$ be a random variable with finite expectation and variance. Then, for any $t>0$,
+\begin{align*}
+\mathbb{P}\left( |X - \mathbb{E}X | \geq t \right) \leq \frac{\mathrm{Var}(X)}{t}
+\end{align*}
+\end{lemma}
+
+A much stronger concentration result, \emph{McDiarmid's inequality} (sometimes called the \emph{bounded difference	inequality}), provides an exponential bound if the \emph{bounded difference property} is satisfied.
+This result forms the basis of the proof of Theorem \ref{thm:concentration}.
+
+\medskip
+
+\begin{theorem}[McDiarmid's inequality, Theorem 6.2, \cite{boucheron2013concentration}]\label{thm:mcdiarmid}
 Suppose that $X_1, \ldots, X_N \in \mathcal{X}$ are independent random variables and that $\phi : \mathcal{X}^N \to \R$ is a function. 
 If it holds that for all $i\in\{1,\ldots,N\}$ and $x_1, \ldots, x_N, x_{i'}$, 
 \begin{align*}
@@ -249,12 +318,15 @@ If it holds that for all $i\in\{1,\ldots,N\}$ and $x_1, \ldots, x_N, x_{i'}$,
 \end{align*}
 then
 \begin{align*}
-    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
+    \mathbb{P} \left(|\phi(X_1,\ldots, X_N) - \E\phi| \geq t \right) \leq 2\exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right).
 \end{align*}
-and
-\begin{align*}
-    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq -t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
-\end{align*}
+%\begin{align*}
+%    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
+%\end{align*}
+%and
+%\begin{align*}
+%    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq -t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
+%\end{align*}
 \end{theorem}
 
 
@@ -328,11 +400,11 @@ The first is to bound the bias in terms of ${\E_{\XN}\big[D_f(\hat{Q}_Z^N, Q_Z)\
 The second step is to bound ${\E_{\XN}\bigl[D_f(\hat{Q}_Z^N, Q_Z)\bigr]}$ in terms of ${\E_{\XN}\bigl[\chi^2(\hat{Q}_Z^N, Q_Z)\bigr]}$.
 From the definition of the $\chi^2$ divergence, the latter quantity is the variance of the average of $N$ i.i.d.\:random variables and therefore decomposes as ${\E_{X\sim Q_X}\bigl[\chi^2(Q_{Z|X}, Q_Z)\bigr] / N} = O(N^{-1})$.
 
-For the KL, the first bound is an equality provided that $\KL\left( Q_{Z} , P_Z\right)$ is finite, and the second follows from the fact that $\KL \leq \chi^2$ \citep{tsybakov2009}.
-For TV, the first bound holds because it is a metric, after which Pinsker's inequality can be used to upper bound in terms of the rate for the KL.
+For the KL, the first bound is an equality provided that $\KL\left( Q_{Z} , P_Z\right)$ is finite, and the second follows from the fact that $\KL \leq \chi^2$ (Lemma \ref{lemma:f-div-klleqchi}).
+For TV, the first bound holds because it is a metric, after which Pinsker's inequality (Lemma \ref{lemma:f-div-pinsker}) can be used to upper bound in terms of the rate for the KL.
 
-For ${D_{f_\beta}}$, which includes $H^2$ and JS as special cases, the first bound is derived by using the property that $D^{1/2}_{f_\beta}$ satisfies the triangle inequality for $\beta \geq \frac{1}{2}$ \citep{hein05hilbertian}, see Lemma \ref{lemma:hilbertian-triangle}.
-The rate for $H^2$ can then be related to that of the KL by the relation $H^2 \leq \KL$ \citep{tsybakov2009}, while for the other $D_{f_\beta}$ (including JS), it can be related to that of TV via the relation $D_{f_\beta} \leq \psi(\beta) \TV$ for some scalar $\psi(\beta)$ \citep{osterreicher2003new}.
+For ${D_{f_\beta}}$, which includes $H^2$ and JS as special cases, the first bound is derived by using the property that $D^{1/2}_{f_\beta}$ satisfies the triangle inequality for $\beta \geq \frac{1}{2}$ \citep{hein05hilbertian} and applying Lemma \ref{lemma:hilbertian-triangle}.
+The rate for $H^2$ can then be related to that of the KL by the relation $H^2 \leq \KL$ (Lemma \ref{lemma:f-div-hleqkl}), while for the other $D_{f_\beta}$ (including JS), it can be related to that of TV via the relation $D_{f_\beta} \leq \psi(\beta) \TV$ for some scalar $\psi(\beta)$ (Lemma \ref{lemma:f-div-betaleqtv}).
 \end{proof}
 
 \medskip
@@ -361,7 +433,7 @@ the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\ri
 \end{theorem}
 \begin{proof}[Proof sketch (full proof in Appendix \ref{proof:thm2})]
 The exact proof is different for each choice of $f$.
-For the $\chi^2$-divergence, this bias can be bounded directly in terms of assumed finite expectation $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$.
+For the $\chi^2$-divergence, this bias can be bounded directly in terms of the assumed finite expectation $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$.
 
 For all other divergences, the proofs have the following general outline.
 A convex function lies above any supporting hyperplane, and so $f(u + t) \geq f(u) + f'(u)t$ for any $u,t$ in the scalar case.
@@ -384,7 +456,6 @@ Subtle treatment is required for the case that $f'$ diverges as the density rati
 In this case, the bias is written as a sum of integrals over separate ranges of values for $\hat{q}_N(z)/p(z)$.
 For small values of $\hat{q}_N(z)/p(z)$, the integral is controlled directly, while for sufficiently large values the above inequalities are used.
 %In the case that $f$ into separate integrals to isolate 
-
 \end{proof}
 
 \subsection{Tail bounds for RAM}
@@ -434,8 +505,8 @@ These results follow by McDiarmid's inequality applied to $D_f( \hat{Q}_Z^N , P_
 To apply it, it needs to be shown that 
 %we need to show that 
 RAM viewed as a function of $\XN$ has bounded differences.
-That is, when changing a single coordinate of $\smash{\XN}=(X_1, X_2, \ldots, X_N)$, the value of $\smash{D_f( \hat{Q}_Z^N(\XN) , P_Z)}$ changes by at most a constant that may depend on $N$.
-This constant is shown to be $\smash{O(N^{-1/2}\psi(N))}$, from which the result follows directly from McDiarmid.
+That is, when changing a single coordinate of $\smash{\XN}=(X_1, X_2, \ldots, X_N)$, the value of $\smash{D_f( \hat{Q}_Z^N(\XN) , P_Z)}$ changes by at most a constant $c_{i,N}$ that may depend on $N$.
+This constant is shown to be $\smash{O(N^{-1/2}\psi(N))}$ for all values of $i$, from which the result follows directly from McDiarmid.
 
 
 Proof of the bounded difference property proceeds similarly to the proof of Theorem \ref{thm:convergence-rate-general}.
@@ -446,7 +517,7 @@ Then,
 %&\left| D_f(  \hat{Q}_Z^N(\XN) , P_Z) - D_f( \hat{Q}_Z^N({\XN}') , P_Z)\right| \\
 %&= \left| \E_{P_Z} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f\left( \frac{\hat{q}'_N(z)}{p(z)}\right) \right] \right| 
 %\end{align*}
-
+%
 \begin{align*}
 & D_f( \hat{Q}_Z^N(\XN) , P_Z) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
 &= \E_{P_Z} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) \right] - \E_{P_Z} \left[ f\left( \frac{\hat{q}_N'(z)}{p(z)}\right)\right] \\
@@ -456,7 +527,7 @@ Then,
 &= \sqrt{ \E_{P_Z} \left[ \left( \frac{1}{N}\frac{q(z|X_1) - q(z|X_1')}{p(z)} \right)^2 \right]} \sqrt{ \E_{P_Z} \left[ f'^2\left(\frac{\hat{q}_N(z)}{p(z)}\right) \right]} \\
 &= \frac{1}{N} \sqrt{ \E_{P_Z} \left[ \left( \frac{q(z|X_1) - q(z|X_1')}{p(z)} \right)^2 \right]} \sqrt{ \E_{P_Z} \left[ f'^2\left(\frac{\hat{q}_N(z)}{p(z)}\right) \right]}.
 \end{align*}
-
+%
 A similar bound can be derived by swapping the role of $\XN$ and ${\XN}'$, thus the absolute value of the difference is upper bounded by the maximum of these bounds.
 By symmetry, it suffices to control one of them.
 The left hand term is controlled by the assumption that ${\chi^2\left(Q_{Z|x} , P_Z\right) \leq C < \infty}$.
@@ -467,7 +538,7 @@ Similar to the proof of Theorem \ref{thm:convergence-rate-general}, special care
 
 \subsection{Practical estimation with RAM-MC}
 
-In practice it may not be possible to evaluate $\smash{D_f( \hat{Q}_Z^N , P_Z)}$ analytically as it requires solving a potentially complicated integral. 
+In practice it may not be possible to evaluate $\smash{D_f( \hat{Q}_Z^N , P_Z)}$ analytically as this would require solving a potentially complicated integral. 
 However, since both densities $\hat{q}_N(z)$ and $p(z)$ are known, Monte-Carlo (MC) sampling can be used to estimate the integral.
 In particular, consider importance sampling with proposal distribution ${\pi(z|\XN)}$, where $\pi$ can depend on the sample $\XN$.
 If $\pi(z|\XN) = p(z)$ this reduces to normal MC sampling. 
@@ -490,15 +561,27 @@ For any proposal distribution $\pi$, RAM-MC is unbiased:
 \end{align*}
 %
 If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either of the following conditions are satisfied:
+%\begin{align*}
+%&(i) \ \pi(z|\XN) = p(z),& 
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
+%&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
+%&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
+%&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+%\end{align*}
 \begin{align*}
-&(i) \ \pi(z|\XN) = p(z),& 
-&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
-&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
-&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
-&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
-&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+(i)& \begin{cases}
+\displaystyle \pi(z|\XN) = p(z) \\
+\displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 p(z) dz  < \infty, \\
+\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty
+\end{cases}\\ \ \\
+(ii)& \begin{cases}
+\displaystyle \pi(z | \XN) = \hat{q}_N(z), \\
+\displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 \left(\frac{p(z)}{q(z|X)}\right)^2 q(z|X) dz < \infty, \\
+\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty
+\end{cases}
 \end{align*}
-where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
+%where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
 then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
 \begin{align*}
     \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
@@ -522,12 +605,12 @@ For unbiasedness, observe that
     &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
 \end{align*}
 
-For the variance, by the law of total variance,
+By the law of total variance, the variance can be decomposed as
 \begin{align*}
     \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f\bigr] = 
     \mathbb{E}_{\XN} \bigl[\text{Var}\bigl[\hat{D}^M_f\, | \XN\bigr]\bigr] + \text{Var}_{\XN} \bigl[D_f( \hat{Q}_Z^N , P_Z )\bigr].
 \end{align*}
-The first of these terms is ${O( M^{-1})}$ by standard results on MC integration, subject to the finiteness assumptions on the moments.
+The first of these terms is ${O( M^{-1})}$ by standard results on MC integration, subject to the finiteness assumptions.
 The concentration results of Theorem \ref{thm:concentration} imply bounds on the second term, since for a random variable $X$,
 \begin{align*}
     \text{Var}X &= \mathbb{E} (X - EX)^2 \\
@@ -555,8 +638,8 @@ Taking $\sqrt{t} = K\psi(N) \sqrt{\log \frac{2}{\delta}}$ implies $\delta = 2 e^
 
 %Through use of the Efron-Stein inequality---rather than integrating the tail bound provided by McDiarmid's inequality---it is possible for some choices of $f$ to weaken the assumptions under which the $O(\psi(N)^2)$ variance is achieved: from uniform boundedness of $\smash{\chi^2(Q_{Z|X},P_Z)}$ to boundedness in expectation.
 In general, a variance better than ${O(M^{-1})}$ is not possible using importance sampling. However, the constant and hence practical performance may vary significantly depending on the choice of $\pi$.
-It is also possible to derive confidence bounds for RAM-MC of the form similar to Theorem~\ref{thm:concentration}, but with an additional dependence on $M$ and the worse dependence on $\delta$ of $1/\delta$. 
-This can be done through Chebyshev's inequality, which states that for any random variable $X$ with finite variance, it is within $\epsilon$ of its mean with probability at least $1 - \text{Var}(X)/\epsilon$.  
+Through Chebyshev's inequality (Lemma \ref{lemma:chebyshev}) it is also possible to derive confidence bounds for RAM-MC of the form similar to Theorem~\ref{thm:concentration}, but with an additional dependence on $M$ and the worse dependence on $\delta$ of $1/\delta$ instead of $\sqrt{\log(2/\delta)}$. 
+%This can be done through Chebyshev's inequality, which states that for any random variable $X$ with finite variance, it is within $\epsilon$ of its mean with probability at least $1 - \text{Var}(X)/\epsilon$.  
 
 %For brevity we omit this.
 
@@ -592,7 +675,7 @@ Since both $\mu(X)$ and $\Sigma(X)$ take value in compact sets, it follows that 
 
 A similar argument based on compactness shows that the density ratio is uniformly bounded in $z$ and $x$, so that $q(z|x)/p(z) \leq C'$ for some $C'<\infty$ for all values of $z$ and $x$. 
 It follows that the conditions of Theorems \ref{thm:convergence-rate-general} and \ref{thm:mc-variance} hold.
-For the former this is because $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$, and for latter this is because the terms inside the $L_2$ norms of condition (i) are bounded and thus the norms and expectations are finite. 
+For the former this is because $\int q^4(z|x)/p^4(z) dP(z) < {C'}^4 < \infty$, and for the latter this is because the terms inside the integrals of condition (i) are bounded and thus the norms and expectations are finite. 
 
 
 %Then the assumptions hold if there exist constants $K, \epsilon > 0$ such that ${\| \mu(X)\| < K}$ and ${\Sigma_{ii}(X) \in [\epsilon, 1]}$ for all $i$ (see Appendix \ref{appendix:discussion-constraints}).
@@ -642,8 +725,8 @@ The previous section discussed theoretical properties of the proposed RAM-MC est
 This section demonstrates its practical performance.
 First, its behaviour is probed in a synthetic, controlled setting where all distributions and divergences are known.
 After this, a more realistic setting is considered in which the goal is to estimate a divergence between the aggregate posterior $Q_Z$ and prior $P_Z$ in pretrained autoencoder models. 
-For experimental details not included in the main text,
-see Appendix \ref{appendix:empirical-evaluation-details}.
+%For experimental details not included in the main text,
+%see Appendix \ref{appendix:empirical-evaluation-details}.
 %\footnote{A python notebook to reproduce all experiments is available at \url{https://github.com/google-research/google-research/tree/master/f_divergence_estimation_ram_mc}.}
 
 
@@ -651,7 +734,7 @@ see Appendix \ref{appendix:empirical-evaluation-details}.
 %\textbf{The data model.}
 The aim is to investigate the behaviour of the RAM-MC estimator for various $d=\dim(\mathcal{Z})$ and $f$-divergences in a synthetic controlled setting. 
 This is done by considering a setting in which $Q^{\lambda}_Z$, parametrised by a scalar $\lambda$, and $P_Z$ are both $d$-variate normal distributions for $d\in\{1, 4, 16\}$.
-In this case $D_f(Q^\lambda_Z, P_Z)$ can be computed analytically for the KL, $\chi^2$, and squared Hellinger divergences (see Appendix \ref{appendix:toy-exps}).
+In this case $D_f(Q^\lambda_Z, P_Z)$ can be computed analytically for the KL, $\chi^2$, and $\mathrm{H}^2$ divergences (see Section \ref{subsec:f-div-closed-form-gaussians}).
 These analytic values can be used as baselines to compare with the estimates obtained through use of RAM-MC. 
 Specifically, take 
 \begin{align*}
@@ -680,7 +763,7 @@ The columns of Figure~\ref{fig:synthetic-exps} correspond to different dimension
 For each column, the values of $A_0$ and $v$ were randomly sampled so that the distributions being compared are the same within columns and different between columns.
 Two other baseline methods are included for comparison.
 First, a plug-in method based on kernel density estimation \citep{moon14ensemble}.
-Second, and only for the KL case, the M1 method of \cite{nguyen10ratio} based on density ratio estimation.
+Second, and only for the KL case, the M1 method of \cite{nguyen10ratio} based on density ratio estimation (see Section \ref{sec:literature-density-ratio-estimation}).
 
 %\textbf{The experiment.}
 To produce each plot, the following was performed 10 times, with the mean result giving the bold lines and standard deviation giving the error bars.
@@ -700,7 +783,7 @@ By side-stepping the issue of density estimation, RAM-MC performs favourably com
 In particular, the shape of the RAM-MC curve follows that of the truth for each divergence, while that of the plug-in estimator does not for larger dimensions.
 In some cases the plug-in estimator can even take negative values due to the large variance.
 
-
+\afterpage{%
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}
@@ -711,24 +794,28 @@ In some cases the plug-in estimator can even take negative values due to the lar
 \end{tikzpicture}
 \end{center}
 \caption{\label{fig:synthetic-exps}
-(Section~\ref{section:synth-exps})
+Results of synthetic experiments, Section~\ref{section:synth-exps}.
 Estimating $D_f\bigl(\mathcal{N}(\mu_\lambda, \Sigma_\lambda),\, \mathcal{N}(0, I_d)\bigr)$ for various $f$, $d$, and parameters $\mu_\lambda$ and $\Sigma_\lambda$ indexed by $\lambda\in \R$.
 Horizontal axis correspond to $\lambda\in[-2, 2]$,
 columns to $d\in\{1, 4, 16\}$ and
 rows to KL, $\chi^2$, and $\mathrm{H}^2$ divergences respectively.
 {\bf \textcolor{blue}{Blue}} are true divergences, 
-{\bf black} and {\bf \textcolor{red}{red}} are RAM-MC estimators~\eqref{eq:our-mc-estimate} for $N\in\{1, 500\}$ respectively,
+{\bf black} and {\bf \textcolor{red}{red}} are RAM-MC estimators (Equation \ref{eq:our-mc-estimate}) for $N\in\{1, 500\}$ respectively,
 {\bf \textcolor{darkgreen}{green}} are M1 estimator of~\citep{nguyen10ratio} and {\bf \textcolor{orange}{orange}} are plug-in estimates based on Gaussian kernel density estimation \citep{moon14ensemble}.
 $N=500$ and $M=128$ in all the plots if not specified otherwise.
 Error bars depict one standard deviation over 10 experiments.
 }
 \end{figure}
+\clearpage
+}
+
 
 \subsection{Real-data experiments}
 \label{sec:exp_wae}
 %\textbf{The data model.}
-To investigate the behaviour of RAM-MC in a more realistic setting, this experiment considers Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), introduced in Section \ref{sec:literature-gen-models}.
+To investigate the behaviour of RAM-MC in a more realistic setting, this experiment considers the estimation of divergences in the context of Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), introduced in Section \ref{sec:literature-gen-models}.
 Recall that both models have a prior ${P_Z}$ over the latent space and involve learning an \emph{encoder} $\smash{Q^\phi_{Z|X}}$ with parameter $\phi$ mapping from the data to latent space.
+%RAM-MC is used to estimate the divergence $D_f(Q^\phi_Z,P_Z)$ between the aggregate posterior and prior.
 %A prior distribution ${P_Z}$ is specified, and the 
 %optimization objectives of both models are of the form ``reconstruction + distribution matching penalty''.
 %The penalty of the VAE was shown by \cite{hoffman2016elbo} to be equivalent to $\smash{\KL(Q^\theta_Z \| P_Z) + I(X,Z)}$ where $I(X,Z)$ is the mutual information of a sample and its encoding.
@@ -744,7 +831,7 @@ Since all models considered have Gaussian encoders, the resulting \emph{empirica
 is a ${\sim}{20}\text{k}$-component Gaussian mixture for $Q_Z$, one component for each item in the test dataset. 
 Since $Q_Z$ is a finite---not continuous---mixture, the true $D_f(Q_Z,P_Z)$ can be estimated using a large number of MC samples ($10^4$ samples were used).
 This is computationally costly as it involves evaluating $2\cdot 10^4$ Gaussian densities for each of the $10^4$ MC points.
-This evaluation was repeated 10 times, and the means and standard deviations are reported in Figures \ref{fig:real-exps} and \ref{fig:real-exps-hsq}.
+This evaluation was repeated 10 times, and the means and standard deviations are reported in Figures \ref{fig:real-exps} and \ref{fig:real-exps-hsq} for the KL and $\mathrm{H}^2$ divergences respectively.
 RAM-MC is evaluated using $N \in \{2^0, 2^1,\ldots, 2^{14}\}$ and $M \in \{10, 10^3\}$.
 For each combination $(N,M)$, RAM-MC was computed 50 times with the means plotted as bold lines and standard deviations as error bars.
 This procedure was performed for the KL and $H^2$ divergences on six models that were chosen to have latent dimension $d\in\{32, 64, 128\}$ and were selected from the classes VAE, WAE-MMD and WAE-GAN.
@@ -765,7 +852,7 @@ In contrast, in the top row it is less obvious, because the comparatively larger
 Even in this case, both the bias and variance of RAM-MC with $M{=}1000$ become negligible for large $N$.
 Importantly, the behaviour of RAM-MC does not degrade in higher dimensions.
 
-The baseline estimators (plug-in of \cite{moon14ensemble} and M1 of \cite{nguyen10ratio}) performed so poorly that 
+The baseline estimators (plug-in of \cite{moon14ensemble} and M1 of \cite{nguyen10ratio}) perform so poorly that 
 %we decided not to include them in the plots (doing so 
 their inclusion would distort the $y$-axis scale.
 In contrast, even with a relatively modest $N{=}2^8$ and $M{=}1000$ samples, RAM-MC behaves reasonably well in all cases.
@@ -778,29 +865,32 @@ Concavity of $\log$ means that the reduction in variance when increasing $M$ res
 Similar to the results for the KL, these also support the theoretical findings presented in the previous section.
 
 Additionally, the same experiment was attempted using the $\chi^2$-divergence but numerical issues were encountered.
-This can be understood as a consequence of the inequality $e^{\KL(A, B)} - 1 \leq \chi^2(A,B)$ for any distributions $A$ and $B$. 
+This can be understood as a consequence of the inequality $e^{\KL(A, B)} - 1 \leq \chi^2(A,B)$ for any distributions $A$ and $B$ (Lemma \ref{lemma:f-div-klleqchi}). 
 From Figure~\ref{fig:real-exps} it can be seen that the $\KL$-divergence reaches values higher than $1000$, making the corresponding value of the $\chi^2$-divergence larger than can be represented using double-precision floats.
 
 
 
-
+\afterpage{%
 \begin{figure}
 \begin{center}
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot.pdf}
 \end{center}
 \caption{\label{fig:real-exps}
-(Section~\ref{sec:exp_wae}) Estimates of $KL(Q_Z^\theta , P_Z)$ for pretrained autoencoder models with RAM-MC as a function of $N$ for $M{=}10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to an accurate MC estimate of the ground truth ({\bf\textcolor{blue}{blue}}).
+Results of real-data experiments, Section~\ref{sec:exp_wae}. Estimates of $KL(Q_Z^\theta , P_Z)$ for pretrained autoencoder models with RAM-MC as a function of $N$ for $M{=}10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to an accurate MC estimate of the ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
 }
 \end{figure}
+\clearpage
+}
 
 
+\afterpage{%
 \begin{figure}
 \begin{center}
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot_hsq.pdf}
 \end{center}
 \caption{\label{fig:real-exps-hsq}
-Estimating $H^2(Q_Z^\theta , P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
+Results of real-data experiments, Section~\ref{sec:exp_wae}. Estimating $H^2(Q_Z^\theta , P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
 Plots depict $\log\big(2 - \hat{D}^M_{H^2}(\hat{Q}^N_Z , P_Z)\big)$ since $H^2$ is close to 2 in all models.
 Omitted lower error bars correspond to error bars going to $-\infty$ introduced by $\log$.
@@ -808,16 +898,17 @@ Note that the approximately \emph{increasing} behaviour evident here corresponds
 Due to concavity of $\log$, the decrease in variance when increasing $M$ manifests itself as the {\bf \textcolor{red}{red}} line ($M{=}1000$) being consistently above the {\bf \textcolor{green!65!blue}{green}} line ($M{=}10$).
 }
 \end{figure}
-
+\clearpage
+}
 
 
 \section{Applications}\label{sec:applications}
-This section details some direct consequences of the proposed estimator and its theoretical guarantees to existing literature.
+This section details some direct consequences of the proposed estimator and its theoretical guarantees to existing literature, illustrating the applicability of this work.
 %In addition, this theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
 
 \subsection{Entropy estimation}
 The differential entropy, defined as $H(Q_Z)= -\int_{\mathcal{Z}} q(z) \log q(z)  dz$, is often a quantity of interest in machine learning.
-While this is intractable in general, straightforward computation shows that for \emph{any} $P_Z$
+While it is intractable in general, straightforward computation shows that for \emph{any} $P_Z$
 {\addtolength{\abovedisplayskip}{-0.5mm}
 \addtolength{\belowdisplayskip}{-0.5mm}
 \begin{align*}
@@ -847,7 +938,7 @@ TC(Q_Z) &:= D_{\text{KL}}\left(Q_Z, \prod_{i=1}^{d_Z} Q_{Z_i}\right)  \\
 where $Q_{Z_i}$ is the $i$th marginal of $Q_Z$.
 This is considered by \cite{chen2018isolating}, who subtract it from the VAE loss function (see Section \ref{sec:literature-gen-models}). 
 Since a non-negative quantity is subtracted from a lower bound on the evidence, the resulting loss function is still an evidence lower bound, with additional encouragement for $Q_Z$ to be factorised. This is named the $\beta$-TC-VAE algorithm.
-By the second equality above, estimation of TC can be reduced to estimation of $H(Q_Z)$ with only slight modifications needed to treat $H(Q_{Z_i})$.
+By the identities above, estimation of TC can be reduced to estimation of $H(Q_Z)$ with only slight modifications needed to treat $H(Q_{Z_i})$.
 
 Two methods are proposed by \cite{chen2018isolating} for estimating $\smash{H(Q_Z)}$, both of which assume a finite dataset of size $D$.
 One of these, named \emph{Minibatch Weighted Sample} (MWS), coincides with $\smash{H(\hat{Q}_Z^N) + \log D}$ estimated with a particular form of MC sampling.
@@ -861,7 +952,7 @@ The mutual information (MI) between variables with joint distribution $\smash{Q_
 \smash{I(Z, X) := D_{\text{KL}}\left(Q_{Z,X}, Q_Z Q_X \right) = \E_{X} D_{\text{KL}}\left(Q_{Z|X}, Q_Z \right)}.
 \end{align*}
 
-Several recent papers have estimated or optimised this quantity in the context of autoencoder architectures, coinciding with the setting considered here \citep{dieng2018avoiding, hoffman2016elbo, alemi2017fixing, oord2018representation}. 
+Several recent papers have estimated or optimised this quantity in the context of autoencoder architectures, coinciding with the setting considered here \citep{hoffman2016elbo, alemi2017fixing, dieng2018avoiding}. 
 In particular, \cite{poolevariational} propose the following estimator based on replacing $Q_Z$ with $\smash{\hat{Q}_{Z}^N}$, proving it to be a lower bound on the true MI:
 %
 \begin{align*}\textstyle

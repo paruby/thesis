@@ -8,66 +8,62 @@
 \fi
 
 
-\chapter{Additional materials for chapter \ref{chapter:latent-space-learning-theory}}\label{chapter:appendix-latex-space-learning-theory}
+\chapter{Additional materials for Chapter \ref{chapter:latent-space-learning-theory}}\label{chapter:appendix-latex-space-learning-theory}
 
-\section{Proofs}\label{appendix:proofs}
+\section{Proof of Proposition \ref{prop:upper-bound}}\label{proof:prop1}
 
-\subsection{Proof of Proposition \ref{prop:upper-bound}}\label{proof:prop1}
-
-\setcounter{proposition}{0}
-\begin{proposition}
+\begin{repproposition}{prop:upper-bound}
 Let $M \leq N$ be integers. Then
 \begin{align*}
     D_f(Q_Z , P_Z) \ \leq 
     \mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N , P_Z) \  \leq \ \mathbb{E}_{\mathbf{X}^M \sim Q_{X}^M} D_f( \hat{Q}_Z^M , P_Z).
 \end{align*}
-\end{proposition}
+\end{repproposition}
 \begin{proof}
 Observe that $\mathbb{E}_{\mathbf{X}^N} \hat{Q}_Z^N = Q_Z$. Thus,
 \begin{align*}
     D_f(Q_Z , P_Z) &= \int f\left(\frac{\E_{\XN}\hat{q}_N(z)}{p(z)}\right) dP_Z(z) \\
     &\leq \E_{\XN} \int f\left(\frac{\hat{q}_N(z)}{p(z)}\right) dP_Z(z)\\
-    &=\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z),
+    &=\mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N , P_Z),
 \end{align*}
 where the inequality follows from convexity of $f$.
 
-To see that $\mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z) \leq \mathbb{E}_{\mathbf{X}^M \sim P_{X}^N} D_f( \hat{Q}_Z^M , P_Z)$ for $N \geq M$,
+To see that $\mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N , P_Z) \leq \mathbb{E}_{\mathbf{X}^M \sim Q_{X}^N} D_f( \hat{Q}_Z^M , P_Z)$ for $N \geq M$,
 let $I \subseteq \{1, \ldots, N\}$, $|I| = M$ and write
 \begin{align*}
     \hat{Q}_Z^I = \frac{1}{M} \sum_{i \in I} Q_{Z | X_i}.
 \end{align*}
-
+%
 Letting $I$ be a random subset chosen uniformly \emph{without replacement},
-observe that for any fixed $I$, $\mathbf{X}^I \sim \mathbb{P}_X^M$ (with the randomness coming from $\mathbf{X}^N \sim \mathbb{P}_X^N$). Thus
-
+observe that for any fixed $I$, $\mathbf{X}^I \sim Q_X^M$ (with the randomness coming from $\mathbf{X}^N \sim Q_X^N$). Thus
+%
 \begin{align*}
     \hat{Q}_Z^N &= \frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} \\
     &= \mathbb{E}_I \frac{1}{M} \sum_{i \in I} Q_{Z|X_i} \\
     &= \mathbb{E}_I \hat{Q}_Z^I
 \end{align*}
-
+%
 and so again by convexity of $f$ we have that
-
-\begin{align}
-    \mathbb{E}_{\mathbf{X}^N \sim P_{X}^N} D_f( \hat{Q}_Z^N , P_Z) &\leq  \mathbb{E}_{\mathbf{X}^N} \mathbb{E}_I D_f( \hat{Q}_Z^I , P_Z) \\
+%
+\begin{align*}
+    \mathbb{E}_{\mathbf{X}^N \sim Q_{X}^N} D_f( \hat{Q}_Z^N , P_Z) &\leq  \mathbb{E}_{\mathbf{X}^N} \mathbb{E}_I D_f( \hat{Q}_Z^I , P_Z) \\
     &= \mathbb{E}_{\mathbf{X}^M} D_f(\hat{Q}_Z^M , P_Z)
-\end{align}
-with the last line following from the observation that $\mathbf{X}^I \sim \mathbb{P}_X^M$.
+\end{align*}
+with the last line following from the observation that $\mathbf{X}^I \sim Q_X^M$.
 \end{proof}
 
 
 
-\subsection{Proof of Theorem \ref{thm:fast-KL-rate}}\label{appendix:subsec:thm1}
+\section{Proof of Theorem \ref{thm:fast-KL-rate}}\label{appendix:subsec:thm1}
 
 
 
 
-\todo{sort out theorem numbering} 
-\begin{theorem}[Rates of the bias]
+\begin{reptheorem}{thm:fast-KL-rate}[Rates of the bias]
 If
 $\E_{X\sim Q_X}\bigl[\chi^2\bigl(Q_{Z|X}, Q_Z\bigr)\bigr]$ and
-$\KL\left( Q_{Z} , P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence}.
-\end{theorem}
+$\KL\left( Q_{Z} , P_Z\right)$ are finite then the bias ${\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)}$ decays with rate as given in the first row of Table~\ref{table:convergence} (see Page \pageref{table:convergence}).
+\end{reptheorem}
 
 \begin{proof}
 To begin, observe that 
@@ -81,8 +77,7 @@ To begin, observe that
 
 where the introduction of the variance operator follows from the fact that $\E_{X_N}\left[ \frac{\hat{q}_N(z)}{q(z)} \right] = 1$.
 
-For the $\KL$-divergence, using the fact that $\KL \leq \chi^2$ (Lemma 2.7 of \cite{tsybakov2009}) yields
-
+For the $\KL$-divergence, using the fact that $\KL \leq \chi^2$ (Lemma \ref{lemma:f-div-klleqchi}) yields
 \begin{align*}
     \E_{\XN}\left[\KL\left( \hat{Q}^N_Z , P_Z\right)\right] - \KL\left( Q_{Z} , P_Z\right) &=\E_{\XN}\left[\KL\left( \hat{Q}^N_Z , Q_Z\right)\right]\\
     &\leq \E_{\XN}\left[\chi^2\bigl(\hat{Q}^N_Z, Q_Z\bigr) \right]\\
@@ -97,17 +92,17 @@ For Total Variation, we have
     &\leq \frac{1}{\sqrt{2}} \sqrt{\E_{\XN}\left[\KL\left( \hat{Q}^N_Z , Q_Z\right) \right]}\\
     &=O\left(\frac{1}{\sqrt{N}}\right),
 \end{align*}
-where the first inequality holds since $\TV$ is a metric and thus obeys the triangle inequality, and the second inequality follows by Pinsker's inequality combined with concavity of $\sqrt{x}$ (Lemma 2.5 of \cite{tsybakov2009}).
+where the first inequality holds since $\TV$ is a metric and thus obeys the triangle inequality, and the second inequality follows by Pinsker's inequality combined with concavity of $\sqrt{x}$ (Lemma \ref{lemma:f-div-pinsker}).
 
 For $D_{f_\beta}$ (including Jenson-Shannon) using the fact that $D_{f_\beta}^{1/2}$ satisfies the triangular inequality, we apply the second part of Lemma~\ref{lemma:hilbertian-triangle}
 in combination with the fact that
-$D_{f_\beta}\left(\hat{Q}^N_Z , Q_Z\right) \leq \psi(\beta) \ \TV\left( \hat{Q}^N_Z , Q_Z \right)$ for some scalar $\psi(\beta)$ (Theorem 2 of \cite{osterreicher2003new}) to obtain
-
+$D_{f_\beta}\left(\hat{Q}^N_Z , Q_Z\right) \leq \psi(\beta) \ \TV\left( \hat{Q}^N_Z , Q_Z \right)$ for some scalar $\psi(\beta)$ (Lemma \ref{lemma:f-div-betaleqtv}) to obtain
+%
 \begin{align*}
     \E_{\XN}\left[D_{f_\beta}\left( \hat{Q}^N_Z , P_Z\right)\right] - D_{f_\beta}\left( Q_{Z} , P_Z\right) \leq O\left(\frac{1}{N^{1/4}}\right).
 \end{align*}
-
-Although the squared Hellinger divergence is a member of the $f_\beta$-divergence family, we can use the tighter bound $\Hsq\left( \hat{Q}^N_Z , Q_Z\right) \leq KL\left( \hat{Q}^N_Z , Q_Z\right)$ (Lemma 2.4 of \cite{tsybakov2009}) in combination with Lemma~\ref{lemma:hilbertian-triangle} to obtain
+%
+Although the squared Hellinger divergence is a member of the $f_\beta$-divergence family, we can use the tighter bound $\Hsq\left( \hat{Q}^N_Z , Q_Z\right) \leq KL\left( \hat{Q}^N_Z , Q_Z\right)$ (Lemma \ref{lemma:f-div-hleqkl}) in combination with Lemma~\ref{lemma:hilbertian-triangle} to obtain
 \begin{align*}
     \E_{\XN}\left[\Hsq\left( \hat{Q}^N_Z , P_Z\right)\right] - \Hsq\left( Q_{Z} , P_Z\right) \leq O\left(\frac{1}{\sqrt{N}}\right).
 \end{align*}
@@ -117,14 +112,15 @@ Although the squared Hellinger divergence is a member of the $f_\beta$-divergenc
 
 
 
-\subsection{Upper bounds of f}\label{appendix:subsubsec:f-upper-bounds}
+\section{Upper bounds of f}\label{appendix:subsubsec:f-upper-bounds}
 
 We will make use of the following lemmas in the proof of Theorem \ref{thm:convergence-rate-general} and \ref{thm:concentration}.
+
+\medskip
 
 \begin{lemma}\label{lemma:concave-upper-bound-kl} 
 Let $f_0(x)=x\log x - x +1$, corresponding to $D_{f_0} = \KL$.
 Write $g(x) = f_0'^2(x) = \log^2(x)$.
-
 For any $0< \delta < 1$, the function
 \begin{align*}
     h_{\delta}(x) := \begin{cases} 
@@ -136,7 +132,6 @@ is an upper bound of $g(x)$ on $[\delta, \infty)$, and is concave and non-negati
 \end{lemma}
 
 \begin{proof}
-
 First observe that $h_{\delta}$ is concave.
 It has continuous first and second derivatives:
 \begin{align*}
@@ -162,13 +157,15 @@ To see that $h_{\delta}(x)$ is an upper bound of $g(x)$ for $x \in [\delta, \inf
     \end{cases}
     \ > 0.
 \end{align*}
-
+%
 To see that $h_{\delta}(x)$ is non-negative on $[0, \infty)$, note that $h_{\delta}(x) > g(x) \geq 0$ on $[\delta, \infty)$. 
 Moreover, $g'(e) = 2/e > 0$, and so for $x \in [0, \delta]$ we have that $h_{\delta}(x) = g(\delta) + 2x/e \geq g(\delta) \geq 0$.
 \end{proof}
 
+\medskip
+
 \begin{lemma}\label{lemma:upper-bound-hellinger}
-Let $f_0(x) = 2(1 -\sqrt{x})$ corresponding to the square of the Hellinger distance. 
+Let $f_0(x) = 2(1 -\sqrt{x})$ corresponding to the squared-Hellinger divergence. 
 Write $g(x) = f'^2_0(x) = (1-\frac{1}{\sqrt{x}})^2$.
 For any $0<\delta<1$, the function
 \begin{align*}
@@ -193,6 +190,8 @@ If $x \in (1, \infty)$ then
 \end{align*}
 Thus $g(x) \leq h_\delta(x)$ for $x\in[\delta, \infty)$.
 \end{proof}
+
+\medskip
 
 \begin{lemma}\label{lemma:upper-bound-alpha}
 Let $f_0(x) = \frac{4}{1-\alpha^2}\left(1 -x^{\frac{1+\alpha}{2}}\right) - \frac{2(x-1)}{\alpha-1}$ corresponding to the $\alpha$-divergence with $\alpha \in (-1,1)$. 
@@ -221,6 +220,8 @@ and it can be shown by differentiating that the term inside the square brackets 
 From this fact it follows that $d(x)$ attains its maximum on $x \in [\delta, \infty)$ at $x=\delta$, and thus the desired inequality holds. 
 \end{proof}
 
+\medskip
+
 \begin{lemma}\label{lemma:upper-bound-JS}
 Let $f_0(x) = \left(1+x\right) \log 2 + x\log x - \left( 1 + x\right) \log \left(1+x\right)$ corresponding to the Jensen-Shannon divergence.
 Write $g(x) = f'^2_0(x) = \log^2 2 + \log^2\left( \frac{x}{1+x} \right) + 2\log 2 \log\left( \frac{x}{1+x} \right)$.
@@ -238,6 +239,8 @@ $f'_0(1)=0$ and by differentiating again it can be shown that $f''_0(x) > 0$ for
 Thus $f'_0(x)<0$ and is increasing on $(0,1)$ and so $g(x) > 0$ and is decreasing on $(0,1)$.
 Thus $h_\delta(x) > g(\delta) \geq g(x)$ for $x \in [\delta, 1)$.
 \end{proof}
+
+\medskip
 
 \begin{lemma}\label{lemma:upper-bound-f-beta}
 Let $f_0(x) = \frac{1}{1-\frac{1}{\beta}}\left[ \left(1+x^\beta\right)^\frac{1}{\beta}  - 2^{\frac{1}{\beta} - 1}(1+x)\right]$
@@ -265,24 +268,23 @@ For $\beta \in (1, \infty)$, $\frac{1-\beta}{\beta} < 0$.
 It follows that $\left(1+x^{-\beta}\right)^\frac{1-\beta}{\beta} \to 0$ as $x \to 0$, and hence $\lim_{x\to 0}g(x)$ exists and is finite.
 Since $g(x)$ is decreasing on $(0,1)$ and increasing on $(1,\infty)$, it follows that 
 $g(x) \leq \max\{\lim_{x\to 0}g(x), \lim_{x\to \infty}g(x)\}$ for all $x\in [0, \infty)$
-
 \end{proof}
 
 
-\subsection{Proof of Theorem \ref{thm:convergence-rate-general}}\label{proof:thm2}
+\section{Proof of Theorem \ref{thm:convergence-rate-general}}\label{proof:thm2}
 
-\begin{theorem}[Rates of the bias]
+\begin{reptheorem}{thm:convergence-rate-general}[Rates of the bias]
 If $\E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$ is finite then
-the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence}.
-\end{theorem}
+the bias $\E_{\XN}\bigl[D_f( \hat{Q}_Z^N , P_Z)\bigr] - D_f\left( Q_{Z} , P_Z\right)$ decays with rate as given in the second row of Table \ref{table:convergence} (see Page \pageref{table:convergence}).
+\end{reptheorem}
 
 \begin{proof}
-For each $f$-divergence we will work with the function $f_0$ which is decreasing on $(0,1)$ and increasing on $(1, \infty)$ with $D_f = D_{f_0}$ (see Appendix \ref{appendix:f-fns}).
+For each $f$-divergence we will work with the function $f_0$ which is decreasing on $(0,1)$ and increasing on $(1, \infty)$ with $D_f = D_{f_0}$ (see Section \ref{subsec:f-divergences-intro}).
 
 For shorthand we will sometimes use the notation $\| q(z|X)/p(z)\|^2_{L_2(P_Z)} = \int \frac{q(z|X)^2}{p(z)^2} p(z) dz$ and $\| q^2(z|X)/p^2(z)\|^2_{L_2(P_Z)} = \int \frac{q(z|X)^4}{p(z)^4} p(z) dz$.
 
 We will denote $C:= \E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^4(Z|X) / p^4(Z) \bigr]$ which is finite by assumption. 
-This implies that the second moment $B:= \E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^2(Z|X) / p^2(Z) \bigr]$ is also finite, thanks to Jensen's inequality: 
+This implies that the second moment $B:= \E_{X\sim Q_X, Z\sim P_Z}\bigl[ q^2(Z|X) / p^2(Z) \bigr]$ is also finite due to Jensen's inequality: 
 \[
 \E[Y^2] = \E[\sqrt{Y^4}]\leq \sqrt{\E[Y^4]}.
 \]
@@ -644,30 +646,13 @@ Setting $\gamma_N = \frac{2}{N^\frac{1}{3}}$ and $\delta_N = \frac{1}{N^\frac{1}
 
 \end{proof}
 
-\subsection{Proof of Theorem \ref{thm:concentration}}\label{proof:thm3}
+\section{Proof of Theorem \ref{thm:concentration}}\label{proof:thm3}
 
-We will make use of McDiarmid's theorem in our proof of Theorem \ref{thm:concentration}:
-
-\begin{theorem}[McDiarmid's inequality]\label{thm:mcdiarmid}
-Suppose that $X_1, \ldots, X_N \in \mathcal{X}$ are independent random variables and that $\phi : \mathcal{X}^N \to \R$ is a function. 
-If it holds that for all $i\in\{1,\ldots,N\}$ and $x_1, \ldots, x_N, x_{i'}$, 
-\begin{align*}
-    \left| \phi(x_1, \ldots, x_{i-1}, x_i, x_{i+1}, \ldots, x_N) - \phi(x_1, \ldots, x_{i-1}, x_{i'}, x_{i+1}, \ldots, x_N)\right| \leq c_i,
-\end{align*}
-then
-\begin{align*}
-    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
-\end{align*}
-and
-\begin{align*}
-    \mathbb{P} \left(\phi(X_1,\ldots, X_N) - \E\phi \geq -t \right) \leq \exp\left(\frac{-2t^2}{\sum_{i=1}^N c^2_i} \right)
-\end{align*}
-\end{theorem}
-
+We will make use of McDiarmid's inequality (Theorem \ref{thm:mcdiarmid}) in our proof of Theorem \ref{thm:concentration}.
 In our setting we will consider $\phi(\XN) = D_f\left( \hat{Q}_Z^N , P_Z\right)$.
 
 
-\begin{theorem}[Tail bounds for RAM]
+\begin{reptheorem}{thm:concentration}[Tail bounds for RAM]
 Suppose that ${\chi^2\left(Q_{Z|x} , P_Z\right) \leq C < \infty}$ for all $x$ and for some constant $C$.
 Then, the RAM estimator ${D_f( \hat{Q}_Z^N , P_Z)}$ concentrates to its mean in the following sense. 
 For $N>8$ and for any $\delta >0$, with probability at least $1-\delta$ it holds that
@@ -675,8 +660,8 @@ For $N>8$ and for any $\delta >0$, with probability at least $1-\delta$ it holds
     \left| D_f( \hat{Q}_Z^N , P_Z) - \mathbb{E}_{\XN} \bigl[D_f(\hat{Q}_Z^N , P_Z)\bigr] \right| \leq {K \cdot \psi(N)} \  \sqrt{\log (2/\delta)},
 \end{align*}
 where $K$ is a constant and $\psi(N)$ is given in Table~\ref{table:concentration}.
-\end{theorem}
-\begin{proof}[Proof (Theorem \ref{thm:concentration})]
+\end{reptheorem}
+\begin{proof}
 We will show that $D_f\left( \hat{Q}_Z^N , P_Z\right)$ exhibits the bounded difference property as in the statement of McDiarmid's theorem.
 Since $\hat{q}_N(z)$ is symmetric in the indices of $\XN$, we can without loss of generality consider only the case $i=1$.
 Henceforth, suppose $\XN, {\XN}'$ are two batches of data with $\XN_1 \not= {\XN}'_1$ and $\XN_i = {\XN}'_i$ for all $i > 1$. 
@@ -972,36 +957,72 @@ This leads to $Nc_N^2 = \frac{1}{N^{1/3}}$ for $N>2$.
 
 \end{proof}
 
-\subsection{Full statement and proof of Theorem \ref{thm:mc-variance}}\label{appendix:full-statment-proof-mc}
+\section{Proof of Theorem \ref{thm:mc-variance}}\label{appendix:full-statment-proof-mc}
 
-The statement of Theorem~\ref{thm:mc-variance} in the main text was simplified for brevity. 
-Below is the full statement, followed by its proof.
-
-
-\todo{sort out theorem numbering} 
-%\setcounter{theorem}{3}
-
-\begin{theorem}
-For any $\pi$,
+\begin{reptheorem}{thm:mc-variance}[RAM-MC is unbiased and consistent]
+For any proposal distribution $\pi$, RAM-MC is unbiased:
+%
 \begin{align*}
-    \E_{\ZM, \XN} \bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr]
-    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
+\E\bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr] =\E\bigl[D_f( \hat{Q}^N_{Z} , P_Z )\bigr].
 \end{align*}
-If either of the following conditions are satisfied:
+%
+If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either of the following conditions are satisfied:
+%\begin{align*}
+%&(i) \ \pi(z|\XN) = p(z),& 
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
+%&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
+%&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
+%&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+%\end{align*}
 \begin{align*}
-&(i) \ \pi(z|\XN) = p(z),& 
-&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
-&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
-&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
-&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
-&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+(i)& \begin{cases}
+\displaystyle \pi(z|\XN) = p(z) \\
+\displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 p(z) dz  < \infty, \\
+\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty
+\end{cases}\\ \ \\
+(ii)& \begin{cases}
+\displaystyle \pi(z | \XN) = \hat{q}_N(z), \\
+\displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 \left(\frac{p(z)}{q(z|X)}\right)^2 q(z|X) dz < \infty, \\
+\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty
+\end{cases}
 \end{align*}
-then, denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
+where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
+then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
 \begin{align*}
     \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
     O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
 \end{align*}
-\end{theorem}
+%
+%If $\pi(z|\XN) = p(z)$ or $\pi(z | \XN) = \hat{q}_N(z)$ then under mild assumptions$^\star$ on the moments of $q(Z|X)/p(Z)$
+%and denoting by ${\psi(N)}$ the rate given in Table~\ref{table:concentration}, we have
+%\begin{align*}
+%    \text{Var}_{\XN, \ZM} \bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr] = 
+%    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
+%\end{align*}
+\end{reptheorem}
+
+%\begin{theorem}
+%For any $\pi$,
+%\begin{align*}
+%    \E_{\ZM, \XN} \bigl[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)\bigr]
+%    &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
+%\end{align*}
+%If either of the following conditions are satisfied:
+%\begin{align*}
+%&(i) \ \pi(z|\XN) = p(z),& 
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right) \right\|^2_{L_2(P_Z)}  < \infty,}&
+%&\textstyle{\E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)} < \infty} \\
+%&(ii) \  \pi(z | \XN) = \hat{q}_N(z),&
+%&\textstyle{\E_X \left\| f\left( \frac{q(z|X)}{p(z)}\right)\frac{p(z)}{q(z|X)}\right\|^2_{L_2(Q_{Z|X})} < \infty,}&
+%&\textstyle{\E_X \left\| \frac{p(z)}{q(z|X)} \right\|^2_{L_2(Q_{Z|X})} < \infty}
+%\end{align*}
+%then, denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
+%\begin{align*}
+%    \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
+%    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
+%\end{align*}
+%\end{theorem}
 
 In proving Theorem~\ref{thm:mc-variance} we will make use of the following lemma.
 
@@ -1051,7 +1072,7 @@ The concentration results of Theorem \ref{thm:concentration} imply bounds on $(i
 \begin{align*}
     \text{Var}X &= \mathbb{E} (X - EX)^2 \\
     &= \int_0^\infty \mathbb{P}\left( (X - \mathbb{E} X)^2 > t \right) dt \\
-    &= \int_0^\infty \mathbb{P} \left( \left| X - \mathbb{E} X \right| > \sqrt{t} \right) dt.
+    &= \int_0^\infty \mathbb{P} \left(( \left| X - \mathbb{E} X \right| > \sqrt{t} \right) dt.
 \end{align*}
 It follows therefore that
 \begin{align*}
@@ -1126,105 +1147,105 @@ Thus $(i) \leq K < \infty$ for some $K$ independent of $N$ in both cases of $\pi
 \end{proof}
 
 
-\subsection{Elaboration of Section \ref{subsection:discussion-assumptions}: satisfaction of assumptions of theorems}\label{appendix:discussion-constraints}
-
-\todo{remove}
-
-
-\section{Empirical evaluation: further details}\label{appendix:empirical-evaluation-details}
-
-In this section with give further details about the synthetic and real-data experiments presented in Section \ref{sec:experiments}.
-
-\subsection{Synthetic experiments}
+%\subsection{Elaboration of Section \ref{subsection:discussion-assumptions}: satisfaction of assumptions of theorems}\label{appendix:discussion-constraints}
+%
+%\todo{remove}
 
 
-
-\subsubsection{Analytical expressions for divergences between two Gaussians}\label{appendix:toy-exps}
-
-
-
-
-
-\subsubsection{Further experimental details}
-
-We take $Q^\lambda_{Z|X=x} = \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right)$ and $P_X = \mathcal{N}\left(0, I_{20} \right)$.
-This results in $Q^\lambda_Z = \mathcal{N}\left(b_\lambda,  A_\lambda A_\lambda^\intercal + \epsilon^2 I_d \right)$. We chose $\epsilon=0.5$ and used $\lambda \in [-2,2]$. $P_Z = \mathcal{N}(0, I_d)$.
-
-$A_\lambda$ and $b_\lambda$ were determined as follows:
-Define $A_1$ to be the $(d, 20)$-dimensional matrix with 1's on the main diagonal, and let $A_0$ be similarly sized matrix with entries randomly sampled i.i.d.\: unit Gaussians which is then normalised to have unit Frobenius norm. 
-Let $v$ be a vector randomly sampled from the $d$-dimensional unit sphere.
-We then set
-$A_\lambda=\frac{1}{2} A_1 + \lambda A_0$ and $b_\lambda= \lambda v$.
-
-$A_0$ and $v$ are sampled once for each dimension $d{\in}\{1,4,16\}$, such that the within each column of Figure~\ref{fig:synthetic-exps}, the distributions used are the same.
-
-
-
-
-
-
-
-\subsection{Real-data experiments}\label{appendix:real-data-experiments-additional}
-
-\subsubsection{Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs)}\label{appendix:intro-vae-wae}
-
-\todo{remove?}
-
-Autoencoders are a general class of models typically used to learn compressed representations of high-dimensional data.
-Given a \emph{data-space} $\mathcal{X}$ and low-dimensional \emph{latent space} $\mathcal{Z}$, the goal is to learn an \emph{encoder} mapping $\mathcal{X}\to\mathcal{Z}$ and \emph{generator} (or \emph{decoder}\footnote{In the VAE literature, the encoder and generator are sometimes referred to as the \emph{inference network} and \emph{likelihood model} respectively.}) mapping $\mathcal{Z}\to\mathcal{X}$.
-The objectives used to train these two components always involve some kind of reconstruction loss measuring how corrupted a datum becomes after mapping through both the encoder and generator, and often some kind of regularization.
-
-Representing by $\theta$ and $\eta$ the parameters of the encoder and generator respectively, the objective functions of VAEs and WAEs are:
-
-\begin{align*}
-    L^{\text{VAE}}(\theta, \eta) &= \E_X \left[ \E_{q_\theta(Z|X)} \log p_\eta(X|Z) + \KL\left( Q^\theta_{Z|X} , P_Z) \right) \right]\\
-    L^{\text{WAE}}(\theta, \eta) &= \E_X \E_{q_\theta(Z|X)} c(X, G_\eta(Z)) + \lambda \cdot D(Q^\theta_Z , P_Z)
-\end{align*}
-
-For VAEs, both encoder $Q^\theta_{Z|X}$ and generator $p_\eta$ are \emph{stochastic} mappings taking an input and mapping it to a distribution over the output space.
-In WAEs, only the encoder $Q^\theta_{Z|X}$ is stochastic, while the generator $G_\eta$ is deterministic.
-$c$ is a cost function, $\lambda$ is a hyperparameter and $D$ is any divergence.
-
-A common assumption made for VAEs is that the generator outputs a Gaussian distribution with fixed diagonal covariance and mean $\mu(z)$ that is a function of the input $z$.
-In this case, the $\log p_\eta(X|z)$ term can be written as the $l^2_2$ (i.e. square of the $l_2$ distance) between $X$ and its reconstruction after encoding and re-generating $\mu(z)$.
-If the cost function of the WAE is chosen to be $l^2_2$, then the left hand terms of the VAE and WAE losses are the same. 
-That is, in this particular case, $L^{\text{VAE}}$ and $L^{\text{WAE}}$ differ only in their regularizers.
-
-The penalty of the VAE was shown by \cite{hoffman2016elbo} to be equivalent to $\smash{\KL(Q^\theta_Z , P_Z) + I(X,Z)}$ where $I(X,Z)$ is the mutual information of a sample and its encoding.
-For the WAE penalty, there is a choice of which $\smash{D(Q^\theta_Z , P_Z)}$ to use; it must only be possible to practically estimate it.
-In the experiments used in this paper, we considered models trained with the Maximum Mean Discrepency (MMD) \cite{gretton2012kernel}, a kernel-based distance on distributions, and a divergence estimated using a GAN-style classifier \cite{goodfellow2014generative} leading to WAE-MMD and WAE-GAN respectively, following \cite{tolstikhin2017wasserstein}.
-
-\subsubsection{Further experimental details}
-
-We took a corpus of VAE, WAE-GAN and WAE-MMD models that had been trained with a large variety of hyperparameters including learning rate, latent dimension (32, 64, 128), architecture (ResNet/DCGAN), scalar factor for regulariser, and additional algorithm-specific hyperparameters: kernel bandwidth for WAE-MMD and learning rate of discriminator for WAE-GAN.
-In total, 60 models were trained of each type (WAE-MMD, WAE-GAN and VAE) leading to 180 models in total.
-
-The small subset of six models exposed in Figures~\ref{fig:real-exps} and \ref{fig:real-exps-hsq} were selected by a heuristic that we next describe. However, we note that qualitatively similar behaviour was found in all other models tested, and so the choice of models to display was somewhat arbitrary; we describe it nonetheless for completeness.
-
-Recall that the objective functions of WAEs and VAEs both include a divergence between $Q^\theta_Z$ and $P_Z$.
-We were interested in considering models from the two extremes of the distribution matching: some models in which $Q^\theta_Z$ and $P_Z$ were close, some in which they were distant.
-
-To determine whether $Q^\theta_Z$ and $P_Z$ in a model are close, we made use of FID \cite{heusel2017gans} scores as a proxy that is independent of the particular divergences for training.
-The FID score between two distributions over images is obtained by pushing both distributions through to an intermediate feature layer of the \emph{Inception} network.
-The resulting push-through distributions are approximated with Gaussians and the \emph{Fr\'echet} distance between them is calculated.
-Denote by $G_\#(Q^\theta_Z)$ the distribution over reconstructed images, $G_\#(P_Z)$ the distribution over model samples and $Q_X$ the data distribution, where $G$ is the generator and $\#$ denotes the push-through operator. 
-The quantity $\text{FID}\left(Q_X, G_\#(Q^\theta_Z)\right)$ is a measure of quality (lower is better) of the reconstructed data,
-while $\text{FID}\left(Q_X, G_\#(P_Z)\right)$ is a measure of quality of model samples.
-
-The two FID scores being very different is an indication that $P_Z$ and $Q^\theta_Z$ are different.
-In contrast, if the two FID scores are similar, we cannot conclude that $P_Z$ and $Q^\theta_Z$ are the same, though it provides some evidence towards that fact.
-Therefore, in order to select a model in which matching between $P_Z$ and $Q^\theta_Z$ is poor, we pick one for which $\text{FID}\left(Q_X, G_\#(Q^\theta_Z)\right)$ is small but $\text{FID}\left(Q_X, G_\#(P_Z)\right)$ is large (good reconstructions; poor samples).
-In order to select a model in which matching between $P_Z$ and $Q^\theta_Z$ is good, we pick one for both FIDs are small (good reconstructions; good samples). 
-We will refer to these settings as \emph{poor matching} and \emph{good matching} respectively.
-
-Our goal was to pick models according to the following criteria. 
-The six chosen should include: two from each model class (VAE, WAE-GAN, WAE-MMD), of which one from each should exhibit poor matching and one good matching; two from each dimension $d\in\{32, 64, 128\}$; three with the ResNet architecture and three with the DCGAN architecture.
-A set of models satisfying these criteria were selected by hand, but as noted previously we saw qualitatively similar results with the other models.
-
-\subsubsection{Additional results for squared Hellinger distance}\label{appendix:sq-hellinger-results}
-
-\todo{remove}
-
-
+%\section{Empirical evaluation: further details}\label{appendix:empirical-evaluation-details}
+%
+%In this section with give further details about the synthetic and real-data experiments presented in Section \ref{sec:experiments}.
+%
+%\subsection{Synthetic experiments}
+%
+%
+%
+%\subsubsection{Analytical expressions for divergences between two Gaussians}\label{appendix:toy-exps}
+%
+%
+%
+%
+%
+%\subsubsection{Further experimental details}
+%
+%We take $Q^\lambda_{Z|X=x} = \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right)$ and $P_X = \mathcal{N}\left(0, I_{20} \right)$.
+%This results in $Q^\lambda_Z = \mathcal{N}\left(b_\lambda,  A_\lambda A_\lambda^\intercal + \epsilon^2 I_d \right)$. We chose $\epsilon=0.5$ and used $\lambda \in [-2,2]$. $P_Z = \mathcal{N}(0, I_d)$.
+%
+%$A_\lambda$ and $b_\lambda$ were determined as follows:
+%Define $A_1$ to be the $(d, 20)$-dimensional matrix with 1's on the main diagonal, and let $A_0$ be similarly sized matrix with entries randomly sampled i.i.d.\: unit Gaussians which is then normalised to have unit Frobenius norm. 
+%Let $v$ be a vector randomly sampled from the $d$-dimensional unit sphere.
+%We then set
+%$A_\lambda=\frac{1}{2} A_1 + \lambda A_0$ and $b_\lambda= \lambda v$.
+%
+%$A_0$ and $v$ are sampled once for each dimension $d{\in}\{1,4,16\}$, such that the within each column of Figure~\ref{fig:synthetic-exps}, the distributions used are the same.
+%
+%
+%
+%
+%
+%
+%
+%\subsection{Real-data experiments}\label{appendix:real-data-experiments-additional}
+%
+%\subsubsection{Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs)}\label{appendix:intro-vae-wae}
+%
+%\todo{remove?}
+%
+%Autoencoders are a general class of models typically used to learn compressed representations of high-dimensional data.
+%Given a \emph{data-space} $\mathcal{X}$ and low-dimensional \emph{latent space} $\mathcal{Z}$, the goal is to learn an \emph{encoder} mapping $\mathcal{X}\to\mathcal{Z}$ and \emph{generator} (or \emph{decoder}\footnote{In the VAE literature, the encoder and generator are sometimes referred to as the \emph{inference network} and \emph{likelihood model} respectively.}) mapping $\mathcal{Z}\to\mathcal{X}$.
+%The objectives used to train these two components always involve some kind of reconstruction loss measuring how corrupted a datum becomes after mapping through both the encoder and generator, and often some kind of regularization.
+%
+%Representing by $\theta$ and $\eta$ the parameters of the encoder and generator respectively, the objective functions of VAEs and WAEs are:
+%
+%\begin{align*}
+%    L^{\text{VAE}}(\theta, \eta) &= \E_X \left[ \E_{q_\theta(Z|X)} \log p_\eta(X|Z) + \KL\left( Q^\theta_{Z|X} , P_Z) \right) \right]\\
+%    L^{\text{WAE}}(\theta, \eta) &= \E_X \E_{q_\theta(Z|X)} c(X, G_\eta(Z)) + \lambda \cdot D(Q^\theta_Z , P_Z)
+%\end{align*}
+%
+%For VAEs, both encoder $Q^\theta_{Z|X}$ and generator $p_\eta$ are \emph{stochastic} mappings taking an input and mapping it to a distribution over the output space.
+%In WAEs, only the encoder $Q^\theta_{Z|X}$ is stochastic, while the generator $G_\eta$ is deterministic.
+%$c$ is a cost function, $\lambda$ is a hyperparameter and $D$ is any divergence.
+%
+%A common assumption made for VAEs is that the generator outputs a Gaussian distribution with fixed diagonal covariance and mean $\mu(z)$ that is a function of the input $z$.
+%In this case, the $\log p_\eta(X|z)$ term can be written as the $l^2_2$ (i.e. square of the $l_2$ distance) between $X$ and its reconstruction after encoding and re-generating $\mu(z)$.
+%If the cost function of the WAE is chosen to be $l^2_2$, then the left hand terms of the VAE and WAE losses are the same. 
+%That is, in this particular case, $L^{\text{VAE}}$ and $L^{\text{WAE}}$ differ only in their regularizers.
+%
+%The penalty of the VAE was shown by \cite{hoffman2016elbo} to be equivalent to $\smash{\KL(Q^\theta_Z , P_Z) + I(X,Z)}$ where $I(X,Z)$ is the mutual information of a sample and its encoding.
+%For the WAE penalty, there is a choice of which $\smash{D(Q^\theta_Z , P_Z)}$ to use; it must only be possible to practically estimate it.
+%In the experiments used in this paper, we considered models trained with the Maximum Mean Discrepency (MMD) \cite{gretton2012kernel}, a kernel-based distance on distributions, and a divergence estimated using a GAN-style classifier \cite{goodfellow2014generative} leading to WAE-MMD and WAE-GAN respectively, following \cite{tolstikhin2017wasserstein}.
+%
+%\subsubsection{Further experimental details}
+%
+%We took a corpus of VAE, WAE-GAN and WAE-MMD models that had been trained with a large variety of hyperparameters including learning rate, latent dimension (32, 64, 128), architecture (ResNet/DCGAN), scalar factor for regulariser, and additional algorithm-specific hyperparameters: kernel bandwidth for WAE-MMD and learning rate of discriminator for WAE-GAN.
+%In total, 60 models were trained of each type (WAE-MMD, WAE-GAN and VAE) leading to 180 models in total.
+%
+%The small subset of six models exposed in Figures~\ref{fig:real-exps} and \ref{fig:real-exps-hsq} were selected by a heuristic that we next describe. However, we note that qualitatively similar behaviour was found in all other models tested, and so the choice of models to display was somewhat arbitrary; we describe it nonetheless for completeness.
+%
+%Recall that the objective functions of WAEs and VAEs both include a divergence between $Q^\theta_Z$ and $P_Z$.
+%We were interested in considering models from the two extremes of the distribution matching: some models in which $Q^\theta_Z$ and $P_Z$ were close, some in which they were distant.
+%
+%To determine whether $Q^\theta_Z$ and $P_Z$ in a model are close, we made use of FID \cite{heusel2017gans} scores as a proxy that is independent of the particular divergences for training.
+%The FID score between two distributions over images is obtained by pushing both distributions through to an intermediate feature layer of the \emph{Inception} network.
+%The resulting push-through distributions are approximated with Gaussians and the \emph{Fr\'echet} distance between them is calculated.
+%Denote by $G_\#(Q^\theta_Z)$ the distribution over reconstructed images, $G_\#(P_Z)$ the distribution over model samples and $Q_X$ the data distribution, where $G$ is the generator and $\#$ denotes the push-through operator. 
+%The quantity $\text{FID}\left(Q_X, G_\#(Q^\theta_Z)\right)$ is a measure of quality (lower is better) of the reconstructed data,
+%while $\text{FID}\left(Q_X, G_\#(P_Z)\right)$ is a measure of quality of model samples.
+%
+%The two FID scores being very different is an indication that $P_Z$ and $Q^\theta_Z$ are different.
+%In contrast, if the two FID scores are similar, we cannot conclude that $P_Z$ and $Q^\theta_Z$ are the same, though it provides some evidence towards that fact.
+%Therefore, in order to select a model in which matching between $P_Z$ and $Q^\theta_Z$ is poor, we pick one for which $\text{FID}\left(Q_X, G_\#(Q^\theta_Z)\right)$ is small but $\text{FID}\left(Q_X, G_\#(P_Z)\right)$ is large (good reconstructions; poor samples).
+%In order to select a model in which matching between $P_Z$ and $Q^\theta_Z$ is good, we pick one for both FIDs are small (good reconstructions; good samples). 
+%We will refer to these settings as \emph{poor matching} and \emph{good matching} respectively.
+%
+%Our goal was to pick models according to the following criteria. 
+%The six chosen should include: two from each model class (VAE, WAE-GAN, WAE-MMD), of which one from each should exhibit poor matching and one good matching; two from each dimension $d\in\{32, 64, 128\}$; three with the ResNet architecture and three with the DCGAN architecture.
+%A set of models satisfying these criteria were selected by hand, but as noted previously we saw qualitatively similar results with the other models.
+%
+%\subsubsection{Additional results for squared Hellinger distance}\label{appendix:sq-hellinger-results}
+%
+%\todo{remove}
+%
+%
 
 
