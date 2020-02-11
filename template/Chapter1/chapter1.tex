@@ -23,76 +23,115 @@
 \nomenclature[r-j]{$j$}{superscript index}                                                       % first letter R is for superscripts
 \nomenclature[s-0]{$0$}{subscript index}                                                        % first letter S is for subscripts
 
-\section{Non-technical introduction}
+%\section{Non-technical introduction}
+%
+%Non-technical introduction that should be accessible to people who don't know about machine learning, e.g. my parents.
+%\begin{itemize}
+%\item Describe machine learning as way to program computers.
+%\item When humans look at a picture, we don't see pixels. We immediately see higher level concepts.
+%\item An important topic in ML, and the subject of this thesis, is, roughly speaking, how machines can learn high level concepts. 
+%\item The example of images is easy to grasp because we are familiar with the idea of objects like cats and dogs. In fact, the difficult thing to understand is that images (on a screen) are fundamentally an array of numbers. 
+%\item Another example: audio. If I showed you a picture of a wave form, you wouldn't understand what it is. But if I play it to you, you'd be able to decompose the continuous stream into different parts (voice, drums, ...)
+%\item But this ability to understand higher level concepts is not something that machines have, where inputs are just arrays of numbers (we also wouldn't have this with a printed list of numbers).
+%\item One of the key features of human perception is the ability to understand the world at different scales of detail. For instance, (image of car) is at its simplest just a car. But a car consists of doors, windows, a wind shield, wheels. Each of these components can be more closely inspected: each wheel has the metal central part and rubber tyres, and we know that out of view there is a complicated steering mechanism connects the wheels to the rest of the car. If we inspected the tyres closely we might have interesting things to say about the tread, and so on. Similarly, an album of music consists of songs that are related, each song consists of chorus and verse, within each of these there is a progression of chords, and so on. Chapter 3 presents the first major topic of my PhD, which considers how to mathematically describe the fact that there is no one objective level at which we understand any system; rather, we are aware that any understanding exists at some particular scale, and that depending on what we are doing or trying to achieve, thinking in more or less detailed ways may be appropriate.
+%\item Another feature of human perception is our ability to synthesise together different streams of perceptual information into one conscious experience. For example, each of our eyes sees a 2D image. Yet we perceive the world in 3D because our brains automatically merge these two distinct streams together. (This is chapter 4, ICA stuff)
+%\item When we look at a red car, we are able to understand that the 'redness' and the 'carness' are two independent features: same same car in green is fundamentally still the same kind of car even though the colour is different, while a red jumper shares little in common with the car, despite having the same colour. Moreover, if I were to present you with a picture of a red car and a green jumper, you could probably imagine what the car would look like in the jumper's shade of green, and also what the jumper would look like in the car's shade of red. Roughly speaking, this is the topic of Chapter 5, which considers a family of methods known as \emph{Wasserstein Autoencoders}.
+%\item The topic of Chapter 6 is more difficult to explain by analogy to common human experience, since it is a more focussed and technical contribution to the field. The use of Wasserstein Autoencoders as in Chapter 5 requires solving a particular mathematical problem. Usually when this problem is encountered, it is very difficult to solve. In Chapter 6 we study this problem in the specific case of Wasserstein Autoencoders in great detail, and show that in this case it is actually not so hard to solve. 
+%\end{itemize}
+%
+%
+%\section{Technical introduction}
+%
+%\texttt{%This is the 'proper' introduction.
+%%
+%\begin{itemize}
+%\item A human looking at an image understands its content not in terms of the pixels that are directly observed, but at higher conceptual levels such as that objects exist and relate to one another. This understanding can fluidly shift between multiple scales, so that most objects can be decomposed into smaller objects in a hierarchical fashion. Different sensory streams can be merged into a single richer conscious experience, so that we perceive the world in three dimensions despite each of our eyes seeing only in two dimensions. 
+%The fact that these happen is a consequence both of evolution as well as a life-time of experience.
+%\item Machine learning models, in contrast, generally have neither of these from which to benefit. This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
+%\end{itemize}
+%
+%Causality:
+%
+%\begin{itemize}
+%\item The first of these comes from the field of \emph{causal inference}, the goal of which is to learn causal relations between random variables from either observational or experimental data. The asking of causal questions is ubiquitous in the social and natural sciences. Does smoking cause cancer? Does cutting corporation taxes cause economic growth? Will a sugar tax reduce the prevalence of obesity?
+%\item It is troubling, however, that scientists often seek to discover causal relations that are ill-defined in the real world. For instance, do blood cholesterol levels causally influence the risk of heart disease? 
+%\item For a long time, researchers investigated this question to find contradictory conclusions. Some found that raising cholesterol levels caused increased risk of heart disease, while others found the opposite. The resolution of these conflicting results came with the realisation that there are two types of blood cholesterol with opposite effects on heart disease risk. Thus, raising one type protects against heart disease, while raising the other raises its risk, yet both of these interventions would be registered as an increase to blood cholesterol levels.
+%\item Even when the variables under investigation are well-defined, in many cases a non-trivial set of assumptions is implicitly made. Consider the link between smoking and prevalence of cancer. In reality, the human body is a complex time-evolving system consisting of numerous individual cells. The effect of regular smoking is the accumulation of small perturbations to this complex system which collectively lead to increased risk that, at some point in time, one or more of the many cells malfunction and a cancerous growth appears. 
+%\item Thus, although it is true to say that "smoking causes cancer", hiding behind this simple statement is a very complicated causal relationship at the level of molecules and cells.
+%\item The first contribution of this thesis is the formalisation of a theory of \emph{causal abstraction} which builds on the mathematical language for modelling causal structure known as Structural Equation Models (SEMs), providing an understanding of when it is legitimate to model causal relationships in the world at a coarser level of detail than the `true' level at which causal relations hold. The main outcome of this research was the paper \emph{Causal Consistency of Structural Equation Models} which is adapted and presented in Chapter 3. A follow-up paper, \emph{From Deterministic ODEs to Dynamic Structural Causal Models}, is not presented in this thesis. %Additionally, another causality paper, though not on the theme of causal abstractions, \emph{Probabilistic Active Learning of Functions in Structural Causal Models}, is also not presented in this thesis.
+%\end{itemize}
+%
+%Non-linear ICA:
+%
+%\begin{itemize}
+%\item The second type of representation comes from \emph{Independent Component Analysis} (ICA). 
+%\item The \emph{cocktail party problem} is often used to describe this problem: at a party where many people are speaking, listening to the voice of a single person requires the separation of many mixed audio signals.
+%\item In the classical ICA problem setting, independent sources $\mathbf{s}$ are mixed through an unknown function $f$ giving rise to a vector of observations $\mathbf{x} = f(\mathbf{s})$. Given the observations $\mathbf{x}$, the goal is to learn a function $g$ that inverts $f$ up to possibly tolerable ambiguities, thus approximately recovering the original independent sources $\mathbf{s}$. 
+%\item The resulting $g(\mathbf{x})$ is a representation of the observed data that should have more appealing properties compared to the raw observations themselves.
+%\item In the usual single view setting, very strong assumptions need to be made on $f$ and $\mathbf{s}$ in order to prove that recovery is possible. 
+%\item The contribution of this thesis to the ICA literature is to consider a problem setting in which multiple different \emph{views} of the same sources is given. For example, different functions $f_1$ and $f_2$ give rise to different observations $f_1(\mathbf{x})$ and $f_2(\mathbf{x})$ which can both be used to recover $\mathbf{s}$. In this multi-view setting, it is proven that recovery of $\mathbf{s}$ can be made under much weaker assumptions compared to the single-view setting. This significantly increases the applicability of ICA methods, since the multi-view setting arises naturally in many real scenarios where, for example, different data modalities (audio, vision) of the same system being observed may exist.
+%\end{itemize}
+%
+%WAE:
+%
+%\begin{itemize}
+%\item The third and final type of representation comes from \emph{Wasserstein Autoencoders} (WAEs), a type of generative model. 
+%\item Autoencoders are a broad class of method that enable learning low-dimensional representations of high-dimensional raw data. An encoder $e$ mapping from the data space $\mathcal{X}$ to the low dimensional representation space $\mathcal{Z}$ and generator or decoder $g$ mapping the reverse direction are simultaneously learned by minimising a reconstruction loss $L\left(x, g(e(x))\right)$. The result is that $e(x)$ is a compressed representation of the original data $x$. 
+%\item WAEs additionally specify a \emph{prior} distribution over the latent space and impose a regularisation term that penalises deviation from this by the \emph{aggregate posterior}, the distribution of encoded data, with respect to some divergence or distance on distributions.
+%\item WAEs can thus be used as a generative model, since samples can be generated by sampling from the prior and passing them through the generator, as well as a way to get representations.
+%\item This thesis contains two contributions to the study of WAEs. The first is the proposal to use \emph{probabilistic} encoders that map a single datum to a distribution over latent codes. It is shown that this leads to improved generative modelling performance as well as better properties for the learned representations.
+%\item The second is to analyse in detail the problem of estimating the deviation between the prior and aggregate posterior distributions for a family of divergences known as \emph{$f$-divergences}.
+%\end{itemize}
+%%
+%%
+%%Scrap:
+%%
+%%Unify notation: $x$ or $\mathbf{x}$ for data, $z$ or $\mathbf{z}$ for latent space. Encoder $e$ and generator $g$. 
+%
+%\clearpage
 
-Non-technical introduction that should be accessible to people who don't know about machine learning, e.g. my parents.
-\begin{itemize}
-\item Describe machine learning as way to program computers.
-\item When humans look at a picture, we don't see pixels. We immediately see higher level concepts.
-\item An important topic in ML, and the subject of this thesis, is, roughly speaking, how machines can learn high level concepts. 
-\item The example of images is easy to grasp because we are familiar with the idea of objects like cats and dogs. In fact, the difficult thing to understand is that images (on a screen) are fundamentally an array of numbers. 
-\item Another example: audio. If I showed you a picture of a wave form, you wouldn't understand what it is. But if I play it to you, you'd be able to decompose the continuous stream into different parts (voice, drums, ...)
-\item But this ability to understand higher level concepts is not something that machines have, where inputs are just arrays of numbers (we also wouldn't have this with a printed list of numbers).
-\item One of the key features of human perception is the ability to understand the world at different scales of detail. For instance, (image of car) is at its simplest just a car. But a car consists of doors, windows, a wind shield, wheels. Each of these components can be more closely inspected: each wheel has the metal central part and rubber tyres, and we know that out of view there is a complicated steering mechanism connects the wheels to the rest of the car. If we inspected the tyres closely we might have interesting things to say about the tread, and so on. Similarly, an album of music consists of songs that are related, each song consists of chorus and verse, within each of these there is a progression of chords, and so on. Chapter 3 presents the first major topic of my PhD, which considers how to mathematically describe the fact that there is no one objective level at which we understand any system; rather, we are aware that any understanding exists at some particular scale, and that depending on what we are doing or trying to achieve, thinking in more or less detailed ways may be appropriate.
-\item Another feature of human perception is our ability to synthesise together different streams of perceptual information into one conscious experience. For example, each of our eyes sees a 2D image. Yet we perceive the world in 3D because our brains automatically merge these two distinct streams together. (This is chapter 4, ICA stuff)
-\item When we look at a red car, we are able to understand that the 'redness' and the 'carness' are two independent features: same same car in green is fundamentally still the same kind of car even though the colour is different, while a red jumper shares little in common with the car, despite having the same colour. Moreover, if I were to present you with a picture of a red car and a green jumper, you could probably imagine what the car would look like in the jumper's shade of green, and also what the jumper would look like in the car's shade of red. Roughly speaking, this is the topic of Chapter 5, which considers a family of methods known as \emph{Wasserstein Autoencoders}.
-\item The topic of Chapter 6 is more difficult to explain by analogy to common human experience, since it is a more focussed and technical contribution to the field. The use of Wasserstein Autoencoders as in Chapter 5 requires solving a particular mathematical problem. Usually when this problem is encountered, it is very difficult to solve. In Chapter 6 we study this problem in the specific case of Wasserstein Autoencoders in great detail, and show that in this case it is actually not so hard to solve. 
-\end{itemize}
+A human looking at an image understands its content not in terms of the pixels that are directly observed, but at higher conceptual levels.
+For instance, we understand that objects exist and relate to one another. 
+This understanding can fluidly shift between multiple scales, so that most objects can be decomposed into smaller objects in a hierarchical fashion. 
+Different sensory streams can be merged into a single richer conscious experience, so that we perceive the world in three dimensions despite each of our eyes seeing only in two dimensions. 
+The fact that this happens is a consequence both of evolution as well as a lifetime of experience.
+Machine learning models, in contrast, generally have neither of these from which to benefit,
+and the modelling of structured data remains a broad and active area of research.
+
+This thesis considers three different areas of machine learning concerned with the modelling of data, extending theoretical understanding in each of them.
+These areas are:
+\begin{enumerate}
+\item Autoencoders, a family of generative models, the goal of which is to model the unknown distribution of data given \iid~samples;
+\item Independent Component Analysis (ICA), the goal of which is to unmix or separate signals from independent sources that have been mixed together; and
+\item Causality, a broad area concerned with the modelling and inference of causal relations between random variables.
+\end{enumerate}
+%The contribution of this thesis to each of these areas is outlined next.
+Autoencoders are a family of models that involve the introduction of a \emph{latent space} and associated \emph{encoder} mapping from the data space to this and \emph{generator} mapping in the reverse direction. 
+In recent years, substantial advances have been made in this area as part of the general progress in machine learning and deep learning in particular.
+Despite this, fundamental questions remain.
+
+The estimation and minimisation of divergences between distributions in the latent spaces of autoencoders are important problems in modern research.
+Of particular interest are divergences between distributions known as the \emph{prior} and \emph{aggregate posterior}, the former being a user-specified distribution and the latter being induced by the unknown data distribution in conjunction with the learned encoder.
+Chapter \ref{chapter:latent-space-learning-theory} presents an estimator for a class of divergences known as \emph{$f$-divergences} that can be applied in the autoencoder setting between priors and aggregate posteriors. 
+
+Much of the literature on $f$-divergence estimation considers settings in which weak knowledge is assumed about the distributions for which the divergence is being estimated. 
+In such settings, the number of samples required to estimate the divergence typically grows exponentially in the dimension of the space over which the distributions are defined, unless the associated densities satisfy strong smoothness assumptions that are difficult to verify in practice.
+By exploiting the natural structure present in the autoencoder setting, superior rates are obtained in Chapter \ref{chapter:latent-space-learning-theory} with only mild and easily verifiable additional assumptions.
+
+Independent Component Analysis (ICA) assumes that data are generated by independent sources that are mixed together. 
+This is formalised by introducing a latent space over which a factorised \emph{source distribution} is assumed. 
+Observations are obtained by passing the sources through a \emph{mixing function}, each coordinate of which is a function of several sources.
+Given a dataset of observations, the goal of ICA is to invert the unknown mixing function and recover the independent sources.
 
 
-\section{Technical introduction}
 
-This is the 'proper' introduction.
+%This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
 
-\begin{itemize}
-\item A human looking at an image understands its content not in terms of the pixels that are directly observed, but at higher conceptual levels such as that objects exist and relate to one another. This understanding can fluidly shift between multiple scales, so that most objects can be decomposed into smaller objects in a hierarchical fashion. Different sensory streams can be merged into a single richer conscious experience, so that we perceive the world in three dimensions despite each of our eyes seeing only in two dimensions. 
-The fact that these happen is a consequence both of evolution as well as a life-time of experience.
-\item Machine learning models, in contrast, generally have neither of these from which to benefit. This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
-\end{itemize}
-
-Causality:
-
-\begin{itemize}
-\item The first of these comes from the field of \emph{causal inference}, the goal of which is to learn causal relations between random variables from either observational or experimental data. The asking of causal questions is ubiquitous in the social and natural sciences. Does smoking cause cancer? Does cutting corporation taxes cause economic growth? Will a sugar tax reduce the prevalence of obesity?
-\item It is troubling, however, that scientists often seek to discover causal relations that are ill-defined in the real world. For instance, do blood cholesterol levels causally influence the risk of heart disease? 
-\item For a long time, researchers investigated this question to find contradictory conclusions. Some found that raising cholesterol levels caused increased risk of heart disease, while others found the opposite. The resolution of these conflicting results came with the realisation that there are two types of blood cholesterol with opposite effects on heart disease risk. Thus, raising one type protects against heart disease, while raising the other raises its risk, yet both of these interventions would be registered as an increase to blood cholesterol levels.
-\item Even when the variables under investigation are well-defined, in many cases a non-trivial set of assumptions is implicitly made. Consider the link between smoking and prevalence of cancer. In reality, the human body is a complex time-evolving system consisting of numerous individual cells. The effect of regular smoking is the accumulation of small perturbations to this complex system which collectively lead to increased risk that, at some point in time, one or more of the many cells malfunction and a cancerous growth appears. 
-\item Thus, although it is true to say that "smoking causes cancer", hiding behind this simple statement is a very complicated causal relationship at the level of molecules and cells.
-\item The first contribution of this thesis is the formalisation of a theory of \emph{causal abstraction} which builds on the mathematical language for modelling causal structure known as Structural Equation Models (SEMs), providing an understanding of when it is legitimate to model causal relationships in the world at a coarser level of detail than the `true' level at which causal relations hold. The main outcome of this research was the paper \emph{Causal Consistency of Structural Equation Models} which is adapted and presented in Chapter 3. A follow-up paper, \emph{From Deterministic ODEs to Dynamic Structural Causal Models}, is not presented in this thesis. %Additionally, another causality paper, though not on the theme of causal abstractions, \emph{Probabilistic Active Learning of Functions in Structural Causal Models}, is also not presented in this thesis.
-\end{itemize}
-
-Non-linear ICA:
-
-\begin{itemize}
-\item The second type of representation comes from \emph{Independent Component Analysis} (ICA). 
-\item The \emph{cocktail party problem} is often used to describe this problem: at a party where many people are speaking, listening to the voice of a single person requires the separation of many mixed audio signals.
-\item In the classical ICA problem setting, independent sources $\mathbf{s}$ are mixed through an unknown function $f$ giving rise to a vector of observations $\mathbf{x} = f(\mathbf{s})$. Given the observations $\mathbf{x}$, the goal is to learn a function $g$ that inverts $f$ up to possibly tolerable ambiguities, thus approximately recovering the original independent sources $\mathbf{s}$. 
-\item The resulting $g(\mathbf{x})$ is a representation of the observed data that should have more appealing properties compared to the raw observations themselves.
-\item In the usual single view setting, very strong assumptions need to be made on $f$ and $\mathbf{s}$ in order to prove that recovery is possible. 
-\item The contribution of this thesis to the ICA literature is to consider a problem setting in which multiple different \emph{views} of the same sources is given. For example, different functions $f_1$ and $f_2$ give rise to different observations $f_1(\mathbf{x})$ and $f_2(\mathbf{x})$ which can both be used to recover $\mathbf{s}$. In this multi-view setting, it is proven that recovery of $\mathbf{s}$ can be made under much weaker assumptions compared to the single-view setting. This significantly increases the applicability of ICA methods, since the multi-view setting arises naturally in many real scenarios where, for example, different data modalities (audio, vision) of the same system being observed may exist.
-\end{itemize}
-
-WAE:
-
-\begin{itemize}
-\item The third and final type of representation comes from \emph{Wasserstein Autoencoders} (WAEs), a type of generative model. 
-\item Autoencoders are a broad class of method that enable learning low-dimensional representations of high-dimensional raw data. An encoder $e$ mapping from the data space $\mathcal{X}$ to the low dimensional representation space $\mathcal{Z}$ and generator or decoder $g$ mapping the reverse direction are simultaneously learned by minimising a reconstruction loss $L\left(x, g(e(x))\right)$. The result is that $e(x)$ is a compressed representation of the original data $x$. 
-\item WAEs additionally specify a \emph{prior} distribution over the latent space and impose a regularisation term that penalises deviation from this by the \emph{aggregate posterior}, the distribution of encoded data, with respect to some divergence or distance on distributions.
-\item WAEs can thus be used as a generative model, since samples can be generated by sampling from the prior and passing them through the generator, as well as a way to get representations.
-\item This thesis contains two contributions to the study of WAEs. The first is the proposal to use \emph{probabilistic} encoders that map a single datum to a distribution over latent codes. It is shown that this leads to improved generative modelling performance as well as better properties for the learned representations.
-\item The second is to analyse in detail the problem of estimating the deviation between the prior and aggregate posterior distributions for a family of divergences known as \emph{$f$-divergences}.
-\end{itemize}
-
-
-Scrap:
-
-Unify notation: $x$ or $\mathbf{x}$ for data, $z$ or $\mathbf{z}$ for latent space. Encoder $e$ and generator $g$. 
-
-
+%Much of machine learning concerns the modelling of structured data. 
 
 \section{Outline and Contributions}
 
-Summarise structure of thesis and outline what are the key contributions of each chapter.
+This thesis is organised as follows
 
 \begin{itemize}
 \item Chapter 2 is literature review. Fill this in after making proper literature review plan.
