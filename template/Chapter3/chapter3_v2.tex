@@ -520,8 +520,8 @@ X = (I-A)^{-1} E
 \end{align*}
 %
 where $I$ is the identity matrix. 
-This is an instance of linear Independent Component Analysis (ICA), a problem class that will be discussed in detail in Chapter \ref{chapter:ica}.\footnote{\todo{If this chapter gets put after ICA chapter, change this paragraph (and subsequent places in which ICA is mentioned).}}
-In brief, identification of $A$ and the distribution of $E$ is known to be possible if at most one of the components of $E$ has Gaussian distribution.
+This is an instance of linear Independent Component Analysis (ICA), discussed in detail in Chapter \ref{chapter:ica}.%\footnote{\todo{If this chapter gets put after ICA chapter, change this paragraph (and subsequent places in which ICA is mentioned).}}
+Recall that identification of $A$ and the distribution of $E$ is possible if at most one of the components of $E$ has Gaussian distribution.
 The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} uses ICA to recover the both the matrix $I-A$ and the distribution over $E$ from only observational data.
 %In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
 %LiNGAM then prunes the matrix of linear weights to force small entries to be 0 and finds an ordering on the components by rearranging the matrix to be upper triangular. 
@@ -1514,8 +1514,8 @@ In the original publication from which this chapter is in part based \citep{rube
 
 
 Since publication of this work, \cite{beckers2019approximate} have investigated precisely this question, exploring several subtleties. 
-For instance, for a pair of distributions, the nearness of the approximation can be defined in multiple ways,\footnote{\todo{if ordering of chapters is moved and divergences have already been introduced, rephrase this.}}
-and this must hold in some sense over a set of interventions. 
+For instance, divergences between pairs of distributions can be defined in multiple ways
+and a notion of nearness must hold in some sense over a set of interventions. 
 They propose two ways of defining approximate abstractions and show how they are related, providing a way to quantify the trade-off between accuracy and abstraction.
 These ideas are illustrate in practice with application to climate models, showing how the El Ni\~no event arises as a macroscopic property of wind and sea temperatures.
 

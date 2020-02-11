@@ -22,7 +22,7 @@ Suppose that a dataset of samples, drawn \iid~from some unknown data distributio
 The high level goal of generative modelling is to learn a model distribution $P_X$ that approximates the unknown data distribution $Q_X$ based on these samples.
 Latent variable models are a flexible way to specify such distributions, and work by composing simple distributions over (unobserved) latent variables with mappings to the observed data space.
 The applications of latent variable generative modelling are diverse, since
-having such a model of the data may be desirable for a variety of reasons, for instance: to artificially generate new samples of data \citep{goodfellow2014generative, oord2016wavenet}; to perform compression \citep{townsend2019practical, townsend2019hilloc}; to unsupervisedly learn features for transfer to other tasks \citep{tschannen2018recent, donahue2019large}; or to extract latent structure present in the data \citep{hyvarinen2000independent}.
+having such a model of the data may be desirable for a variety of reasons, for instance: to artificially generate new samples of data \citep{goodfellow2014generative, oord2016wavenet}; to perform compression \citep{townsend2019hilloc, townsend2019practical}; to unsupervisedly learn features for transfer to other tasks \citep{tschannen2018recent, donahue2019large}; or to extract latent structure present in the data \citep{hyvarinen2000independent}.
 
 The goal of this chapter is to introduce the necessary background and context for Chapters \ref{chapter:latent-space-learning-theory} and \ref{chapter:ica} of this thesis.
 Although both concern latent variable generative models, these chapters are set in different niches of the machine learning literature.
@@ -83,12 +83,13 @@ Together, these induce a distribution $P_X$ over the data space.
 
 In the neural sampler community, $P_Z$ is referred to as a \emph{prior} or \emph{noise distribution} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
 In the ICA community, $P_Z$ is referred to as a \emph{source distribution} and may be specified only implicitly through some assumed properties, such as being a factorised distribution.
+Usually the letter $S$ denotes the corresponding sources in the ICA literature, but for consistency this thesis will use $Z$.
 
 The conditional distributions can be thought of as a mapping $g:\mathcal{Z}\to\mathcal{P}(\mathcal{X})$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$,
 and may in general be Dirac delta distributions (where all probability mass is placed at a single point), in which case the associated mapping $g$ is well-defined as a function $g:\mathcal{Z}\to\mathcal{X}$. 
 
 In the neural sampler community, the conditional distributions are referred to as \emph{generators} or \emph{decoders}, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
-If the conditional distributions they correspond to are Dirac delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic}.
+If the conditional distributions they correspond to are Dirac delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic} (sometimes \emph{probabilistic}).
 In the ICA community, the generators are generally deterministic and are known as \emph{mixing functions}, and are usually denoted by $f$.
 
 When practically implemented in modern applications, generators are often realised as neural networks.
@@ -106,7 +107,7 @@ p^\theta(x) = \int p^\theta(x|z) p(z) dz.
 %
 In some special cases, the density $p^\theta(x)$ may be tractable: for instance, if the generators are deterministic and invertible with known Jacobian, as is often the case in the ICA community.
 In most cases in the neural sampler community, the integral is intractable, meaning that $P_X^\theta$ has unknown density in practice.
-LVMs are nonetheless useful here because samples from $P_X^\theta$ can be drawn easily:
+Despite this, LVMs are nonetheless useful here because samples from $P_X^\theta$ can be drawn easily:
 one samples first a value $z\sim P_Z$ and then $x \sim P^\theta_{X|Z=z}$. 
 All relevant distributions can be chosen so that these sampling procedures are simple, e.g.\:if $P_Z$ and all $P^\theta_{X|Z}$ are Gaussian. 
 
@@ -197,7 +198,7 @@ Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
 
 %\todo{flesh out this section, give more properties of $f$-divergences?}
 
-$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009} and are studied in Chapter \ref{chapter:latent-space-learning-theory}.
+$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009}. Their estimation is studied in Chapter \ref{chapter:latent-space-learning-theory}.
 
 \medskip
 
@@ -242,8 +243,8 @@ It follows that $D_f = D_{f_0}$ is also positive.
 Hence `most' choices of $f$ lead to valid $f$-divergences.
 
 
-Different choices of $f$ yield several commonly encountered divergences, including the Kullback-Leibler, Jensen-Shannon, Total Variation, $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
-This family of symmetric divergences are continuously parameterized by $\beta\in(0, \infty]$ and include as special cases the squared-Hellinger $({\beta=\frac{1}{2}})$,  Jensen-Shannon $(\beta=1)$ and Total Variation $(\beta=\infty)$. 
+Different choices of $f$ yield several commonly encountered divergences, including the Kullback-Leibler (KL), Jensen-Shannon (JS), Total Variation (TV), $\chi^2$ and $\alpha$-divergences as well as the lesser known $\beta$-divergences \citep{osterreicher2003new}.
+This family of symmetric divergences is parameterized by $\beta\in(0, \infty]$ and includes the squared-Hellinger ($\Hsq$, ${\beta=\frac{1}{2}}$),  Jensen-Shannon $(\beta=1)$ and Total Variation $(\beta=\infty)$. 
 Table \ref{table:f-fns} lists the $f_0$ and other commonly encountered choices of $f$ for the divergences considered in Chapter \ref{chapter:latent-space-learning-theory}.
 
 %This is similarly the case for any $f$ for which there exists some $c>0$ such that $f(u) > c(u-1)$ for all $u\not=1$. 
@@ -314,7 +315,7 @@ L(c) &=  \mathbb{E}_{x\sim P}\left[ - \log c(x) \right] + \mathbb{E}_{x \sim Q} 
 &= \int -\log c(x) p(x) - \log (1 - c(x)) q(x) dx
 \end{align*}
 %
-For any particular $x$, the integrand is minimised by $c^*(x) = \frac{p(x)}{q(x) + p(x)}$ \citep{goodfellow2014generative}, and so the optimal classifier assigns $x$ to class $1$ with the posterior probability that it was drawn from $P$.
+For any particular $x$, the integrand is minimised by $c^*(x) = \frac{p(x)}{q(x) + p(x)}$, and so the optimal classifier assigns $x$ to class $1$ with the posterior probability that it was drawn from $P$ (Proposition 1, \cite{goodfellow2014generative}).
 If $c$ parametrised as $\frac{1}{1+\exp( -r(x))}$ where $r:\mathcal{X}\to\mathbb{R}$, then the optimal  $c^*$ corresponds to $r^*(x) = \log\left(p(x) / q(x)\right)$.
 
 This is a useful trick for cases in which only samples from two distributions are available and estimation of their density ratio is desired, as is the case in Chapter \ref{chapter:ica}.
@@ -330,7 +331,7 @@ Rearranging, it follows that the Jensen-Shannon divergence between two distribut
 \begin{align*}
 D_{\text{JS}}(P, Q) \geq \log 2 - \frac{L(c)}{2}.
 \end{align*}
-
+%
 Recall that the Jensen-Shannon divergence is an $f$-divergence. 
 It can be similarly shown that any $f$-divergence between two distributions can be estimated by maximisation of a lower bound corresponding to a classification problem, and that doing so results in a function of the density ratio being estimated.
 All $f$-divergences admit a variational form as a result of convex conjugacy \citep{nguyen10ratio}.
@@ -356,11 +357,11 @@ D_f(P, Q) &= \int q(x) \sup_{t \in \dom(f^*)} \left\{t \frac{p(x)}{q(x)} - f^*(t
 &= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
 \end{align*}
 where $\mathcal{T}$ is an arbitrary class of functions $\mathcal{X} \to \dom(f^*) \subseteq \mathbb{R}$.
-It can be shown \citep{nguyen10ratio} that the optimal $T^*$ attaining the supremum satisfies 
+It can be shown that the optimal $T^*$ attaining the supremum satisfies 
 \begin{align*}
 T^*(x) = f'\left( \frac{p(x)}{q(x)}\right)
 \end{align*}
-subject to mild conditions on $f$. 
+subject to mild conditions on $f$ (Lemma 1, \cite{nguyen10ratio}). 
 In this sense, $T^*$ estimates (a function of) the density ratio $p(x)/q(x)$.
 
 %The particular case of the Jensen-Shannon divergence merits further discussion for two reasons.
@@ -430,7 +431,7 @@ If $\mathcal{H}$ is such that $h \in \mathcal{H}$ implies that $-h \in \mathcal{
 \begin{align*}
 D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x) \\
 &= \sup_{h\in\mathcal{H}} \left\{ \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right] \right\} \\
-&\geq  \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right] \\
+&\geq  \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right]
 \end{align*}
 %
 where the inequality holds for any $h \in \mathcal{H}$, where $h$ now plays the role of the discriminator. 
@@ -453,6 +454,7 @@ The first term above, the negative of the \emph{differential entropy} of $Q_X$, 
 However, since it is constant as a function of $\theta$, it can be ignored.
 The term $\log p^\theta(x)$ inside the second integral is known as the \emph{log-likelihood} or \emph{evidence}, and maximisation of this quantity is known as \emph{maximum likelihood estimation}. 
 Although the density $p^\theta(x)$ is intractable, the evidence can be tractably lower bounded leading to the so-called \emph{evidence lower bound} (ELBO), which in turn leads to a tractable \emph{upper} bound on $D_{\text{KL}}(Q_X, P^\theta_X)$. 
+This will be derived next.
 
 First, observe that the log-likelihood can be written 
 %
@@ -539,20 +541,20 @@ If the generator $p^\theta(x|z)$ is deterministic, any valid $\gamma$ can be wri
 That is, any $\gamma$ can be `factored through' the latent space by introducing an encoder $q^\phi(z|x)$, replacing the constraint of distribution matching in the data-space ($\int \gamma(x'|x) q_X(x) dx = p_X^\theta(x')$) with distribution matching in the latent space ($\int q^\phi(z|x) q(x) dx = p(z)$).
 
 Intuitively, $P_Z$ is a different parametrisation of $P_X^\theta$ and so if $Q_X$ pushed through the encoder results in $P_Z$, pushing $Q_X$ through the composition of the encoder and generator will result in $P_X^\theta$. 
-While it is clear that the composition of any such encoder and the generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
+While it is clear that the composition of any such encoder and generator induces a valid $\gamma$, it is non-trivial that any $\gamma$ can be decomposed as such. 
 This is proved in Theorem 1 of \cite{tolstikhin2017wasserstein}.
 
 Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder and $g$ for the deterministic generator yields the following alternative statement of the optimal transport distance in the LVM setting:
 %
 \begin{align*}
-OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, G(z)) \right].
+OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, g(z)) \right].
 \end{align*}
 %
 Again this optimisation problem is not feasible to solve due to the hard constraint, 
 but it can be made computationally feasible by relaxing the constraint to obtain the WAE objective:
 %
 \begin{align}
-L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, G^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}}
+L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, g^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}}
 \end{align}
 %
 where $D$ is some divergence, $\lambda$ is a positive scalar and the encoder is given parameter $\phi$.
@@ -560,8 +562,9 @@ While the generator is required to be deterministic, the encoder may be determin
 For general choices of $\lambda$ and $D$, $\inf_{\phi} L_{\text{WAE}}^{\lambda, D}(\theta, \phi)$ is neither an upper nor lower bound on the original objective $OT_c(P_X^\theta, Q_X)$, but a heuristic approximation due to the relaxation of the constraint. 
 
 %It was, however, proven by \cite{sinkhorn} (Theorem 2.1) that if $G$ is $\lambda$-Lipschitz, , then taking $D$ to be
+%Since term (i) is a reconstruction loss and term (ii) is a regulariser, and so WAEs are a type of regularised autoencoder.
 
-Term (i) of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and their reconstruction obtained by pushing through the encoder and decoder.
+Term (i) of the WAE loss is simply a reconstruction loss, corresponding to the average distance between data sampled from $Q_X$ and the reconstruction obtained by pushing through the encoder and generator.
 This is therefore simple to estimate and optimise with respect to the parameters $\phi$ and $\theta$.
 Term (ii) is potentially challenging to estimate depending on the choice of $D$. 
 \cite{tolstikhin2017wasserstein} propose two choices for $D$ which can be estimated based on samples from $P_Z$ and $Q_Z^\phi$: the Maximum Mean Discrepancy (MMD) \citep{gretton2012kernel} which can be estimated directly, leading to WAE-MMD, and a GAN style estimation of the Jensen-Shannon divergence by introducing an additional discriminator to obtain a lower bound on the divergence, leading to WAE-GAN. 

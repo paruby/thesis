@@ -213,7 +213,7 @@ The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking 
 Intuition for why such an approach works can be seen in the Central Limit Theorem, which, informally, states that an average of \iid~random variables becomes more Gaussian-like as the number of variables in the average increases. 
 Similarly, in sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables makes them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
 
-We recall in passing that linear ICA methods can be used for causal discovery in linear cyclic models, as discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.\footnote{\todo{rewrite if order of chapters is changed}}
+Linear ICA methods can be used for causal discovery in linear cyclic models, as will be discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.
 
 
 
@@ -932,26 +932,36 @@ The columns of this matrix are linearly independent for almost all values of $z_
 
 Noise on the sources is required for at least one of the views. 
 This is a consequence of training a classifier as a way retrieve the the unmixed signals.
-The reasons for this are explained briefly here.\footnote{\todo{Rewrite if density ratio estimation is covered in the literature review}}
+The reasons for this are explained briefly here.
+
+Recall from the discussion on density ratio estimation in Section \ref{sec:literature-density-ratio-estimation} that if a classifier is trained with the logistic loss to classify between samples from two distributions $P$ (class 1) and $Q$ (class 0), the optimal classifier should output $c(x) = \frac{p(x)}{p(x) + q(x)}$ as the estimated probability that a sample is drawn from $P$.
+When the classifier is parametrised as $c(x) = \frac{1}{1 + \exp(-r(x))}$, the corresponding optimal regression function $r$ is $r(x) = \log( p(x) / q(x))$. 
+
+In the setting considered here, $P$ and $Q$ are the joint distribution $p(x_1, x_2)$ and product of marginals $p(x_1)p(x_2)$ of the views.
+Thus, at optimality
+
+%Noise on the sources is required for at least one of the views. 
+%This is a consequence of training a classifier as a way retrieve the the unmixed signals.
+%The reasons for this are explained briefly here.\footnote{\todo{Rewrite if density ratio estimation is covered in the literature review}}
 
 
-Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
-A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realisation of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
-
-\[
-L(D) = \mathbb{E}_{X\sim P_0} \left[ - \log D(X) \right] + \mathbb{E}_{X\sim P_1} \left[ - \log (1 - D(X)) \right].
-\]
-
-As shown in, for instance, \cite{goodfellow2014generative}, the global optimum of this loss occurs when $D(x) = \frac{p_0(x)}{p_0(x) + p_1(x)}$, which can be rewritten as
-
-\begin{align}
-D(x) &= \frac{1}{1 + p_1(x)/p_0(x)}\\
-&= \frac{1}{1 + \exp ( - \log (p_0(x)/p_1(x))) } \label{eq:density-ratio-classification}
-\end{align}
-
-Recall that in the setting considered in this work, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $p(x_1, x_2)$ (\emph{class $0$}) or the product of marginals $p(x_1) p(x_2)$ (\emph{class $1$}).
-$r(x_1, x_2)$ is trained so that $\frac{1}{1 + \exp(-r(x_1, x_2))}$ estimates the posterior probability of $(x_1, x_2)$ belonging to class 0.
-By comparing to Equation \ref{eq:density-ratio-classification}, it can be seen that
+%Suppose that a variable $X$ is drawn with equal probability from two distributions $P_0$ and $P_1$ with densities $p_0(x)$ and $p_1(x)$ respectively.
+%A classifier $D: x \mapsto [0,1]$ is trained to estimate the posterior probability that a particular realisation of $X$ was drawn from $P_0$ with the cross entropy loss, i.e. the parameters of $D$ are chosen to minimise
+%
+%\[
+%L(D) = \mathbb{E}_{X\sim P_0} \left[ - \log D(X) \right] + \mathbb{E}_{X\sim P_1} \left[ - \log (1 - D(X)) \right].
+%\]
+%
+%As shown in, for instance, \cite{goodfellow2014generative}, the global optimum of this loss occurs when $D(x) = \frac{p_0(x)}{p_0(x) + p_1(x)}$, which can be rewritten as
+%
+%\begin{align}
+%D(x) &= \frac{1}{1 + p_1(x)/p_0(x)}\\
+%&= \frac{1}{1 + \exp ( - \log (p_0(x)/p_1(x))) } \label{eq:density-ratio-classification}
+%\end{align}
+%
+%Recall that in the setting considered in this work, the function $r(x_1, x_2)$ is trained to classify between the two cases that $(x_1, x_2)$ is drawn from the joint distribution $p(x_1, x_2)$ (\emph{class $0$}) or the product of marginals $p(x_1) p(x_2)$ (\emph{class $1$}).
+%$r(x_1, x_2)$ is trained so that $\frac{1}{1 + \exp(-r(x_1, x_2))}$ estimates the posterior probability of $(x_1, x_2)$ belonging to class 0.
+%By comparing to Equation \ref{eq:density-ratio-classification}, it can be seen that
 %
 \begin{align*}
 r(x_1, x_2) &= \log \left( p(x_1, x_2) / p(x_1) p(x_2)\right) \\
