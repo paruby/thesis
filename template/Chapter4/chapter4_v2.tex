@@ -128,7 +128,7 @@ Such assumptions may be made either on the mixing functions or on the distributi
 		\caption{}\label{fig:ica-model:b}
 	\end{subfigure}
 	%
-	\caption{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work. $Z$ is a vector of unobserved latent sources and the $X_i$ are observed mixtures of the components of $Z$.}
+	\caption[Graphical model depictions of ICA and multi-view ICA]{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work. $Z$ is a vector of unobserved latent sources and the $X_i$ are observed mixtures of the components of $Z$.}
 \end{figure}
 
 
@@ -473,7 +473,7 @@ This result is quite involved; we will first state it, and then discuss it.
 		\draw[->] (N) -- (X2);
 		\end{tikzpicture}
 %	\includegraphics[scale=0.3]{img_pdf/one_noisy.pdf}
-	\caption{The setting considered in Section \ref{sec:onenoisless}. Two views of the sources are available, one of which, $X_1$, is not corrupted by noise. In this and all subsequent figures in this chapter, each node is a deterministic function of its parents in the graph.
+	\caption[Two-view ICA with one noiseless view]{The setting considered in Section \ref{sec:onenoisless}. Two views of the sources are available, one of which, $X_1$, is not corrupted by noise. In this and all subsequent figures in this chapter, each node is a deterministic function of its parents in the graph.
 	}
 	\label{fig:generalized_hsr_basic}
 \end{figure}
@@ -643,7 +643,7 @@ these results show that jointly exploiting the multiple modalities can lead to i
 		\draw[->] (N1) -- (X1);
 		\end{tikzpicture}
 %	\includegraphics[scale=0.3]{img_pdf/classic_hsr.pdf}
-	\caption{Setting with two views of the sources $Z$, both corrupted by noise.}
+	\caption[Two-view ICA with two noisy views]{Setting with two views of the sources $Z$, both corrupted by noise.}
 	\label{fig:classic_hsr}
 \end{figure}
 
@@ -745,7 +745,7 @@ The intuition is that the less noise there is, the more information each observa
 		\node[](text) at(0.5,1.05) {\scriptsize $i=1,\ldots,M$};
 		\end{tikzpicture}	
 %	\includegraphics[scale=0.3]{img_pdf/generalized_hsr_many.pdf}
-	\caption{The setting of Section \ref{sec:multiple} with $M$ corrupted views of the sources.}
+	\caption[Multi-view ICA with noisy views]{The setting of Section \ref{sec:multiple} with $M$ corrupted views of the sources.}
 	\label{fig:generalized_hsr_many}
 \end{figure}
 

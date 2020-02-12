@@ -125,7 +125,7 @@
 \addbibresource{References/references.bib} %Location of references.bib only for biblatex, Do not omit the .bib extension from the filename.
 \DeclareBibliographyCategory{ignore}
 \addtocategory{ignore}{rubenstein2017causal}
-
+\addtocategory{ignore}{gresele2019incomplete}
 
 \usepackage{csquotes}
 \renewcommand\nameyeardelim{, }
@@ -167,6 +167,13 @@
 % To change the name of the Nomenclature section, uncomment the following line
 
 %\renewcommand{\nomname}{Symbols}
+
+\renewcommand\nomgroup[1]{%
+  \item[\bfseries
+  \ifstrequal{#1}{A}{General Abbreviations}{%
+  \ifstrequal{#1}{F}{$f$-divergence Abbreviations}{%
+  \ifstrequal{#1}{M}{Mathematical Notation}{}}}%
+]}
 
 
 % ********************************* Appendix ***********************************

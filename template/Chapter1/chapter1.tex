@@ -12,16 +12,87 @@
 \fi
 
 
+\nomenclature[A]{LVM}{Latent Variable Model}
+\nomenclature[A]{ICA}{Independent Component Analysis}
+\nomenclature[A]{GAN}{Generative Adversarial Network}
+\nomenclature[A]{WAE}{Wasserstein Autoencoder}
+\nomenclature[A]{VAE}{Variational Autoencoder}
+\nomenclature[A]{\iid}{Independent and identically distributed}
+\nomenclature[A]{IPM}{Integral Probability Metric}
+\nomenclature[A]{MMD}{Maximum Mean Discrepancy}
+\nomenclature[A]{RKHS}{Reproducing Kernel Hilbert Space}
+\nomenclature[A]{MC}{Monte-Carlo}
+\nomenclature[A]{RAM}{Random Mixture estimator}
+\nomenclature[A]{RAM-MC}{Random Mixture estimator with Monte-Carlo sampling}
+\nomenclature[A]{TC}{Total Correlation}
+\nomenclature[A]{MWS}{Minibatch Weighted Sample}
+\nomenclature[A]{MI}{Mutual Information}
+\nomenclature[A]{ELBO}{Evidence Lower Bound}
+\nomenclature[A]{CCA}{Canonical Correlation Analysis}
+\nomenclature[A]{SDV}{Sufficiently Distinct Views}
+\nomenclature[A]{SEM}{Structural Equation Model}
+\nomenclature[A]{HDL}{High-Density Lipoprotein}
+\nomenclature[A]{LDL}{Low-Density Lipoprotein}
+\nomenclature[A]{HD}{Heart Disease}
+
+
+\nomenclature[F]{KL}{Kullback-Leibler}
+\nomenclature[F]{TV}{Total Variation}
+\nomenclature[F]{$\Hsq$}{Squared-Hellinger}
+\nomenclature[F]{JS}{Jensen-Shannon}
+
+
+
+\nomenclature[M]{$A$}{Matrix}
+\nomenclature[M]{$\mathcal{X}$}{Data space}
+\nomenclature[M]{$\mathcal{Z}$}{Latent space}
+\nomenclature[M]{$X$}{Random variable over data space}
+\nomenclature[M]{$x$}{Particular value taken by $X$}
+\nomenclature[M]{$\mathbf{X}^N$}{Set of $N$ observations of $X$}
+\nomenclature[M]{$Z$}{Random variable over latent space}
+\nomenclature[M]{$\mathbf{Z}^M$}{Set of $M$ observations of $Z$}
+\nomenclature[M]{$E$}{Exogenous noise variable}
+\nomenclature[M]{$N$}{Noise variable}
+\nomenclature[M]{$Q_X$, $q(x)$}{Data distribution, density}
+\nomenclature[M]{$P^\theta_X$, $p^\theta(x)$}{Model distribution with parameter $\theta$, density}
+\nomenclature[M]{$P_Z$, $p(z)$}{Prior distribution over latent space, density}
+\nomenclature[M]{$Q_Z$, $q(z)$}{Aggregate posterior distribution over latent space, density}
+\nomenclature[M]{$\hat{Q}_Z^N$, $\hat{q}_N(z)$}{Empirical approximation to aggregate posterior based on $N$ samples, density}
+\nomenclature[M]{$H(Q_Z)$}{Differential entropy of $Q_Z$}
+\nomenclature[M]{$TC(Q_Z)$}{Total correlation of $Q_Z$}
+\nomenclature[M]{$I(X,Z)$}{Mutual information of variables $X$ and $Z$}
+
+\nomenclature[M]{$\mathcal{H}$}{Function class}
+\nomenclature[M]{$L(\theta, \phi)$}{Loss function with parameters $\theta$ and $\phi$}
+\nomenclature[M]{$OT_c$}{Optimal transport distance with respect to metric $c$}
+\nomenclature[M]{$D, D_f$}{Divergence}
+\nomenclature[M]{$\mathcal{N}(\mu, \Sigma)$}{Gaussian distribution with mean $\mu$ and covariance matrix $\Sigma$}
+\nomenclature[M]{$\mathbb{E}$}{Expectation operator}
+\nomenclature[M]{$\mathbb{P}$}{Probability operator}
+\nomenclature[M]{$\#$}{Push-forward operator}
+\nomenclature[M]{$\doop(X_i=x_i)$}{Do-intervention setting variable $X_i$ to value $x_i$}
+\nomenclature[M]{$\mathcal{M}_X$}{Structural Equation Model over $X$}
+\nomenclature[M]{$\mathcal{S}_X$}{Structural equations in $\mathcal{M}_X$}
+\nomenclature[M]{$\mathcal{I}_X$}{Interventions in $\mathcal{M}_X$}
+\nomenclature[M]{$P_X^{\doop(\cdot)}$}{Distribution over $X$ after intervention $\doop(\cdot)$}
+\nomenclature[M]{$\mathcal{G}$}{Causal graph}
+\nomenclature[M]{$\tau$}{Function mapping between causal variables}
+\nomenclature[M]{$\omega$}{Function mapping between sets of interventions}
+
+
 % Example nomenclature definitions
 
-\nomenclature[z-cif]{$CIF$}{Cauchy's Integral Formula}                                % first letter Z is for Acronyms 
-\nomenclature[a-F]{$F$}{complex function}                                                   % first letter A is for Roman symbols
-\nomenclature[g-p]{$\pi$}{ $\simeq 3.14\ldots$}                                             % first letter G is for Greek Symbols
-\nomenclature[g-i]{$\iota$}{unit imaginary number $\sqrt{-1}$}                      % first letter G is for Greek Symbols
-\nomenclature[g-g]{$\gamma$}{a simply closed curve on a complex plane}  % first letter G is for Greek Symbols
-\nomenclature[x-i]{$\oint_\gamma$}{integration around a curve $\gamma$} % first letter X is for Other Symbols
-\nomenclature[r-j]{$j$}{superscript index}                                                       % first letter R is for superscripts
-\nomenclature[s-0]{$0$}{subscript index}                                                        % first letter S is for subscripts
+%\nomenclature[z-cif]{$CIF$}{Cauchy's Integral Formula}                                % first letter Z is for Acronyms 
+%
+%\nomenclature
+%
+%\nomenclature[a-F]{$F$}{complex function}                                                   % first letter A is for Roman symbols
+%\nomenclature[g-p]{$\pi$}{ $\simeq 3.14\ldots$}                                             % first letter G is for Greek Symbols
+%\nomenclature[g-i]{$\iota$}{unit imaginary number $\sqrt{-1}$}                      % first letter G is for Greek Symbols
+%\nomenclature[g-g]{$\gamma$}{a simply closed curve on a complex plane}  % first letter G is for Greek Symbols
+%\nomenclature[x-i]{$\oint_\gamma$}{integration around a curve $\gamma$} % first letter X is for Other Symbols
+%\nomenclature[r-j]{$j$}{superscript index}                                                       % first letter R is for superscripts
+%\nomenclature[s-0]{$0$}{subscript index}                                                        % first letter S is for subscripts
 
 %\section{Non-technical introduction}
 %
@@ -112,17 +183,49 @@ Despite this, fundamental questions remain.
 
 The estimation and minimisation of divergences between distributions in the latent spaces of autoencoders are important problems in modern research.
 Of particular interest are divergences between distributions known as the \emph{prior} and \emph{aggregate posterior}, the former being a user-specified distribution and the latter being induced by the unknown data distribution in conjunction with the learned encoder.
-Chapter \ref{chapter:latent-space-learning-theory} presents an estimator for a class of divergences known as \emph{$f$-divergences} that can be applied in the autoencoder setting between priors and aggregate posteriors. 
+Chapter \ref{chapter:latent-space-learning-theory} presents and studies an estimator for a class of divergences known as \emph{$f$-divergences}, deriving bounds on the rate of decay of the bias and finite sample concentration bounds.
+Although this estimator may be applied in other settings, the structural assumptions are naturally satisfied in the estimation of divergences between priors and aggregate posteriors in the autoencoder setting. 
+
 
 Much of the literature on $f$-divergence estimation considers settings in which weak knowledge is assumed about the distributions for which the divergence is being estimated. 
 In such settings, the number of samples required to estimate the divergence typically grows exponentially in the dimension of the space over which the distributions are defined, unless the associated densities satisfy strong smoothness assumptions that are difficult to verify in practice.
 By exploiting the natural structure present in the autoencoder setting, superior rates are obtained in Chapter \ref{chapter:latent-space-learning-theory} with only mild and easily verifiable additional assumptions.
+This work additionally has implications to existing literature by giving a rigorous foundation to heuristically proposals in related settings.
+
 
 Independent Component Analysis (ICA) assumes that data are generated by independent sources that are mixed together. 
 This is formalised by introducing a latent space over which a factorised \emph{source distribution} is assumed. 
 Observations are obtained by passing the sources through a \emph{mixing function}, each coordinate of which is a function of several sources.
 Given a dataset of observations, the goal of ICA is to invert the unknown mixing function and recover the independent sources.
 
+In addition to the derivation of practical algorithms, one of the main lines of enquiry in the ICA community is the search for \emph{identifiability results}.
+Specifying an ICA problem requires making assumptions, for instance on the source distribution or the mixing functions, thus defining a restricted family of models.
+An ICA problem is \emph{unidentifiable} if there are multiple fundamentally different models in this restricted family that result in the same data distribution, and is \emph{identifiable} otherwise.
+%For instance, taking a model and permuting the coordinates of the latent variables results in a new model that is fundamentally similar to the first, while linearly mixing the latent variables makes them fundamentally dissimilar. 
+Identifiability results allow us to identify conditions under which it is fundamentally possible to unambiguously recover the latent sources.
+
+
+At one extreme, if the mixing functions are linear then identifiability holds if at most one component of the latent sources is Gaussian. 
+At the another extreme, the ICA problem is unidentifiable if no assumptions on the mixing functions or sources are made. 
+This line of research thus seeks to identify settings between these extremes where identifiability still holds. 
+Chapter \ref{chapter:ica} extends the scarce literature of identifiability results for \emph{nonlinear ICA} by considering a novel setting in which \emph{multiple views} of the sources through different mixing functions are available.
+These theoretical results have important practical implications, as in many applications such as neuroscience, multiple data modalities may be simultaneously available.
+These results show that jointly using these different modalities can result in recovery of the sources under weaker conditions than when using them separately.
+
+The field of causality is largely concerned with the inference of causal relationships between variables from data. 
+These are distinct from statistical relationships, since if two variables are statistically dependent, either one may causally influence the other or they could both be influenced by a third.
+Causal inference algorithms generally operate on vectorial data in which each component is assumed to be a variable that exhibits causal relations with some subset of the other components, the goal then being identify these relations.
+But in many realistic scenarios, there is no guarantee that the components of collected data are well-defined causal variables in this sense.
+
+For example, early investigations into the influence of blood cholesterol on the risk of developing heart disease found conflicting results.
+Some studies found that raising total blood cholesterol levels increased the risk, while others found the opposite. 
+Later, it was discovered that there are in fact two types of cholesterol, one reducing the risk, the other raising it. 
+Attempting to identify the causal relation between their \emph{sum} and the risk was therefore doomed to failure because total blood cholesterol is not a well-defined causal variable in relation to the risk of heart disease.
+
+More generally, though any physical system in the real world exhibits causal structure at some level of detail, measurements are typically made at a more coarse-grained or abstract level. 
+Chapter \ref{chapter:causality} seeks to understand these `higher-level' variables admit an interpretation as well-defined causal variables.
+This is done by introducing a framework for understanding when two causal models are consistent with one another: if a high-level model is consistent with a low-level model that is physically grounded in real causal relations, it admits a causal interpretation through its connection to the low-level model.
+This work has implications to the causal modelling generally by giving a handle on the problem of defining causal variables. 
 
 
 %This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
@@ -131,18 +234,66 @@ Given a dataset of observations, the goal of ICA is to invert the unknown mixing
 
 \section{Outline and Contributions}
 
-This thesis is organised as follows
+This thesis is organised as follows.
 
 \begin{itemize}
-\item Chapter 2 is literature review. Fill this in after making proper literature review plan.
-\item Chapter 3 is causality section. Contribution is introducing theory of causal abstraction.
-\item Chapter 4 is ICA. Contribution is providing first identifiability results in multi-view setting.
-\item Chapter 5 is WAE. Contribution is introducing use of probabilistic encoders.
-\item Chapter 6 is WAE/learning theory. Contribution is showing that divergence estimation is \emph{much} easier in AE setting than in agnostic setting.
-\item Chapter 7 is conclusion and discussion of where the field is going.
+\item Chapter \ref{chapter:literature} is an overview of the literature on generative modelling with Latent Variable Models (LVMs), providing important background for Chapters \ref{chapter:latent-space-learning-theory} and \ref{chapter:ica}. 
+This defines and discusses LVMs, divergences including the family of $f$-divergences, density ratio estimation and examples of generative models including autoencoders.
+\item Chapter \ref{chapter:latent-space-learning-theory} presents and studies an estimator for $f$-divergences between distributions with particular application to the setting of autoencoders. 
+The natural structural assumptions that hold in this setting make it possible to estimate the divergences with fast rates.
+In contrast, in much of the existing $f$-divergence estimation literature fast rates are only attainable with strong assumptions that would be hard to verify in practice.
+This chapter is based on \cite{rubenstein2019practical}.
+\item Chapter \ref{chapter:ica} presents novel identifiability results for nonlinear ICA, extending the scarce literature of such results. 
+A multi-view setting is considered in which multiple observations of the sources are simultaneously available through different mixing functions.
+This has application to practical scenarios in which multiple data modalities are available.
+This chapter is based on \cite{gresele2019incomplete}.
+\item Chapter \ref{chapter:causality} presents a framework for understanding when two casual models at different levels of detail are consistent with one another, showing how high-level causal variables can arise as functions of lower-level variables.
+This has implications to the understanding of causal modelling by shedding light on the definition of causal variables, and in particular highlights the importance of considering interventions as part of the causal modelling process.
+This chapter is based on \cite{rubenstein2017causal}.
+\item Chapter \ref{chapter:conclusion} concludes and additional materials for the main chapters are included in Appendices \ref{chapter:appendix-latex-space-learning-theory}, \ref{chapter:appendix-ica} and \ref{chapter:appendix-causality}.
 \end{itemize}
 
-\paragraph{Summary of PhD work not included in this thesis}
+\medskip
+
+All of the work presented in this thesis was conducted with my numerous collaborators. 
+The conferene papers cited above on which the chapters of this thesis are based are repeated with a full list of collaborators:
+
+\medskip
+
+
+\begin{quote}
+\fullcite{rubenstein2019practical}
+
+\medskip
+
+\fullcite{gresele2019incomplete_fullcite}
+
+\medskip
+
+\fullcite{rubenstein2017causal_fullcite}
+\end{quote}
+
+\medskip
+
+In addition to the above papers, the following conference and workshop papers were also written during my PhD but are not discussed in this thesis.
+
+\begin{quote}
+\fullcite{rubenstein2018deterministic}
+
+\fullcite{rubenstein2017probabilistic}
+
+\fullcite{janzing2018structural}
+
+\fullcite{von2019optimal}
+
+\fullcite{rubenstein2018latent}
+
+\fullcite{rubenstein2018learning}
+
+\fullcite{rubenstein2018wasserstein}
+\end{quote}
+
+
 
 
 

@@ -646,7 +646,7 @@ The issue is, however, best illustrated concretely by an example previously used
 		\caption{}\label{fig:cholesterol:b}
 	\end{subfigure}
 	%
-	\caption{Effects of cholesterol on risk of heart disease. As illustrated by~(a), the current consensus is that low-density lipoprotein (LDL) has a negative effect on heart disease (HD), while high-density lipoprotein (HDL) has a positive effect on heart disease. Considering total blood cholesterol (TC = LDL + HDL) to be a causal variable as in~(b) leads to problems: two diets promoting raised LDL levels and raised HDL levels respectively have the same effect on TC but opposite effects on heart disease. Hence different studies may come to contradictory conclusions about the effect of TC on heart disease.}
+	\caption[Effects of HDL and LDL cholesterol on risk of heart disease]{Effects of cholesterol on risk of heart disease. As illustrated by~(a), the current consensus is that low-density lipoprotein (LDL) has a negative effect on heart disease (HD), while high-density lipoprotein (HDL) has a positive effect on heart disease. Considering total blood cholesterol (TC = LDL + HDL) to be a causal variable as in~(b) leads to problems: two diets promoting raised LDL levels and raised HDL levels respectively have the same effect on TC but opposite effects on heart disease. Hence different studies may come to contradictory conclusions about the effect of TC on heart disease.}
 	\label{fig:cholesterol}
 \end{figure}
 
@@ -1034,7 +1034,7 @@ If it were only required that $\omega$ be surjective (but not order-preserving),
 \caption{SEM $\mathcal{M}_Y$}
 \end{subfigure}
 %
-\caption{Graphical illustration of parent-child relationships for the examples in Section~\ref{sec:wrong}. The micro-level model $\mathcal{M}_X$ depicted in (a) is to be transformed into the macro-level model $\mathcal{M}_Y$ depicted in (b) which is a coarser descriptions as in it only considers the sum of $X_1$ and $X_2$. In Section~\ref{sec:wrong} we give examples of what can go wrong if the transformation is not exact.}
+\caption[An invalid transformation applied to causal variables]{Graphical illustration of parent-child relationships for the examples in Section~\ref{sec:wrong}. The micro-level model $\mathcal{M}_X$ depicted in (a) is to be transformed into the macro-level model $\mathcal{M}_Y$ depicted in (b) which is a coarser descriptions as in it only considers the sum of $X_1$ and $X_2$. In Section~\ref{sec:wrong} we give examples of what can go wrong if the transformation is not exact.}
 \label{fig:wrong-example}
 \end{figure}
 
@@ -1205,7 +1205,7 @@ This formally explains why we can sensibly consider causal models that focus on 
 
 \end{tikzpicture}
 %
-\caption{Suppose that a complex model $\mathcal{M}_X$ is given but that only the subsystem $X_1,X_2,X_3$ is of interest.
+\caption[Example exact transformation: marginalisation]{Suppose that a complex model $\mathcal{M}_X$ is given but that only the subsystem $X_1,X_2,X_3$ is of interest.
 By Theorem~\ref{theorem:childless}, downstream effects (\dropNode{drop1}) can be ignored after grouping them together as one multivariate variable.
 By Theorem~\ref{theorem:never_intervened} intermediate steps of complex mechanisms (\dropNode{drop2a}) can be ignored and upstream causes (\dropNode{drop2b}) treated as exogenous noise.
 That is, the complex SEM $\mathcal{M}_X$ can be exactly transformed into a simpler model $\mathcal{M}_Y$ by marginalisation of the irrelevant variables.
@@ -1337,7 +1337,7 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 
 \end{tikzpicture}
 %
-\caption{ An illustration of the setting considered in Theorem~\ref{theorem:micro-macro}. The micro-variables $W_1,\ldots,W_n$ and $Z_1,\ldots,Z_m$ in the SEM $\mathcal{M}_X$ can be averaged to derive macro-variables $\widehat{W}$ and $\widehat{Z}$ in such a way that the resulting macro-level SEM $\mathcal{M}_Y$ is an exact transformation of the micro-level SEM $\mathcal{M}_X$.}
+\caption[Example exact transformation: averaging micro-variables to obtain macro-variables]{An illustration of the setting considered in Theorem~\ref{theorem:micro-macro}. The micro-variables $W_1,\ldots,W_n$ and $Z_1,\ldots,Z_m$ in the SEM $\mathcal{M}_X$ can be averaged to derive macro-variables $\widehat{W}$ and $\widehat{Z}$ in such a way that the resulting macro-level SEM $\mathcal{M}_Y$ is an exact transformation of the micro-level SEM $\mathcal{M}_X$.}
 \label{fig:micro_macro}
 \end{figure}
 
@@ -1425,7 +1425,7 @@ For purposes of exposition, the simpler case of linear dynamics suffices.
 \node (Ylab2) at(\copysep+\hsep,3.7) {$X^2_t$};
 
 \end{tikzpicture}
-\caption{An illustration of the setting considered in Theorem~\ref{theorem:identical}. The discrete-time dynamical process is exactly transformed into a model describing its equilibria.}
+\caption[Example exact transformation: equilibria of a time-evolving process]{An illustration of the setting considered in Theorem~\ref{theorem:identical}. The discrete-time dynamical process is exactly transformed into a model describing its equilibria.}
 \label{fig:stationary}
 \end{figure}
 

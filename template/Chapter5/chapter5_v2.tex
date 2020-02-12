@@ -412,7 +412,7 @@ The rate for $\Hsq$ can then be related to that of the KL by the relation $\Hsq 
 
 \renewcommand{\arraystretch}{1}
 \begin{table}
- \caption{Rate of bias $\E_{\XN} D_f\big(\hat{Q}^N_{Z} , P_Z\big) - D_f\left(Q_{Z} , P_Z\right)$.}
+ \caption[Rate of bias of RAM]{Rate of bias $\E_{\XN} D_f\big(\hat{Q}^N_{Z} , P_Z\big) - D_f\left(Q_{Z} , P_Z\right)$.}
  \label{table:convergence}
  \centering
  \begin{tabular}{c c c c c c c c c } 
@@ -468,7 +468,7 @@ Fortunately, the following result shows that RAM rapidly concentrates to its exp
 
 
 \begin{table}
- \caption{Rate $\psi(N)$ of high probability bounds for $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$ (Theorem \ref{thm:concentration}).}
+ \caption[Rate of high probability bounds of RAM]{Rate $\psi(N)$ of high probability bounds for $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$ (Theorem \ref{thm:concentration}).}
  \label{table:concentration}
  \centering
  \begin{tabular}{c c c c c c c c c } 
@@ -647,7 +647,7 @@ Through Chebyshev's inequality (Lemma \ref{lemma:chebyshev}) it is also possible
 
 \renewcommand{\arraystretch}{1}
 \begin{table}
- \caption{Rate of bias for other estimators of $D_f(P,Q)$.}
+ \caption[Rate of bias for other estimators]{Rate of bias for other estimators of $D_f(P,Q)$.}
  \label{table:convergence-other}
  \centering
  \begin{tabular}{c c c c c c c c c } 
@@ -759,7 +759,7 @@ $A_\lambda$ was chosen by randomly sampling a $(d,20)$-dimensional matrix $A_0$ 
 \node[rotate=0] at (0, 6.7) {$\mathrm{KL}$};
 \end{tikzpicture}
 \end{center}
-\caption{\label{fig:synthetic-exps}
+\caption[Evaluation of RAM-MC on synthetic data]{\label{fig:synthetic-exps}
 Results of synthetic experiments, Section~\ref{section:synth-exps}.
 Estimating $D_f\bigl(\mathcal{N}(\mu_\lambda, \Sigma_\lambda),\, \mathcal{N}(0, I_d)\bigr)$ for various $f$, $d$, and parameters $\mu_\lambda$ and $\Sigma_\lambda$ indexed by $\lambda\in \R$.
 Horizontal axis correspond to $\lambda\in[-2, 2]$,
@@ -844,7 +844,7 @@ This procedure was performed for the KL and $\Hsq$ divergences on six models tha
 \begin{center}
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot.pdf}
 \end{center}
-\caption{\label{fig:real-exps}
+\caption[Evaluation of RAM-MC on real data with KL-divergence]{\label{fig:real-exps}
 Results of real-data experiments, Section~\ref{sec:exp_wae}. Estimates of $\KL(Q_Z^\theta , P_Z)$ for pretrained autoencoder models with RAM-MC as a function of $N$ for $M{=}10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to an accurate MC estimate of the ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
 }
@@ -858,7 +858,7 @@ Lines and error bars represent means and standard deviations over 50 trials.
 \begin{center}
 \includegraphics[width=1.\textwidth, height=0.615\textwidth]{pics/NeurIPS_wae_exps_plot_hsq.pdf}
 \end{center}
-\caption{\label{fig:real-exps-hsq}
+\caption[Evaluation of RAM-MC on real data with $\Hsq$-divergence]{\label{fig:real-exps-hsq}
 Results of real-data experiments, Section~\ref{sec:exp_wae}. Estimating $\Hsq(Q_Z^\theta , P_Z)$ in pretrained autoencoder models with RAM-MC as a function of $N$ for $M=10$ ({\bf \textcolor{green!65!blue}{green}}) and $M{=}1000$ ({\bf \textcolor{red}{red}}) compared to ground truth ({\bf\textcolor{blue}{blue}}).
 Lines and error bars represent means and standard deviations over 50 trials.
 Plots depict $\log\big(2 - \hat{D}^M_{\Hsq}(\hat{Q}^N_Z , P_Z)\big)$ since $\Hsq$ is close to 2 in all models.
@@ -891,7 +891,7 @@ their inclusion would distort the $y$-axis scale.
 In contrast, even with a relatively modest $N{=}2^8$ and $M{=}1000$ samples, RAM-MC behaves reasonably well in all cases.
 
 Figure~\ref{fig:real-exps-hsq} displays similar results for the $\Hsq$-divergence.
-Since $Hsq(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$ and all computed estimates were close to $2$,
+Since $\Hsq(A,B) \in [0, 2]$ for any probability distributions $A$ and $B$ and all computed estimates were close to $2$,
 considerations of scale mean that the estimated values $\log\big(2 - \hat{D}^M_{\Hsq}(\hat{Q}^N_Z , P_Z)\big)$ were plotted instead.
 Decreasing bias in $N$ of RAM-MC therefore manifests itself as the lines \emph{increasing} in Figure~\ref{fig:real-exps-hsq}. 
 Concavity of $\log$ means that the reduction in variance when increasing $M$ results in RAM-MC with $M{=}1000$ being above RAM-MC with $M{=}10$.
