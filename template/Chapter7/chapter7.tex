@@ -18,12 +18,12 @@ This chapter summarises the main contributions and discusses future directions o
 
 Chapter \ref{chapter:latent-space-learning-theory} presented an estimator for $f$-divergences between pairs of distributions satisfying certain structural assumptions that are naturally satisfied in the setting of autoencoders. 
 These assumptions enabled the derivation of fast rates for the decay of the bias and concentration of this estimator without additional strong assumptions on the distributions.
-This is in contrast to much of the existing $f$-divergence estimation literature that considers the agnostic setting.
+This is in contrast to much of the existing $f$-divergence estimation literature, where fast rates are only attainable with strong assumptions that are difficult to verify.
 
 %These assumptions that hold in this setting make it possible to estimate the divergences with fast rates.
 %In contrast, in much of the existing $f$-divergence estimation literature fast rates are only attainable with strong assumptions that would be hard to verify in practice.
 
-Chapter \ref{chapter:ica} presented identifiability results for a novel multi-view nonlinear ICA setting, extending the few known identifiability results for nonlinear ICA.
+Chapter \ref{chapter:ica} presented identifiability results for a novel multi-view nonlinear ICA setting, extending the few identifiability results known for nonlinear ICA.
 These results required at least one of the views to exhibit source-side noise, termed corruptions.
 %The settings considered were: one in which two views are available, one of which is noiseless, in which case full reconstruction of the sources is possible; one in which two noisy views are available, in which reconstruction of the sources up to the corruptions is possible; one in which a large number of noisy views are available, in which case preliminary results suggest
 This setting has application to practical scenarios in which multiple distinct data modalities are available, such as in neuroimaging where fMRI and EEG data of a subject may be measured.
@@ -36,13 +36,13 @@ This provides a way to formally understand when higher-level variables can be co
 \section{Future directions}
 
 Chapter \ref{chapter:latent-space-learning-theory} was fundamentally a learning theoretic study of $f$-divergence estimation under particular structural assumptions. 
-One direction for future enquiry is the use of the proposed RAM-MC estimator for optimisation, instead of pure estimation. 
+One direction for future enquiry would be the use of the proposed RAM-MC estimator for optimisation, instead of pure estimation. 
 A clear application of this would be to the training of Wasserstein Autoencoders, the regularisation term of which is any divergence between the prior and aggregate posterior, and naturally satisfies the structural assumptions considered in this chapter.
 
 This work has broader implications as it demonstrates that there is interesting work to be done at the intersection of deep learning and learning theory. 
 While the learning theory literature has tended to focus on settings in which as few assumptions are made as possible, this work shows that in some cases strong assumptions that naturally apply to modern deep learning settings can yield superior results.
 
-The identifiability results presented in Chapter \ref{chapter:ica} show that ICA in the multi-view setting is in principle possible, and natural next steps would be the developments of practical algorithms that actually work in application.
+The identifiability results presented in Chapter \ref{chapter:ica} show that ICA in the multi-view setting is in principle possible, and natural next steps would be the development of practical algorithms that actually work in application.
 %Tbut it remains to be seen whether the proposal works in practice.
 %If not, other approaches can be considered; identifiability results have been proven and so t
 
@@ -50,14 +50,14 @@ One of the currently hyping areas within deep learning is \emph{disentangled rep
 This empirically driven community shares similar goals to the ICA community but with a strong emphasis on image datasets.
 Despite this, few bridges have been build between the two communities, though recent work in  disentanglement has begun to consider multi-view settings similar to that considered here \citep{shu2019weakly}.
 
-One barrier connecting the ICA and disentanglement communities is the pervasive assumption in ICA that the source and observation dimensions be the same.
+One barrier to connecting the ICA and disentanglement communities is the pervasive assumption in ICA that the source and observation dimensions be the same.
 In high dimensional data such as images, this is clearly unrealistic as usually dozens of latent dimensions are sufficient to explain the majority of variation in images with hundreds or thousands of pixels. 
 Thus, attempting to relax this assumption would seem to be a possible way to give ICA wider applicability across the modern machine learning community.
 
 
 Similarly, gaps exist between the causality literature and modern advances in deep learning.
 The fundamental assumption to almost all causal learning algorithms is that the individual components of the data are meaningful entities. 
-In contrast, deep learning algorithms can be applied to data such as images and audio for which the components of raw data, i.e. individual pixels or amplitudes at a particular point in time, are themselves not meaningful, but where higher-level concepts such as objects, textures or syllables are.
+In contrast, deep learning algorithms can be applied to data such as images and audio for which the components of raw data, i.e. individual pixels or amplitudes at a particular point in time, are themselves not meaningful, but where higher-level features such as objects, textures or syllables are.
 Causality is nonetheless gaining increasing attention outside of the traditional community, with authors such as \cite{bengio2019meta} attempting to blend ideas from causality with deep learning.
 
 The framework introduced in Chapter \ref{chapter:causality} allows one to reason about whether higher-level causal variables are consistent with the `raw' variables from which they are derived, but it is not clear how such coarsenings can be learned automatically from data.
