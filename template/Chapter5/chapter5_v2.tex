@@ -506,7 +506,7 @@ These results follow by McDiarmid's inequality applied to $D_f( \hat{Q}_Z^N , P_
 To apply it, it needs to be shown that 
 %we need to show that 
 RAM viewed as a function of $\XN$ exhibits the bounded differences property.
-That is, when changing a single coordinate of $\smash{\XN}=(X_1, X_2, \ldots, X_N)$, the value of $\smash{D_f( \hat{Q}_Z^N(\XN) , P_Z)}$ changes by at most a constant $c_{i,N}$ that may depend on $N$.
+That is, when changing a single coordinate $X_i$ of $\smash{\XN}=(X_1, X_2, \ldots, X_N)$, the value of $\smash{D_f( \hat{Q}_Z^N(\XN) , P_Z)}$ changes by at most a constant $c_{i,N}$ that may depend on $N$.
 This constant is shown to be $\smash{O(N^{-1/2}\psi(N))}$ for all values of $i$, from which the result follows directly from McDiarmid.
 
 
@@ -705,7 +705,7 @@ This would be the case, for instance, if ${\| \mu(X)\| \leq K}$ and ${\Sigma_{ii
 
 
 \subsection{Summary}\label{subsection:discussion-assumptions}
-All of the rates presented are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
+All of the rates presented for RAM and RAM-MC are independent of the dimension of the space $\mathcal{Z}$ over which the distributions are defined.
 However, the constants may exhibit some dependence on the dimension.
 Accordingly, for fixed $N$, the bias and variance may generally grow with the dimension.
 
@@ -723,7 +723,7 @@ It is also practical because it can be efficiently estimated with Monte-Carlo sa
 \section{Empirical evaluation}\label{sec:experiments}
 
 The previous section discussed theoretical properties of the proposed RAM-MC estimator.
-This section demonstrates its practical performance.
+This section demonstrates its empirical performance.
 First, its behaviour is probed in a synthetic, controlled setting where all distributions and divergences are known.
 After this, a more realistic setting is considered in which the goal is to estimate a divergence between the aggregate posterior $Q_Z$ and prior $P_Z$ in pretrained autoencoder models. 
 %For experimental details not included in the main text,

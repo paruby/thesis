@@ -26,8 +26,9 @@ having such a model of the data may be desirable for a variety of reasons, for i
 
 The goal of this chapter is to introduce the necessary background and context for Chapters \ref{chapter:latent-space-learning-theory} and \ref{chapter:ica} of this thesis.
 Although both concern latent variable generative models, these chapters are set in different niches of the machine learning literature.
-Chapter \ref{chapter:latent-space-learning-theory} presents learning theoretic results that are relevant to the \emph{neural sampler community}, a field centred around the generation of artificial data, for which Sections \ref{sec:literature-lvms}, \ref{subsec:gen-model-divergence} and \ref{sec:literature-gen-models} of this chapter are relevant.
-Chapter \ref{chapter:ica} concerns the \emph{Independent Component Analysis (ICA) community}, in which the goal is inference of latent structure, for which Sections \ref{sec:literature-lvms} and \ref{sec:literature-density-ratio-estimation} of this chapter are relevant.
+Chapter \ref{chapter:latent-space-learning-theory} presents learning theoretic results that are relevant to the \emph{neural sampler community}, 
+a field centred around the generation of artificial data, for which Sections \ref{sec:literature-lvms}, \ref{subsec:gen-model-divergence} and \ref{sec:literature-gen-models} of this chapter are relevant.
+Chapter \ref{chapter:ica} concerns the \emph{Independent Component Analysis (ICA) community}, in which the goal is the inference of latent sources, for which Sections \ref{sec:literature-lvms} and \ref{sec:literature-density-ratio-estimation} of this chapter are relevant.
 
 
 %Both Chapters \ref{chapter:latent-space-learning-theory} and \ref{chapter:ica} of this thesis directly concern generative models, and the goal of this chapter is to introduce the required background.
@@ -107,7 +108,7 @@ p^\theta(x) = \int p^\theta(x|z) p(z) dz.
 %
 In some special cases, the density $p^\theta(x)$ may be tractable: for instance, if the generators are deterministic and invertible with known Jacobian, as is often the case in the ICA community.
 In most cases in the neural sampler community, the integral is intractable, meaning that $P_X^\theta$ has unknown density in practice.
-Despite this, LVMs are nonetheless useful here because samples from $P_X^\theta$ can be drawn easily:
+Despite this, LVMs are useful here because samples from $P_X^\theta$ can be drawn easily:
 one samples first a value $z\sim P_Z$ and then $x \sim P^\theta_{X|Z=z}$. 
 All relevant distributions can be chosen so that these sampling procedures are simple, e.g.\:if $P_Z$ and all $P^\theta_{X|Z}$ are Gaussian. 
 
@@ -198,7 +199,7 @@ Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
 
 %\todo{flesh out this section, give more properties of $f$-divergences?}
 
-$f$-divergences are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009}. Their estimation is studied in Chapter \ref{chapter:latent-space-learning-theory}.
+$f$-divergences, sometimes called $\phi$-divergences, are a family of divergences that compare pairs of distributions via their density ratio, and are widespread and important in the statistics literature \citep{csiszar2004information, liese2006divergences, tsybakov2009}. Their estimation is studied in Chapter \ref{chapter:latent-space-learning-theory}.
 
 \medskip
 
@@ -400,9 +401,9 @@ L(\theta, \phi) = \mathbb{E}_{x\sim Q_X}\left[ -\log d^\phi(x) \right] \mathbb{E
 %
 which, as previously discussed in Section \ref{sec:literature-density-ratio-estimation}, is a lower bound on the Jensen-Shannon divergence $D_{\text{JS}}(P^\theta_X, Q_X)$, up to constants and scalar factors.
 
-Stochastic gradients of this loss can be taken with respect to both $\phi$ and $\theta$ by using minibatch samples of data to approximate the outer expectations when $d^\phi$ and $g^\theta$ are both neural networks.
+Stochastic gradients of this loss can be taken with respect to both $\phi$ and $\theta$ by using minibatch samples of data to approximate the outer expectations when $d^\phi$ and $g^\theta$ are both differentiably parametrised neural networks.
 %It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence.
-Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractable, it can be approximately minimised with respect to $\theta$ by maximising the surrogate loss $L(\theta, \phi)$ with respect to $\phi$ and minimising it with respect to $\theta$.
+Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractable, it can be approximately minimised with respect to $\theta$ by maximising $L(\theta, \phi)$ with respect to $\phi$ and minimising this surrogate loss with respect to $\theta$.
 %is (up to constants) a lower bound on this.
 %Hence the Jensen-Shannon divergence can be approximately minimised by \emph{maximising} $L(\theta, \phi)$ with respect to $\phi$ and minimising this with respect to $\theta$.
 
@@ -435,7 +436,7 @@ D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x
 \end{align*}
 %
 where the inequality holds for any $h \in \mathcal{H}$, where $h$ now plays the role of the discriminator. 
-If the set $\mathcal{H}$ can be differentiably parametrised, stochastic gradients of the loss can be obtained with respect its parameters.
+If the set $\mathcal{H}$ can be differentiably parametrised, stochastic gradients of the loss can be obtained with respect to its parameters.
 In contrast to the $f$-divergence case, the discriminator $h$ must belong to a particular class of functions, which can complicate specifying the parametrisation.
 One example of an IPM-based GAN is the Wasserstein GAN of \cite{AB17}. 
 Here, the 1-Wasserstein distance is used, corresponding to $h$ having Lipschitz constant at most $1$. 
