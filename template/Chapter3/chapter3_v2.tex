@@ -319,13 +319,15 @@ When generalising to \emph{cyclic SEMs} by relaxing this acyclicity constraint, 
 The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $P_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if and only if the intervened structural equations have unique solution $P_E$-almost surely.
 The following example shows a simple case of an SEM with well-defined observational distribution for which some interventional distributions are well-defined but others are ill-defined.
 
+\medskip
+
 \begin{example}\label{example:causality-cyclic-invalid}
 Consider the cyclic SEM $\mathcal{M}_X=\{\mathcal{S}_X, P_E\}$ where
 %
 \begin{align*}
 \mathcal{S}_X = \big\{  X_1 &= X_2 + X_3 + E_1, \\
 					    X_2 &= X_1 + X_3 + E_2, \\
-					    X_3 &= X_1 + X_2 + E_3\big\} \\
+					    X_3 &= X_1 + X_2 + E_3\big\}
 \end{align*}
 %
 and $P_E$ is any distribution.
@@ -343,11 +345,11 @@ Thus the interventional distribution $P_X^{\doop(X_1 = x_1, X_2=x_2)}$ is well d
 
 %\todo{\paragraph{Example:} $X$, $Y$, $Z$ with $X = Y+Z+ E_X$ and so on. Then observational distribution is well defined with e.g. $X= -(E_Y + E_Z) / 2$. But interventional distributions on single variables are in general not well defined. Interventions on pairs of variables are well defined.}
 
-The literature has not settled on a set of criteria for which cyclic SEMs should be considered `valid'. 
+The literature has not settled on a set of criteria for determining which cyclic SEMs should be considered `valid'. 
 All agree on the fact that observational distributions must be well-defined, but there is significant disagreement on interventional distributions.
 Notable works include \cite{hyttinen2010causal}, which requires well-defined distributions after any intervention, and \cite{mooij2011causal}, which state that for any cyclic SEM, any intervention leading to a well-defined interventional distribution may be given a causal interpretation. Other works in this area such as \cite{lacerda2012discovering} avoid discussion of this issue.
 
-It will be argued in Sections \ref{sec:causality-what-are-causal-vars} and \ref{sec:causality-transformations-between-sems} that it should be considered an integral part of the modelling process to choose a set of interventions being modelled. As such, it should be guaranteed that interventional distributions be well-defined for those that are part of the modelled intervention set; the behaviour outside of this set being considered outside of the universe and thus irrelevant.
+It will be argued in Sections \ref{sec:causality-what-are-causal-vars} and \ref{sec:causality-transformations-between-sems} that it should be considered an integral part of the modelling process to choose a set of interventions being modelled. As such, it should be guaranteed that interventional distributions be well-defined for those that are part of the modelled intervention set; the behaviour outside of this set being considered outside of the modelled universe and thus irrelevant.
 
 %\paragraph{Interpretations of cyclic SEMs}
 %Note to self: mention this later on after presenting transformations.
@@ -525,7 +527,7 @@ X = (I-A)^{-1} E
 \end{align*}
 %
 where $I$ is the identity matrix. 
-This is an instance of linear Independent Component Analysis (ICA), discussed in detail in Chapter \ref{chapter:ica}.%\footnote{\todo{If this chapter gets put after ICA chapter, change this paragraph (and subsequent places in which ICA is mentioned).}}
+This is an instance of linear Independent Component Analysis (ICA), discussed in detail in Chapter \ref{chapter:ica}. %\footnote{\todo{If this chapter gets put after ICA chapter, change this paragraph (and subsequent places in which ICA is mentioned).}}
 Recall that identification of $A$ and the distribution of $E$ is possible if at most one of the components of $E$ has Gaussian distribution.
 The Linear Non-Gaussian Acyclic causal Model method (LiNGAM) of \cite{shimizu2006linear} uses ICA to recover the both the matrix $I-A$ and the distribution over $E$ from only observational data.
 %In brief, the algorithm works by identifying linear combinations of the components of $\mathbf{x}$ that maximise independence. 
@@ -764,11 +766,10 @@ In summary, for macro-variables that are functions of underlying causal micro-va
 
 \section{Transformations between Structural Equation Models}\label{sec:causality-transformations-between-sems}
 
-In this section we will first introduce an extended definition for SEMs that can capture restricted sets of interventions and the structure they exhibit.
-We will then formalise a notion of \emph{exact transformations} between two SEMs. 
+This section will first introduce an extended definition for SEMs that can capture restricted sets of interventions and the structure they exhibit, after which a notion of \emph{exact transformations} between two SEMs will be formalised. 
 The idea is that if one SEM can be viewed as an exact transformation of another, they can both be viewed as consistent causal models of the same underlying system at different levels of detail. 
 Elementary transformations satisfying this definition will be examined, and the main result (Theorem \ref{lemma:commuting}), which states that causal reasoning is preserved under exact transformations, is presented and discussed in detail.
-Section \ref{sec:causality-causal-examples-of-transformations} presents practical examples of exact transformations covering each of the three categories of modelling abstractions discussed in Section \ref{subsec:causality-modelling-different-levels}.
+Section \ref{sec:causality-causal-examples-of-transformations} presents practical examples of exact transformations covering each of the three categories of modelling abstractions discussed in Section \ref{subsec:causality-modelling-different-levels}: marginalisation in systems of many variables, macro-variables derived from underlying micro-variables, and descriptions of the time-invariant behaviour of a dynamical system.
 
 
 \subsection{An extended definition for SEMs}
@@ -904,7 +905,7 @@ naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transform
 Consider the SEM $\mathcal{M}_Y$ obtained from $\mathcal{M}_X$ by replacing, for all $i\in\mathbb{I}_X$, any occurrence of $X_i$ in the structural equations $\mathcal{S}_X$ and interventions $\mathcal{I}_X$ by $Y_{\pi(i)}$ and leaving the distribution over the exogenous variables unchanged. Denote by $\omega$ the corresponding mapping on interventions obtained by replacing $X_i$ with $Y_{\pi(i)}$.
 \end{proof}
 
-This is a good sanity check; it would be problematic if this were not the case and the labelling of our variables mattered. Similarly, compositions of exact transformations are also exact.
+This is a good sanity check; it would be problematic if this were not the case and the labelling of the variables mattered. Similarly, compositions of exact transformations are also exact.
 
 \medskip
 
@@ -1138,13 +1139,13 @@ $\mathcal{M}_X$ suggests that $\doop(X_1=0,\, X_2=0)$ could be implemented by pe
 In contrast, $\mathcal{M}_Y$ suggests that implementing the corresponding intervention $\doop(Y_1=0)$ would conflict with the already performed intervention $\doop(Y_1=1)$.
 The requirement that $\omega$ be order-preserving rules this pathology out. 
 
-\section{Examples of transformations}\label{sec:causality-causal-examples-of-transformations}
+\section{Examples of exact transformations}\label{sec:causality-causal-examples-of-transformations}
 
 The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur.
 Having introduced the notion of an exact transformation between SEMs, this section provides examples of exact transformations falling into each of the categories.
 %The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
-Observe that in each example, the particular set of interventions considered is important. If one were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact, highlighting the importance to the causal modelling process of carefully considering the set of interventions. All proofs are found in Appendix \ref{chapter:appendix-causality}.
+Observe that in each example, the particular set of interventions considered is important. If one were to allow larger sets of interventions $\mathcal{I}_X$ in the SEM $\mathcal{M}_X$, the transformations given would not be exact, highlighting the importance to the causal modelling process of carefully considering the set of interventions. All proofs can be found in Appendix \ref{chapter:appendix-causality}.
 
 
 
@@ -1258,48 +1259,6 @@ Transformations from micro- to macro-levels may arise in situations in which the
 For instance, we can use a thermometer to measure the temperature of a gas, but not the motions of the individual particles. 
 They may also arise due to deliberate modelling choice when we wish to describe a system using higher level features, such as viewing the motor cortex as a single entity responsible for movements, rather than as a collection of individual neurons.
 
-In such situations, the framework of exact transformations allows the investigation of whether such a macro-level model admits a causal interpretation. The following theorem, illustrated in Figure~\ref{fig:micro_macro}, provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging.
-
-\medskip
-
-\begin{theorem}[Micro- to macro-level]\label{theorem:micro-macro}
-Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
-%
-\begin{align*}
-\mathcal{S}_X &= \left\lbrace W_i = E_i \:  : \: 1 \leq i \leq n  \right\rbrace \\
-& \quad \ \  \cup \left\lbrace Z_i = \sum_{j=1}^n A_{ij}W_j  + F_{i} \:  : \: 1\leq i \leq m \right\rbrace \\
-%
-\mathcal{I}_X &= \Big{\{} \nulli, \ \doop(W= w), \ \doop(Z= z), \\
-& \qquad\ \doop(W= w, Z= z ) :   w \in \mathbb{R}^{n}, \, z \in \mathbb{R}^m \Big{\}}
-%
-\end{align*}
-%
-and $(E,F)  \sim P$ where $P$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
-
-Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
-%
-\begin{align*}
-\tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2 \\
-\begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}
-\end{align*}
-%
-Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
-%
-\begin{align*}
-\mathcal{S}_Y &= \Big\lbrace \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \Big\rbrace \\
-%
-\mathcal{I}_Y &= \Big{\{} \nulli,\ \doop(\widehat{W}= \widehat{w}), \ \doop(\widehat{Z}= \widehat{z}), \\
-& \qquad\ \doop(\widehat{W}= \widehat{w}, \widehat{Z}= \widehat{z} ) :   \widehat{w} \in \mathbb{R}, \, \widehat{z} \in \mathbb{R} \Big{\}} \\
-%
-\widehat{E}  & \sim \frac{1}{n}\sum_{i=1}^{n} E_i, \quad
-\widehat{F}  \sim \frac{1}{m}\sum_{i=1}^{m} F_i
-\end{align*}
-
-Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
-\end{theorem}
-
-\medskip
-
 
 \begin{figure}
 \center\
@@ -1345,6 +1304,48 @@ Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
 \caption[Example exact transformation: averaging micro-variables to obtain macro-variables]{An illustration of the setting considered in Theorem~\ref{theorem:micro-macro}. The micro-variables $W_1,\ldots,W_n$ and $Z_1,\ldots,Z_m$ in the SEM $\mathcal{M}_X$ can be averaged to derive macro-variables $\widehat{W}$ and $\widehat{Z}$ in such a way that the resulting macro-level SEM $\mathcal{M}_Y$ is an exact transformation of the micro-level SEM $\mathcal{M}_X$.}
 \label{fig:micro_macro}
 \end{figure}
+
+In such situations, the framework of exact transformations allows the investigation of whether such a macro-level model admits a causal interpretation. The following theorem, illustrated in Figure~\ref{fig:micro_macro}, provides an exact transformation between a micro-level model $\mathcal{M}_X$ and a macro-level model $\mathcal{M}_Y$ in which the variables are aggregate features of variables in $\mathcal{M}_X$ obtained by averaging.
+
+\medskip
+
+\begin{theorem}[Micro- to macro-level]\label{theorem:micro-macro}
+Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
+%
+\begin{align*}
+\mathcal{S}_X &= \left\lbrace W_i = E_i \:  : \: 1 \leq i \leq n  \right\rbrace \\
+& \quad \ \  \cup \left\lbrace Z_i = \sum_{j=1}^n A_{ij}W_j  + F_{i} \:  : \: 1\leq i \leq m \right\rbrace \\
+%
+\mathcal{I}_X &= \Big{\{} \nulli, \ \doop(W= w), \ \doop(Z= z), \\
+& \qquad\ \doop(W= w, Z= z ) :   w \in \mathbb{R}^{n}, \, z \in \mathbb{R}^m \Big{\}}
+%
+\end{align*}
+%
+and $(E,F)  \sim P$ where $P$ is any distribution over $\mathbb{R}^{n+m}$ and $A$ is a matrix.
+
+Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
+%
+\begin{align*}
+\tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2 \\
+\begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}
+\end{align*}
+%
+Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
+%
+\begin{align*}
+\mathcal{S}_Y &= \Big\lbrace \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \Big\rbrace \\
+%
+\mathcal{I}_Y &= \Big{\{} \nulli,\ \doop(\widehat{W}= \widehat{w}), \ \doop(\widehat{Z}= \widehat{z}), \\
+& \qquad\ \doop(\widehat{W}= \widehat{w}, \widehat{Z}= \widehat{z} ) :   \widehat{w} \in \mathbb{R}, \, \widehat{z} \in \mathbb{R} \Big{\}} \\
+%
+\widehat{E}  & \sim \frac{1}{n}\sum_{i=1}^{n} E_i, \quad
+\widehat{F}  \sim \frac{1}{m}\sum_{i=1}^{m} F_i
+\end{align*}
+
+Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
+\end{theorem}
+
+
 
 \subsection{Stationary behaviour of dynamical processes}\label{subsec:stationary}
 
@@ -1492,7 +1493,7 @@ This section discusses the implications of this work to the causality literature
 The example of cholesterol and heart disease discussed in Section \ref{sec:causality-what-are-causal-vars} was adapted from \cite{spirtes2004causal}, who illustrate the problem of \emph{ambiguous manipulations} of variables that are functions of underlying causal entities (e.g. TC = HDL + LDL).
 Although their work was primarily concerned with causal discovery in such a context, \cite{eberhardt2016green} demonstrated broader problematic implications to the idea of causal variable definition: in general, functions of causal variables cannot be considered to be themselves causal.
 
-The framework of exact transformations between SEMs provides a partial solution to this issue, as it has been argued that if a higher level SEM $\mathcal{M}_Y$ is an exact transformation of a SEM $\mathcal{M}_X$ of causal variables, then variables in $\mathcal{M}_Y$ can also be considered causal entities. 
+The framework of exact transformations between SEMs provides a partial solution to this issue, as it has been argued that if a higher level SEM $\mathcal{M}_Y$ is an exact transformation of a SEM $\mathcal{M}_X$ of causal variables, then the variables in $\mathcal{M}_Y$ can also be considered causal entities. 
 The key idea missing in previous work was to consider not simply individual variables in isolation, but the entire SEM \emph{along with the interventions being modelled} as the object being transformed.
 
 
@@ -1511,7 +1512,7 @@ The framework of exact transformations between SEMs thus provides a way to think
 
 \subsection{Extensions}
 
-A high-level model need not be a perfectly accurate and faithful representation of low-level model in order to be useful. 
+A high-level model need not be a perfectly accurate and faithful representation of a low-level model in order to be useful. 
 Indeed, all models are an approximation to some degree.
 In this regard, the theory of exact transformations is perhaps too strict because of the requirement that $\tau_{\#}P_X^{\doop(i)} = P_Y^{\doop(\omega(i))}$ should hold for all interventions $i\in \mathcal{I}_X$.
 

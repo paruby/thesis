@@ -11,26 +11,30 @@
     \graphicspath{{Chapter7/Figs/Vector/}{Chapter7/Figs/}}
 \fi
 
-This thesis presented theoretical advances in three niches of the machine learning literature related to modelling structured data.
+This thesis presented theoretical advances in three niches of the machine learning literature related to the modelling of structured data.
 This chapter summarises the main contributions and discusses future directions of research.
 
 \section{Summary of Contributions}
 
 Chapter \ref{chapter:latent-space-learning-theory} presented an estimator for $f$-divergences between pairs of distributions satisfying certain structural assumptions that are naturally satisfied in the setting of autoencoders. 
 These assumptions enabled the derivation of fast rates for the decay of the bias and concentration of this estimator without additional strong assumptions on the distributions.
-This is in contrast to much of the existing $f$-divergence estimation literature, where fast rates are only attainable with strong assumptions that are difficult to verify.
+This is in contrast to much of the existing $f$-divergence estimation literature, where fast rates are only attainable with strong assumptions that would be difficult to verify in practice.
 
 %These assumptions that hold in this setting make it possible to estimate the divergences with fast rates.
 %In contrast, in much of the existing $f$-divergence estimation literature fast rates are only attainable with strong assumptions that would be hard to verify in practice.
 
 Chapter \ref{chapter:ica} presented identifiability results for a novel multi-view nonlinear ICA setting, extending the few identifiability results known for nonlinear ICA.
 These results required at least one of the views to exhibit source-side noise, termed corruptions.
+In particular, if one noiseless view of the sources is supplemented by a second view that is appropriately corrupted by source-level noise, it was proved that the sources can be fully reconstructed from the observations up to tolerable ambiguities.
 %The settings considered were: one in which two views are available, one of which is noiseless, in which case full reconstruction of the sources is possible; one in which two noisy views are available, in which reconstruction of the sources up to the corruptions is possible; one in which a large number of noisy views are available, in which case preliminary results suggest
-This setting has application to practical scenarios in which multiple distinct data modalities are available, such as in neuroimaging where fMRI and EEG data of a subject may be measured.
+This setting has application to practical scenarios in which multiple distinct data modalities are available, such as in neuroimaging. % where fMRI and EEG data of a subject may be measured.
 
 
 Chapter \ref{chapter:causality} introduced the notion of \emph{exact transformations} between Structural Equations Models (SEMs), providing a framework to understand when two SEMs can be viewed as consistent causal models of the same system at different levels of detail. 
-This provides a way to formally understand when higher-level variables can be considered to be causal variables, and brings to attention the importance of specifying interventions of interest as a part of the causal modelling process.
+This provides a way to formally understand when higher-level variables can be considered to be causal variables, and encompasses a wide range of settings in which such higher-level models arise.
+Practically all measurements are made at a level of detail different to that at which `true' causal structure exists, yet causal discovery algorithms typically seek causal relations at the level of measurements.
+Thus, this work has broad implications to the causality community in general and in particular to the problem of causal variable definition.
+It furthermore brings to attention the importance of the specification of interventions of interest as a part of the causal modelling process.
 
 
 \section{Future directions}
@@ -41,14 +45,16 @@ A clear application of this would be to the training of Wasserstein Autoencoders
 
 This work has broader implications as it demonstrates that there is interesting work to be done at the intersection of deep learning and learning theory. 
 While the learning theory literature has tended to focus on settings in which as few assumptions are made as possible, this work shows that in some cases strong assumptions that naturally apply to modern deep learning settings can yield superior results.
+To give one example, it is known that in the general case, estimation of mutual information is a hard problem \citep{mcallester2018formal}.
+Yet in many practical cases where mutual information is used, such as in representation learning \citep{hjelm2018learning, oord2018representation, tschannen2020onmutual}, stronger assumptions may hold than in the general case.
 
 The identifiability results presented in Chapter \ref{chapter:ica} show that ICA in the multi-view setting is in principle possible, and natural next steps would be the development of practical algorithms that actually work in application.
 %Tbut it remains to be seen whether the proposal works in practice.
 %If not, other approaches can be considered; identifiability results have been proven and so t
 
-One of the currently hyping areas within deep learning is \emph{disentangled representation learning}. 
+An emerging area within deep learning is \emph{disentangled representation learning}. 
 This empirically driven community shares similar goals to the ICA community but with a strong emphasis on image datasets.
-Despite this, few bridges have been build between the two communities, though recent work in  disentanglement has begun to consider multi-view settings similar to that considered here \citep{shu2019weakly}.
+Despite this, few bridges have been built between the two communities, though recent work in  disentanglement has begun to consider multi-view settings similar to that considered here \citep{shu2019weakly}.
 
 One barrier to connecting the ICA and disentanglement communities is the pervasive assumption in ICA that the source and observation dimensions be the same.
 In high dimensional data such as images, this is clearly unrealistic as usually dozens of latent dimensions are sufficient to explain the majority of variation in images with hundreds or thousands of pixels. 
