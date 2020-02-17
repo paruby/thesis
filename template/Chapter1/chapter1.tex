@@ -177,7 +177,8 @@ These areas are:
 \item Causality, a broad area concerned with the modelling and inference of causal relations between random variables.
 \end{enumerate}
 %The contribution of this thesis to each of these areas is outlined next.
-Autoencoders are a family of models that involve the introduction of a \emph{latent space} and associated \emph{encoder} mapping from the data space to this and \emph{generator} mapping in the reverse direction. 
+Autoencoders are a family of models that involve the introduction of a \emph{latent space} and associated \emph{encoder} and \emph{generator}. 
+The encoder maps from the data space to the latent space and the generator maps in the reverse direction. 
 In recent years, substantial advances have been made in this area as part of the general progress in machine learning and deep learning in particular.
 Despite this, fundamental questions remain.
 
@@ -210,7 +211,7 @@ At the other extreme, the ICA problem is unidentifiable if no assumptions on the
 This line of research thus seeks to identify settings between these extremes where identifiability still holds. 
 Chapter \ref{chapter:ica} extends the scarce literature of identifiability results for \emph{nonlinear ICA} by considering a novel setting in which \emph{multiple views} of the sources through different mixing functions are available.
 In particular, if one noiseless view of the sources is supplemented by a second view that is appropriately corrupted by source-level noise, the sources can be fully reconstructed from the observations up to tolerable ambiguities.
-These theoretical results have important practical implications, as in many applications such as neuroimaging, multiple data modalities may be simultaneously available.
+These theoretical results have important practical implications, as in many applications such as neuroimaging, multiple data modalities may be available.
 These results show that jointly using these different modalities can result in recovery of the sources under weaker conditions than when using them separately.
 
 The field of causality is largely concerned with the inference of causal relationships between variables from data. 
@@ -221,12 +222,12 @@ But in many realistic scenarios, there is no guarantee that the components of co
 For example, early investigations into the influence of blood cholesterol on the risk of developing heart disease found conflicting results.
 Some studies found that raising total blood cholesterol levels increased the risk, while others found the opposite. 
 Later, it was discovered that there are in fact two types of cholesterol, one reducing the risk, the other raising it. 
-Attempting to identify the causal relation between their \emph{sum} and the risk was therefore doomed to failure: total blood cholesterol is not a well-defined causal variable in relation to the risk of heart disease.
+Attempting to identify the causal relation between their \emph{sum} and the risk was therefore doomed to failure: total blood cholesterol is not a well-defined causal variable in relation to the risk of developing heart disease.
 
 More generally, though any physical system in the real world exhibits causal structure at some level of detail, measurements are typically made at a more coarse-grained or abstract level. 
 Chapter \ref{chapter:causality} seeks to identify when these `higher-level' variables admit an interpretation as well-defined causal variables.
 This is done by introducing a framework for understanding when two causal models are consistent with one another: if a high-level model is consistent with a low-level model that is physically grounded in real causal relations, it admits a causal interpretation through its connection to the low-level model.
-This work has implications to the causal modelling generally by giving a handle on the problem of defining causal variables. 
+This work has implications to causal modelling generally by giving a handle on the problem of defining causal variables. 
 
 
 %This is a thesis about how high-level concepts and representations can nonetheless be modelled and learned. It examines three different ways in which representations occur, though there are others that are not treated here. 
@@ -242,16 +243,16 @@ This thesis is organised as follows.
 This defines and discusses LVMs, divergences including the family of $f$-divergences, density ratio estimation and examples of generative models including autoencoders.
 \item Chapter \ref{chapter:latent-space-learning-theory} presents and studies an estimator for $f$-divergences between distributions with particular application to the setting of autoencoders. 
 The natural structural assumptions that hold in this setting make it possible to estimate the divergences with fast rates.
-In contrast, in much of the existing $f$-divergence estimation literature, fast rates are only attainable with strong assumptions that would be hard to verify in practice.
-This chapter is based on \cite{rubenstein2019practical}.
+In contrast, in much of the existing $f$-divergence estimation literature, fast rates are only attainable under strong assumptions that would be hard to verify in practice.
+This chapter is based on the \emph{NeurIPS} conference paper \cite{rubenstein2019practical}.
 \item Chapter \ref{chapter:ica} presents novel identifiability results for nonlinear ICA, extending the scarce literature of such results. 
 A multi-view setting is considered in which multiple observations of the sources are simultaneously available through different mixing functions.
 In particular, supplementing a noiseless view of the sources with a second appropriately corrupted view leads to the model being identifiable.
 This has application to practical scenarios in which multiple data modalities are available.
-This chapter is based on \cite{gresele2019incomplete}.
+This chapter is based on the \emph{UAI} conference paper \cite{gresele2019incomplete}.
 \item Chapter \ref{chapter:causality} presents a framework for understanding when two casual models at different levels of detail are consistent with one another, showing how high-level causal variables can arise as functions of lower-level variables.
 This has implications to the understanding of causal modelling by shedding light on the definition of causal variables, and in particular highlights the importance of considering interventions as part of the causal modelling process.
-This chapter is based on \cite{rubenstein2017causal}.
+This chapter is based on the \emph{UAI} conference paper \cite{rubenstein2017causal}.
 \item Chapter \ref{chapter:conclusion} concludes and additional materials for the main chapters are included in Appendices \ref{chapter:appendix-latex-space-learning-theory}, \ref{chapter:appendix-ica} and \ref{chapter:appendix-causality}.
 \end{itemize}
 

@@ -16,7 +16,7 @@
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
 	&= \left(\sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
+	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)) \,
 	\end{align}
 	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel).
@@ -119,7 +119,7 @@ This can in turn be rewritten in matrix form,
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber \\
-	&= \sum_i \gamma_i(z_i, g_i(z_i, n_i)) - \sum_i \beta_i(z_i)) \label{eq:logdens_noiesless_2}\,.
+	&= \sum_i \gamma_i(z_i, g_i(z_i, n_i)) - \sum_i \beta_i(z_i)) \,.
 	\end{align}
 	Suppose that ${\gamma}$ satisfies the SDV assumption.
 	Replacing the regression function with

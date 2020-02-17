@@ -18,7 +18,7 @@
 
 \emph{%
 This chapter presents identifiability results in a novel multi-view nonlinear ICA setting.
-In the usual single-view setting, identifiability holds only under strong assumptions on the source distribution and mixing function.
+In the usual single-view setting, identifiability holds only under strong assumptions on the source distribution and mixing functions.
 The results presented here show that when multiple distinct views of the sources are available, identifiability holds under much weaker assumptions.
 This work is an important contribution to the literature as it extends the few known identifiability results for nonlinear ICA models.}
 
@@ -58,8 +58,8 @@ When two conversations at a party are happening simultaneously, a listener will 
 Despite both ears receiving mixtures of the conversations, the listener is able to focus on either of the conversations separately, hearing and understanding one while ignoring the other.
 This is due to the brain's ability to separate out the mixed audio streams into the separate underlying sources, one for each conversation.
 
-More generally, given data that are mixtures of independent underlying sources, the goal of ICA is `unmix' the data, thus recovering the sources.
-This provides a principled approach to disentanglement of independent latent components, blind source separation, and feature extraction~\citep{hyvarinen2000independent}.
+More generally, given data that are mixtures of independent underlying sources, the goal of ICA is to `unmix' the data, thus recovering the sources.
+This provides a principled approach to the disentanglement of independent latent components, blind source separation, and feature extraction~\citep{hyvarinen2000independent}.
 The applications of ICA are ubiquitous, including neuroimaging~\citep{mckeown1998independent}, signal processing~\citep{sawada2003direction}, text mining~\citep{honkela2010wordica}, astronomy~\citep{nuzillard2000blind} and financial time series analysis~\citep{oja2000independent}.
 
 The ICA problem can be written formally by defining the 
@@ -81,7 +81,7 @@ where $Z$ is a vector of independent \emph{sources}, $X$ is a vector of \emph{ob
 Given a dataset of observations of $X$, the goal of ICA is to recover the corresponding unknown values of $Z$ by learning to invert the unknown $f$.
 In the general case, no assumptions are made about $p(z)$ other than that it factorises.
 The latent variable model in this setting should thus be thought of as a true descriptive model for the world, 
-in contrast to generative modelling, where latent variable models with factorised priors merely provide a convenient way to specify distributions over the observable variables. 
+in contrast to the neural sampler setting, where latent variable models with factorised priors merely provide a convenient way to specify distributions over the observable variables. 
 
 
 %where $\bm{s}$ is a vector of independent \emph{sources}, $\bm{x}$ are the vector of \emph{observations} or \emph{mixtures} and $\bm{f}$ is the vector of \emph{mixing functions} expressing how each coordinate of $\bm{x}$ depends on all of the coordinates of $\bm{s}$. 
@@ -91,9 +91,9 @@ in contrast to generative modelling, where latent variable models with factorise
 
 An ICA problem is known as \emph{identifiable} when it is possible to recover the sources $Z$ up to tolerable ambiguities. 
 For instance, it is generally acceptable to recover $Z$ up to linear rescaling or permuted coordinates.
-Although identifiability results generally assume access to unlimited samples of data, they are crucial to ensuring the reliability of ICA methods in practical scenarios; in the absence of these, there is no guarantee that a proposed method will successfully reconstruct the true sources, even in controlled settings.
+Although identifiability results generally assume access to unlimited samples of data, they are crucial for ensuring the reliability of ICA methods in practical scenarios; in the absence of these, there is no guarantee that a proposed method will successfully reconstruct the true sources, even in controlled settings.
 
-It was proven by \cite{hyvarinen1999nonlinear} that the `vanilla' ICA setting, in which only independence of the sources and invertibility of $f$ are assumed, is \emph{non-identifiable}.
+It was proved by \cite{hyvarinen1999nonlinear} that the `vanilla' ICA setting, in which only independence of the sources and invertibility of $f$ are assumed, is \emph{non-identifiable}.
 Thus, much of the research in this field has attempted to characterise the assumptions under which identifiability holds.
 Such assumptions may be made either on the mixing functions or on the distributions of the sources. 
 
@@ -153,7 +153,7 @@ Analogously, the results presented in this work show that inference of latent st
 The remainder of this chapter is structured as follows.
 Section \ref{sec:ica-literature-overview} provides an introduction to ICA and the literature surrounding it, as well as literature from other areas that is relevant to the setting considered in this work.
 Section \ref{sec:ica-nonlinear-ica-with-mulitple-views} presents the main results.
-Section \ref{sec:ica-assumptions} discusses the assumptions we make, and Section \ref{sec:on_suffistv} concludes.
+Section \ref{sec:ica-assumptions} discusses the assumptions of these results, and Section \ref{sec:on_suffistv} concludes.
 
 
 %In the rest of this section we give an overview of the different cases for which identifiability results are known. 
@@ -210,10 +210,10 @@ Note that even in the non-Gaussian case, taking $U=I$ or a permutation matrix al
 This, however, corresponds to a `trivial' indeterminacy of the linear ICA problem, since in this case $U\Lambda Z$ still recovers the separate components of $Z$, only linearly rescaled and in a different order.
 
 The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking linear maps $W$ such that the transformed data ${W}X$ have maximally non-Gaussian components.
-Intuition for why such an approach works can be seen in the Central Limit Theorem, which, informally, states that an average of \iid~random variables becomes more Gaussian-like as the number of variables in the average increases. 
+Intuition for why such an approach works can be seen in the Central Limit Theorem which, informally, states that an average of \iid~random variables becomes more Gaussian-like as the number of variables in the average increases. 
 Similarly, in sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables makes them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
 
-Linear ICA methods can be used for causal discovery in linear cyclic models, as will be discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.
+Linear ICA methods can be used for causal discovery in linear causal models, as will be discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.
 
 
 
@@ -253,7 +253,7 @@ All of the novel identifiability results presented in Section \ref{sec:ica-nonli
 
 
 Other works have shown that identifiability is possible when additional assumptions are made.
-Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure \citep{cardoso2001three, singer2008non, sprekeler2014extension}.
+Mostly these assume that the observations correspond not to \iid~samples of the sources, but rather time series with temporal structure \citep{singer2008non, sprekeler2014extension}.
 In contrast, \cite{taleb1999source} prove identifiability under the rather strong \emph{post-nonlinear mixing} assumption on the mixing functions, corresponding to linear mixing followed by a nonlinear component-wise invertible function.
 
 
@@ -270,23 +270,23 @@ In contrast, \cite{taleb1999source} prove identifiability under the rather stron
 
 \subsection{Nonlinear ICA with auxiliary variables}\label{subsec:ica-literature-nonlinear-ica-with-aux}
 
-\cite{hyvarinen19a} study a modification of the typical ICA setting where an additional observed auxiliary variable $U$ is introduced.
+\cite{hyvarinen19a}, generalising the results of \cite{hyvarinen2016unsupervised} and \cite{hyvarinen2017nonlinear}, study a modification of the typical ICA setting where an additional observed auxiliary variable $U$ is introduced.
 $U$ is assumed to be always observed with the sources $Z$ being \emph{conditionally} independent given $U$, resulting in the model
-
+%
 %\begin{align}
 %\bm{x} &= \bm{f}(\bm{s}) \\
 %p(\bm{s}|\bm{u}) &= \prod_{i} p_i(s_i | \bm{u}).
 %\end{align}
-
+%
 \begin{align}
 Z | U &\sim p(z|u) = \prod_{i} p_i(z_i | u), \\
 X &= f(Z).
 \end{align}
-
+%
 %Crucially, the variables $\bm{u}$ are presumed to be observed. 
 This general model includes temporally dependent sources as a special case, taking $(U, X)= (X_t,X_{t+1})$.
 %For notational convenience later on, let $q_i(s_i, \bm{u}) = \log p_i(s_i | \bm{u})$.
-\cite{hyvarinen19a} prove identifiability results under conditions on both the conditional distributions $p_i(z_i | u)$, the relationships between sources and auxiliary variables, and subject to $U$ having a sufficiently diverse influence on the $X$ in a sense that is formalised as the \emph{assumption of variability}.
+\cite{hyvarinen19a} prove identifiability results under conditions on both the conditional distributions $p_i(z_i | u)$, the relationships between sources and auxiliary variables, and subject to $U$ having a sufficiently diverse influence on $X$ in a sense that is formalised as the \emph{assumption of variability}.
 
 Identifiability in this model is proved constructively by considering classification between tuples $(x, u)$, sampled from the joint distribution $p(x, u)$, and tuples $(x, u^*)$ sampled from the product of marginals $p(u)p(x)$.
 Tuples from the former distribution correspond to the same value of the sources $z$, and thus share information, while tuples from the latter correspond to different sources and thus do not share information.
@@ -459,7 +459,7 @@ X_{2}&= f_{2}( g(Z, N)) \label{eq:sem2_2},
 %
 where $f_1$ and $f_2$ are invertible, $g$ is a component-wise corrupter, $N \independent Z$ and $X_1$ and $X_2$ are observed.
 The following theorem demonstrates assumptions under which identifiability in this model holds.
-This result is quite involved; we will first state it, and then discuss it.
+This result is quite involved; it will first be stated, then discussed.
 
 \begin{figure}[t!]
 	\centering
@@ -482,7 +482,7 @@ This result is quite involved; we will first state it, and then discuss it.
 
 \begin{theorem}
 	\label{thm:noiseless1}
-	The difference between the log joint probability and log product of marginals of the observed variables in the model given in Equations \ref{eq:indep}-\ref{eq:sem2_1} admits the following factorisation:
+	The difference between the log joint probability and log product of marginals of the observed variables in the model given in Equations \ref{eq:indep}-\ref{eq:sem2_2} admits the following factorisation:
 	\begin{align}
 	&\log p({x}_1, {x}_2) - \log p({x}_1) p({x}_2) \nonumber \\
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
@@ -490,9 +490,9 @@ This result is quite involved; we will first state it, and then discuss it.
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
 	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
 	\end{align}
-	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
+	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i(z_i, n_i)=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel\footnote{Several subsequent results in this section consider the difference between two log-probabilities.
-In all of these cases, the Jacobians introduced by a change of variables cancel out as in Equation \ref{eq:logdens_noiesless_1}.
+In all of these cases, the Jacobians introduced by the change of variables cancel out.
 For brevity these Jacobians are omitted henceforth.}).
 	Suppose that
 	\begin{enumerate}
@@ -532,7 +532,7 @@ Informally, it demands that the probability distribution of the corruption shoul
 	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2\, \label{eq:convention2}\\
 	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
 	\end{align}
-	We say that ${\alpha}$ satisfies the assumption of \emph{Sufficiently Distinct Views (SDV)} if for any value of ${y}$, there exist $2D$ distinct values ${t}^j$, $j=1, \ldots, 2D$ such that the vectors ${w}({y},{t}^j)$ are linearly independent.
+	${\alpha}$ satisfies the assumption of \emph{Sufficiently Distinct Views (SDV)} if for any value of ${y}$, there exist $2D$ distinct values ${t}^j$, $j=1, \ldots, 2D$ such that the vectors ${w_\alpha}({y},{t}^j)$ are linearly independent.
 	\\    \end{definition}
 This is closely related to the Assumption of Variability in~\cite{hyvarinen19a}.
 The SDV assumption is discussed in further detail in Section \ref{appendix:sdv}, where simple cases of conditional log-probability density functions satisfying and violating the assumption are presented.
@@ -540,7 +540,7 @@ The SDV assumption is discussed in further detail in Section \ref{appendix:sdv},
 
 
 \begin{proof}[Sketch proof of Theorem \ref{thm:noiseless1}]
-The first observation to be made is that for logistic regression, the optimal regression function for the logit $r(x_1, x_2)$ is equal to the log density-ratio between the two distributions being distinguished, namely $\log\left( p(x_1, x_2) / p(x_1)p(x_2)\right) = \log p(x_1, x_2) - \log p(x_1)p(x_2)$.
+The first observation to be made is that for logistic regression, the optimal regression function for the logit $r(x_1, x_2)$ is equal to the log density-ratio between the two distributions being distinguished, namely $\log\left( p(x_1, x_2) / p(x_1)p(x_2)\right) = \log p(x_1, x_2) - \log p(x_1)p(x_2)$ (as discussed in Section \ref{sec:literature-density-ratio-estimation}).
 Thus, in the limit of infinite data and with universal approximation capacity, the following equality holds:
 %
 \begin{align*}
@@ -559,9 +559,9 @@ Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions
 It follows that $z_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $z$ up to permutations and coordinate-wise invertible transformations.
 
 Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, and it is here that the SDV assumption is required.
-It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_i$ and $y_j$ for $j\not=i$. 
+It is proved by taking partial derivatives of Equation \ref{eqn:ica-first-theorem-proof} with respect to $y_j$ and $y_{j'}$ for $j\not=j'$. 
 This results in an expression involving first- and second-order derivatives of $\alpha_i$ and $v_i$ in which the expressions in the SDV assumption appear. 
-If the SDV assumption holds, it follows that the derivative of $v_i$ with respect to $y_j$ is everywhere zero, meaning that $v_i$ does not depend on $y_j$. 
+If the SDV assumption holds, it follows that the derivative of $v_i$ with respect to $y_j$ is non-zero for at most one one value of $j$, meaning that $v_i$ does not depend on all other $y_{j'}$. 
 \end{proof}
 
 See the full proof in Appendix \ref{appendix:proof-thm1} for further details; proofs of subsequent results Corollary \ref{crl:noiseless1} and Theorems \ref{thm:demixing} and \ref{thm:two-noisy-views} proceed similarly to this, and thus sketches of these results will be omitted.
@@ -649,8 +649,8 @@ these results show that jointly exploiting the multiple modalities can lead to i
 
 Consider next the setting in which both variables are corrupted by noise, depicted in Figure \ref{fig:classic_hsr} and described by the following model:
 \begin{align*}
-X_{1}&={f}_{1}({g}_{1}({Z},N_{1}))  \\
-X_{2}&={f}_{2}({g}_{2}({Z},N_{2}))  \,,
+X_{1}&={f}_{1}({g}_{1}({Z},N_{1})),  \\
+X_{2}&={f}_{2}({g}_{2}({Z},N_{2})),
 \end{align*}
 where all variables take value in $\mathbb{R}^D$, ${f}_{1}$ and ${f}_{2}$ are nonlinear, invertible, deterministic functions,
 ${g}_{1}$ and ${g}_{2}$ are component-wise corrupters, and $Z$ and the $N_i$ are independent with independent components.
@@ -678,7 +678,7 @@ Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that t
 \end{theorem}
 The proof can be found in Appendix \ref{appendix:thm1}.
 
-We can thus recover the common source $Z$ up to the corruptions ${g}_i(Z, N_i)$.
+The common source $Z$ can thus be recovered up to the corruptions ${g}_i(Z, N_i)$.
 In the limit of the magnitude of one of the noise variables going to zero, the reconstruction of the sources $Z$ attained through the corresponding view is exact up to the component-wise invertible functions, as stated in the following corollary.
 
 \medskip
@@ -699,7 +699,7 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 	where $p$ denotes convergence in probability.
 \end{corollary}
 
-\begin{proof}[Sketch; see Appendix \ref{appendix:thm2} for full proof.]
+\begin{proof}[Proof sketch; see Appendix \ref{appendix:thm2} for full proof.]
 The key idea of the proof is to rewrite ${e}(h_1^{(k)}(X_1))$ as $\tilde{e} \circ g_1(Z, N_1^{(k)})$ for some $\tilde{e} \in \mathcal{E}$, and to Taylor expand $g_1(Z, N_1^{(k)})$ in its second argument.
 Together with the assumptions on $g_1$, it is proved that the random variable converges to $0$ in mean, which implies that it converges to $0$ in probability.
 \end{proof}
@@ -722,7 +722,7 @@ Together with the assumptions on $g_1$, it is proved that the random variable co
 Corollary \ref{crl:lownoise} implies that in the limit of small noise, the sources $Z$ can be recovered exactly.
 Condition $1$ upper bounds the influence of $N_1$ on the corruption: one cannot not hope to recover $Z$ if $g_1(Z, N_1)$ contains too little signal.
 Condition $2$ ensures that the function $g_1$ is invertible with respect to $z$ when $n_1$ is equal to zero.
-If this were not satisfied, some information about $Z$ would be washed out by $g_1$ even in absence of noise, which would make recovery of $Z$ trivially impossible.
+If this were not satisfied, some information about $Z$ would be washed out by $g_1$ even in the absence of noise, which would make recovery of $Z$ trivially impossible.
 These conditions are satisfied, for example, by additive noise.
 
 
@@ -771,6 +771,7 @@ The fact that the components are recovered up to \emph{different} scalar inverti
 
 
 As a first step in this direction, consider the special case that each ${g}_i$ acts additively and each $N_i$ is zero mean and each of $Z$ and the $N_i$ are independent with independent components.
+%
 \begin{align}
 \left.
 \begin{array}{ll}
@@ -779,7 +780,7 @@ As a first step in this direction, consider the special case that each ${g}_i$ a
 \end{array}
 \right\rbrace \quad i \in \mathbb{N}
 \end{align}
-
+%
 Suppose to begin with that it is possible to recover each $Z + N_i$ \emph{without} the usual component-wise invertible functions. Then, writing $N$ to denote all of the $N_i$, it is possible to estimate $Z$ as
 \begin{align*}
 Z \approx \Omega^M(Z, N) = \frac{1}{M}\sum_{i=1}^M \left(Z + N_i\right).
@@ -811,7 +812,7 @@ Subject to mild conditions, the dependence of these quantities on most or all of
 	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z)
 	\end{align*}
 \end{lemma}
-\begin{proof}[Sketch; see Appendix \ref{appendix:last-lemma} for full proof]
+\begin{proof}[Proof sketch; see Appendix \ref{appendix:last-lemma} for full proof]
 The result follows by applying Kolmogorov's strong law to $\Omega_{e}^M(Z, N)$ for each value of $Z$.
 Kolmogorov's strong law states that the average of a sequence of independent, but not necessarily identically distributed, random variables converges to the expectation of the average, provided that the variances of the random variables do not grow too quickly. 
 This is ensured by the assumption on the $V_{e_i}$.
@@ -832,14 +833,13 @@ The following theorem provides sufficient conditions which, if satisfied by a pu
 
 \begin{theorem}
 	\label{thm:lastthm}
-	Suppose there exists $C>0$ such that $\text{Var}(N_i) \leq C$ for all $i$ and let $\mathcal{G}_K = \big\lbrace
-	\{{e}_i \}$ s.t.
+	Suppose there exists $C>0$ such that $\text{Var}(N_i) \leq C$ for all $i$ and let $\mathcal{G}_K$ be the set of $\{{e}_i \}_{i=1}^M$ s.t.
 	\begin{align}
-	& V_{{e}_i} \leq K \ \forall i \label{eq:resid_1}\\
-	& \Omega_{{e}}(Z) < \infty \  \text{ for almost all } Z \label{eq:resid_2}\\
+	& V_{{e}_i} \leq K \ \forall i, \label{eq:resid_1}\\
+	& \Omega_{{e}}(Z) < \infty \  \text{ for almost all } Z, \label{eq:resid_2}\\
 	&R_{{e}, i} \independent R_{{e}, j} \ \forall i \not= j, \label{eq:resid_3}\\
-	\nonumber \\    &\mathbb{E} R_{{e}, i} = 0 \ \forall i \label{eq:resid_5} \\
-	&R_{{e}, i}(Z, N_i) = R_{{e}, i}(N_i) \ \forall i \ \big\rbrace \label{eq:resid_6}
+	\nonumber \\    &\mathbb{E} R_{{e}, i} = 0 \ \forall i, \label{eq:resid_5} \\
+	&R_{{e}, i}(Z, N_i) = R_{{e}, i}(N_i) \ \forall i. \label{eq:resid_6}
 	\end{align}
 	
 	Then,
@@ -850,8 +850,8 @@ The following theorem provides sufficient conditions which, if satisfied by a pu
 	If $K \geq \text{Var}(Z) + C$, then $ \{ {k}^{-1}_i \}  \in \mathcal{G}_K$,
 	and so $\mathcal{G}_K$ is non-empty for $K$ sufficiently large.
 \end{theorem}
-\begin{proof}[Sketch; see Appendix \ref{sec:lasttmpr} for full proof]
-That $\{ {k}^{-1}_i \}  \in \mathcal{G}_K$ can be shown using Lemma \ref{lem:last-lemma}. 
+\begin{proof}[Proof sketch; see Appendix \ref{sec:lasttmpr} for full proof]
+The fact that $\{ {k}^{-1}_i \}  \in \mathcal{G}_K$ can be shown using Lemma \ref{lem:last-lemma}. 
 The fact that $\mathcal{G}_K \subseteq\left\lbrace \{ {\alpha} {k}^{-1}_i + {\beta} \} \ : \ {\alpha} \in \mathbb{R}^{D}_{\not=0}, \: {\beta} \in \mathbb{R}^{D} \right\rbrace$ is proved by showing that for any $e_i$ such that $\{e_i\} \in \mathcal{G}_K$, the composition $e_i \circ k_i$ is affine.
 It follows that $e_i = A_i k_i^{-1} + \beta_i$ for some matrix $A_i$ and vector $\beta_i$. 
 Finally, it is shown that $A_i$ and $\beta_i$ are equal for all choices of $i$, and $A$ is a diagonal matrix, and thus $A k_i^{-1}$ can be written as an elementwise product with a vector $\alpha$.
@@ -904,7 +904,6 @@ Since taking second derivatives of the log-probability with respect to $s_i$ res
 there is no way to find $2D$ vectors ${t}_j$, $j=1, \ldots, 2D$, such that the corresponding ${w}(z_1, t_j)$ in Definition \ref{suff_dist_assumption} are linearly independent.
 
 This rules out the case in which one or both views correspond to the source being corrupted by additive Gaussian noise.
-
 Note that this result is distinct from the non-identifiability result in the case of Gaussian sources for ICA.
 The problem here is not that the conditional distribution is rotationally invariant, but that the connection it implies between the two variables is `too simple'.
 In fact, the identifiability results presented here do not demand that the marginal distribution over the uncorrupted source be non-Gaussian.
@@ -914,16 +913,15 @@ In fact, the identifiability results presented here do not demand that the margi
 
 \subsubsection{An example satisfying SDV}
 
-By choosing a conditional distribution  that is more comlex, the SDV assumption can be satisfied. Consider
+By choosing a conditional distribution  that is more complex, the SDV assumption can be satisfied. Consider
 
 \begin{equation}
 \log p(z_1|z_2) =  - \sum_i (z_i^2  s_i^2 + z_i^4 s_i^4  ) + C(z_2) \,, \label{eq:satisfied}
 \end{equation}
 
 where $C(z_2)$ is a normalisation constant that depends only on $z_2$.
-Proof that this conditional distribution satisfies the SDV assumption requires a few lines of computation.
-
-Since this polynomial expression is of order strictly greater than 2, the second derivatives are not constant.
+Proof that this conditional distribution satisfies the SDV assumption requires a few lines of computation:
+since this polynomial expression is of order strictly greater than 2, the second derivatives are not constant.
 ${w}(z_1, z_2)$ can be written as the product of a matrix and vector which are functions only of $z_1$ and $z_2$ respectively.
 The columns of this matrix are linearly independent for almost all values of $z_1$ and $2D$ linearly independent vectors can be realised by different choices of $z_2$, and hence the assumption is satisfied.
 
@@ -966,7 +964,7 @@ Thus, at optimality
 \begin{align*}
 r(x_1, x_2) &= \log \left( p(x_1, x_2) / p(x_1) p(x_2)\right) \\
 &= \log p(x_1 | x_2)  - \log p(x_1) \\
-&= \log p(x_2 | x_1)  - \log p(x_2) \\
+&= \log p(x_2 | x_1)  - \log p(x_2). \\
 \end{align*}
 %
 If the variables $x_1$ and $x_2$ are deterministically related, this log-ratio is everywhere either $0$ or $\infty$.
@@ -990,9 +988,9 @@ The main contribution of this chapter was to present identifiability results in 
 These results are an important contribution to the field since they extend the scarce literature on identifiability results for nonlinear ICA models.
 
 
-Theorems \ref{thm:noiseless1} and \ref{thm:demixing} state that in contrast to the single-view setting, the two-view setting is identifiable when the mixing functions are arbitrary smooth, invertible nonlinear functions with smooth inverse, provided that one of the views is corrupted at the source level by sufficiently `complex' noise so that the Sufficiently Distinct Views assumption is satisfied. 
+Theorems \ref{thm:noiseless1} and \ref{thm:demixing} state that in contrast to the single-view setting, the two-view setting is identifiable when the mixing functions are arbitrary smooth, invertible nonlinear functions with smooth inverse, provided that one of the views is corrupted at the source level by sufficiently `complex' noise such that the Sufficiently Distinct Views assumption is satisfied. 
 
-Identifiability results are also obtained in the case of corruptions on both views. Theorem \ref{thm:two-noisy-views} states that the sources can be recovered up to the corruptions, and Corollary \ref{crl:lownoise} demonstrates that in limit as one of the corruptions becomes small, the uncorrupted sources can be recovered.
+Identifiability results are also obtained in the case of corruptions on both views. Theorem \ref{thm:two-noisy-views} states that the sources can be recovered up to the corruptions, and Corollary \ref{crl:lownoise} demonstrates that in the limit as one of the corruptions becomes small, the uncorrupted sources can be recovered.
 
 Finally, initial results are presented in Theorem \ref{thm:lastthm} providing conditions under which the uncorrupted sources are identifiable when a large number of views are available, even if these views are all corrupted by source noise.
 
@@ -1015,7 +1013,7 @@ Finally, initial results are presented in Theorem \ref{thm:lastthm} providing co
 
 
 The multi-view setting is relevant in a number of real-world applications, namely in all datasets that include multiple distinct measurements of related phenomena.
-In practice, it may be better to think of the noise variables rather as intrinsic sources of variability specific to each view.
+In practice, it may be better to think of the noise variables as intrinsic sources of variability specific to each view, rather than as noise per se.
 In most practical applications this would probably not be a significant limitation due to the prevalence of stochasticity in real-world systems.
 
 A specific example application of the work presented here can be found in the field of neuroimaging.
@@ -1031,8 +1029,8 @@ Observe that Theorem \ref{thm:lastthm} builds on the setting of Theorem \ref{thm
 A natural extension of this work would be to investigate algorithms that explicitly make use of $N>2$ views, which may allow relaxation of the additivity assumption on the corruptions.
 Furthermore, Theorem \ref{thm:lastthm} provides results that only hold for the asymptotic limit as the number of views becomes large.
 Other extensions to this result could include analysis of the case of finitely many views.
-
-
+In the direction of application, the results here prove that recovery of the latent sources is possible in a multi-view setting, but there may be many ways to actually perform this recovery in practice. 
+The development of algorithms exploiting this setting are a natural direction to explore.
 
 
 

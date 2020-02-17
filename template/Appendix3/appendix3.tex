@@ -987,8 +987,8 @@ If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either o
 \displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty
 \end{cases}
 \end{align*}
-where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
-then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we have
+%where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
+then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, the variance of RAM-MC decays as
 \begin{align*}
     \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
     O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
@@ -1026,6 +1026,8 @@ then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, we
 
 In proving Theorem~\ref{thm:mc-variance} we will make use of the following lemma.
 
+\medskip
+
 \begin{lemma}\label{lemma:f0-x-convex}
 For any $f_0(x)$,
 the functions $f_0(x)^2$ and $\frac{f_0(x)^2}{x}$ are convex on $(0, \infty)$.
@@ -1038,7 +1040,7 @@ To see that $f_0(x)^2$ is convex, observe that
 All of these terms are postive for $x > 0$.
 Indeed, since $f_0(x)$ is convex for $x > 0$, $f_0''(x) \geq 0$.  
 By construction of $f_0$, $f_0(x) \geq 0$ for $x > 0$. 
-Thus $f_0(x)^2$ has non-negative derivative and is thus convex on $(0, \infty)$.
+Thus $f_0(x)^2$ has non-negative second derivative and is thus convex on $(0, \infty)$.
 
 To see that $\frac{f_0(x)^2}{x}$ is convex, observe that
 
