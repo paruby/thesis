@@ -11,9 +11,13 @@
     \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
 \fi
 
-\emph{This chapter introduces the notion of \emph{exact transformations} between Structural Equation Models (SEMs), providing a framework to evaluate whether two SEMs are consistent with one another as causal models.
+\emph{This chapter introduces the notion of \emph{exact transformations} between Structural Equation Models (SEMs).
+This provides a framework to evaluate whether two SEMs are consistent with one another as causal models, meaning that a correspondence can be established between them such that reasoning about the effects of interventions in both models agree.
 In particular, this framework can be used to understand whether two models of the same system at different levels of detail are consistent, and whether measured variables derived from a lower-level causal model admit interpretation as causal variables themselves.
-This work has broad implications to the causal modelling process, as measured data are generally an approximation to the level at which `true' causal structure exists, yet causal inference algorithms generally seek to discover causal structure at the level of measurements.}
+This work has broad implications to the causal modelling process, as 
+there is often a mismatch between the level at which measurements are made and the level at which the underlying `true' causal structure exists,
+%measured data are generally an approximation to the level at which `true' causal structure exists, 
+yet causal inference algorithms generally seek to discover causal structure at the level of measurements.}
 
 
 \emph{The main technical content of this chapter has been published in paper:}
@@ -57,8 +61,8 @@ Classification is the canonical example of this, where given a set of \iid~sampl
 %Given a set of \emph{i.i.d.} samples from a distribution $P_X$, the goal of \emph{density estimation} is to learn an approximation to $P_X$.
 
 Despite the great empirical successes of machine learning in practical and applied settings in recent years, there remain problems of interest that cannot be cast directly into the framework described above. 
-The framework is limited in that it presupposes the existence of a single joint distribution over all of the random variables of interest, with the operations of marginalisation and conditioning then providing the relationships connecting any subset of variables.
-But there are many examples of problems for which a single joint distribution over all variables does not suffice. 
+The framework is limited in that it presupposes the existence of a single fixed joint distribution over all of the random variables of interest, with the operations of marginalisation and conditioning then providing the relationships connecting any subset of variables.
+But there are many examples of problems for which a single fixed joint distribution over all variables does not suffice. 
 For many questions of scientific interest, this is because the problem either implicitly or explicitly concerns an \emph{intervention} or \emph{action} in the world that changes the joint distribution over the observable variables.
 
 For example, we may be interested to understand the influence of diet on longevity, with the aim of improving public health by encouraging people to eat healthily. 
@@ -69,7 +73,7 @@ These questions are concerned with understanding causal, not statistical, relati
 The aim of \emph{causality} is to study causal influence through the lens of a formal mathematical language, in much the same way that statistical machine learning uses the language of probability. 
 \emph{Causal inference} or \emph{causal discovery}, a large part of the causality literature, concerns the identification of causal relationships using data.
 As the examples above demonstrate, this can be highly non-trivial, with the well-known phrase ``correlation does not imply causation'' standing testament to the simultaneous difficulty and ubiquity of this problem.
-Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship between two variables can never be inferred without other prior knowledge. 
+Since correlation (or statistical dependence more generally) is a symmetric relation, an asymmetric causal relationship between two variables can never be inferred without other prior knowledge or assumptions. 
 Moreover, simply identifying that two quantities tend to co-occur does not itself imply a causal relation between the two, since both could be causally influenced by a third.
 
 While causal inference is an important problem with a wide variety of applications ranging from astronomy to neuroscience and economics \citep{scholkopf2016modeling, ding200617, hicks1980causality}, the main contribution of this chapter is to extend and provide greater understanding of \emph{Structural Equation Models (SEMs)}, one of the popular mathematical frameworks for formalising causal relationships between random variables and interventions, along with the variety of probability distributions these entail.
@@ -119,12 +123,12 @@ Let $X = (X_1, \ldots, X_N)$ and $E = (E_1, \ldots E_N)$ with each $X_i$, $E_i$ 
 %the functions $f_i$ are measurable], 
 $\pa(i) \subset \{1,\ldots,N\}$ and $X_{\pa(i)}$ is the corresponding subset of the variables $X$.
 	\item The variables $E = (E_1,\ldots,E_N)$ have distribution $P_E$ which factorises, i.e. the $E_i$ are independent.
-	\item The \emph{causal graph} $\mathcal{G}$, the directed graph with nodes $X_i$ and edges $X_i \to X_j$ if and only if $i \in \pa(j)$, is acyclic.
+	\item The \emph{causal graph} $\mathcal{G}$ is acyclic, where $\mathcal{G}$ is the directed graph with nodes $X_i$ and edges $X_i \to X_j$ if and only if $i \in \pa(j)$.
 \end{itemize}
 \end{definition}
 
 %\paragraph{Remark:}
-The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well defined distribution $P_X$ over the variables $X$. This is known as the \emph{observational distribution}.
+The requirement that $\mathcal{G}$ be acyclic ensures that the SEM implies a well-defined distribution $P_X$ over the variables $X$. This is known as the \emph{observational distribution}.
 %We will discuss this fact further next. Later, we will discuss the additional fact that, in combination with the requirement that the noise variables $E_i$ are independent, $\mathcal{G}$ being acyclic implies a correspondence between the conditional independence properties of the joint distribution $P_X$ and $\mathcal{G}$, which is useful for learning $\mathcal{G}$ from data (i.e. causal inference). 
 
 \medskip
@@ -153,6 +157,7 @@ Such an intervention is realised by altering the structural equation of the inte
 \end{definition}
 
 %\paragraph{Remark:} 
+
 We note in passing that the notion of a perfect intervention may also be extended to \emph{imperfect} or \emph{stochastic interventions} in which the intervened variable is set equal to some random variable rather than a constant. Formally, this is no different from the case of perfect interventions other than needing to additionally introduce distributions over the new random variables. 
 %We will not discuss such interventions further. [cite Eberhardt? See elem causality book for references].
 
@@ -227,6 +232,10 @@ x_2
 \subsection{Connections to Bayesian networks}
 
 SEMs are closely related to Bayesian networks, a class of graphical models.
+There is a long debate between certain members of the causality community and the Bayesian and statistics communities as to whether there is in fact any difference between these two classes of models.
+Discussion of this is somewhat tangential to the main contribution of this chapter, but for completeness it is nonetheless important to give a brief outline of this debate.
+In the following, I attempt to give a neutral overview of the similarities and differences between them, followed by my personal opinion.
+
 
 \medskip
 
@@ -240,8 +249,9 @@ where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an
 
 Since any product distribution can always be decomposed as $p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{j<i})$, it is the \emph{absence} of edges in $\mathcal{G}$ that imposes structure on the probability distribution.
 
-Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution $\delta_{X_i = x_i}$. 
-Bayesian networks equipped with such a notion are sometimes referred to as \emph{causal} Bayesian networks. 
+Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution $\delta_{X_i = x_i}$.\footnote{It is also possible instead to introduce an additional `treatment' variable for each observed variable, whose value determines whether the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution.
+Conditioning on these treatment variables is then equivalent to a perfect intervention.}
+Bayesian networks equipped with such notions are sometimes referred to as \emph{causal} Bayesian networks. 
 In the following, we will simply refer to them as Bayesian networks.
 
 
@@ -286,8 +296,9 @@ Similarly, replacing any equation with $X_i=x_i$ corresponds to the cumulative d
 %
 %SEMs are usually explicitly used with the modelling of causal structure in mind, while Bayesian networks are often not. For instance, variables in a Bayesian network may represent uncertain parameters or latent variables that have no direct physical meaning.
 %
-In an SEM the noise variables $E$ are explicitly modelled, while in a Bayesian network they are not.\footnote{An exception to this is the \emph{reparameterisation trick} as a way to train Bayesian networks via stochastic gradient methods \citep{kingma2013auto,rezende2014stochastic}, though as the name suggests this is generally viewed as a computational `trick' rather than a general strategy of mathematical modelling.}
-As discussed in \cite{pearl2009causality}, this corresponds to a quasi-deterministic view of the world in which any observed randomness is a consequence of a lack of knowledge. In contrast, modelling with Bayesian networks corresponds to a view that the world is inherently stochastic.
+In an SEM the noise variables $E$ are explicitly modelled, while in a Bayesian network they are generally not.
+\cite{pearl2009causality} considers this to correspond to a `quasi-deterministic' view of the world in which any observed randomness is a consequence of a lack of knowledge. 
+In contrast, modelling with implicit noise in a Bayesian network corresponds to a view that the world is inherently stochastic.
 %This difference is largely academic and we will not concern ourselves with it further.
 
 As a consequence of the noise variables being explicitly modelled, SEMs are equipped with \emph{counterfactual reasoning}. 
@@ -298,15 +309,33 @@ Whether or not this is useful in practice is debatable, since different SEMs may
 on data without prior knowledge to distinguish between counterfactually non-equivalent models.
 %We will not discuss counterfactual reasoning further.
 
-
-There are two main consequential differences between SEMs and Bayesian networks.
-First, it can be easier to express assumptions on the mechanisms of causal influence within the SEM framework, for instance by assuming that the distribution $P_E$ and the functions $f_i$ belong to some restricted sets.
-Second, it is also conceptually simple to extend the SEM framework to express cyclic dependencies, which we discuss in the next section.
+It can be easier to express assumptions on the mechanisms of causal influence within the SEM framework, for instance by assuming that the distribution $P_E$ and the functions $f_i$ belong to some restricted sets, though this is also possible in the Bayesian network setting.
+The main consequential difference between SEMs and Bayesian networks is that it is conceptually simple to extend the SEM framework to express cyclic dependencies as a result of the explicit modelling of the noise variables.
 %For this reasons, study of the SCM framework is preferred in this chapter.
 
 %Next, we discuss the relaxation of the acyclicity contraint in the definition
 
 %Mention latent confounders and that independent noise variables corresponds to no latent confounders?
+
+\subsubsection{Personal opinion}
+
+Acyclic SEMs and Bayesian networks are fundamentally equivalent as mathematical models.
+By convention, Bayesian networks usually do not explicitly specify the noise variables, though there is no reason why they cannot do so.
+Indeed, the \emph{reparameterisation trick} involves explicit use of noise variables as a way to train Bayesian networks via stochastic gradient methods \citep{kingma2013auto,rezende2014stochastic}.
+
+This equivalence breaks down in the case of cycles: while SEMs can be easily generalised to allow cyclic causal graphs, it is not clear how to do so for Bayesian networks unless the noise variables are explicitly specified, in which case they are essentially the same as SEMs.
+That said, most of the debate around SEMs and Bayesian networks has revolved around the acyclic case.
+The substance of this debate seems to revolve largely around differences of philosophy or culture, rather than formal mathematics.
+This can be summarised in two key differences.
+
+First, the causality community thinks of the structural equations as physical mechanisms representing some fundamental, invariant truth about how the universe operates. 
+The Bayesian and statistics communities are more accustomed to thinking of them as abstract descriptions that are not necessarily grounded in physical reality to the same degree.
+
+Second, the causality community places a strong emphasis on the role of interventions or `action'.
+As such, to do-operator is considered as a central feature of SEMs, while the statistics and Bayesian communities often see the do-operator as a feature that has been post-hoc tacked onto Bayesian networks.
+
+In summary, my personal belief is that Bayesian networks and SEMs are essentialy equivalent, with some subtleties in the cyclic case. 
+The fact that debate on this topic continues to exist despite the formal relation between the two model classes being fairly clear and well understood is, in my opinion, caused largely by cultural differences leading to misunderstandings as well as academic politics.
 
 \subsection{Cyclic Structural Equation Models}
 
@@ -362,7 +391,7 @@ It will be argued in Sections \ref{sec:causality-what-are-causal-vars} and \ref{
 The problem that is typically of greatest interest to practitioners in the context of causality is that of \emph{causal inference}, sometimes referred to as \emph{causal discovery}.
 The goal of a causal inference algorithm is to learn the causal graph $\mathcal{G}$, 
 either with only observational data, or with a mixture of observational and interventional data.
-In the case of no latent confounders, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. 
+In the case of no latent confounders\footnote{A confounder is an unobserved variable that causally influences two or more observed variables, leading to those observed variables exhibiting statistical dependence without directly influencing one another.}, once $\mathcal{G}$ has been identified, learning the functional relationships between parents and children reduces to solving independent regression problems. 
 Although the main contribution of this chapter is to improve theoretical understanding and extend the mathematical framework of SEMs, some discussion of approaches to causal inference will provide important context.
 All methods focus on the acyclic case unless otherwise stated.
 
@@ -372,7 +401,7 @@ All methods focus on the acyclic case unless otherwise stated.
 %These methods focus on the acyclic case unless otherwise stated.
 
 The problem is usually formalised thus: Given \iid~draws from a distribution $P_X$ induced by an SEM with causal graph $\mathcal{G}$, estimate $\mathcal{G}$.
-Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $P_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $P_E$ and functions $f_i$.
+Broadly speaking, there are two main categories of approaches: those which exploit a correspondence between statistical properties of $P_X$ and properties of $\mathcal{G}$; and those that make additional assumptions on the noise variable distribution $P_E$ and structural equation functions $f_i$.
 These are briefly outlined next.
 %The former category will be briefly outlined in the next section, followed by a more detailed exposition of the latter.
 
