@@ -56,7 +56,7 @@ yet causal inference algorithms generally seek to discover causal structure at t
 
 \section{Introduction}
 
-Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed but unknown probability distribution exists from which observed data are sampled \emph{independently and identically distributed (\iid)}, and that new data at `test time' will similarly be drawn \iid~from this distribution.
+Much of machine learning concerns the statistical relationships between random variables. In this context, the word \emph{statistical} refers to the assumptions that a fixed but unknown probability distribution exists from which observed data are sampled \iid, and that new data at `test time' will similarly be drawn \iid~from this distribution.
 Classification is the canonical example of this, where given a set of \iid~samples from a joint distribution $P_{XY}$ over input $X$ and discrete target $Y$, the goal is to learn the conditional distribution $P_{Y|X}$ giving the probability distribution over targets for each possible input. Other problems such as density estimation can be phrased similarly.
 %Given a set of \emph{i.i.d.} samples from a distribution $P_X$, the goal of \emph{density estimation} is to learn an approximation to $P_X$.
 
@@ -324,7 +324,7 @@ By convention, Bayesian networks usually do not explicitly specify the noise var
 Indeed, the \emph{reparameterisation trick} involves explicit use of noise variables as a way to train Bayesian networks via stochastic gradient methods \citep{kingma2013auto,rezende2014stochastic}.
 
 This equivalence breaks down in the case of cycles: while SEMs can be easily generalised to allow cyclic causal graphs, it is not clear how to do so for Bayesian networks unless the noise variables are explicitly specified, in which case they are essentially the same as SEMs.
-That said, most of the debate around SEMs and Bayesian networks has revolved around the acyclic case.
+That said, most of the debate around SEMs and Bayesian networks has considered the acyclic case.
 The substance of this debate seems to revolve largely around differences of philosophy or culture, rather than formal mathematics.
 This can be summarised in two key differences.
 
