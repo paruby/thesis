@@ -422,7 +422,7 @@ This approach
 %to recovering $\bm{s}$ 
 is to classify between pairs $(X_1, X_2)$ corresponding to the same $Z$ and $(X_1, X^*_2)$ corresponding to different realisations of $Z$.
 This classification problem can only be solved by employing the information shared by the simultaneous views in order to distinguish the two classes.
-By placing constraints on the regression function used in such a classifier, it can be shown that an intermediate layer recovers $Z$ up to unavoidable ambiguities.
+By placing constraints on the regression function used in such a classifier, it can be shown that the representation obtained by taking an intermediate layer of this classifier recovers $Z$ up to unavoidable ambiguities.
 
 For technical reasons discussed in Section
 \ref{sec:converged}, the results require some stochasticity in the relationship between $Z$ and at least one of the $X_i$.
@@ -555,7 +555,7 @@ By performing the change of variables $y=h(x_1)$, $t=f_2^{-1}(x_2)$, and definin
 %
 The goal is to show that $v_i(y)$ depends on exactly one coordinate of $y$, so that $v_i(y) = v_i(y_j)$ for some $j$. 
 Since $z = v(y)$, this implies that $z_i = v_i(y_j)$ is a function only of $y_j$, which in turn implies that $z_i$ is a function only of $h_j(x_1)$. 
-Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions, it is itself invertible, and since each component of $v$ depends only one one component of its input, each of the components are also invertible.
+Since $v = f_1^{-1} \circ h^{-1}$ is the composition of two invertible functions, it is itself invertible, and since each component of $v$ depends only one component of its input, each of the components are also invertible.
 It follows that $z_i$ is an invertible function of $h_j(x_1)$, and so $h(x_1)$ recovers $z$ up to permutations and coordinate-wise invertible transformations.
 
 Showing that $v_i(y) = v_i(y_j)$ for some $j$ is somewhat technically involved, and it is here that the SDV assumption is required.
