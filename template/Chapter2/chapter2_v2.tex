@@ -45,10 +45,10 @@ Chapter \ref{chapter:ica} concerns the \emph{Independent Component Analysis (ICA
 % from which new samples can be drawn. 
 In the neural sampler community, the problem of generative modelling is made precise with specification of a choice of divergence
 %\footnote{Defined in Section \ref{subsec:gen-model-divergence}} 
-$D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, the goal then being:
+$D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, the goal then being
 %
 \begin{align*}
-\min_{\theta \in \Theta} \ D\left(P_X^\theta,  Q_X \right)
+\min_{\theta \in \Theta}: \ D\left(P_X^\theta,  Q_X \right).
 \end{align*}
 %
 There are two main challenges in practically implementing and solving this problem.
@@ -56,7 +56,7 @@ First, when the data are drawn from complex high dimensional distributions, how 
 Second, what are appropriate choices of divergences, and how can they be estimated or minimised with respect to the parameters $\theta$?
 %These questions will be discussed in the rest of this chapter. 
 
-In the ICA community, the goal is the use the learned model $P_X^\theta$ to infer the values of latent variables. 
+In the ICA community, the goal is to use the learned model $P_X^\theta$ to infer the values of latent variables. 
 Since latent variables are by definition unknown, it is important that if multiple solutions to the generative modelling problem exist, they should correspond to similar models with regard to the use of the latent variables.
 That is, if distinct parameters $\theta_1 \not= \theta_2$ are such that  $P_X^{\theta_1} = P_X^{\theta_2} = Q_X$, the corresponding models should be strongly related; for instance, corresponding to the same model but with permuted coordinates over the latent variables.
 Such results are known as \emph{identifiability results} and are important in the theoretical study of ICA algorithms. 
@@ -86,8 +86,8 @@ In the neural sampler community, $P_Z$ is referred to as a \emph{prior} or \emph
 In the ICA community, $P_Z$ is referred to as a \emph{source distribution} and may be specified only implicitly through some assumed properties, such as being a factorised distribution.
 Usually the letter $S$ denotes the corresponding sources in the ICA literature, but for consistency this thesis will use $Z$.
 
-The conditional distributions can be thought of as a mapping $g:\mathcal{Z}\to\mathcal{P}(\mathcal{X})$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$,
-and may in general be Dirac delta distributions (where all probability mass is placed at a single point), in which case the associated mapping $g$ is well-defined as a function $g:\mathcal{Z}\to\mathcal{X}$. 
+The conditional distributions can be thought of as a mapping $g:\mathcal{Z}\to\mathcal{P}(\mathcal{X})$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$.
+If all of these distributions are Dirac delta distributions (where all probability mass is placed at a single point), the mapping $g$ can be seen as a function $g:\mathcal{Z}\to\mathcal{X}$. 
 
 In the neural sampler community, the conditional distributions are referred to as \emph{generators} or \emph{decoders}, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
 If the conditional distributions they correspond to are Dirac delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic} (sometimes \emph{probabilistic}).
@@ -99,7 +99,7 @@ If the generator is stochastic, it can still be explicitly represented as a neur
 For instance, if the conditional distributions are Gaussian with varying mean and covariance, $g^\theta$ can be represented as a neural network with two outputs, one for the mean and one for the covariance.
 
 
-For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution distribution $P_X^\theta$ over the data space $\mathcal{X}$. 
+For a fixed choice of parameter $\theta$, $P_Z$ and $P^\theta_{X|Z}$ specify a joint distribution $P^\theta_{XZ}$ over $\mathcal{X} \times \mathcal{Z}$ and thus a distribution $P_X^\theta$ over the data space $\mathcal{X}$. 
 For simplicity, it will be assumed that densities of all relevant distributions exist, so that this is equivalent to specifying $P_X^\theta$ via the integral
 %
 \begin{align*}
@@ -127,14 +127,14 @@ A divergence $D$ is a mapping $D: \mathcal{P}(\mathcal{X}) \times \mathcal{P}(\m
 \item $D(P, Q) = 0$ if and only if $P = Q$,
 \end{itemize}
 
-where $\mathcal{P}(\mathcal{X})$ denotes the set of all distributions on $\mathcal{X}$.
+where $\mathcal{P}(\mathcal{X})$ denotes the set of all probability distributions on $\mathcal{X}$.
 \end{definition}
 
 
 A metric is additionally symmetric and obeys the triangle inequality.
 For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimise it with respect to the parameters $\theta$. 
 There are two main families of divergences that are used in the machine learning literature generally.
-At a high level, Integral Probability Metrics (IPMs) can be thought of as comparing distributions by considering the difference between their densities, while $f$-divergences can be thought of as considering the ratio of their densities.
+At a high level, Integral Probability Metrics (IPMs) can be thought of as comparing distributions by considering the pointwise difference between their densities, while $f$-divergences can be thought of as considering the ratio of their densities.
 These two families are discussed in the rest of this section.
 
 \subsection{Integral Probability Metrics}\label{subsec:intro-ipm}
@@ -146,14 +146,14 @@ An Integral Probability Metric (IPM) is a divergence that can be written as
 D_{\mathcal{H}}(P, Q) = \sup_{h\in\mathcal{H}} \left| \int h(x) dP(x) - \int h(x) dQ(x) \right|
 \end{align*}
 %
-for some restricted function class $\mathcal{H}: \mathcal{X} \to \mathbb{R}$. 
+for some restricted function class $\mathcal{H} = \{h: \mathcal{X} \to \mathbb{R} \}$. 
 \end{definition}
 
 Elements of $\mathcal{H}$ are referred to as \emph{witness functions}.
 If $\mathcal{H}$ is too small, $D_\mathcal{H}$ may not be a divergence.
 For instance, taking $\mathcal{H}$ to contain only the constant $0$ function results in $D_{\mathcal{H}}(P, Q) = 0$ for any $P$ and $Q$.
 On the other hand, if $\mathcal{H}$ is too rich then $D_{\mathcal{H}}$ may not be useful: 
-taking $\mathcal{H}$ to be the set of all real-valued measurable functions leads to the trivial (Theorem 1, \cite{sriperumbudur2009integral})
+taking $\mathcal{H}$ to be the set of all real-valued measurable functions leads to the trivial case (Theorem 1, \cite{sriperumbudur2009integral})
 \begin{align*}
 D_{\mathcal{H}}(P, Q) = \begin{cases} 0 &\text{ if } P = Q, \\ \infty &\text{ if } P \not= Q .\end{cases}
 \end{align*}
@@ -171,9 +171,9 @@ These properties are inherited from the function $d(x,y) = |x - y|$.
 %For the triangle inequality
 
 
-Commonly encountered IPMs include \citep{sriperumbudur2009integral}:
+Commonly encountered IPMs include \citep{muller1997integral, sriperumbudur2009integral}:
 \begin{itemize}	
-\item Wasserstein or optimal transport distances, where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$ with respect to some base metric;
+\item The 1-Wasserstein distance, where $\mathcal{H}$ is the set of all functions with Lipschitz constant $1$ with respect to some base metric;
 \item The Total Variation distance, where $\mathcal{H}$ is the set of all functions with infinity norm $1$; and
 \item The Maximum Mean Discrepancy, where $\mathcal{H}$ is the set of functions in a reproducing kernel Hilbert space with norm at most $1$ induced by some kernel $k$ \citep{gretton2012kernel}.
 \end{itemize}
@@ -219,7 +219,7 @@ A useful property of $f$-divergences is that for any constant $c$, replacing $f(
 \begin{align*}
 D_{\tilde{f}}(P, Q) &= \int \left[ f\left(\frac{p(x)}{q(x)}\right) + c\left(\frac{p(x)}{q(x)} - 1\right) \right] q(x) dx \\
 &=  \int f\left(\frac{p(x)}{q(x)}\right) q(x) dx + c \int p(x) - q(x) dx \\
-&= D_f(P, Q)
+&= D_f(P, Q),
 \end{align*}
 %
 where the last equality holds since $p(x)$ and $q(x)$ integrate to $1$.
@@ -313,13 +313,13 @@ This classification problem can be implemented as logistic regression, in which 
 %
 \begin{align*}
 L(c) &=  \mathbb{E}_{x\sim P}\left[ - \log c(x) \right] + \mathbb{E}_{x \sim Q} \left[ - \log(1 - c(x)) \right] \\
-&= \int -\log c(x) p(x) - \log (1 - c(x)) q(x) dx
+&= \int -\log c(x) p(x) - \log (1 - c(x)) q(x) dx.
 \end{align*}
 %
 For any particular $x$, the integrand is minimised by $c^*(x) = \frac{p(x)}{q(x) + p(x)}$, and so the optimal classifier assigns $x$ to class $1$ with the posterior probability that it was drawn from $P$ (Proposition 1, \cite{goodfellow2014generative}).
-If $c$ parametrised as $\frac{1}{1+\exp( -r(x))}$ where $r:\mathcal{X}\to\mathbb{R}$, then the optimal  $c^*$ corresponds to $r^*(x) = \log\left(p(x) / q(x)\right)$.
+If $c$ is parametrised as $\frac{1}{1+\exp( -r(x))}$ where $r:\mathcal{X}\to\mathbb{R}$, then the optimal  $c^*$ corresponds to $r^*(x) = \log\left(p(x) / q(x)\right)$.
 
-This is a useful trick for cases in which only samples from two distributions are available and estimation of their density ratio is desired, as is the case in Chapter \ref{chapter:ica}.
+This provides a useful tool for cases in which only samples from two distributions are available and estimation of their density ratio is desired, as is the case in Chapter \ref{chapter:ica}.
 Moreover, solving this classification problem is closely related to divergence estimation, since for any choice of classifier $c$,
 %
 \begin{align*}
@@ -355,12 +355,12 @@ Plugging this into the definition of $f$-divergences yields
 \begin{align*}
 D_f(P, Q) &= \int q(x) \sup_{t \in \dom(f^*)} \left\{t \frac{p(x)}{q(x)} - f^*(t) \right\} dx \\
 & \geq \sup_{T \in \mathcal{T}} \left\{ \int p(x) T(x) dx - \int q(x) f^*(T(x)) \right\} dx \\
-&= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right] 
+&= \sup_{T \in \mathcal{T}} \mathbb{E}_{x \sim P} \left[ T(x) \right] - \mathbb{E}_{x \sim Q} \left[ f^*(T(x)) \right],
 \end{align*}
 where $\mathcal{T}$ is an arbitrary class of functions $\mathcal{X} \to \dom(f^*) \subseteq \mathbb{R}$.
 It can be shown that the optimal $T^*$ attaining the supremum satisfies 
 \begin{align*}
-T^*(x) = f'\left( \frac{p(x)}{q(x)}\right)
+T^*(x) = f'\left( \frac{p(x)}{q(x)}\right),
 \end{align*}
 subject to mild conditions on $f$ (Lemma 1, \cite{nguyen10ratio}). 
 In this sense, $T^*$ estimates (a function of) the density ratio $p(x)/q(x)$.
@@ -418,7 +418,7 @@ Thus, although actually computing $D_{\text{JS}}(P^\theta_X, Q_X)$ is intractabl
 %Thus, parameterising $T$ by $\phi$ yields the surrogate loss
 %
 \begin{align*}
-L_f(\phi, \theta) = \mathbb{E}_{x \sim Q_X} \left[ T^\phi(x) \right] - \mathbb{E}_{z \sim P_Z} \left[ f^*(T^\phi(g^\theta(x))) \right] \leq D_f(P^\theta_X, Q_X)
+L_f(\phi, \theta) = \mathbb{E}_{x \sim Q_X} \left[ T^\phi(x) \right] - \mathbb{E}_{z \sim P_Z} \left[ f^*(T^\phi(g^\theta(x))) \right] \leq D_f(P^\theta_X, Q_X),
 \end{align*}
 %
 where the function $T^\phi$ is implemented as a neural network.
@@ -432,7 +432,7 @@ If $\mathcal{H}$ is such that $h \in \mathcal{H}$ implies that $-h \in \mathcal{
 \begin{align*}
 D_{\mathcal{H}}(P, Q) &= \sup_{h\in\mathcal{H}} \int h(x) dP(x) - \int h(x) dQ(x) \\
 &= \sup_{h\in\mathcal{H}} \left\{ \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right] \right\} \\
-&\geq  \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right]
+&\geq  \mathbb{E}_{x \sim P} \left[ h(x) \right]- \mathbb{E}_{x \sim Q} \left[ h(x) \right],
 \end{align*}
 %
 where the inequality holds for any $h \in \mathcal{H}$, where $h$ now plays the role of the discriminator. 
@@ -505,10 +505,11 @@ Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-di
 
 \subsection{Wasserstein Autoencoders}
 
-Wasserstein Autoencoders (WAEs) \citep{tolstikhin2017wasserstein} approximately minimise optimal transport distances, also known as 1-Wasserstein distances, between model and data distributions.
+Wasserstein Autoencoders (WAEs) \citep{tolstikhin2017wasserstein} approximately minimise optimal transport distances between model and data distributions.
 These were discussed briefly in Section \ref{subsec:intro-ipm} as they can be expressed as IPMs, but here an alternative formulation of these distances will be used.
 
-Let $c$ be any metric on $\mathcal{X}$.
+%Let $c$ be any metric on $\mathcal{X}$
+Let $c$ be any non-negative function on $\mathcal{X} \times \mathcal{X}$ satisfying $c(x,x)=0$.
 For intuition, $c(x, x')$ may be thought of as a function specifying the cost of transporting a point from $x$ to $x'$.
 The optimal transport distance between two distributions $P$ and $Q$ over $\mathcal{X}$ is then the minimal cost incurred by transporting the probability mass of $P$ to that of $Q$.
 %For simplicity in the following, we will assume $P$ and $Q$ have densities $p$ and $q$. 
@@ -552,10 +553,10 @@ OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb
 \end{align*}
 %
 Again this optimisation problem is not feasible to solve due to the hard constraint, 
-but it can be made computationally feasible by relaxing the constraint to obtain the WAE objective:
+but it can be made computationally feasible by relaxing the constraint to obtain the WAE objective
 %
 \begin{align}
-L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, g^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}}
+L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, g^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}},
 \end{align}
 %
 where $D$ is some divergence, $\lambda$ is a positive scalar and the encoder is given parameter $\phi$.

@@ -646,7 +646,10 @@ As is the case for acyclic SEMs, removing this assumption leads to significant i
 The approaches to causal inference discussed in the previous section all make a crucial assumption that we have not yet discussed: we are presented with a vector of random variables which are individually `causally meaningful' in the sense that causal relations between them exist and can thus be discovered. 
 Clearly not all random variables are meaningful in this way, and thus cannot be endowed with a causal interpretation.
 A simple intuitive example of this can be found in images, where individual pixels are not meaningful, though higher level features such as the presence of an object may be.
-The issue is, however, best illustrated concretely by an example previously used by~\cite{spirtes2004causal} to demonstrate problems in the causal modelling process.
+
+It will be argued that for macro-variables that are functions of underlying causal micro-variables to be themselves considered causal entities, it is important to consider the set of interventions being modelled and the structure exhibited by these interventions.
+
+The issue is best illustrated concretely by an example previously used by~\cite{spirtes2004causal} to demonstrate problems in the causal modelling process.
 
 
 \begin{figure}
@@ -1170,7 +1173,7 @@ The requirement that $\omega$ be order-preserving rules this pathology out.
 
 \section{Examples of exact transformations}\label{sec:causality-causal-examples-of-transformations}
 
-The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur.
+The problem of modelling at multiple levels of complexity was motivated in Section \ref{subsec:causality-modelling-different-levels} by listing three settings in which differing model levels naturally occur: marginalisation of unobserved variables; macro-level models of underlying micro-variables; and time-invariant descriptions of dynamical systems.
 Having introduced the notion of an exact transformation between SEMs, this section provides examples of exact transformations falling into each of the categories.
 %The fact that a single framework can be used to draw an explicit correspondence between differing model levels in each of these settings demonstrates the generality of our framework.
 
