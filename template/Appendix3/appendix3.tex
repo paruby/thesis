@@ -267,7 +267,7 @@ Since $g(x)$ is increasing on $(1, \infty)$ we have that $h_\delta(x) \geq \lim_
 For $\beta \in (1, \infty)$, $\frac{1-\beta}{\beta} < 0$. 
 It follows that $\left(1+x^{-\beta}\right)^\frac{1-\beta}{\beta} \to 0$ as $x \to 0$, and hence $\lim_{x\to 0}g(x)$ exists and is finite.
 Since $g(x)$ is decreasing on $(0,1)$ and increasing on $(1,\infty)$, it follows that 
-$g(x) \leq \max\{\lim_{x\to 0}g(x), \lim_{x\to \infty}g(x)\}$ for all $x\in [0, \infty)$
+$g(x) \leq \max\{\lim_{x\to 0}g(x), \lim_{x\to \infty}g(x)\}$ for all $x\in [0, \infty)$.
 \end{proof}
 
 
@@ -304,7 +304,6 @@ Indeed, expanding the right hand side and using the fact that $\E_{\XN}\hat{q}_N
     &= \E_{\XN} \left[ D_{f}\left( \hat{Q}_Z^N , P_Z\right)\right] - D_{f}\left( Q_{Z} , P_Z\right).
 \end{align*}
 Again using the fact that $\E_{\XN}\hat{q}_N(z) = q(z)$, observe that taking expectations over $\XN$ in the right hand size of Equation \ref{eqn:chi2-bias} above (after changing the order of integration) can be viewed as taking the variance of $\hat{q}_N(z)/p(z)$, the average of $N$ i.i.d. random variables, and so
-
 \begin{align*}
  \E_{\XN}\left[ \int_Z  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 dP(z) \right] &= \int_Z \E_{\XN}\left[  \left(\frac{\hat{q}_N(z) - q(z)}{p(z)}\right)^2 \right] dP(z) \\
  &=\frac{1}{N} \int_Z \E_{X}\left[  \left(\frac{q(z|X) - q(z)}{p(z)}\right)^2 \right] dP(z) \\
@@ -315,7 +314,7 @@ Again using the fact that $\E_{\XN}\hat{q}_N(z) = q(z)$, observe that taking exp
 \paragraph{The case that $D_f$ is the Total Variation distance or $D_{f_\beta}$ with $\beta>1$:}
 
 For these divergences, we only need the condition that the second moment $\E_X \| q(z|X)/p(z)\|^2_{L_2(P_Z)} < \infty$ is bounded.
-
+%
 \begin{align*}
     & \E_{\XN} \left[ D_{f_0}\left( \hat{Q}_Z^N , P_Z\right)\right] - D_{f_0}\left( Q_{Z} , P_Z\right)  \\
     &= \E_{\XN}\E_{P_Z} \left[ f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \right] \\
@@ -333,17 +332,17 @@ Then,
     &\leq \frac{1}{N}\E_{X} \E_{P_Z} \left[ \frac{q^2(z|X)}{p^2(z)} \right] = \frac{1}{N} \E_X \left\| \frac{q(z|X)}{p(z)} \right\|^2_{L_2(P_Z)}\\
     \implies & (i) = O\left(\frac{1}{\sqrt{N}}\right).
 \end{align*}
-
+%
 For Total Variation, ${f'_0}^2(x) \leq 1$, so
 \begin{align*}
     (ii)^2 \leq 1.
 \end{align*}
-
+%
 For $D_{f_\beta}$ with $\beta>1$, Lemma~\ref{lemma:upper-bound-f-beta} shows that $f'^2_0(x) \leq \max\{\lim_{x\to 0}f'^2_0(x), \lim_{x\to \infty}f'^2_0(x)\} < \infty$ and so 
 \begin{align*}
     (ii)^2 = O(1).
 \end{align*}
-
+%
 Thus, for both cases considered,
 \begin{align*}
     \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right) \leq O\left( \frac{1}{\sqrt{N}} \right).
@@ -353,7 +352,7 @@ Thus, for both cases considered,
 
 We start by writing the difference as the sum of integrals over mutually exclusive events that partition $\mathcal{Z}$.
 Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, write
-
+%
 \begin{align*}
     & \E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)  \\
     &= \E_{\XN} \left[\int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) dP_Z(z) \right] \\
@@ -361,7 +360,7 @@ Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, write
     & \quad + \E_{\XN} \left[\int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} \leq \delta_N \text{ and } \frac{q(z)}{p(z)} > \gamma_N \right\rbrace} dP_Z(z) \right]\tag*{\encircle{B}}\\
     & \quad + \E_{\XN} \left[ \int f_0\left( \frac{\hat{q}_N(z)}{p(z)} \right) - f_0\left( \frac{q(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} dP_Z(z) \right]. \tag*{\encircle{C}}
 \end{align*}
-
+%
 Consider each of the terms \encircle{A}, \encircle{B} and  \encircle{C} separately.
 
 Later on, we will pick $\delta_N < \gamma_N$ to be decreasing in $N$.
@@ -377,7 +376,6 @@ Since $\gamma_N, \delta_N \leq 1$, the integrand is at most $f_0(0) - f_0(\gamma
 
 \encircle{B}:
 The integrand is bounded above by $f_0(0)$ since $\delta_N<1$, and so 
-% \carlos{Again, here we need $\delta_N < 1$ right?}
 \begin{align*}
     \encircle{B} &\leq f_0(0) \times \mathbb{P}_{Z,\XN}
     \underbrace{
@@ -413,7 +411,7 @@ We thus have that
 
 \encircle{C}:
 Bounding this term will involve two computations, one of which $(\dagger\dagger)$ will be treated separately for each divergence we consider.
-
+%
 \begin{align*}
     \encircle{C} &= \E_{\XN}\left[\int f_0\left( \frac{\hat{q}_N(z)}{p(z)}\right) - f_0\left( \frac{q(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} dP_Z(z)\right] \\
     &\leq \E_{\XN} \left[ \int \left(\frac{\hat{q}_N(z)}{p(z)} - \frac{q(z)}{p(z)}\right) f'_0\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} dP_Z(z) \right]
@@ -439,7 +437,7 @@ The idea is to use the results of Lemmas~\ref{lemma:concave-upper-bound-kl}-\ref
 \paragraph{KL.}
 
 By Lemma \ref{lemma:concave-upper-bound-kl}, there exists a function $h_{\delta_N}(x)$ that is positive and concave on $[0, \infty)$ and is an upper bound of $f_0'^2(x)$ on $[\delta_N, \infty)$ with $h_{\delta_N}(1) = \log^2(\delta_N) + \frac{2}{e}$.
-
+%
 \begin{align*}
     (\dagger\dagger)^2 
     &= \E_{\XN} \left[\int f_0'^2\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} p(z) dz \right]
@@ -457,14 +455,14 @@ By Lemma \ref{lemma:concave-upper-bound-kl}, there exists a function $h_{\delta_
     &= \log^2(\delta_N) + \frac{2}{e} \\
     \implies (\dagger\dagger)&= \sqrt{\log^2(\delta_N) + \frac{2}{e}}.
 \end{align*}
-
+%
 Therefore,
 \begin{align*}
     \encircle{C} \leq \sqrt{B} \sqrt{\frac{\log^2(\delta_N) + \frac{2}{e}}{N}}.
 \end{align*}
-
+%
 Putting everything together,
-
+%
 \begin{align*}
     &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -475,13 +473,13 @@ Taking $\delta_N = \frac{1}{N^{1/3}}$ and $\gamma_N = \frac{2}{N^{1/3}}$:
 \begin{align*}
     &=\frac{2}{N^{1/3}} - \frac{2}{N^{1/3}} \log\left( \frac{2}{N^{1/3}}\right) + \frac{ \sqrt{C} }{N \cdot \frac{1}{N^{2/3}} } + \sqrt{B} \sqrt{\frac{\log^2\left(\frac{1}{N^{1/3}}\right) + \frac{2}{e}}{N}}\\
     &= \frac{ 2 - 2\log2}{N^{1/3}} + \frac{2}{3}\frac{\log N}{N^{1/3}} + \frac{\sqrt{C}}{N^{1/3}} + \sqrt{B} \sqrt{\frac{\frac{1}{4}\log^2\left(N\right) + \frac{2}{e}}{N}} \\
-    & = O\left( \frac{\log N}{N^{1/3}}\right)
+    & = O\left( \frac{\log N}{N^{1/3}}\right).
 \end{align*}
 
 
 \paragraph{Squared-Hellinger.}
 Lemma~\ref{lemma:upper-bound-hellinger} provides a function $h_\delta$ that upper bounds $f'^2(x)$ for $x \in \in[\delta, \infty)$.
-
+%
 \begin{align*}
     (\dagger\dagger)^2 
     &= \E_{\XN} \left[\int f_0'^2\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} p(z) dz \right]
@@ -498,26 +496,26 @@ Lemma~\ref{lemma:upper-bound-hellinger} provides a function $h_\delta$ that uppe
     &\leq \frac{B + 1}{\delta_N} \\
     \implies (\dagger\dagger)&= \frac{\sqrt{B + 1}}{\sqrt{\delta_N}}.
 \end{align*}
-
+%
 and thus
-
+%
 \begin{align*}
     &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}\sqrt{B + 1}}{\sqrt{N \delta_N}}\\
     &= 2\sqrt{\gamma_N}  + \frac{2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} + \frac{\sqrt{B}\sqrt{B + 1}}{\sqrt{N \delta_N}}.
 \end{align*}
-
+%
 Setting $\gamma_N = \frac{2}{N^{2/5}}$ and $\delta_N = \frac{1}{N^{2/5}}$ yields
-
+%
 \begin{align*}
     &= \frac{2}{N^{1/5}}  + \frac{2\sqrt{C}}{N^{1/5}} + \frac{\sqrt{B}\sqrt{B + 1}}{N^{3/10}} \\
-    & = O\left(\frac{1}{N^{1/5}} \right)
+    & = O\left(\frac{1}{N^{1/5}} \right).
 \end{align*}
 
 \paragraph{$\alpha$-divergence with $\alpha\in(-1,1)$.}
 Lemma~\ref{lemma:upper-bound-alpha} provides a function $h_\delta$ that upper bounds $f'^2(x)$ for $x \in \in[\delta, \infty)$.
-
+%
 \begin{align*}
     (\dagger\dagger)^2 
     &= \E_{\XN} \left[\int f_0'^2\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} p(z) dz \right]
@@ -534,9 +532,9 @@ Lemma~\ref{lemma:upper-bound-alpha} provides a function $h_\delta$ that upper bo
     &\leq \frac{4(1+B)\left(\delta_N^\frac{\alpha-1}{2} - 1\right)^2}{(\alpha - 1)^2 (\delta_N- 1)^2} \\
     \implies (\dagger\dagger)&= \frac{2\sqrt{1+B}\left(\delta_N^\frac{\alpha-1}{2} - 1\right)}{(\alpha - 1) (\delta_N- 1)}.
 \end{align*}
-
+%
 and thus
-
+%
 \begin{align*}
     &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -546,18 +544,18 @@ and thus
 where each $k_i$ is a positive constant independent of $N$.
 
 Setting $\gamma_N = \frac{2}{N^\frac{2}{\alpha+5}}$ and $\delta_N = \frac{1}{N^\frac{2}{\alpha+5}}$ yields
-
+%
 \begin{align*}
     &= \leq  \frac{k_1}{N^{\frac{\alpha+1}{\alpha+5}}} + \frac{k_2}{N^{\frac{2}{\alpha+5}}}
     + \frac{k_3}{N^{\frac{\alpha+1}{\alpha+5}}} 
     + \frac{k_4}{N^{\frac{7-\alpha}{2(\alpha+5)}}} \\
-    & = O\left(\frac{1}{N^\frac{\alpha+1}{\alpha+5}} \right)
+    & = O\left(\frac{1}{N^\frac{\alpha+1}{\alpha+5}} \right).
 \end{align*}
 
 
 \paragraph{Jensen-Shannon.}
 Lemma~\ref{lemma:upper-bound-JS} provides a function $h_\delta$ that upper bounds $f'^2(x)$ for $x \in[\delta, \infty)$.
-
+%
 \begin{align*}
     (\dagger\dagger)^2 
     &= \E_{\XN} \left[\int f_0'^2\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} p(z) dz \right]
@@ -577,22 +575,22 @@ Lemma~\ref{lemma:upper-bound-JS} provides a function $h_\delta$ that upper bound
     &\leq \sqrt{5}\log\left(\frac{2}{\delta_N} \right) - \sqrt{5}\log 2 && \text{(since $\delta_N<1$)}\\
     &= -\sqrt{5}\log(\delta_N).
 \end{align*}
-
+%
 and thus
-
+%
 \begin{align*}
     &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0(\gamma_N) + f_0(0) \frac{\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B}\log \delta_N}{\sqrt{N}}\\
-    &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{\log2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B} \log \delta_N}{\sqrt{N}} \\
+    &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{\log2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B} \log \delta_N}{\sqrt{N}}. 
 \end{align*}
 Using the fact that $\gamma_N \log(1+\gamma_N) \leq \gamma_N \log2$ for $\gamma_N < 1$ and $\log(1+ \gamma_N) \leq \gamma_N$, we can upper bound the last line with
 \begin{align*}
-    &\leq \gamma_N \left(\log2 + 1\right)   - \gamma_N \log \gamma_N  + \frac{\log2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B} \log \delta_N}{\sqrt{N}} \\
+    &\leq \gamma_N \left(\log2 + 1\right)   - \gamma_N \log \gamma_N  + \frac{\log2\sqrt{C}}{N \left( \gamma_N - \delta_N \right)^2} - \frac{\sqrt{5}\sqrt{B} \log \delta_N}{\sqrt{N}} 
 \end{align*}
-
+%
 Setting $\gamma_N = \frac{2}{N^\frac{1}{3}}$ and $\delta_N = \frac{1}{N^\frac{1}{3}}$ yields
-
+%
 \begin{align*}
     &= \frac{k_1}{N^{\frac{1}{3}}} + \frac{k_2 \log N}{N^{\frac{1}{3}}}
     + \frac{k_3}{N^{\frac{1}{3}}} 
@@ -603,7 +601,7 @@ where the $k_i$ are positive constants independent of $N$.
 
 \paragraph{$f_\beta$-divergence with $\beta\in(\frac{1}{2}, 1)$.}
 Lemma~\ref{lemma:upper-bound-f-beta} provides a function $h_\delta$ that upper bounds $f'^2(x)$ for $x \in[\delta, \infty)$.
-
+%
 \begin{align*}
     (\dagger\dagger)^2 
     &= \E_{\XN} \left[ \int f_0'^2\left(\frac{\hat{q}_N(z)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z)}{p(z)} > \delta_N \right\rbrace} p(z) dz \right]
@@ -622,9 +620,9 @@ Lemma~\ref{lemma:upper-bound-f-beta} provides a function $h_\delta$ that upper b
     \implies (\dagger\dagger)&\leq 
     2^{\frac{2+\beta}{2\beta}}\left(\frac{\beta}{1-\beta}\right) \delta_N^{\beta - 1}\\
 \end{align*}
-
+%
 (noting that $\frac{\beta^2}{(1-\beta)^2}\left(2^{\frac{1}{\beta} - 1}\right)^2 = \lim_{x\to\infty} f'^2_0(x)$ as defined in Lemma~\ref{lemma:upper-bound-f-beta}). Thus
-
+%
 \begin{align*}
     &\E_{\XN} \left[ D_f\left( \hat{Q}_Z^N , P_Z\right)\right] - D_f\left( Q_{Z} , P_Z\right)\\
     &\leq \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -636,12 +634,12 @@ Lemma~\ref{lemma:upper-bound-f-beta} provides a function $h_\delta$ that upper b
 where the $k_i$ are positive constants independent of $N$.
 
 Setting $\gamma_N = \frac{2}{N^\frac{1}{3}}$ and $\delta_N = \frac{1}{N^\frac{1}{3}}$ yields
-
+%
 \begin{align*}
     &= \frac{k_1}{N^{\frac{1}{3}}}
     + \frac{k_2}{N^{\frac{1}{3}}} 
     + \frac{k_3}{N^{\frac{1}{2}+\frac{\beta-1}{3}}} \\
-    &= O\left(\frac{1}{N^\frac{1}{3}}\right)
+    &= O\left(\frac{1}{N^\frac{1}{3}}\right).
 \end{align*}
 
 \end{proof}
@@ -694,16 +692,16 @@ Note that in order to show that
 \end{align}
 it is sufficient to prove that 
 \begin{align}\label{eqn:bounded-diff}
-     D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N
+     D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N,
 \end{align}
 since the symmetry in $\XN \leftrightarrow {\XN}'$ implies that
 \begin{align}
-    - D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) + D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N
+    - D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) + D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \leq c_N,
 \end{align}
 and thus implies Inequality \ref{eqn:bounded-diff-abs}.
 The remainder of this proof is therefore devoted to showing that Inequality \ref{eqn:bounded-diff} holds for each divergence.
 
-We will make use of the fact that $\chi^2\left(Q_{Z|x} , P_Z\right) \leq C \implies \bigl\| \frac{q(z|x)}{p(z)} \bigr\|_{L_2(P_Z)} \leq C+1 $
+We will make use of the fact that $\chi^2\left(Q_{Z|x} , P_Z\right) \leq C \implies \bigl\| \frac{q(z|x)}{p(z)} \bigr\|_{L_2(P_Z)} \leq C+1. $
 
 \paragraph{The case that $D_f$ is the $\chi^2$-divergence, Total Variation or $D_{f_\beta}$ with $\beta>1$:}
 \begin{align*}
@@ -727,7 +725,7 @@ This holds for any $N>0$.
 Similar to the proof of Theorem \ref{thm:convergence-rate-general},
 we write the difference as the sum of integrals over different mutually exclusive events that partition $\mathcal{Z}$.
 Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, we have that
-
+%
 \begin{align*}
     & D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right)  \\
     &= \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) dP_Z(z)  \\
@@ -735,7 +733,7 @@ Denoting by $\gamma_N$ and $\delta_N$ scalars depending on $N$, we have that
     & \quad + \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) \mathds{1}_{\left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \leq \delta_N \text{ and } \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) > \gamma_N \right\rbrace} dP_Z(z) \tag*{\encircle{B}}\\
     & \quad + \int f_0\left( \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \right) - f_0\left( \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) \right) \mathds{1}_{\left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) > \delta_N \right\rbrace} dP_Z(z). \tag*{\encircle{C}}
 \end{align*}
-
+%
 We will consider each of the terms \encircle{A}, \encircle{B} and  \encircle{C} separately.
 
 Later on, we will pick $\gamma_N$ and $\delta_N$ to be decreasing in $N$ such that $\delta_N < \gamma_N$.
@@ -746,7 +744,7 @@ Recall that $f_0(x)$ is decreasing on the interval $[0,1]$.
 Since $\gamma_N, \delta_N \leq 1$, 
 the integrand is at most $f_0(0) - f_0(\gamma_N)$, and so 
 \begin{align*}
-    \encircle{A} &\leq f_0(0) - f_0(\gamma_N)
+    \encircle{A} &\leq f_0(0) - f_0(\gamma_N).
 \end{align*}
 
 
@@ -756,48 +754,49 @@ the integrand is at most $f_0(0)$ and so
 \begin{align*}
     \encircle{B} &\leq f_0(0) \times \mathbb{P}_Z
     \underbrace{
-    \left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \leq \delta_N \text{ and } \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) > \gamma_N \right\rbrace}_{\encircle{$*$}} \\
+    \left\lbrace \frac{d\hat{Q}_Z^N(\XN)}{dP_Z}(z) \leq \delta_N \text{ and } \frac{d\hat{Q}_Z^N({\XN}')}{dP_Z}(z) > \gamma_N \right\rbrace}_{\encircle{$*$}}.
 \end{align*}
-
+%
 We will bound $\mathbb{P}_Z\encircle{$*$} = 0$ using Chebyshev's inequality.
 Noting that 
 \begin{align*}
     \frac{\hat{q}_N(z;\XN)}{p(z)} 
-    &= \frac{\hat{q}_N(z;{\XN}')}{p(z)} - \frac{1}{N}\frac{q(z|X'_1)}{p(z)} + \frac{1}{N}\frac{q(z|X_1)}{p(z)}, \\
+    &= \frac{\hat{q}_N(z;{\XN}')}{p(z)} - \frac{1}{N}\frac{q(z|X'_1)}{p(z)} + \frac{1}{N}\frac{q(z|X_1)}{p(z)}, 
 \end{align*}
 and using the fact that $\frac{q(z|X_1)}{p(z)} > 0$ it follows that
 \begin{align*}
     \encircle{$*$} \implies &\gamma_N - \frac{1}{N}\frac{q(z|X'_1)}{p(z)} + \frac{1}{N}\frac{q(z|X_1)}{p(z)} < \delta_N \\
     \iff & (\gamma_N - \delta_N)N + \frac{q(z|X_1)}{p(z)} < \frac{q(z|X'_1)}{p(z)}\\
     \implies & (\gamma_N-\delta_N)N < \frac{q(z|X'_1)}{p(z)}  \\
-\implies & (\gamma_N-\delta_N)N - 1 < \frac{q(z|X'_1)}{p(z)} - 1.
+\implies & (\gamma_N-\delta_N)N - 1 < \frac{q(z|X'_1)}{p(z)} - 1,
 \end{align*}
 where the penultimate line follows from the fact that $q(z|X_1)/p(z)\geq0$. It follows that
 \begin{align*}
     \mathbb{P}_Z\encircle{$*$} &\leq \mathbb{P}_Z\left\lbrace \frac{q(z|X'_1)}{p(z)} - 1 > (\gamma_N-\delta_N)N - 1 \right\rbrace \\
-    &\leq \mathbb{P}_Z\left\lbrace \left|\frac{q(z|X'_1)}{p(z)} - 1\right| > (\gamma_N-\delta_N)N - 1 \right\rbrace. \\
+    &\leq \mathbb{P}_Z\left\lbrace \left|\frac{q(z|X'_1)}{p(z)} - 1\right| > (\gamma_N-\delta_N)N - 1 \right\rbrace. 
 \end{align*}
-
+%
 Denote by $\sigma^2(X) = \V_Z\left[\frac{q(z|X)}{p(z)}\right] = \E_Z \frac{q^2(z|X)}{p^2(z)} - 1 \leq C$.
 We have by Chebyshev that for any $t>0$,
+%
 \begin{align*}
     &\mathbb{P}_Z\left\lbrace \left|\frac{q(z|X)}{p(z)} - 1\right| > t \right\rbrace \leq \frac{\sigma^2(X)}{t^2} \\
 \end{align*}
 and so setting $t=(\gamma_N-\delta_N)N - 1$ yields
 \begin{align*}
-    \mathbb{P}_Z\encircle{$*$} &\leq \frac{\sigma^2(X)}{\left((\gamma_N-\delta_N)N - 1\right)^2} \leq \frac{C}{\left((\gamma_N-\delta_N)N - 1\right)^2}
+    \mathbb{P}_Z\encircle{$*$} &\leq \frac{\sigma^2(X)}{\left((\gamma_N-\delta_N)N - 1\right)^2} \leq \frac{C}{\left((\gamma_N-\delta_N)N - 1\right)^2}.
 \end{align*}
-
+%
 It follow that
 \begin{align*}
-    \encircle{B} &\leq f_0(0) \frac{C}{\left((\gamma_N-\delta_N)N - 1\right)^2}
+    \encircle{B} &\leq f_0(0) \frac{C}{\left((\gamma_N-\delta_N)N - 1\right)^2}.
 \end{align*}
 
 
 \encircle{C}: Similar to the proof of Theorem \ref{thm:convergence-rate-general}, we can upper bound this term by the product of two terms, one of which is independent of the choice of divergence.
 The other term will be treated separately for each divergence considered.
-
-
+%
+%
 \begin{align*}
     \encircle{C} &= \int {f_0}\left( \frac{\hat{q}_N(z;\XN)}{p(z)}\right) - {f_0}\left( \frac{\hat{q}_N(z;{\XN}')}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z;\XN)}{p(z)} > \delta_N \right\rbrace} dP_Z(z) \\
     &\leq \int \left(\frac{\hat{q}_N(z;\XN)}{p(z)} - \frac{\hat{q}_N(z;{\XN}')}{p(z)}\right) {f_0}'\left(\frac{\hat{q}_N(z;\XN)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z;\XN)}{p(z)} > \delta_N \right\rbrace} dP_Z(z) 
@@ -810,14 +809,12 @@ The other term will be treated separately for each divergence considered.
     \\
     &\leq \frac{2(C+1)}{N} \underbrace{\sqrt{\int {f_0}'^2\left(\frac{\hat{q}_N(z;\XN)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z;\XN)}{p(z)} > \delta_N \right\rbrace} p(z) dz }}_{\encircle{$*$}}
     \qquad \text{(Boundedness of ${\scriptscriptstyle\left\| \frac{q(z|x)}{p(z)}\right\|_{L_2(P_Z)}}$)}
-    \\
 \end{align*}
 The term \encircle{$*$} will be treated separately for each divergence.
-
+%
 \paragraph{$\KL$:}
-
 By Lemma \ref{lemma:concave-upper-bound-kl}, there exists a function $h_{\delta_N}(x)$ that is positive and concave on $[0, \infty)$ and is an upper bound of $f_0'^2(x)$ on $[\delta_N, \infty)$ with $h_{\delta_N}(1) = \log^2(\delta_N) + \frac{2}{e}$.
-
+%
 \begin{align*}
     \encircle{$*$}^2
     &\leq \int h_{\delta_N}\left(\frac{\hat{q}_N(z;\XN)}{p(z)} \right) \mathds{1}_{\left\lbrace \frac{\hat{q}_N(z;\XN)}{p(z)} > \delta_N \right\rbrace} p(z) dz
@@ -833,10 +830,9 @@ By Lemma \ref{lemma:concave-upper-bound-kl}, there exists a function $h_{\delta_
     &= \log^2(\delta_N) + \frac{2}{e}\\
     \implies \encircle{$C$} &\leq \frac{2(C+1)}{N}\sqrt{\log^2(\delta_N) + \frac{2}{e}}.
 \end{align*}
-
-
+%
 Putting together the separate integrals and setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N = \frac{2}{N^{2/3}}$ , we have that
-
+%
 \begin{align*}
     &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -847,7 +843,7 @@ Putting together the separate integrals and setting $\delta_N = \frac{1}{N^{2/3}
     &\leq\frac{2}{N^{2/3}} - \frac{2}{N^{2/3}} \log\left(\frac{2}{N^{2/3}} \right) + \frac{9f_0(0)C}{4N^{2/3}} + \frac{2(C+1)}{N} \sqrt{\frac{4}{9}\log^2(N) + \frac{2}{e}} 
     \\
     &= \frac{k_1}{N^{2/3}} + \frac{k_2 \log N}{N^{2/3}} + \frac{k_3 \sqrt{\log^2N + \frac{9}{2e}}}{N}\\
-    &\leq (k_1+k_2+2k_3)\frac{\log N}{N^{2/3}}
+    &\leq (k_1+k_2+2k_3)\frac{\log N}{N^{2/3}},
 \end{align*}
 where $k_1, k_2$ and $k_3$ are constants depending on $C$.
 The second inequality holds if $N^{1/3}-1 > \frac{N^{1/3}}{3} \iff N>\left(\frac{3}{2}\right)^3 < 4$ and the third inequality holds if $N\geq 4$
@@ -864,14 +860,13 @@ In this case similar reasoning to the other divergences leads to a bound that is
 \paragraph{$\alpha$-divergence with $\alpha\in(\frac{1}{3},1)$.}
 
 Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-general} for the $\alpha$-divergence case, we use the function $h_{\delta_N}(x)$ provided by Lemma \ref{lemma:upper-bound-alpha} to derive the following upper bound:
-
+%
 \begin{align*}
     \encircle{C} &\leq \frac{2(C+1)}{N} \cdot \frac{2\sqrt{1+(C+1)^2}\left(\delta_N^\frac{\alpha-1}{2} - 1\right)}{(\alpha - 1) (\delta_N- 1)}.
 \end{align*}
-
-
+%
 Setting $\delta_N = \frac{1}{N^\frac{4}{\alpha+5}}$ and $\gamma_N = \frac{2}{N^\frac{4}{\alpha+5}}$,
-
+%
 \begin{align*}
     &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -880,7 +875,7 @@ Setting $\delta_N = \frac{1}{N^\frac{4}{\alpha+5}}$ and $\gamma_N = \frac{2}{N^\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{t^2f_0(0)C}{(t-1)^2(\gamma_N-\delta_N)^2N^2} + \frac{2(C+1)}{N}\frac{4\sqrt{1+(C+1)^2}\delta_N^\frac{\alpha-1}{2}}{(1-\alpha)} \\
     &\leq k_1 \gamma_N^{\frac{\alpha+1}{2}} + k_2 \gamma_N +\frac{k_3}{(\gamma_N-\delta_N)^2N^2} + \frac{k_4 \delta_N^\frac{\alpha-1}{2}}{N} \\
     &= \frac{k_1}{N^{\frac{2\alpha+2}{\alpha+5}}} + \frac{k_2}{N^\frac{4}{\alpha+5}} + \frac{k_3}{N^{\frac{2\alpha -2}{\alpha+5}}} +\frac{k_4}{N^{\frac{3\alpha+3}{\alpha+5}}} \\
-    &\leq \frac{k_1+k_2+k_3 + k_4}{N^{\frac{2\alpha+2}{\alpha+5}}}
+    &\leq \frac{k_1+k_2+k_3 + k_4}{N^{\frac{2\alpha+2}{\alpha+5}}},
 \end{align*}
 where $t$ is any positive number and where the second inequality holds if $N^\frac{2\alpha+2}{\alpha+5} - 1 > \frac{N^\frac{2\alpha+2}{\alpha+5}}{t} \iff N > (\frac{t}{t-1})^{\frac{\alpha+5}{2\alpha+21}}$.
 For $\alpha \in (\frac{1}{3}, 1)$ we have $\frac{\alpha+5}{2\alpha+2} \in (\frac{3}{2}, 2)$. 
@@ -896,30 +891,28 @@ Thus, this leads to $Nc_N^2 = \frac{k}{N^{\frac{3\alpha - 1}{\alpha+5}}}$ for $N
 \paragraph{Jensen-Shannon.}
 
 Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-general} for the $\alpha$-divergence case, we use the function $h_{\delta_N}(x)$ provided by Lemma \ref{lemma:upper-bound-JS} to derive the following upper bound:
-
-
+%
 \begin{align*}
     \encircle{C} &\leq \frac{2(C+1)}{N} \cdot \sqrt{5}\log\left(\frac{1}{\delta_N}\right).
 \end{align*}
-
-
+%
 Setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N = \frac{2}{N^{2/3}}$,
-
+%
 \begin{align*}
     &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
     &\leq f_0(0) - f_0\left(\gamma_N\right) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right) \\
-    &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right).\\
+    &\leq \gamma_N \log\left(\frac{1+\gamma_N}{2\gamma_N}\right) + \log(1+\gamma_N) + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right).
 \end{align*}
-
+%
 Using the fact that $\log(1+\gamma_N)\leq \gamma_N$, we obtain the following upper bound:
-
+%
 \begin{align*}
     &\leq \gamma_N^2 + \gamma_N(1-\log 2 ) - \gamma_N \log \gamma_N + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2} + \frac{2(C+1)}{N} \cdot \log\left(\frac{1}{\delta_N}\right)\\
     &= \frac{k_1}{N^{4/3}} + \frac{k_2}{N^{2/3}} + \frac{k_3\log N}{N^{2/3}} + \frac{k_4}{(N^{1/3} - 1)^2} +\frac{k_5 \log N }{ N^{2/3}} \\
     &= \frac{k_1}{N^{4/3}} + \frac{k_2}{N^{2/3}} + \frac{k_3\log N}{N^{2/3}} + \frac{k_4}{(N^{1/3} - 1)^2} +\frac{k_5 \log N }{ N^{2/3}} \\
     &\leq \frac{k_1}{N^{4/3}} + \frac{k_2}{N^{2/3}} + \frac{k_3\log N}{N^{2/3}} + \frac{100k_4}{81N^{2/3}} +\frac{k_5 \log N }{ N^{2/3}} \\
-    &\leq (k_1+k_2+k_3+k'_4 + k_5)\frac{\log N}{N^{2/3}}
+    &\leq (k_1+k_2+k_3+k'_4 + k_5)\frac{\log N}{N^{2/3}},
 \end{align*}
 where the penultimate inequality holds if $N^{1/3}-1 > \frac{N^{1/3}}{10} \iff N>\left(\frac{10}{9}\right)^3$ which is satisfied if $N>1$ and the last inequality is true if $N>1$.
 
@@ -931,14 +924,13 @@ This leads to $Nc_N^2 = \frac{\log^2N}{N^{1/3}}$ for $N>2$.
 \paragraph{$f_\beta$-divergence, $\beta\in(\frac{1}{2},1)$.}
 
 Following similar reasoning to the proof of Theorem \ref{thm:convergence-rate-general} for the $\alpha$-divergence case, we use the function $h_{\delta_N}(x)$ provided by Lemma \ref{lemma:upper-bound-f-beta} to derive the following upper bound:
-
-
+%
 \begin{align*}
     \encircle{C} &\leq \frac{2(C+1)}{N} \cdot \frac{\beta}{1-\beta}\cdot 2^{\frac{2+\beta}{2\beta}}\delta_N^{\beta-1}.
 \end{align*}
-
+%
 Setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N =\frac{2}{N^{2/3}}$,
-
+%
 \begin{align*}
     &D_f\left( \hat{Q}_Z^N(\XN) , P_Z\right) - D_f\left( \hat{Q}_Z^N({\XN}') , P_Z\right) \\
     &= \encircle{A} + \encircle{B} + \encircle{C} \\
@@ -946,15 +938,13 @@ Setting $\delta_N = \frac{1}{N^{2/3}}$ and $\gamma_N =\frac{2}{N^{2/3}}$,
     &\leq \frac{\beta}{\beta-1}2^{\frac{1-\beta}{\beta}}\gamma_N + \frac{f_0(0)C}{\left((\gamma_N-\delta_N)N - 1\right)^2}+ \frac{\beta}{1-\beta}\cdot 2^{\frac{2+\beta}{2\beta}} \frac{ \delta^{\beta-1}}{N} \\
     &= \frac{k_1}{N^{2/3}} + \frac{k_2}{(N^{1/3} - 1)^2} + \frac{k_3}{N^\frac{2\beta + 1}{3}}\\
     &\leq \frac{k_1}{N^{2/3}} + \frac{100k_2}{81N^{2/3}} + \frac{k_3}{N^\frac{2\beta + 1}{3}}\\
-    &\leq \frac{k_1+k'_2 + k_3}{N^{2/3}}
+    &\leq \frac{k_1+k'_2 + k_3}{N^{2/3}},
 \end{align*}
 where the penultimate inequality holds if $N^{1/3}-1 > \frac{N^{1/3}}{10} \iff N>\left(\frac{10}{9}\right)^3$ which is satisfied if $N>1$.
 
 The assumption that $\delta_N, \gamma_N \leq 1$ holds if $N>2^{3/2}$ and so holds if $N\geq3$.
 
 This leads to $Nc_N^2 = \frac{1}{N^{1/3}}$ for $N>2$.
-
-
 \end{proof}
 
 \section{Proof of Theorem \ref{thm:mc-variance}}\label{appendix:full-statment-proof-mc}
@@ -977,21 +967,21 @@ If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either o
 %\end{align*}
 \begin{align*}
 (i)& \begin{cases}
-\displaystyle \pi(z|\XN) = p(z) \\
+\displaystyle \pi(z|\XN) = p(z), \\
 \displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 p(z) dz  < \infty, \\
-\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty
+\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty,
 \end{cases}\\ \ \\
 (ii)& \begin{cases}
 \displaystyle \pi(z | \XN) = \hat{q}_N(z), \\
 \displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 \left(\frac{p(z)}{q(z|X)}\right)^2 q(z|X) dz < \infty, \\
-\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty
+\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty,
 \end{cases}
 \end{align*}
 %where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
 then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, the variance of RAM-MC decays as
 \begin{align*}
     \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
-    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
+    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
 \end{align*}
 %
 %If $\pi(z|\XN) = p(z)$ or $\pi(z | \XN) = \hat{q}_N(z)$ then under mild assumptions$^\star$ on the moments of $q(Z|X)/p(Z)$
@@ -1043,7 +1033,7 @@ By construction of $f_0$, $f_0(x) \geq 0$ for $x > 0$.
 Thus $f_0(x)^2$ has non-negative second derivative and is thus convex on $(0, \infty)$.
 
 To see that $\frac{f_0(x)^2}{x}$ is convex, observe that
-
+%
 \begin{align*}
     \frac{d^2}{dx^2} \frac{f_0(x)^2}{x} = \frac{2}{x}\left( f_0(x) f_0''(x) + \left(f_0'(x) - \frac{f_0(x)}{x}\right)^2 \right).
 \end{align*}
@@ -1052,23 +1042,23 @@ By the same arguments above, this is positive for $x > 0$ and thus $\frac{f_0(x)
 
 \begin{proof}(Theorem \ref{thm:mc-variance})
 For the expectation, observe that
-
+%
 \begin{align*}
     \E_{\ZM, \XN} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)
     &=\E_{\XN} \left[ \E_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z | \XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)\right] \\
     &= \E_{\XN} \left[ \E_{z \sim \pi(z | \XN)} f\left(\frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi(z|\XN)} \right] \\
     &=\E_{\XN} \left[ D_f\left( \hat{Q}^N_Z , P_Z \right)\right].
 \end{align*}
-
+%
 For the variance, by the law of total variance we have that
-
+%
 \begin{align*}
     &\text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right]  \\
     &= \E_{\XN} \text{Var}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z) + \text{Var}_{\XN} \mathbb{E}_{\ZM \overset{\text{\emph{i.i.d.}}}{\sim} \pi(z|\XN)} \hat{D}^M_f( \hat{Q}_Z^N , P_Z)
     \\
     &=\frac{1}{M} \underbrace{\E_{\XN} \text{Var}_{\pi(z|\XN)} \left[ f\left( \frac{\hat{q}_N(z)}{p(z)} \right) \frac{p(z)}{\pi\left(z|\XN\right)} \right]}_{(i)}  + \underbrace{\text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z , P_Z \right)\right]}_{(ii)}.
 \end{align*}
-
+%
 Consider term $(ii)$.
 The concentration results of Theorem \ref{thm:concentration} imply bounds on $(ii)$, since for a random variable $X$,
 \begin{align*}
@@ -1080,7 +1070,7 @@ It follows therefore that
 \begin{align*}
     \text{Var}_{\XN} \left[D_f\left( \hat{Q}^N_Z , P_Z \right)\right] 
     &\leq \int_0^\infty 2 \exp\left( -\frac{k}{\psi(N)^2}t \right) dt\\
-    &= O\left(\psi(N)^2 \right)
+    &= O\left(\psi(N)^2 \right),
 \end{align*}
 where $\psi(N)$ is given by Table~\ref{table:concentration}.
 
@@ -1096,7 +1086,7 @@ In the case that $\pi(z|\XN) = p(z)$,
 &\leq \E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right] 
 +
  f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right] \\
- & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right]} \\
+ & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right]}.
 \end{align*}
 The penultimate inequality follows by application of Cauchy-Schwartz.
 The last inequality follows by Proposition \ref{prop:upper-bound} applied to $D_{f_0^2}$ and $D_{(x-1)^2}$, 
@@ -1110,7 +1100,7 @@ Consider the other term:
     +
     f'(1)^2 \E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right] \\
     & \qquad + 2f'(1) \sqrt{\E_{X} \E_{p(z)} \left[  f\left( \frac{q(z|X)}{p(z)} \right)^2\right] } \times \sqrt{\E_{X} \E_{p(z)} \left[  \left( \frac{q(z|X)}{p(z)} - 1 \right)^2\right]} \\
-    & < \infty
+    & < \infty.
 \end{align*}
 The inequality follows by Cauchy-Schwartz.
 All terms are finite by assumption.
@@ -1118,7 +1108,7 @@ Thus $(i) \leq K < \infty$ for some $K$ independent of $N$.
 
 Now consider the case that $\pi(z|\XN) = \hat{q}_N(z)$. 
 Then, following similar (but algebraically more tedious) reasoning to the previous case, it can be shown that
-
+%
 \begin{align*}
 (i)
 &\leq \E_{X} \E_{p(z)} \left[  f_0\left( \frac{q(z|X)}{p(z)} \right)^2 \frac{p(z)}{q(z|X)}\right] 
