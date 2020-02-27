@@ -16,7 +16,7 @@
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
 	&= \left(\sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)) \,
+	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)),
 	\end{align}
 	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel).
@@ -179,13 +179,13 @@ Moreover, in order to show that the representations are aligned, we will show th
 	\begin{align}
 	\sum_{i}\psi_{i}(y_{i},t_{i}) 
 	&=\sum_{i}\eta_{i}(v_i({y}), u_i({t}))
-	-\sum_{i}\theta_{i}(v_i({y}))\label{eq:logistic}
+	-\sum_{i}\theta_{i}(v_i({y})). \label{eq:logistic}
 	\end{align}
 
 	To show that $h_{1i}(X_1)$ depends on exactly one component of $Z$, we will show that
 	\begin{equation}
 	\label{eq:v_onev}
-	v_{i}({y})  = v_{i}(y_{\pi(i)})\\
+	v_{i}({y})  = v_{i}(y_{\pi(i)})
 	\end{equation}
 	for some permutation of the indices $\pi$ with respect to the indexing of the sources ${z} = (z_1, \ldots, z_D)$.
 	
@@ -194,28 +194,28 @@ Moreover, in order to show that the representations are aligned, we will show th
 	0 = \sum_{i} \eta''_{i}(v_{i}({y}),u_{i}({t}))v^j_i({y})v^{j'}_i({y}) + \sum_{i}\eta'_{i}(v_{i}({y}), u_{i}({t}))v^{jj'}({y}).
 	\end{align*}
 	Define vectors ${a}_i({y})$ collecting all entries $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, and vectors ${b}_i({y})$ with the variables $v_i^j({y})v_i^{j'}({y})$, $j=1, \ldots, n$, $j'=1, \ldots, j-1$, the above equality can be rewritten as
-	
+	%
 	\begin{align*}
 	0 = \sum_{i} \eta''_{i}(v_{i}({y}),u_{i}({t})){a}_i({y}) + \eta'_{i}(v_{i}({y}), u_{i}({t})){b}_i({y}).
 	\end{align*}
-	
+	%
 	As in the proof of Theorem \ref{thm:noiseless1}, this can be rewritten in matrix form as
-	
+	%
 	\begin{equation}
 	\label{eq:matrixmult}
 	{M}({y}){w}({y}, {t})=0\,,
 	\end{equation}
-	
+	%
 	where ${M}({y}) = ({a}_1({y}), \ldots,  {a}_D({y}), {b}_1({y}), \ldots, {b}_D({y})) $ and ${w}({y}, {t}) = (\eta''_{1}, \ldots, \eta''_{D}, \eta'_{1}, \ldots,\eta'_{D})$. ${M}({y})$ is therefore a $D(D-1)/2 \times 2D$ matrix, and ${w}({y}, {t})$ is a $2D$ dimensional vector.
 	
 	To show that ${M}({y})$ is equal to zero, we invoke the SDV assumption on ${\eta}$.
 	This implies the existence of $2D$ linearly independent ${w}({y}, {t}_j)$.
 	It follows that
-	
+	%
 	\[
 	{M}({y})[{w}({y}, {t}_1), \ldots, {w}({y}, {t}_{2D})]=0\,,
 	\]
-	
+	%
 	and hence ${M}({y})$ is zero by elementary linear algebraic results.
 	It follows that $v_i^j({y})\not=0$ for at most one value of $j$, since otherwise the product of two non-zero terms would appear in one of the entries of ${M}({y})$, thus rendering it non-zero.
 	Thus $v_i$ is a function only of one $y_j = y_{\pi(i)}$.
@@ -267,15 +267,15 @@ To show that this ambiguity is also resolved, we will show that
 	\]
 	and note that it is a permutation. Then
 	\begin{equation}
-	y_i \independent t_{\tau(j)}  \forall i \neq j \label{eq:tauperm}
+	y_i \independent t_{\tau(j)}  \forall i \neq j. \label{eq:tauperm}
 	\end{equation}
 	
 	Fix any particular $i$.
 	Our goal is to show that for any $j\not= i$ the independence relation in Equation \ref{eq:aim_lastpart} holds.
 	There are two possibilities:
 	\begin{enumerate}
-		\item $\tau(i)=i$
-		\item $\tau(i)\neq i$
+		\item $\tau(i)=i$,
+		\item $\tau(i)\neq i$.
 	\end{enumerate}
 	In the first case, $\tau$ restricted to the set $\{1,\ldots,D\}\setminus\{i\}$ is still a permutation, and thus considering the independences of Equation \ref{eq:tauperm} for all $j\not= i$ implies each of the independences of Equation \ref{eq:aim_lastpart} and we are done.
 	
@@ -292,11 +292,11 @@ To show that this ambiguity is also resolved, we will show that
 	
 	In order to do so, we rewrite equation \ref{eq:logistic}, yielding
 	\begin{align}
-\sum_{m}\psi_{m}(y_{m},t_{m}) \nonumber	= \sum_{m}\eta_{m}(v_m(y_{\pi(m)}), u_m(t_{\tilde{\pi}(m)}))	-\sum_{m}\theta_{i}(v_m(y_{\pi(m)}))
+\sum_{m}\psi_{m}(y_{m},t_{m}) \nonumber	= \sum_{m}\eta_{m}(v_m(y_{\pi(m)}), u_m(t_{\tilde{\pi}(m)}))	-\sum_{m}\theta_{i}(v_m(y_{\pi(m)})).
 	\end{align}
 	We now take derivative with respect to $y_i$ and $t_l$ in \ref{eq:ref_indices}; noting that $\tilde{\pi}^{-1}(l) = \pi^{-1}(i) $, we get
 	\begin{align}
-	0 = \frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) \times \frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) \frac{\partial }{\partial t_l} u_{\pi^{-1}(i)}(t_l) \label{eq:perm_deriv}
+	0 = \frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) \times \frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) \frac{\partial }{\partial t_l} u_{\pi^{-1}(i)}(t_l). \label{eq:perm_deriv}
 	\end{align}
 	
 	Since $v_{\pi^{-1}(i)}(y_i)$ is a smooth and invertible function of its argument, the set of $y_i$ such that $\frac{\partial}{\partial y_i}v_{\pi^{-1}(i)}(y_i) = 0$ has measure zero.
@@ -308,12 +308,12 @@ To show that this ambiguity is also resolved, we will show that
 	\end{align*}
 	almost everywhere and hence that
 	\begin{equation}
-	\frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = 0\,. \label{eq:additive_eta}
+	\frac{\partial^2}{\partial v_{\pi^{-1}(i)} \partial u_{\pi^{-1}(i)}} \eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = 0 \label{eq:additive_eta}
 	\end{equation}
 	almost everywhere.
 	It thus follows that
 	\begin{align*}
-	\eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = \eta_{\pi^{-1}(i)}^y(v_{\pi^{-1}(i)}(y_i))+ \eta_{\pi^{-1}(i)}^t(u_{\pi^{-1}(i)}(t_l))
+	\eta_{\pi^{-1}(i)}(v_{\pi^{-1}(i)}(y_i), u_{\pi^{-1}(i)}(t_l)) = \eta_{\pi^{-1}(i)}^y(v_{\pi^{-1}(i)}(y_i))+ \eta_{\pi^{-1}(i)}^t(u_{\pi^{-1}(i)}(t_l)),
 	\end{align*}
 	which in turn implies that, for some functions $A$ and $B$, we can write
 	\begin{align*}
@@ -346,12 +346,12 @@ To show that this ambiguity is also resolved, we will show that
 	
 	Suppose that the corrupters $g_i$ satisfy the following two criteria:
 	\begin{enumerate}
-		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$
-		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$
+		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$,
+		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$.
 	\end{enumerate}
 	Then, denoting by $\mathcal{E}$ the set of all component-wise, invertible functions, it holds that
 	\[
-	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0
+	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0,
 	\]
 	where $p$ denotes convergence in probability.
 \end{repcorollary}
@@ -369,7 +369,7 @@ Denoting by ${d}^{(k)}_1$ the component-wise invertible ambiguity up to which ${
 	& \leq \inf_{{e}\in \mathcal{E}} \mathbb{E}_{Z, X_1} \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \\
 	& = \inf_{{e}\in \mathcal{E}} \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - {e} \circ d_1^{(k)} \circ g_1(Z, N_1^{(k)}) \right \| \\
 	& = \inf_{\tilde{e}\in \mathcal{E}} \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - \tilde{e} \circ g_1(Z, N_1^{(k)}) \right \| \\
-	& \leq \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - e^* \circ g_1(Z, N_1^{(k)}) \right \| \label{eq:low_bounded} 
+	& \leq \mathbb{E}_{Z, N_1^{(k)}} \left \|Z - e^* \circ g_1(Z, N_1^{(k)}) \right \|, \label{eq:low_bounded} 
 	\end{align}
 	where the first upper bound holds by concavity, and the second holds for any ${e^*}\in\mathcal{E}$ by definition of infimum and in particular for ${e^*} = {g}_1 |^{-1}_{{n}=0}$, the existence of which is guaranteed by the assumptions on ${g}_1$.
 	Taking a Taylor expansion of ${e^*} \circ  {g}_1(z, {n}_1^{(k)})$ around ${n}_1^{(k)}=0$ yields
@@ -379,7 +379,7 @@ Denoting by ${d}^{(k)}_1$ the component-wise invertible ambiguity up to which ${
 	&=\mathbb{E}_{(Z, N_1^{(k)})} \Bigg[  \Bigg\|\left.\left.\frac{\partial e^*}{\partial {g}_1} \frac{\partial {g}_1 (Z, 0)}{\partial {n}_1^{(k)}} \cdot N_1^{(k)} + \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
 %	&\leq \mathbb{E}_{(Z, N_1^{(k)})} \left[  \left\| \frac{\partial e^*}{\partial {g}_1} \right\| \cdot \left\| \frac{\partial {g}_1 (Z, 0)}{\partial {n}_1^{(k)}} \right\| \cdot \left\| N_1^{(k)} \right\| + \left\| \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
 %	&\leq \mathbb{E}_{(Z, N_1^{(k)})} \left[  \frac{b}{a} \left\| N_1^{(k)} \right\| + \left\| \mathcal{O}(\|N_1^{(k)}\|^2) \right \| \right]\\
-	&\longrightarrow 0 \text{ as $k \longrightarrow \infty$}
+	&\longrightarrow 0 \text{ as $k \longrightarrow \infty$},
 	\end{align*}
 	where the last equality follows from fact that $e^* = g |^{-1}_{\bm{n}=0}$ and the convergence follows from the fact that $N_1^{(k)} = \frac{1}{k} N_1$ where $N_1$ has finite variance (and thus mean) and from the boundedness conditions on the partial derivatives of $g_1$.
 \end{proof}
@@ -400,7 +400,7 @@ Denoting by ${d}^{(k)}_1$ the component-wise invertible ambiguity up to which ${
 	Then
 	\begin{align*}
 	\Omega_{e}^M(Z, N) & \overset{a.s.}{\longrightarrow} \Omega_{e}(Z) \\
-	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z)
+	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z).
 	\end{align*}
 \end{replemma}
 
@@ -411,11 +411,11 @@ In proving this, we will make crucial use of \emph{Kolmogorov's strong law}:
 \begin{theorem}
 	Suppose that $X_m$ is a sequence of independent (but not necessarily identically distributed) random variables with
 	\begin{align*}
-	\sum_{m=1}^\infty \frac{1}{m^2}\mathrm{Var} [X_m] < \infty
+	\sum_{m=1}^\infty \frac{1}{m^2}\mathrm{Var} [X_m] < \infty.
 	\end{align*}
 	Then,
 	\begin{align*}
-	\frac{1}{M}\sum_{m=1}^M X_m - \mathbb{E}[X_m] \overset{a.s.}{\longrightarrow} 0
+	\frac{1}{M}\sum_{m=1}^M X_m - \mathbb{E}[X_m] \overset{a.s.}{\longrightarrow} 0.
 	\end{align*}
 \end{theorem}
 
@@ -442,7 +442,7 @@ We have further that for almost all ${z}$,
 exists.
 Therefore, for almost all $s$ the conditions of Kolmogorov's strong law are met by $\Omega_{{e}}^M({z}, {n})$ and so
 \begin{align*}
-\Omega_{{e}}^M({z}, {n}) - \mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] \overset{{n}-a.s.}{\longrightarrow} 0
+\Omega_{{e}}^M({z}, {n}) - \mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] \overset{{n}-a.s.}{\longrightarrow} 0.
 \end{align*}
 
 Since $\mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] \overset{{n}-a.s.}{\longrightarrow} \Omega_{{e}}({z})$, it follows that
@@ -453,12 +453,12 @@ Since this holds with probability $1$ over ${z}$, we have that
 \begin{align*}
 \Omega_{{e}}^M({z}, {n}) \overset{{n}-a.s.}{\longrightarrow} \Omega_{{e}}({z}).
 \end{align*}
-
+%
 It follows that we can write
-
+%
 \begin{align*}
 R_{{e}, i}^M({z}, {n}) &= {e}_i\circ {k}_i( {z} + {n}_i) - \Omega_{{e}}^M({z}, {n}) \\
-&\overset{a.s.}{\longrightarrow} R_{{e}, i}({z}, {n}_i):= {e}_i\circ {k}_i( {z} + {n}_i) - \Omega_{{e}}({z})
+&\overset{a.s.}{\longrightarrow} R_{{e}, i}({z}, {n}_i):= {e}_i\circ {k}_i( {z} + {n}_i) - \Omega_{{e}}({z}).
 \end{align*}
 \end{proof}
 
@@ -490,8 +490,8 @@ We will begin by showing that if $K \geq \mathrm{Var}({z}) + C$ then $\{ {k}^{-1
 
 For ${e}_i = {k}_i^{-1}$, we have that
 \begin{align*}
-\Omega_{{e}}^M({z}, {n}) = \frac{1}{M} \sum_{i=1}^M {z} + {n}_i &\overset{a.s.}{\longrightarrow} {z} = \Omega_{{e}}^M({z})\\
-R_i^M = {z} + {n}_i - \Omega_{{e}}({z}, {n})  &\overset{a.s.}{\longrightarrow} {n}_i = R_{{e}, i}({n}_i)
+\Omega_{{e}}^M({z}, {n}) = \frac{1}{M} \sum_{i=1}^M {z} + {n}_i &\overset{a.s.}{\longrightarrow} {z} = \Omega_{{e}}^M({z}), \\
+R_i^M = {z} + {n}_i - \Omega_{{e}}({z}, {n})  &\overset{a.s.}{\longrightarrow} {n}_i = R_{{e}, i}({n}_i),
 \end{align*}
 where the convergences follow from application of Kolmogorov's strong law, using the fact that $\mathrm{Var}({n}_i) \leq C$ for all $i$.
 Satisfaction of condition \ref{eq:resid_1} follows from the fact that $\mathrm{Var}_{{z}, {n}_i} ({z} + {n}_i) \leq C + \mathrm{Var}({z}) \leq K$.
@@ -516,18 +516,18 @@ It follows that for any $x$ and $y$
 {e}_i\circ{k}_i(x + y) &= R_{{e},i}(x) + \Omega_{{e}}(y) \\
 &= R_{{e},i}(x) + \Omega_{{e}}(0) + R_{{e},i}(0) + \Omega_{{e}}(y) \\
 & \qquad- \left(R_{{e},i}(0) +  \Omega_{{e}}(0)\right) \\
-&= {e}_i\circ{k}_i(x) + {e}_i\circ{k}_i(y) - {e}_i\circ{k}_i(0)
+&= {e}_i\circ{k}_i(x) + {e}_i\circ{k}_i(y) - {e}_i\circ{k}_i(0).
 \end{align*}
 It therefore follows that ${e}_i\circ{k}_i$ is affine, since if we define
 \begin{align*}
 L(x + y) &= {e}_i\circ{k}_i(x + y) - {e}_i\circ{k}_i(0) \\
 &= \left({e}_i\circ{k}_i(x) - {e}_i\circ{k}_i(0)\right) \\
 & \qquad+ \left({e}_i\circ{k}_i(y) - {e}_i\circ{k}_i(0)\right) \\
-&= L(x) + L(y)
+&= L(x) + L(y),
 \end{align*}
 then $L$ is linear and we can write ${e}_i\circ{k}_i(x)$ as the sum of a linear function and a constant:
 \begin{align*}
-{e}_i\circ{k}_i(x) = L(x) + {e}_i\circ{k}_i(0)
+{e}_i\circ{k}_i(x) = L(x) + {e}_i\circ{k}_i(0).
 \end{align*}
 Thus ${e}_i\circ{k}_i$ is affine, and we have some (diagonal) matrix ${\alpha}_i$ and vector ${\beta}_i$ such that for any $x$
 \begin{align*}
@@ -542,26 +542,26 @@ Next we show that for the set of $\{{e}_i = {\alpha}_i {k}_i^{-1} + {\beta}_i\}$
 Observe that
 \begin{align*}
 \Omega_{{e}}^M({z}, {n}) &= \frac{1}{M} \sum_{i=1}^M {\alpha}_i {z} + {\alpha}_i {n}_i + {\beta}_i \\
-&= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} + \frac{1}{M} \sum_{i=1}^M {\beta}_i  + \frac{1}{M} \sum_{i=1}^M {\alpha}_i {{n}}_i \\
-\mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] &= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} +  \frac{1}{M} \sum_{i=1}^M {\beta}_i
+&= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} + \frac{1}{M} \sum_{i=1}^M {\beta}_i  + \frac{1}{M} \sum_{i=1}^M {\alpha}_i {{n}}_i, \\
+\mathbb{E}_{{n}}[\Omega_{{e}}^M({z}, {n})] &= \left( \frac{1}{M} \sum_{i=1}^M {\alpha}_i \right){z} +  \frac{1}{M} \sum_{i=1}^M {\beta}_i.
 \end{align*}
 
 Define
 \begin{align*}
-{\alpha} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\alpha}_i \\
-{\beta} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\beta}_i \\
+{\alpha} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\alpha}_i, \\
+{\beta} &= \lim_{M\to\infty}\frac{1}{M}\sum_{i=1}^M {\beta}_i,
 \end{align*}
 which exist by the assumption that $\Omega_{{e}}^M({z}, {n})$ converges as $M\to\infty$.
 Thus
 \begin{align*}
-\Omega_{{e}}({z}) &= {\alpha} {z} + {\beta} \\
-R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta}
+\Omega_{{e}}({z}) &= {\alpha} {z} + {\beta}, \\
+R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta}.
 \end{align*}
 Now, suppose that there exist $i$ and $j$ such that such that ${\alpha}_i \not= {\alpha}_j$.
 It follows that
 \begin{align*}
-R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta} \\
-R_{{e}, j}({z}, {n}_j) &= ({\alpha}_j - {\alpha}){z} + {\alpha}_j{n}_j + {\beta}_j - {\beta}
+R_{{e}, i}({z}, {n}_i) &= ({\alpha}_i - {\alpha}){z} + {\alpha}_i{n}_i + {\beta}_i - {\beta}, \\
+R_{{e}, j}({z}, {n}_j) &= ({\alpha}_j - {\alpha}){z} + {\alpha}_j{n}_j + {\beta}_j - {\beta}.
 \end{align*}
 There are two cases.
 If ${\alpha}_i \not={\alpha}$, then $R_{{e}, i}({z}, {n}_i)$ is not a constant function of ${z}$.
