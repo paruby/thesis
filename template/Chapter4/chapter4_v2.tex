@@ -422,7 +422,7 @@ This approach
 %to recovering $\bm{s}$ 
 is to classify between pairs $(X_1, X_2)$ corresponding to the same $Z$ and $(X_1, X^*_2)$ corresponding to different realisations of $Z$.
 This classification problem can only be solved by employing the information shared by the simultaneous views in order to distinguish the two classes.
-By placing constraints on the regression function used in such a classifier, it can be shown that the representation obtained by taking an intermediate layer of this classifier recovers $Z$ up to unavoidable ambiguities.
+By placing constraints on the regression function used in such a classifier, it can be shown that the representation obtained by taking an intermediate layer of this classifier recovers $Z$ up to tolerable ambiguities.
 
 For technical reasons discussed in Section
 \ref{sec:converged}, the results require some stochasticity in the relationship between $Z$ and at least one of the $X_i$.
@@ -662,7 +662,7 @@ The log density-ratio $\log p({x}_1, {x}_2) - \log p({x}_1)p({x}_2)$ admits simi
 &= \log p({x}_1 | {x}_2) - \log p({x}_1)\nonumber\\
 &= \sum_i \eta_i(g_{1i}(z_i, n_{i1}), g_{2i}(z_i, n_{2i})) - \sum_i \theta_i(g_{1i}(z_i, n_{1i}) \label{eq:noisylogdens_1}\\
 &= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
-&= \sum_i \lambda_i(g_{2i}(z_i, n_{2i}), g_{1i}(z_i, n_{1i})) - \sum_i \mu_i(g_{2i}(z_i, n_{2i})) \label{eq:noisylogdens_2}
+&= \sum_i \lambda_i(g_{2i}(z_i, n_{2i}), g_{1i}(z_i, n_{1i})) - \sum_i \mu_i(g_{2i}(z_i, n_{2i})). \label{eq:noisylogdens_2}
 \end{align}
 Since access is only given to corrupted observations, exact recovery of $Z$ is not possible.
 Nonetheless, a generalisation of Theorem \ref{thm:demixing} holds showing that the ${f}_i$ can be inverted and $Z$ recovered up to the corruptions induced by the $N_i$ via the ${g}_i$.
@@ -689,8 +689,8 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 	
 	Suppose that the corrupters $g_i$ satisfy the following two criteria:
 	\begin{enumerate}
-		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$
-		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$
+		\item $\exists {a}  \in \mathbb{R}_{> 0}^D \: $   s.t. $\: \left|\frac{\partial g_1(z,n)}{\partial n} \right|_{n=0} \leq {a} \: $ for all ${z}$,
+		\item $\exists {b}  \in \mathbb{R}_{> 0}^D \: $ s.t. $\: 0<\frac{\partial g_1(z,0)}{\partial z} \leq b$.
 	\end{enumerate}
 	Then, denoting by $\mathcal{E}$ the set of all component-wise, invertible functions, it holds that
 	\[
@@ -770,7 +770,7 @@ The problem is then how to combine the information from each aligned ${k}_i \cir
 The fact that the components are recovered up to \emph{different} scalar invertible functions makes combining information from different views non-trivial.
 
 
-As a first step in this direction, consider the special case that each ${g}_i$ acts additively and each $N_i$ is zero mean and each of $Z$ and the $N_i$ are independent with independent components.
+As a first step in this direction, consider the special case that each ${g}_i$ acts additively, each $N_i$ is zero mean and each of $Z$ and the $N_i$ are independent with independent components:
 %
 \begin{align}
 \left.
@@ -778,7 +778,7 @@ As a first step in this direction, consider the special case that each ${g}_i$ a
 &X_{i}={f}_{i}(Z + N_{i}) \\
 &\mathbb{E}[N_i]= 0
 \end{array}
-\right\rbrace \quad i \in \mathbb{N}
+\right\rbrace \quad i \in \mathbb{N}.
 \end{align}
 %
 Suppose to begin with that it is possible to recover each $Z + N_i$ \emph{without} the usual component-wise invertible functions. Then, writing $N$ to denote all of the $N_i$, it is possible to estimate $Z$ as
@@ -791,7 +791,7 @@ This implies moreover that it is possible to reconstruct the $N_i$ by considerin
 In the presence of the unknown functions ${k}_i$, we would be able to reconstruct $Z$ and the $N_i$ if we were able to identify the inverses ${e}_i = {k}_i^{-1}$ for each $i$.
 For any component-wise invertible functions ${e}_i$, define
 \begin{align*}
-\Omega_{e}^M(Z, N) &= \frac{1}{M} \sum_{i=1}^M {e}_i\circ {k}_i( Z + N_i) \\
+\Omega_{e}^M(Z, N) &= \frac{1}{M} \sum_{i=1}^M {e}_i\circ {k}_i( Z + N_i), \\
 R_{{e}, i}^M(Z, N) &= {e}_i\circ {k}_i( Z + N_i) - \Omega_{{e}}^M(Z, N).\\
 \end{align*}
 ${e}_i$ is something we can choose and ${k}_i(Z+N_i) = {h}_i({X}_i)$ is the output of the algorithm, and hence $\Omega_{e}^M(Z, N)$ and $R_{{e}, i}^M(Z, N)$ are random variables with known distributions.
@@ -808,8 +808,8 @@ Subject to mild conditions, the dependence of these quantities on most or all of
 	Suppose further that there exists $K$ such that $V_{e_i} = \mathrm{Var}\left({e}_i \circ {k}_i(Z + N_i) \right) \leq K$ for all $i$.
 	Then
 	\begin{align*}
-	\Omega_{e}^M(Z, N) & \overset{a.s.}{\longrightarrow} \Omega_{e}(Z) \\
-	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z)
+	\Omega_{e}^M(Z, N) & \overset{a.s.}{\longrightarrow} \Omega_{e}(Z), \\
+	R_{e, i}^M(Z, N) & \overset{a.s.}{\longrightarrow} R_{e, i}(Z, N_i) = {e}_i\circ {k}_i( Z + N_i) - \Omega_{e}(Z).
 	\end{align*}
 \end{lemma}
 \begin{proof}[Proof sketch; see Appendix \ref{appendix:last-lemma} for full proof]
