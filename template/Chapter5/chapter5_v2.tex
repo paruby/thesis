@@ -181,13 +181,13 @@ Suppose that $D_f^{\frac{1}{2}}$ satisfies the triangle inequality.
 Let $A_N$ be a sequence of probability distributions, and let $B$ and $C$ be fixed probability distributions.
 Then for any $\lambda>0$,
 \begin{align*}
-    D_f\left(A_N , C\right) - D_f\left(B , C\right) \leq (1+\lambda) D_f\left(A_N , B \right) +  \frac{1}{\lambda} D_f\left(B , C \right)
+    D_f\left(A_N , C\right) - D_f\left(B , C\right) \leq (1+\lambda) D_f\left(A_N , B \right) +  \frac{1}{\lambda} D_f\left(B , C \right).
 \end{align*}
 If, furthermore, $D_f\left(A_N , B\right) = O\left( \frac{1}{N^k} \right)$ 
 for some $k>0$, 
 then
 \begin{align*}
-	D_f\left(A_N , C\right)  - D_f\left(B , C\right) = O\left( \frac{1}{N^{k/2}} \right)
+	D_f\left(A_N , C\right)  - D_f\left(B , C\right) = O\left( \frac{1}{N^{k/2}} \right).
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -255,7 +255,7 @@ The squared Hellinger ($H^2$) divergence between two multivariate Gaussians is
 \begin{lemma}[Lemma 1, \cite{NielsenN14}]\label{lemma:chi-squared-closed-form}
 Suppose that $P_1$ and $P_2$ are members of the same exponential family of distributions with log-partition function $F$ and natural parameters $\theta_1$ and $\theta_2$ respectively. Then
 \begin{align*}
-\chi^2(P_1, P_2) = e^{F(2\theta_2 - \theta_1) - \left(2F(\theta_2) - F(\theta_1) \right) } - 1
+\chi^2(P_1, P_2) = e^{F(2\theta_2 - \theta_1) - \left(2F(\theta_2) - F(\theta_1) \right) } - 1,
 \end{align*}
 and is finite provided that $2\theta_2 - \theta_1$ belongs to the natural parameter space.
 In the particular case of Gaussians,
@@ -302,7 +302,7 @@ One basic result is \emph{Chebyshev's inequality}.
 \begin{lemma}[Chebyshev's inequality, Section 2.1, \cite{boucheron2013concentration}]\label{lemma:chebyshev}
 Let $X$ be a random variable with finite expectation and variance. Then, for any $t>0$,
 \begin{align*}
-\mathbb{P}\left( |X - \mathbb{E}X | \geq t \right) \leq \frac{\mathrm{Var}(X)}{t}
+\mathbb{P}\left( |X - \mathbb{E}X | \geq t \right) \leq \frac{\mathrm{Var}(X)}{t}.
 \end{align*}
 \end{lemma}
 
@@ -353,7 +353,7 @@ Substituting $Q_Z$ with a sample-based finite mixture ${\hat{Q}_Z^N := \frac{1}{
     D_f\bigl(\hat{Q}_Z^N , P_Z\bigr) := D_f\Big(\frac{1}{N} \sum_{i=1}^N Q_{Z|X_i} , P_Z\Big).
 \end{align}
 %
-Although $\smash{\hat{Q}_Z^N} = \smash{\hat{Q}_Z^N}(\XN)$ is a function of of the \iid~samples $\smash{\XN}$, this explicit dependence is omitted for notational brevity. 
+Although $\smash{\hat{Q}_Z^N} = \smash{\hat{Q}_Z^N}(\XN)$ is a function of the \iid~samples $\smash{\XN}$, this explicit dependence is omitted for notational brevity. 
 The true $f$-divergence $D_f(Q_Z , P_Z)$ is a real-valued scalar, but $D_f\bigl(\hat{Q}_Z^N , P_Z\bigr)$ is a random variable whose randomness is inherited from the \iid~samples. 
 
 The rest of this section is devoted to the exploration of conditions under which $\smash{D_f(\hat{Q}_Z^N , P_Z)}$ is a `good' estimator of $\smash{D_f(Q_{Z} , P_Z)}$.
@@ -463,7 +463,7 @@ For small values of $\hat{q}_N(z)/p(z)$, the integral is controlled directly, wh
 
 Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} describe the convergence of the  expectation of the random variable $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$.
 In practical scenarios, the spread of its distribution will also be of interest, because evaluation based on a single set of \iid~samples $\XN$ corresponds to a single observation of the random variable $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$.
-If the spread were large, then even if the bias were small one could not confidently conclude that a single draw of $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$ would be close to the true divergence $D_f\big(Q_{Z} , P_Z\big)$.
+If the spread were large, then even if the bias were small, one could not confidently conclude that a single draw of $D_f\big(\hat{Q}^N_{Z} , P_Z\big)$ would be close to the true divergence $D_f\big(Q_{Z} , P_Z\big)$.
 Fortunately, the following result shows that RAM rapidly concentrates to its expectation.
 
 
@@ -572,21 +572,21 @@ If the hypothesis of Theorem \ref{thm:concentration} holds and moreover either o
 %\end{align*}
 \begin{align*}
 (i)& \begin{cases}
-\displaystyle \pi(z|\XN) = p(z) \\
+\displaystyle \pi(z|\XN) = p(z), \\
 \displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 p(z) dz  < \infty, \\
-\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty
+\displaystyle \E_{Q_X} \int \left( \frac{q(z|X)}{p(z)} \right)^2 p(z) dz < \infty,
 \end{cases}\\ \ \\
 (ii)& \begin{cases}
 \displaystyle \pi(z | \XN) = \hat{q}_N(z), \\
 \displaystyle \E_{Q_X} \int f\left( \frac{q(z|X)}{p(z)}\right)^2 \left(\frac{p(z)}{q(z|X)}\right)^2 q(z|X) dz < \infty, \\
-\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty
+\displaystyle \E_{Q_X} \int \left(\frac{p(z)}{q(z|X)} \right)^2 q(z|X) dz < \infty,
 \end{cases}
 \end{align*}
 %where $\| g(z) \|^2_{L_2(\mu)} = \int g(z)^2 d\mu(z)$,
 then denoting by $\psi(N)$ the rate given in Table~\ref{table:concentration}, the variance of RAM-MC decays as
 \begin{align*}
     \text{Var}_{\ZM, \XN} \left[\hat{D}^M_f( \hat{Q}_Z^N , P_Z)  \right] = 
-    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right) 
+    O\left(M^{-1}\right) + O\left( \psi(N)^2 \right).
 \end{align*}
 %
 %If $\pi(z|\XN) = p(z)$ or $\pi(z | \XN) = \hat{q}_N(z)$ then under mild assumptions$^\star$ on the moments of $q(Z|X)/p(Z)$
@@ -740,9 +740,9 @@ In this case $D_f(Q^\lambda_Z, P_Z)$ can be computed analytically for the KL, $\
 These analytic values can be used as baselines to compare with the estimates obtained through use of RAM-MC. 
 Specifically, take 
 \begin{align*}
-P_Z &= \mathcal{N}(0, I_d) \\
-Q^\lambda_{Z|X=x} &= \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right) \\
-P_X &= \mathcal{N}\left(0, I_{20} \right)
+P_Z &= \mathcal{N}(0, I_d), \\
+Q^\lambda_{Z|X=x} &= \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right), \\
+P_X &= \mathcal{N}\left(0, I_{20} \right),
 \end{align*}
 %$P_Z = \mathcal{N}(0, I_d)$ and let $Q^\lambda_{Z|X=x} = \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right)$ and $P_X = \mathcal{N}\left(0, I_{20} \right)$.
 where the constant $\epsilon=0.5$.
@@ -976,7 +976,7 @@ Therefore, the results in this chapter also provide sufficient conditions under 
 
 %\todo{Rewrite section heading to make this next bit fit in, moved from the intro}
 \subsection{Related, but fundamentally different work}
-\cite{burda2015importance} propose to reduce the gap introduced by Jensen's inequality in the derivation of the classical evidence lower bound (ELBO) by using multiple Monte-Carlo samples from the approximate posterior $\smash{Q_{Z|X}}$.
+\cite{burda2015importance} propose to reduce the gap introduced by Jensen's inequality in the derivation of the classical ELBO by using multiple Monte-Carlo samples from the approximate posterior $\smash{Q_{Z|X}}$.
 This is similar in flavour to the approach considered in this chapter, but is fundamentally different since the approach taken here uses multiple samples from the \emph{data distribution} to reduce a different Jensen gap.
 
 To avoid confusion, note that replacing the `regulariser' term $\mathbb{E}_X[D_{\text{KL}}(Q_{Z|X}, P_Z)]$ of the classical ELBO with expectation of the proposed estimator $\E_{\XN}[D_{\text{KL}}(\hat{Q}_Z^N, P_Z)]$ results in an upper bound of the classical ELBO (by Proposition~\ref{prop:upper-bound}) but is itself not in general an evidence lower bound:
