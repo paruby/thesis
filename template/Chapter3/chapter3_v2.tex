@@ -183,7 +183,7 @@ This is illustrated in the following simple example.
 Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X, P_E\}$ where
 %
 \begin{align*}
-\mathcal{S}_X &= \big\{  X_1 = E_1,\ X_2 = X_1 + E_2\big\} \\
+\mathcal{S}_X &= \big\{  X_1 = E_1,\ X_2 = X_1 + E_2\big\}, \\
 P_E &= \mathcal{N}\left(\begin{pmatrix}
 0 \\
 0 
@@ -191,7 +191,7 @@ P_E &= \mathcal{N}\left(\begin{pmatrix}
 \begin{pmatrix}
 1 & 0 \\
 0 & 1
-\end{pmatrix}\right)
+\end{pmatrix}\right).
 \end{align*}
 %
 Then the observational distribution is given by 
@@ -204,7 +204,7 @@ P_X = \mathcal{N}\left(\begin{pmatrix}
 \begin{pmatrix}
 1 & 1 \\
 1 & 2
-\end{pmatrix}\right)
+\end{pmatrix}\right),
 \end{align*}
 %
 while the interventional distributions corresponding to $\doop(X_1 = x_1)$ and $\doop(X_2 = x_2)$ are given by the degenerate Gaussians
@@ -217,7 +217,7 @@ x_1
 \begin{pmatrix}
 0 & 0 \\
 0 & 1
-\end{pmatrix}\right) \\
+\end{pmatrix}\right), \\
 P^{\doop(X_2 = x_2)}_X &= \mathcal{N}\left(\begin{pmatrix}
 0 \\
 x_2 
@@ -411,7 +411,7 @@ The key idea of this family of approaches is to relate \emph{conditional indepen
 This line of work is historically important, but only tangentially related to the topic of this chapter.
 As such, only a brief outline follows; see \cite{pearl2009causality} or \cite{peters2017elements} for an in-depth explanation.
 
-d-separation is a relation between triples of disjoint subsets of nodes in directed acyclic graphs. 
+In a direction acyclic graph, d-separation is a relation between triples of disjoint subsets of nodes. 
 Informally, if a subset of nodes $A$ d-separates subsets $B$ and $C$, then $A$ blocks any information flow between $B$ and $C$. 
 Graphs exhibiting the same set of d-separations form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
 Subject to mild assumptions, there is a one-one correspondence between possible sets of conditional independences present in $P_X$, and Markov equivalence classes of $\mathcal{G}$. 
@@ -552,7 +552,7 @@ where $A$ is a strictly upper triangular matrix\footnote{The diagonal and anythi
 The distribution over $E$ induces a density on the observable variables $X$ via
 %
 \begin{align*}
-X = (I-A)^{-1} E
+X = (I-A)^{-1} E,
 \end{align*}
 %
 where $I$ is the identity matrix. 
@@ -743,7 +743,7 @@ As we saw, this lack of theory occasionally leads to apparent contradictions.
 
 Due to deliberate modelling choice or the limited ability to observe a system, differing levels of model descriptions are ubiquitous and occur, amongst possibly others, in the following three settings:
 
-\begin{itemize}[noitemsep]
+\begin{itemize}
 	\item[(a)] Models with large numbers of variables versus models in which the `irrelevant' or unobservable variables have been marginalised out \citep{bongers2016structural}; e.\,g.\ modelling blood cholesterol levels and risk of heart disease while ignoring other blood chemicals or external factors such as stress.
 	
 	\item[(b)] Micro-level models versus macro-level models in which the macro-variables are aggregate features of the micro-variables \citep{simon1961aggregation,iwasaki1994causality,hoel2013quantifying,chalupka2015visual,chalupka2016multi}; e.\,g.\ instead of modelling the brain as consisting of $100$ billion neurons it can be modelled as averaged neuronal activity in distinct functional brain regions.
@@ -850,12 +850,11 @@ The following example illustrates how SEMs are written in this notation and prov
 Consider the following SEM defined over the variables $\{ B_1,B_2,L \}$
 %
 \begin{align*}
-\mathcal{S}_X = \big\{ & B_1 = E_1,\ B_2 = E_2,\ L = \operatorname{OR}(B_1,B_2,E_3) \big\} \\
+&\mathcal{S}_X = \big\{ B_1 = E_1,\ B_2 = E_2,\ L = \operatorname{OR}(B_1,B_2,E_3) \big\}, \\
 %
-\mathcal{I}_X = \big\{ & \nulli,\ \doop(B_1=0),\ \doop(B_2=0),\\
-& \doop(B_1=0,B_2=0) \big\}, \\
+&\mathcal{I}_X = \big\{ \nulli,\ \doop(B_1=0),\ \doop(B_2=0), \doop(B_1=0,B_2=0) \big\}, \\
 %
-\{ E_1,E_2,E_3 \} & \overset{\text{iid}}{\sim} \mathrm{Bernoulli}(0.5)
+\{ &E_1,E_2,E_3 \} \overset{\text{iid}}{\sim} \mathrm{Bernoulli}(0.5),
 \end{align*}
 %
 where by the element $\nulli \in \mathcal{I}$ we denote the null- or empty-intervention corresponding to the unintervened SEM\@.
@@ -875,7 +874,7 @@ For notational convenience, we will use $P_X$ and $P_X^{\doop(i)}$ interchangeab
 
 $\mathcal{M}_X$ induces a set of joint distributions over $\mathcal{X}$, one for each intervention in $\mathcal{I}_X$, which moreover inherits the partial ordering from $\mathcal{I}_X$. 
 This poset of distributions can be written as
-\[\mathcal{P}_X := \left( \left\{ P_X^{\doop(i)} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
+\[\mathcal{P}_X := \left( \left\{ P_X^{\doop(i)} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right), \]
 where $\leq_X$ is the partial ordering inherited from $\mathcal{I}_X$, i.\,e.\ ${P_X^{\doop(i)} \leq_X P_X^{\doop(j)} \iff i \leq_X j}$.%
 %\footnote{More formally, one would need to define $\mathcal{P}_X$ to be the poset of \emph{tuples} $\left(i, P_X^{\doop(i)}\right)$ to avoid problems in the case that $P_X^{\doop(i)} = P_X^{\doop(j)}$ for some $i\not=_X j$. Doing so would not require a change to Definition **???** or affect the results of this chapter. To avoid notational burden in our exposition, we omit this treatment.}
 
@@ -893,7 +892,7 @@ For any distribution $P_X$ on $\mathcal{X}$ we thus obtain the distribution of t
 
 In particular, any intervention $i \in \mathcal{I}_X$ induces the distribution $P_{\tau(X)}^{i} = \tau_{\#}P_X^{\doop(i)}$.
 We can write the poset of distributions on $\mathcal{Y}$ that are induced by the original SEM $\mathcal{M}_X$ and the transformation $\tau$ as
-\[\mathcal{P}_{\tau(X)} := \left( \left\{ P_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right) \]
+\[\mathcal{P}_{\tau(X)} := \left( \left\{ P_{\tau(X)}^{i} \enspace : \enspace i \in \mathcal{I}_X \right\}, \leq_X \right), \]
 where $\leq_X$ is the partial ordering inherited from $\mathcal{P}_X$ (in turn inherited from $\mathcal{I}_X$).
 $\mathcal{P}_{\tau(X)}$ is just a structured collection of distributions over $\mathcal{Y}$, indexed by interventions $\mathcal{I}_X$ on the $\mathcal{X}$-level; importantly, the indices are \emph{not} interventions on the $\mathcal{Y}$-level.
 
@@ -909,7 +908,7 @@ The case in which there \emph{does} exist an SEM $\mathcal{M}_Y$ that implies $\
 \begin{definition}[Exact Transformations between SEMs]\label{def:exacttrafos}
 Let $\mathcal{M}_X$ and $\mathcal{M}_Y$ be SEMs and $\tau: \mathcal{X} \to \mathcal{Y}$ be a function.
 We say $\mathcal{M}_Y$ is an \emph{exact}  $\tau$-transformation of $\mathcal{M}_X$ if there exists a \emph{surjective order-preserving} map $\omega:\mathcal{I}_X\rightarrow \mathcal{I}_Y$ such that
-\[ P_{\tau(X)}^{i} = P_Y^{\doop(\omega(i))} \quad \forall i \in \mathcal{I}_X \]
+\[ P_{\tau(X)}^{i} = P_Y^{\doop(\omega(i))} \quad \forall i \in \mathcal{I}_X, \]
 where $P_{\tau(X)}^{i}$ is the distribution of the $\mathcal{Y}$-valued random variable $\tau(X)$ with $X \sim P_X^{\doop(i)}$.
 \end{definition}
 
@@ -954,9 +953,9 @@ This is a good sanity check; it would be problematic if this were not the case a
         =
         P^{ \omega_{ZY}(\omega_{YX}(i))}_{\tau_{ZY}(\tau_{YX}(X))}
         =
-        P^{\doop(\omega_{ZX}(i))}_{Z}
+        P^{\doop(\omega_{ZX}(i))}_{Z}.
     \end{align*}
-    i.\,e.\ $\mathcal{M}_Z$ is an $\tau_{ZX}$-exact transformation of $\mathcal{M}_X$.
+    That is, $\mathcal{M}_Z$ is an $\tau_{ZX}$-exact transformation of $\mathcal{M}_X$.
 \end{proof}
 
 
@@ -1082,11 +1081,11 @@ If it were only required that $\omega$ be surjective (but not order-preserving),
 Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, P_E\}$ over $\mathcal{X}=\mathbb{R}^3$ where
 %
 \begin{align*}
-\mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2,\ X_3 = X_1 + X_2 + E_3 \big\} \\
+\mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2,\ X_3 = X_1 + X_2 + E_3 \big\}, \\
 %
 \mathcal{I}_X = \big\{ & \nulli,\ \doop(X_2=0),\ \doop(X_1=0,\, X_2=0)\big\}, \\
 %
-E_1 & \sim P_{E_1},\ \,  E_2 = - E_1, \  \, E_3 \sim P_{E_3}
+E_1 & \sim P_{E_1},\ \,  E_2 = - E_1, \  \, E_3 \sim P_{E_3},
 \end{align*}
 %
 where $P_{E_1}$ and $P_{E_3}$ are arbitrary distributions.
@@ -1094,26 +1093,26 @@ Let ${\tau:\mathcal{X}\to\mathcal{Y}=\mathbb{R}^2}$ be the mapping such that
 \begin{align*}
 \tau\begin{pmatrix} x_1, x_2, x_3 \end{pmatrix}
 = \begin{pmatrix} y_1, y_2\end{pmatrix}
-= \begin{pmatrix} x_1 + x_2, x_3\end{pmatrix}
+= \begin{pmatrix} x_1 + x_2, x_3\end{pmatrix}.
 \end{align*}
 %
 Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, P_F\}$ be an SEM over $\mathcal{Y}$ with
 %
 \begin{align*}
-\mathcal{S}_Y = \big\{ & Y_1 = F_1,\ Y_2 = Y_1 + F_2 \big\} \\
+\mathcal{S}_Y = \big\{ & Y_1 = F_1,\ Y_2 = Y_1 + F_2 \big\}, \\
 %
 \mathcal{I}_Y = \big\{ & \nulli,\ \doop(Y_1=0) \big\}, \\
 %
-F_1 \sim P_{E_1},&  \  \, F_2 \sim P_{E_3}
+F_1 \sim P_{E_1},&  \  \, F_2 \sim P_{E_3}.
 \end{align*}
 %
 Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
 %
 \begin{align*}
 \omega: \begin{cases}
-\nulli &\mapsto \doop(Y_1=0) \\
-\doop(X_2=0) &\mapsto \nulli \\
-\doop(X_1=0,\, X_2=0) &\mapsto \doop(Y_1=0) \\
+\nulli &\mapsto \doop(Y_1=0), \\
+\doop(X_2=0) &\mapsto \nulli, \\
+\doop(X_1=0,\, X_2=0) &\mapsto \doop(Y_1=0). \\
 \end{cases}
 \end{align*}
 %
@@ -1132,11 +1131,11 @@ However, as the following example shows, this would not ensure that the right-ha
 Let $\mathcal{X},\mathcal{Y}$ and $\tau$ be as in Example~\ref{example:wrong1}. Consider the SEM $\mathcal{M}_X=\{\mathcal{S}_X , \mathcal{I}_X, P_E\}$ where
 %
 \begin{align*}
-\mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2, \ X_3 = X_1 + X_2 + E_3 \big\} \\
+\mathcal{S}_X = \big\{ & X_1 = E_1,\ X_2 = E_2, \ X_3 = X_1 + X_2 + E_3 \big\}, \\
 %
 \mathcal{I}_X = \big\{ & \nulli,\ \doop(X_2=0),\ \doop(X_1=0,\, X_2=0)\big\}, \\
 %
-E_1 & = 1,\ \,  E_2 \sim P_{E_2}, \  \, E_3 \sim P_{E_3}
+E_1 & = 1,\ \,  E_2 \sim P_{E_2}, \  \, E_3 \sim P_{E_3},
 \end{align*}
 %
 where $P_{E_2}$ and $P_{E_3}$ are arbitrary distributions.
@@ -1144,20 +1143,20 @@ where $P_{E_2}$ and $P_{E_3}$ are arbitrary distributions.
 Let $\mathcal{M}_Y =\{\mathcal{S}_Y , \mathcal{I}_Y, P_F\}$ be the SEM over $\mathcal{Y}$ with
 %
 \begin{align*}
-\mathcal{S}_Y = \big\{ & Y_1 =1+ F_1,\ Y_2 = Y_1 + F_2 \big\} \\
+\mathcal{S}_Y = \big\{ & Y_1 =1+ F_1,\ Y_2 = Y_1 + F_2 \big\}, \\
 %
 \mathcal{I}_Y = \big\{ & \nulli,\ \doop(Y_1=0),\ \doop(Y_1=1) \big\}, \\
 %
-F_1 &\sim P_{E_2},  \  \, F_2 \sim P_{E_3}
+F_1 &\sim P_{E_2},  \  \, F_2 \sim P_{E_3}.
 \end{align*}
 %
 Let ${\omega:\mathcal{I}_X \to \mathcal{I}_Y}$ be defined by
 %
 \begin{align*}
 \omega: \begin{cases}
-\nulli &\mapsto \nulli  \\
-\doop(X_2=0) &\mapsto \doop(Y_1=1) \\
-\doop(X_1=0,\, X_2=0) &\mapsto \doop(Y_1=0) \\
+\nulli &\mapsto \nulli, \\
+\doop(X_2=0) &\mapsto \doop(Y_1=1), \\
+\doop(X_1=0,\, X_2=0) &\mapsto \doop(Y_1=0). \\
 \end{cases}
 \end{align*}
 %
@@ -1345,11 +1344,9 @@ In such situations, the framework of exact transformations allows the investigat
 Let ${\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E,F} \right)}$ be a linear SEM over the variables ${W=\left( W_i \: : \: 1\leq  i \leq n \right)}$ and ${Z=\left( Z_i \: : \: 1\leq  i \leq m \right)}$ with
 %
 \begin{align*}
-\mathcal{S}_X &= \left\lbrace W_i = E_i \:  : \: 1 \leq i \leq n  \right\rbrace \\
-& \quad \ \  \cup \left\lbrace Z_i = \sum_{j=1}^n A_{ij}W_j  + F_{i} \:  : \: 1\leq i \leq m \right\rbrace \\
+\mathcal{S}_X &= \left\{ W_i = E_i \:  : \: 1 \leq i \leq n  \right\} \cup \left\{ Z_i = \sum_{j=1}^n A_{ij}W_j  + F_{i} \:  : \: 1\leq i \leq m \right\}, \\
 %
-\mathcal{I}_X &= \Big{\{} \nulli, \ \doop(W= w), \ \doop(Z= z), \\
-& \qquad\ \doop(W= w, Z= z ) :   w \in \mathbb{R}^{n}, \, z \in \mathbb{R}^m \Big{\}}
+\mathcal{I}_X &= \left\{ \nulli, \ \doop(W= w), \ \doop(Z= z), \ \doop(W= w, Z= z ) :   w \in \mathbb{R}^{n}, \, z \in \mathbb{R}^m \right\}.
 %
 \end{align*}
 %
@@ -1358,20 +1355,19 @@ and $(E,F)  \sim P$ where $P$ is any distribution over $\mathbb{R}^{n+m}$ and $A
 Assume that there exists a scalar $a\in \mathbb{R}$ such that each column of $A$ sums to $a$. Consider the following transformation that averages the $W$ and $Z$ variables:
 %
 \begin{align*}
-\tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2 \\
-\begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}
+\tau : \mathcal{X} &\rightarrow \mathcal{Y} = \mathbb{R}^2, \\
+\begin{pmatrix} W \\ Z \end{pmatrix} &\mapsto \begin{pmatrix} \widehat{W} \\ \widehat{Z} \end{pmatrix} = \begin{pmatrix} \frac{1}{n}\sum_{i=1}^n W_i \\ \frac{1}{m}\sum_{j=1}^m Z_j  \end{pmatrix}.
 \end{align*}
 %
 Further, let $\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{\widehat{E},\widehat{F}} \right)$ over the variables ${\left\lbrace \widehat{W}, \widehat{Z} \right\rbrace}$ be an SEM with
 %
 \begin{align*}
-\mathcal{S}_Y &= \Big\lbrace \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \Big\rbrace \\
+\mathcal{S}_Y &= \left\{ \widehat{W} = \widehat{E}, \ \widehat{Z} = \frac{a}{m}\widehat{W} + \widehat{F} \right\}, \\
 %
-\mathcal{I}_Y &= \Big{\{} \nulli,\ \doop(\widehat{W}= \widehat{w}), \ \doop(\widehat{Z}= \widehat{z}), \\
-& \qquad\ \doop(\widehat{W}= \widehat{w}, \widehat{Z}= \widehat{z} ) :   \widehat{w} \in \mathbb{R}, \, \widehat{z} \in \mathbb{R} \Big{\}} \\
+\mathcal{I}_Y &= \left\{ \nulli,\ \doop(\widehat{W}= \widehat{w}), \ \doop(\widehat{Z}= \widehat{z}),\ \doop(\widehat{W}= \widehat{w}, \widehat{Z}= \widehat{z} ) :   \widehat{w} \in \mathbb{R}, \, \widehat{z} \in \mathbb{R} \right\}, \\
 %
 \widehat{E}  & \sim \frac{1}{n}\sum_{i=1}^{n} E_i, \quad
-\widehat{F}  \sim \frac{1}{m}\sum_{i=1}^{m} F_i
+\widehat{F}  \sim \frac{1}{m}\sum_{i=1}^{m} F_i. 
 \end{align*}
 
 Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
@@ -1473,12 +1469,12 @@ For purposes of exposition, the simpler case of linear dynamics suffices.
 Let $\mathcal{M}_X = \left(\mathcal{S}_X, \mathcal{I}_X, P_{E} \right)$ over the variables ${\left\lbrace X_t^i \: : \: t \in \mathbb{Z}, \: i\in \{1,\ldots,n\} \right\rbrace}$ be a linear SEM with
 %
 \begin{align*}
-\mathcal{S}_X &= \left\lbrace X_{t+1}^i = \sum_{j=1}^n A_{ij}X_t^j + E_t^i \:  : \: i \in \{1,\ldots,n\}, t\in\mathbb{Z} \right\rbrace \\
+\mathcal{S}_X &= \left\lbrace X_{t+1}^i = \sum_{j=1}^n A_{ij}X_t^j + E_t^i \:  : \: i \in \{1,\ldots,n\}, t\in\mathbb{Z} \right\rbrace, \\
 &\qquad\text{i.\,e.}\ X_{t+1} = AX_t + E_t \\
 %
-\mathcal{I}_X &= \Big{\{} \doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z},\forall j \in J):  x \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+\mathcal{I}_X &= \Big{\{} \doop(X_t^j= x_j \enspace \forall t \in \mathbb{Z},\forall j \in J):  x \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}}, \\
 %
-E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim P
+E_t &= E\ \forall t\in\mathbb{Z} \text{ where } E \sim P,
 \end{align*}
 %
 where $P$ is any distribution over $\mathbb{R}^n$ and $A$ is a matrix.
@@ -1487,18 +1483,18 @@ Assume that the linear mapping $v\mapsto Av$ is a contraction.\footnote{In Appen
 Then the following transformation is well-defined under any intervention $i\in\mathcal{I}_X$:
 %
 \begin{align*}
-\tau : \mathcal{X} &\rightarrow \mathcal{Y} \\
-(x_t)_{t\in \mathbb{Z}} & \mapsto y= \lim_{t\rightarrow \infty} x_t
+\tau : \mathcal{X} &\rightarrow \mathcal{Y}, \\
+(x_t)_{t\in \mathbb{Z}} & \mapsto y= \lim_{t\rightarrow \infty} x_t.
 \end{align*}
 %
 Let ${\mathcal{M}_Y = \left(\mathcal{S}_Y, \mathcal{I}_Y, P_{F} \right)}$ be the (potentially cyclic) SEM over the variables ${\left\lbrace Y^i \: :  \: i\in \{1,\ldots,n\} \right\rbrace}$  with
 %
 \begin{align*}
-\mathcal{S}_Y &= \left\lbrace Y^i = \frac{\sum_{j\not=i} A_{ij}Y^j}{1-A_{ii}} + \frac{F^i}{1-A_{ii}} \:  : \: i \in \{1,\ldots,n\} \right\rbrace \\
+\mathcal{S}_Y &= \left\lbrace Y^i = \frac{\sum_{j\not=i} A_{ij}Y^j}{1-A_{ii}} + \frac{F^i}{1-A_{ii}} \:  : \: i \in \{1,\ldots,n\} \right\rbrace, \\
 %
-\mathcal{I}_Y &= \Big{\{} \doop(Y^j= y_j \ \forall j \in J) : y \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}} \\
+\mathcal{I}_Y &= \Big{\{} \doop(Y^j= y_j \ \forall j \in J) : y \in \mathbb{R}^{|J|}, \: J \subseteq \{1,\ldots,n\} \Big{\}}, \\
 %
-F &\sim P
+F &\sim P.
 \end{align*}
 %
 Then $\mathcal{M}_Y$ is an exact $\tau$-transformation of $\mathcal{M}_X$.
