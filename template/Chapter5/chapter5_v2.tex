@@ -17,7 +17,7 @@ By exploiting the natural structure present in the autoencoder setting, RAM-MC e
 
 \emph{This work is an important contribution to the literature for two main reasons. 
 First, it demonstrates that the $f$-divergences considered can be estimated with a practical number of samples.
-Second, it provides a rigorous foundation to related methods that have been heuristically proposed elsewhere in the literature.}
+Second, it provides a rigorous foundation to heuristically proposed methods for estimating and minimising Total Correlation and Mutual Information in the context of Variational Autoencoders.}
 
 \emph{The main technical content of this chapter has been published in the paper:}
 
@@ -84,8 +84,9 @@ it is more common to only show that the estimators are asymptotically unbiased o
 
 
 Motivated by recent advances in machine learning, this chapter considers a setting in which structural assumptions are made about the distributions.
-Although the assumptions are strong, they are naturally satisfied in the setting of autoencoders such as Wasserstein Autoencoders and Variational Autoencoders.
+Although the assumptions are strong, they are naturally satisfied in the setting of autoencoders with probabilistic encoders, including Wasserstein Autoencoders and variants of Variational Autoencoders.
 
+\subsection{Summary of setting and results}
 
 Let $\X$ and $\Z$ be two finite dimensional Euclidean spaces.
 This chapter studies estimation of the divergence $D_f(Q_Z, P_Z)$ between two probability distributions $P_Z$ and $Q_Z$, both defined over $\Z$.
@@ -111,8 +112,16 @@ This is in contrast to the agnostic setting where \emph{both} nonparametric rate
 
 These results have immediate implications to existing literature.
 For the particular case of the $\KL$ divergence, a similar approach has been heuristically applied 
-for estimation of mutual information \citep{poolevariational} and total correlation \citep{chen2018isolating}.
+for estimation of mutual information \citep{poolevariational} and total correlation \citep{chen2018isolating} in the context of Variational Autoencoders.
+Both works have application to representation learning, the latter in particular to disentangled representation learning. 
 The results presented in this chapter thus provide strong theoretical grounding for these existing methods through rigorous analysis lacking in the original proposals.
+In these works, the quantities being estimated and minimised are $D_{\KL}(Q_{Z,X}, Q_ZQ_X )$ and $D_{\KL}(Q_Z, \prod_{i} Q_{Z_i})$ respectively. 
+Each of these quantities can be rewritten in terms of $\smash{D_{\KL}(Q_Z , P_Z)}$ and so RAM-MC can be used to estimate them.
+In doing so, one recovers the estimators proposed by the authors, thus results concerning the convergence properties of RAM-MC transfer to results about their estimators.
+See Section \ref{sec:applications} for details. 
+
+Moreover, while this work considers estimation of $\smash{D_f(Q_Z , P_Z)}$, minimisation of this quantity is the key challenge in the training of Wasserstein Autoencoders (see Section \ref{subsec:chapter2-wae}). 
+Preliminary experiments not included in this thesis did not find the proposed RAM-MC estimator to lead to improved training over existing methods, but future research could investigate this more thoroughly.
 
 Section \ref{sec:f-div-background} presents known results from the literature on $f$-divergences and basic results in learning theory that are used in the proofs of novel results presented in this chapter.
 %Since the setting we consider arises naturally in the study of autoencoder-based generative models, the following Section \ref{sec:generative-modelling-tour} provides an overview of the key concepts in the generative modelling literature in the context of this chapter.
@@ -381,7 +390,7 @@ The second holds since a sample ${\XM}$ can be drawn by sub-sampling (without re
 
 As a function of $N$, the expectation of RAM is a decreasing sequence that is bounded below.
 By the monotone convergence theorem, the sequence converges.
-Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} below give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} , P_Z)$ as $N\to\infty$ for a variety of $f$ and provide rates at which this happens, summarised in Table \ref{table:convergence}.
+Theorems \ref{thm:fast-KL-rate} and \ref{thm:convergence-rate-general} below give sufficient conditions under which the expectation of RAM converges to $D_f(Q_{Z} , P_Z)$ as $N\to\infty$ for a variety of $f$s and provide rates at which this happens, summarised in Table \ref{table:convergence}.
 The two theorems are proved using different techniques and assumptions. 
 These assumptions, along with those of other methods (see Table~\ref{table:convergence-other}) are discussed in Section \ref{subsection:discussion-assumptions}.
 
@@ -745,7 +754,7 @@ Q^\lambda_{Z|X=x} &= \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \r
 P_X &= \mathcal{N}\left(0, I_{20} \right),
 \end{align*}
 %$P_Z = \mathcal{N}(0, I_d)$ and let $Q^\lambda_{Z|X=x} = \mathcal{N}\left(A_\lambda x + b_\lambda, \epsilon^2 I_d \right)$ and $P_X = \mathcal{N}\left(0, I_{20} \right)$.
-where the constant $\epsilon=0.5$.
+where the constant $\epsilon=0.5$.\footnote{Multiple values of $\epsilon$ were experimented with, and although changing its value does change the scale of the plots in Figure \ref{fig:synthetic-exps}, the general shapes and conclusions drawn from the results are the same.}
 This results in $Q^\lambda_Z = \mathcal{N}\left(b_\lambda,  A_\lambda A_\lambda^\intercal + \epsilon^2 I_d \right)$. 
 $b_\lambda$ was chosen by randomly sampling a vector $v$ from the unit sphere and setting $b_\lambda = \lambda v$. 
 $A_\lambda$ was chosen by randomly sampling a $(d,20)$-dimensional matrix $A_0$ with \iid~Gaussian entries and normalising it to have unit Frobenius norm, taking $A_1$ to be the similarly sized matrix with 1 on the main diagonal and 0 elsewhere, and setting $A_\lambda = \frac{1}{2}A_1 + \lambda A_0$.
@@ -797,8 +806,11 @@ Second, and only for the KL case, the M1 method of \cite{nguyen10ratio} based on
 To produce each plot, the following was performed 10 times, with the mean result giving the bold lines and standard deviation giving the error bars.
 First, $N$ points $\XN$ were drawn from $Q_X$. 
 Then $M{=}128$ points $\ZM$ were drawn from $\hat{Q}_Z^N$ and RAM-MC (Equation \ref{eq:our-mc-estimate}) was evaluated. 
+Using $\hat{Q}_Z^N$ as the proposal distribution resulted in significantly better results compared to using $P_Z$ as the proposal distribution for all divergences.
 For the plug-in estimator, the densities $\hat{q}(z)$ and $\hat{p}(z)$ were estimated by kernel density estimation with 500 samples from $Q_Z$ and $P_Z$ respectively using the default settings of the Python library {\texttt{scipy.stats.gaussian\_kde}}.
 The divergence was then estimated via MC-sampling using $128$ samples from $Q_Z$ and the surrogate densities.
+Note that this density estimation approach ignores all of the structure present, and thus demonstrates the poor performance of an agnostic method. 
+It would also be possible to exploit part of the problem structure and use one of the known density $p(z)$ or $\widehat{Q}_Z^N$, rather than estimating both by density estimation; these cases led to performance better than the naive density estimation approach, but still significantly worse than RAM-MC and were omitted from Figure \ref{fig:synthetic-exps} to avoid clutter. 
 The M1~estimator involves solving a convex linear program in $N$ variables to maximise a lower bound on the true divergence, see \cite{nguyen10ratio} for more details.
 Although the M1~estimator can in principle be used for arbitrary $f$-divergences, its implementation requires hand-crafted derivations that are supplied only for the $\KL$ in \cite{nguyen10ratio}.
 
@@ -807,7 +819,7 @@ The results of this experiment empirically support Proposition \ref{prop:upper-b
 (i) in expectation, RAM-MC upper bounds the true divergence; (ii) increasing $N$ from 1 to 500 clearly decreases both the bias and the variance of RAM-MC.
 When the dimension $d$ increases, the bias for fixed $N$ also increases.
 This is consistent with the theory in that, although the rates are independent of $d$, the constants are not.
-By side-stepping the issue of density estimation, RAM-MC performs favourably compared to the plug-in and M1 estimators, more so in higher dimensions ($d=16$).
+By side-stepping the issue of density estimation---that is, samples are drawn at the level of $\mathcal{X}$ so that $Q_Z$ is approximated as a mixture of known components, rather than performing kernel density estimation based on samples at the level of $\mathcal{Z}$---RAM-MC performs favourably compared to the plug-in and M1 estimators, more so in higher dimensions ($d=16$).
 In particular, the shape of the RAM-MC curve follows that of the truth for each divergence, while that of the plug-in estimator does not for larger dimensions.
 In some cases the plug-in estimator can even take negative values due to the large variance.
 
@@ -818,7 +830,10 @@ In some cases the plug-in estimator can even take negative values due to the lar
 \label{sec:exp_wae}
 %\textbf{The data model.}
 To investigate the behaviour of RAM-MC in a more realistic setting, this experiment considers the estimation of divergences in the context of Variational Autoencoders (VAEs) and Wasserstein Autoencoders (WAEs), introduced in Section \ref{sec:literature-gen-models}.
-Recall that both models have a prior ${P_Z}$ over the latent space and involve learning an encoder $\smash{Q^\phi_{Z|X}}$ with parameter $\phi$ mapping from the data to latent space.
+Similar to the synthetic experiments, we are purely concerned with estimating $D_f(Q_Z,P_Z)$ with pre-trained models here, not actually training models from scratch. 
+Recall that both VAEs and WAEs have a prior ${P_Z}$ over the latent space and involve learning an encoder $\smash{Q^\phi_{Z|X}}$ with parameter $\phi$ mapping from the data to latent space.
+Although the divergence $D_f(Q_Z,P_Z)$ does not appear in the VAE objective function, pretrained VAEs can nonetheless be used alongside WAEs as more realistic, higher dimensional settings to investigate estimation of this quantity compared to the simple synthetic setting considered in the previous section.
+
 %RAM-MC is used to estimate the divergence $D_f(Q^\phi_Z,P_Z)$ between the aggregate posterior and prior.
 %A prior distribution ${P_Z}$ is specified, and the 
 %optimization objectives of both models are of the form ``reconstruction + distribution matching penalty''.
@@ -829,7 +844,7 @@ Recall that both models have a prior ${P_Z}$ over the latent space and involve l
 %For more information about VAE and WAE, see Appendix \ref{appendix:intro-vae-wae}.
 %\textbf{The experiment.}
 
-Pre-trained models that were trained on the \emph{CelebA} dataset \citep{liu2015faceattributes} were used to evaluate the RAM-MC estimator as follows.
+Pretrained models that were trained on the \emph{CelebA} dataset \citep{liu2015faceattributes} were used to evaluate the RAM-MC estimator as follows.
 The test dataset is taken as the ground-truth $Q_X$, and this is embedded into the latent space via the trained encoder.
 Since all models considered have Gaussian encoders, the resulting \emph{empirical aggregate posterior}
 is a ${\sim}{20}\text{k}$-component Gaussian mixture for $Q_Z$, one component for each item in the test dataset. 
@@ -909,6 +924,7 @@ From Figure~\ref{fig:real-exps} it can be seen that the $\KL$-divergence reaches
 
 \section{Applications}\label{sec:applications}
 This section details some direct consequences of the proposed estimator and its theoretical guarantees to existing literature, illustrating the applicability of this work.
+We remind the reader that these results apply specifically to the setting of LVMs with probabilistic encoders.
 %In addition, this theory may also apply to a number of machine learning domains where estimating entropy, total correlation or mutual information is either the final goal or part of a broader optimization loop.
 
 \subsection{Entropy estimation}
@@ -937,7 +953,7 @@ TC(Q_Z) &:= D_{\text{KL}}\left(Q_Z, \prod_{i=1}^{d_Z} Q_{Z_i}\right)  \\
 &= - \int q(z) \log \left( \frac{q(z)}{\prod_i q(z_i)} \right) dz \\
 &= - \int q(z) \log q(z) dz + \int q(z) \sum_i \log q(z_i) dz \\
 &= - \int q(z) \log q(z) dz + \sum_i \int q(z_i)  \log q(z_i) dz \\
-&= \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z)
+&= \sum_{i=1}^{d_Z}H(Q_{Z_i}) - H(Q_Z),
 \end{align*}
 %
 where $Q_{Z_i}$ is the $i$th marginal of $Q_Z$.
@@ -1000,8 +1016,16 @@ thus extending understanding of the conditions under which these quantities can 
 
 
 Future work should investigate the use of the proposals for optimization loops, in contrast to pure estimation.
-When $\smash{Q^\phi_{Z|X}}$ depends on parameter $\phi$ and the goal is to minimise $\smash{D_f(Q_Z^\phi , P_Z)}$ with respect to $\phi$, such as is the case for Wasserstein Autoencoders, RAM-MC provides a practical surrogate loss that can be minimised using stochastic gradient methods.
+When $\smash{Q^\phi_{Z|X}}$ depends on parameter $\phi$ and the goal is to minimise $\smash{D_f(Q_Z^\phi , P_Z)}$ with respect to $\phi$, RAM-MC provides a practical surrogate loss that can be minimised using stochastic gradient methods.
+The obvious setting to apply this is in training WAEs, where the main problem is minimisation of a divergence term $\smash{D(Q_Z^\phi , P_Z)}$, discussed in Section \ref{subsec:chapter2-wae}.
+Indeed, the research presented in this chapter was originally motivated by the study of WAEs.
+Preliminary experiements not included in this thesis found little improvement when using RAM-MC as the latent-space matching penalty compared to existing methods (WAE-MMD and WAE-GAN). 
+It is possible that this lack of improvement is attributable to deficiencies in the proposed method, or to the use of $f$-divergences in this setting more generally.
+It may instead be due to the insufficiently thorough nature of those preliminary experiments.
 
+Another more theoretical direction of research relating the proposed RAM-MC estimator to its application in training WAEs would be to investigate how bounds on the divergence $\smash{D_f(Q_Z^\phi , P_Z)}$ in combination with the reconstruction error of a WAE relate to the optimal transport distance $OT(P^\theta_X, Q_X)$ that a WAE is ultimately supposed to minimise.
+Work in this direction has been done by \cite{patrini2018sinkhorn}, who relate the reconstruction error and latent-space optimal transport distance $\smash{OT(Q_Z^\phi , P_Z)}$ with the data-space optimal transport distance $OT(P^\theta_X, Q_X)$. 
+However, it is not clear whether such a connection must hold for other choices of latent-space divergences, since the `relaxed' WAE objective (Equation \ref{eq:wae-objective-relaxed}) is itself a heuristic approximation to the original `constrained' optimal transport formulation (Equation \ref{eq:ot-objective-constrained}).
 
 
 

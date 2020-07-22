@@ -26,7 +26,7 @@ having such a model of the data may be desirable for a variety of reasons, for i
 
 The goal of this chapter is to introduce the necessary background and context for Chapters \ref{chapter:latent-space-learning-theory} and \ref{chapter:ica} of this thesis.
 Although both concern latent variable generative models, these chapters are set in different niches of the machine learning literature.
-Chapter \ref{chapter:latent-space-learning-theory} presents learning theoretic results that are relevant to the \emph{neural sampler community}, 
+Chapter \ref{chapter:latent-space-learning-theory} presents learning theoretic results that are relevant to the \emph{deep generative modelling community}, 
 a field centred around the generation of artificial data, for which Sections \ref{sec:literature-lvms}, \ref{subsec:gen-model-divergence} and \ref{sec:literature-gen-models} of this chapter are relevant.
 Chapter \ref{chapter:ica} concerns the \emph{Independent Component Analysis (ICA) community}, in which the goal is the inference of latent sources, for which Sections \ref{sec:literature-lvms} and \ref{sec:literature-density-ratio-estimation} of this chapter are relevant.
 
@@ -43,18 +43,28 @@ Chapter \ref{chapter:ica} concerns the \emph{Independent Component Analysis (ICA
 
 
 % from which new samples can be drawn. 
-In the neural sampler community, the problem of generative modelling is made precise with specification of a choice of divergence
+In the deep generative modelling community, the problem of generative modelling is made precise with specification of a choice of divergence
 %\footnote{Defined in Section \ref{subsec:gen-model-divergence}} 
 $D$ and family of distributions $P_X^\theta$ with parameter $\theta\in\Theta$, the goal then being
 %
-\begin{align*}
+\begin{align}\label{eqn:chap-2-generative-modelling}
 \min_{\theta \in \Theta}: \ D\left(P_X^\theta,  Q_X \right).
-\end{align*}
+\end{align}
 %
 There are two main challenges in practically implementing and solving this problem.
 First, when the data are drawn from complex high dimensional distributions, how can this be modelled with a parameterised distribution that is computationally tractable?
 Second, what are appropriate choices of divergences, and how can they be estimated or minimised with respect to the parameters $\theta$?
 %These questions will be discussed in the rest of this chapter. 
+
+In general, $Q_X$ is unknown and can only be approximated as an empirical distribution based on available samples, often denoted $\widehat{Q}_X$. 
+Thus, although the goal is to minimise a divergence between the model distribution and the true data distribution $Q_X$, the problem often reduces to minimising some divergence or loss function involving instead $\widehat{Q}_X$.
+It may be tempting simply to replace $Q_X$ with $\widehat{Q}_X$ in Equation \ref{eqn:chap-2-generative-modelling}, however the distinction between the underlying data distribution and empirical distribution can sometimes require subtle reasoning for two main reasons.
+First, one could easily overfit if care is not taken, learning only to reproduce the observed data. 
+Second, in some cases divergences between model and empirical distributions may not be well-defined. 
+For instance, maximum likelihood learning is equivalent to minimising the KL-divergence in Equation \ref{eqn:chap-2-generative-modelling} when $P_X^\theta$ is absolutely continuous with respect to $Q_X$. 
+But when $P_X^\theta$ is a continuous distribution and $\widehat{Q}_X$ is an empirical distribution, the KL-divergence is not well-defined, although the maximum likelihood interpretation still is.
+For other choices of divergences, for instance Integral Probability Metrics (see Section \ref{subsec:intro-ipm}), this latter issue may not arise. 
+
 
 In the ICA community, the goal is to use the learned model $P_X^\theta$ to infer the values of latent variables. 
 Since latent variables are by definition unknown, it is important that if multiple solutions to the generative modelling problem exist, they should correspond to similar models with regard to the use of the latent variables.
@@ -70,7 +80,7 @@ ICA will be discussed in more detail in Chapter \ref{chapter:ica}, in which nove
 
 A Latent Variable Model (LVM) is a way to specify complex distributions over potentially high-dimensional spaces using simple components. 
 These are flexible models that are used widely in the machine learning literature and as such, different parts of the literature often use different terminology to describe fundamentally similar ideas.
-In the following, two sets of nomenclature will be introduced for the neural sampler and ICA communities.
+In the following, two sets of nomenclature will be introduced for the deep generative modelling and ICA communities.
 
 \medskip
 
@@ -82,14 +92,14 @@ Together, these induce a distribution $P_X$ over the data space.
 %In practice, an LVM may be parametrised, either by parametrising the prior as $P_Z^\theta$, or the conditional distributions as $P_{X|Z}^\theta$, or both.
 
 
-In the neural sampler community, $P_Z$ is referred to as a \emph{prior} or \emph{noise distribution} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
+In the deep generative modelling community, $P_Z$ is referred to as a \emph{prior} or \emph{noise distribution} and is usually fixed to be some simple distribution such as a unit Gaussian or uniform distribution. 
 In the ICA community, $P_Z$ is referred to as a \emph{source distribution} and may be specified only implicitly through some assumed properties, such as being a factorised distribution.
 Usually the letter $S$ denotes the corresponding sources in the ICA literature, but for consistency this thesis will use $Z$.
 
 The conditional distributions can be thought of as a mapping $g:\mathcal{Z}\to\mathcal{P}(\mathcal{X})$ from elements of $\mathcal{Z}$ to distributions over $\mathcal{X}$.
 If all of these distributions are Dirac delta distributions (where all probability mass is placed at a single point), the mapping $g$ can be seen as a function $g:\mathcal{Z}\to\mathcal{X}$. 
 
-In the neural sampler community, the conditional distributions are referred to as \emph{generators} or \emph{decoders}, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
+In the deep generative modelling community, the conditional distributions are referred to as \emph{generators} or \emph{decoders}, and when given parameter $\theta$ may be written as $P_{X|Z}^\theta$ or $g^\theta$. 
 If the conditional distributions they correspond to are Dirac delta distributions, the generators are called \emph{deterministic}, otherwise they are \emph{stochastic} (sometimes \emph{probabilistic}).
 In the ICA community, the generators are generally deterministic and are known as \emph{mixing functions}, and are usually denoted by $f$.
 
@@ -106,11 +116,68 @@ For simplicity, it will be assumed that densities of all relevant distributions 
 p^\theta(x) = \int p^\theta(x|z) p(z) dz.
 \end{align*}
 %
-In some special cases, the density $p^\theta(x)$ may be tractable: for instance, if the generators are deterministic and invertible with known Jacobian, as is often the case in the ICA community.
-In most cases in the neural sampler community, the integral is intractable, meaning that $P_X^\theta$ has unknown density in practice.
+In some special cases (e.g. normalising flows in Section \ref{subsec:normalising-flows}), the density $p^\theta(x)$ may be tractable.
+In most cases in the deep generative modelling community, the integral is intractable, meaning that $P_X^\theta$ has unknown density in practice.
 Despite this, LVMs are useful here because samples from $P_X^\theta$ can be drawn easily:
 one samples first a value $z\sim P_Z$ and then $x \sim P^\theta_{X|Z=z}$. 
 All relevant distributions can be chosen so that these sampling procedures are simple, e.g.\:if $P_Z$ and all $P^\theta_{X|Z}$ are Gaussian. 
+
+
+\section{Other generative models}
+
+This section briefly covers two other generative models that are encountered across the machine learning literature. The first, \emph{normalising flows}, are a specialisation of the general formulation of LVMs as introduced in the previous section. The second, \emph{autoregressive models}, do not use latent variables and are therefore fundamentally different. 
+
+Both of these families of models have in common that the likelihood of observed data can be calculated directly, and thus can be fit straightforwardly by maximum likelihood learning. 
+In practice, this typically means using the log-likelihood as an objective function which is maximised with respect to the model parameters using stochastic gradient methods.
+
+\subsection{Normalising Flows}\label{subsec:normalising-flows}
+
+Normalising flows, first introduced by \cite{tabak2010density} and \cite{tabak2013family} and subsequently popularised within the machine learning community by \cite{dinh2014nice} and \cite{rezende2015variational}, are type of LVM for which the generator $f^\theta$ is deterministic and invertible with known Jacobian and inverse.
+By the change of variable formula, the density $p^\theta(x)$ can be explicitly calculated in terms of the prior $p(z)$ and generator $f^\theta$
+%
+\begin{align}\label{eqn:chapter2-normalising-flow-likelihood}
+p^\theta(x) = p(z) \left| \det \frac{\partial f^\theta}{\partial z}\right|^{-1},
+\end{align}
+%
+where $x=f^\theta(z)$. 
+The setting of normalising flows applies naturally to the problem of ICA due to the assumption that $f^\theta$ be invertible. 
+
+
+By the chain rule, if two functions have known Jacobian and inverse, their composition also has known Jacobian and inverse. 
+Thus, $f^\theta$ can be specified by composing many layers of simple components. 
+One of the lines of research within the normalising flow community is the development of such layers, for instance Planar Flows \citep{rezende2015variational}, Nonlinear Independent Components Estimation (NICE) \citep{dinh2014nice}, Real Non-Volume Preserving (RealNVP) \citep{dinh2016density}, Masked Autoregressive Flow \citep{papamakarios2017masked} and Inverse Autoregressive Flow layers \citep{kingma2016improved}. 
+
+The advantage of normalising flows over the more general LVMs introduced in the previous chapter is that the likelihood of input data can be calculated exactly via Equation \ref{eqn:chapter2-normalising-flow-likelihood}, while it is still possible to featurise inputs and generate samples via $f^\theta$ and its inverse. 
+The challenge of these models is that `standard' architectures (e.g. convolutions) cannot be straightforwardly applied due to the invertibility constraint. 
+Moreover, the assumption that the data and latent space have the same dimension may be restrictive in some settings, for example when modelling high-dimensional data such as images. 
+
+
+
+\subsection{Autoregressive Models}
+
+In contrast to LVMs, autoregressive models do not involve the introduction of a latent variable and prior distribution.
+Instead, the distribution over the observable variables is modelled directly by making use of the factorisation of the joint distribution
+%
+\begin{align}\label{eqn:chapter2-autoregressive-likelihood}
+p^\theta(x) = \prod_{i=1}^{n} p^\theta(x_i | x_{j<i}),
+\end{align}
+%
+where $x$ is an $n$-dimensional vector and $x_{j<i}$ is the vector of components with index smaller than $i$. 
+Any joint distribution can be factorised this way so no assumptions need to be made in order to use this decomposition, though part of the modelling process may be to drop some dependencies: for example, rather than depending on all previous components, $x_i$ may depend only on some subset of previous components.
+Each component $p^\theta(x_i | x_{j<i})$ can be modelled with a neural network, with inputs $x_{j<i}$ and output a distribution over $x_i$. 
+Such models can be used for both discrete and continuous data by varying the choice of output distributions. 
+
+The main considerations in the modelling process are deciding the order in which to enumerate the components $x_i$ in Equation \ref{eqn:chapter2-autoregressive-likelihood}, whether to drop any dependencies, and precisely how to model the factors $p^\theta(x_i | x_{j<i})$. 
+
+Prominent methods in the literature include PixelRNN \citep{van2016pixel} which models images by enumerating each pixel and colour-channel by row and column and using a recurrent neural network to model the distribution over each pixel conditioned on all previous pixels. 
+PixelCNN \citep{van2016conditional} instead models the distribution of a pixel using a \emph{masked convolution} centred at that pixel, such that it is a function only of previous pixels which are also spatially close.
+WaveNet \citep{oord2016wavenet} models audio by modelling the wave amplitude at each time step as a function of those at previous time steps by using dilated convolutions, achieving long-range dependencies with a convolutional architecture.
+
+Similar to normalising flow models, autoregressive models have the advantage over LVMs that it is possible to exactly calculate the likelihood of any observation, since this reduces to just evaluating each of the factors in Equation \ref{eqn:chapter2-autoregressive-likelihood}.
+They can also be used to generate samples, though this can be significantly slower than for LVMs, since each component needs to be sampled sequentially given previous components. 
+In particular, this means that high-dimensional data such as images or audio can be slow to sample. 
+In contrast to LVMs, autoregressive models cannot be used to featurise data.
+
 
 
 \section{Divergences}\label{subsec:gen-model-divergence}
@@ -130,6 +197,11 @@ A divergence $D$ is a mapping $D: \mathcal{P}(\mathcal{X}) \times \mathcal{P}(\m
 where $\mathcal{P}(\mathcal{X})$ denotes the set of all probability distributions on $\mathcal{X}$.
 \end{definition}
 
+As a technical side-note, this definition is very general, and does not assume that the distributions admit densities; the only requirement is that $P$ and $Q$ be probability measures over $\mathcal{X}$ with the same $\sigma$-algebra $\Sigma$ over $\mathcal{X}$.
+$\Sigma$ is the set of all subsets or `events' assigned probability mass under the distributions.
+For most typical settings, where $\mathcal{X}$ would be a subset of some Euclidean space $\mathbb{R}^d$, $\Sigma$ would canonically be the set of Lebesgue-measurable subsets.
+$P = Q$ if and only  $P(A) = Q(A)$ for all $A\in \Sigma$, meaning that they assign the same probability mass to each possible event. 
+If $P$ and $Q$ admit densities $p$ and $q$, then $P=Q$ if and only if $p=q$ almost everywhere as functions $\mathcal{X} \rightarrow \mathbb{R}$.
 
 A metric is additionally symmetric and obeys the triangle inequality.
 For a divergence $D(P^\theta_X, Q_X)$ to be useful in the context of generative modelling, it must be possible to minimise it with respect to the parameters $\theta$. 
@@ -143,7 +215,7 @@ These two families are discussed in the rest of this section.
 An Integral Probability Metric (IPM) is a divergence that can be written as
 %
 \begin{align*}
-D_{\mathcal{H}}(P, Q) = \sup_{h\in\mathcal{H}} \left| \int h(x) dP(x) - \int h(x) dQ(x) \right|
+D_{\mathcal{H}}(P, Q) = \sup_{h\in\mathcal{H}} \left| \int h(x) dP(x) - \int h(x) dQ(x) \right|,
 \end{align*}
 %
 for some restricted function class $\mathcal{H} = \{h: \mathcal{X} \to \mathbb{R} \}$. 
@@ -375,7 +447,7 @@ In this sense, $T^*$ estimates (a function of) the density ratio $p(x)/q(x)$.
 %In this chapter we do not make use of this variational formulation of $f$-divergences, but it will be used in explaining Generative Adversarial Networks in the next section.
 
 
-\section{Examples of generative models}\label{sec:literature-gen-models}
+\section{Methods for fitting Latent Variable Models}\label{sec:literature-gen-models}
 
 Solving the generative modelling problem as posed in the introduction requires the minimisation of $D(P^\theta_X, Q_X)$ with respect to the parameters $\theta$ of the LVM in a computationally tractable way.
 In general it is infeasible to estimate $D(P^\theta_X, Q_X)$ directly, or even to compute gradients of it with respect to $\theta$. 
@@ -393,13 +465,13 @@ Generative Adversarial Networks (GANs) are a family of methods that approximatel
 In the case of $f$-divergences, the key ideas have been already introduced in Section \ref{sec:literature-density-ratio-estimation}.
 
 \cite{goodfellow2014generative} introduced the idea of training a discriminator $d^\phi: \mathcal{X} \to [0,1]$ to classify between `real' samples from $Q_X$ and `fake' samples from $P^\theta_X$, which then provides a surrogate loss for a generator $g^\theta$, trained simultaneously to maximise the loss of the discriminator. 
-In \cite{goodfellow2014generative}, the loss is implemented as logistic regression
+In \cite{goodfellow2014generative}, the loss is implemented as logistic regression:
 %
 \begin{align*}
-L(\theta, \phi) = \mathbb{E}_{x\sim Q_X}\left[ -\log d^\phi(x) \right] \mathbb{E}_{x \sim P_Z} \left[- \log(1 - d^\phi(g^\theta(z)) \right]
+L(\theta, \phi) = \mathbb{E}_{x\sim Q_X}\left[ -\log d^\phi(x) \right] + \mathbb{E}_{x \sim P_Z} \left[- \log(1 - d^\phi(g^\theta(z)) \right].
 \end{align*}
 %
-which, as previously discussed in Section \ref{sec:literature-density-ratio-estimation}, is a lower bound on the Jensen-Shannon divergence $D_{\text{JS}}(P^\theta_X, Q_X)$, up to constants and scalar factors.
+As previously discussed in Section \ref{sec:literature-density-ratio-estimation}, this is a lower bound on the Jensen-Shannon divergence $D_{\text{JS}}(P^\theta_X, Q_X)$, up to constants and scalar factors.
 
 Stochastic gradients of this loss can be taken with respect to both $\phi$ and $\theta$ by using minibatch samples of data to approximate the outer expectations when $d^\phi$ and $g^\theta$ are both differentiably parametrised neural networks.
 %It was shown that this loss satisfies $L(\theta, \phi) \leq 2 \cdot D_{\text{JS}}(P^\theta_X, Q_X) - \log 4$ for any $d^\phi$ and $g^\theta$, with equality attainable only if the class of $d^\phi$ is sufficiently rich, where $D_{\text{JS}}$ is the Jensen-Shannon divergence.
@@ -442,6 +514,13 @@ One example of an IPM-based GAN is the Wasserstein GAN of \cite{AB17}.
 Here, the 1-Wasserstein distance is used, corresponding to $h$ having Lipschitz constant at most $1$. 
 For certain neural network architectures, including those composed of fully-connected and convolutional layers, this can be enforced by weight clipping.
 
+It should be noted that while the ultimate goal is to minimise the divergence $D(P_X^\theta, Q_X)$ with respect to the parameters $\theta$, the surrogate losses provided by the above techniques result in \emph{lower bounds} to $D(P_X^\theta, Q_X)$. 
+This leads to several potential issues.
+For example, it is difficult to make rigorous claims about the value of $D(P_X^\theta, Q_X)$ and whether it indeed becomes smaller throughout training.
+Furthermore, GANs are famously unstable to train, requiring a delicate balance between updates to the generator and discriminator. 
+Minimisation of upper bounds on the divergence $D(P_X^\theta, Q_X)$ are preferable, and one such method that does so in the case of the KL-divergence is discussed in the next section. 
+Other works such as \cite{zhang2019variational} investigate other upper bounds for more general choices of divergences to avoid the problems associated with GANs.
+
 \subsection{Variational Autoencoders}
 
 Variational Autoencdoers (VAEs) \citep{kingma2013auto, rezende2014stochastic} are a method to minimise the KL-divergence between model and data distributions, defined as
@@ -479,16 +558,16 @@ $q^\phi(z|x)$ is often referred to as an encoder as it maps elements of the data
 Putting things together yields
 %
 \begin{align*}
-D_{\text{KL}}(Q_X, P^\theta_X) \leq -H(Q_X)  - \mathbb{E}_{q(x)} \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z) + \mathbb{E}_{q(x)}D_{\text{KL}}\left(q^\phi(z|x), p(z)\right)
+D_{\text{KL}}(Q_X, P^\theta_X) \leq -H(Q_X)  - \mathbb{E}_{q(x)} \mathbb{E}_{q^\phi(z|x)} \log p^\theta(x|z) + \mathbb{E}_{q(x)}D_{\text{KL}}\left(q^\phi(z|x), p(z)\right),
 \end{align*}
 %
 where $H(Q_X)$ is the constant differential entropy, leading to the VAE loss
 %
 \begin{align}
-L_{\text{VAE}}(\theta, \phi) =  \underbrace{\mathbb{E}_{q(x)} \mathbb{E}_{q^\phi(z|x)} \left[ - \log p^\theta(x|z)\right]}_{\text{(i)}} + \underbrace{\mathbb{E}_{q(x)}D_{\text{KL}}\left(q^\phi(z|x), p(z)\right)}_{\text{(ii)}}
+L_{\text{VAE}}(\theta, \phi) =  \underbrace{\mathbb{E}_{q(x)} \mathbb{E}_{q^\phi(z|x)} \left[ - \log p^\theta(x|z)\right]}_{\text{(i)}} + \underbrace{\mathbb{E}_{q(x)}D_{\text{KL}}\left(q^\phi(z|x), p(z)\right)}_{\text{(ii)}}.
 \end{align}
 %
-which (up to constants) is an upper bound on $D_{\text{KL}}(Q_X, P^\theta_X)$.
+Up to constants, this is an upper bound on $D_{\text{KL}}(Q_X, P^\theta_X)$.
 It is common for the prior to be a standard Gaussian, the generator to output Gaussians with mean $\mu^\theta(z)$ and fixed isotropic covariance, and the encoder to map to Gaussians with mean $\mu^\phi(x)$ and diagonal covariance $\Sigma^\phi(x)$.
 In this case, term (i) above can be interpreted as an average reconstruction loss and (ii) as a regulariser, hence making the model a type of regularised autoencoder\footnote{Note however that the interpretation of VAEs as a type of autoencoder breaks down when more powerful classes of generators are used, as discussed in \href{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}{http://paulrubenstein.co.uk/variational-autoencoders-are-not-autoencoders/}.}.
 
@@ -503,7 +582,7 @@ Chapter \ref{chapter:latent-space-learning-theory} concerns estimation of $f$-di
 
 %\todo{discuss the fact that the aggregate posterior and prior satisfy the setting we consider and mention that some works consider divergences between them?}
 
-\subsection{Wasserstein Autoencoders}
+\subsection{Wasserstein Autoencoders}\label{subsec:chapter2-wae}
 
 Wasserstein Autoencoders (WAEs) \citep{tolstikhin2017wasserstein} approximately minimise optimal transport distances between model and data distributions.
 These were discussed briefly in Section \ref{subsec:intro-ipm} as they can be expressed as IPMs, but here an alternative formulation of these distances will be used.
@@ -548,14 +627,14 @@ This is proved in Theorem 1 of \cite{tolstikhin2017wasserstein}.
 
 Writing $Q_Z = \int Q_{Z|X=x} q(x) dx$ to be the latent space distribution obtained by pushing the data through the encoder and $g$ for the deterministic generator yields the following alternative statement of the optimal transport distance in the LVM setting:
 %
-\begin{align*}
+\begin{align}\label{eq:ot-objective-constrained}
 OT_c(P_X^\theta, Q_X) = \min_{Q_{Z|X}: Q_Z = P_Z} \mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q_{Z|X=x}} \left[ c(x, g(z)) \right].
-\end{align*}
+\end{align}
 %
 Again this optimisation problem is not feasible to solve due to the hard constraint, 
 but it can be made computationally feasible by relaxing the constraint to obtain the WAE objective
 %
-\begin{align}
+\begin{align}\label{eq:wae-objective-relaxed}
 L_{\text{WAE}}^{\lambda, D}(\theta, \phi) = \underbrace{\mathbb{E}_{x\sim Q_X} \mathbb{E}_{z\sim Q^\phi_{Z|X=x}} \left[ c(x, g^\theta(z)) \right]}_{\text{(i)}} + \underbrace{\lambda D\left(Q^\phi_Z, P_Z  \right)}_{\text{(ii)}},
 \end{align}
 %
@@ -574,3 +653,10 @@ Term (ii) is potentially challenging to estimate depending on the choice of $D$.
 Estimating a divergence between $P_Z$ and $Q_Z^\phi$ using sample-based methods does not make use of a significant degree of structure that is present in the problem. $P_Z$ is typically chosen to be a simple distribution with known density. While $Q_Z^\phi$ may be complex, its density can be decomposed as $q^\phi(z) = \mathbb{E}_{x\sim Q_X} q^\phi(z|x)$ where $q^\phi(z|x)$ is also typically chosen to be simple (e.g. Gaussian) and $Q_X$ can be sampled.
 The main contribution of Chapter \ref{chapter:latent-space-learning-theory} is to propose and analyse an estimator making use of this structure for the case that $D$ in (ii) is chosen to be an $f$-divergence. 
 
+
+\section{Conclusion}
+
+This chapter introduced key ideas in the literature of generative modelling with LVMs that are relevant to this thesis, in particular the following two chapters.
+Next, Chapter \ref{chapter:latent-space-learning-theory} presents learning theoretic results for divergence estimation in the latent spaces of autoencoders.
+Following that, Chapter \ref{chapter:ica} presents identifiability results for ICA models, a type of LVM. 
+Chapter \ref{chapter:causality}, the third and final main chapter of research content, concerns causality and is less relevant to the ideas presented here, though there are strong connections between more general probabilistic modelling and causality. 

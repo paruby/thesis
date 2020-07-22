@@ -86,7 +86,7 @@ Sections \ref{sec:causality-structural-equation-models} and \ref{section:causali
 Section \ref{sec:causality-what-are-causal-vars} discusses issues involved in defining causal variables in practice, as well as modelling the same system at different levels of details,
 followed by Section \ref{sec:causality-transformations-between-sems} which extends the definition of SEMs and provides a framework to analyse when two causal models at different levels of detail are consistent with one another.
 Section \ref{sec:causality-causal-examples-of-transformations} provides examples of consistent models in a variety of settings.
-Section \ref{sec:causality-discussion} discusses the implications of this work to the literature, as well as papers that have build on this since its original publication. 
+Section \ref{sec:causality-discussion} discusses the implications of this work to the literature, as well as papers that have built on this since its original publication. 
 
 %, we will introduce SEMs, followed in Section ?? by an overview of approaches to causal inference using SEMs. 
 %In Section ?? we will discuss the implicit assumptions in these approaches to causal inference, which will lead us to discussing causal abstractions in Sections ?? to ??.
@@ -242,17 +242,19 @@ In the following, I attempt to give a neutral overview of the similarities and d
 \begin{definition}
 A Bayesian network over variables $X = (X_1,\ldots, X_N)$ with directed acyclic graph $\mathcal{G}$ specifies a joint distribution over $X$ as a product of conditional distributions
 \begin{align*}
-	p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{\pa(i)})
+	p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{\pa(i)}),
 \end{align*}
 where the nodes of $\mathcal{G}$ correspond to the variables $X$ and there is an edge $X_j \to X_i$ in $\mathcal{G}$ if and only if $j \in \pa(i)$.
 \end{definition}
 
 Since any product distribution can always be decomposed as $p(X_1,\ldots,X_N) = \prod_{i=1}^N p(X_i | X_{j<i})$, it is the \emph{absence} of edges in $\mathcal{G}$ that imposes structure on the probability distribution.
 
-Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution $\delta_{X_i = x_i}$.\footnote{It is also possible instead to introduce an additional `treatment' variable for each observed variable, whose value determines whether the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution.
-Conditioning on these treatment variables is then equivalent to a perfect intervention.}
+Bayesian networks can be endowed with a similar notion of perfect intervention as SEMs. To model the effect of the perfect intervention $\doop(X_i = x_i)$, in the resulting joint distribution the factor $p(X_i | X_{\pa(i)})$ is replaced with a Dirac delta distribution $\delta_{X_i = x_i}$.
 Bayesian networks equipped with such notions are sometimes referred to as \emph{causal} Bayesian networks. 
 In the following, we will simply refer to them as Bayesian networks.
+
+Note that it is also possible instead to introduce additional `treatment' or `indicator' variables representing the application of interventions. This may in general replace the factor $p(X_i | X_{\pa(i)})$ with a Dirac delta distribution or indeed any other distribution.
+A theory of such models, termed \emph{decision theoretic statistical causality} is developed in \cite{dawid2020decision} and the references therein.
 
 
 \subsubsection{Correspondence between SEMs and Bayesian networks} 
@@ -305,7 +307,7 @@ As a consequence of the noise variables being explicitly modelled, SEMs are equi
 That is, once the variables $X$ have been observed, the values for the exogenous variables $E$ can generally be inferred. 
 This means that one can answer questions such as ``what would have happened had the intervention $\doop(X_i=x_i)$ been performed?''
 %\paragraph{Example:} todo.
-Whether or not this is useful in practice is debatable, since different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be from observational or interventional settings. Therefore one cannot hope to be able to answer counterfactual questions based 
+Whether or not this is useful in practice is debatable, since different SEMs may imply the same set of observational and interventional distributions, but nonetheless be counterfactually non-equivalent. That is, they may produce different answers to the same counterfactual question, despite implying the same observational and interventional distributions. This means that such models cannot be distinguished based on data, be that from observational or interventional settings. Therefore one cannot hope to be able to answer counterfactual questions based 
 on data without prior knowledge to distinguish between counterfactually non-equivalent models.
 %We will not discuss counterfactual reasoning further.
 
@@ -321,7 +323,7 @@ The main consequential difference between SEMs and Bayesian networks is that it 
 
 Acyclic SEMs and Bayesian networks are fundamentally equivalent as mathematical models.
 By convention, Bayesian networks usually do not explicitly specify the noise variables, though there is no reason why they cannot do so.
-Indeed, the \emph{reparameterisation trick} involves explicit use of noise variables as a way to train Bayesian networks via stochastic gradient methods \citep{kingma2013auto,rezende2014stochastic}.
+Indeed, the \emph{reparameterisation trick}, also known as a \emph{disturbance} representation, involves explicit use of noise variables rather than an implicit representation.
 
 This equivalence breaks down in the case of cycles: while SEMs can be easily generalised to allow cyclic causal graphs, it is not clear how to do so for Bayesian networks unless the noise variables are explicitly specified, in which case they are essentially the same as SEMs.
 That said, most of the debate around SEMs and Bayesian networks has considered the acyclic case.
@@ -343,9 +345,20 @@ Most causal systems in the real world involve some degree of feedback.
 Examples can be found in a wide variety of settings: molecular biology (e.g. gene-gene or gene-protein interactions in a cell), ecology (e.g. population dynamics), climate science (e.g. methane release from thawing permafrost) and public policy and economics (e.g. poverty traps).
 Studying the mathematical modelling of these cases is interesting in part because their treatment requires consideration of issues that are not present in the acyclic, feedback-free case.
 
+In reality, any cyclic causal system will correspond to an acyclic system when `unravelled' in time.
+Nonetheless, explicitly modelling systems as cyclic may be useful in scenarios in which it is not possible to make measurements or observations at the level of the acyclic structure.
+For instance, in many biological settings, it may not be possible to generate temporal data if making a measurement involves destroying the system being measured (e.g. sequencing the mRNA in a cell).
+
 Recall that Lemmas \ref{lemma:acyclic-sem-well-defined-obs-dist} and \ref{lemma:acyclic-sem-well-defined-int-dist} relied on acyclicity of the causal graph $\mathcal{G}$ to prove that an SEM induces well-defined observational and interventional distributions over the variables $X$. 
 When generalising to \emph{cyclic SEMs} by relaxing this acyclicity constraint, one must be careful to understand under which conditions the observational and interventional distributions are well-defined.
 The implied observational distribution is well-defined if and only if there is a unique solution $X(E)$ to the structural equations for $P_E$-almost all values of $E$. Similarly, an interventional distribution is well-defined if and only if the intervened structural equations have unique solution $P_E$-almost surely.
+
+That is, one generates from a cyclic SEM in exactly the same way that one generates from an acyclic one. 
+First, sample the values for the exogenous noise variables. 
+Then, solve the structural equations to find the (unique) values of $X$ satisfying the equations. 
+This value of $X$ is the generated value. 
+Therefore, a cyclic SEM only implies well-defined observational and interventional distributions if, with probability 1 over the distribution of the exogenous noise variables $E$, a unique solution $X(E)$ exists to the (possibly intervened) structural equations.
+
 The following example shows a simple case of an SEM with well-defined observational distribution for which some interventional distributions are well-defined but others are ill-defined.
 
 \medskip
@@ -411,7 +424,7 @@ The key idea of this family of approaches is to relate \emph{conditional indepen
 This line of work is historically important, but only tangentially related to the topic of this chapter.
 As such, only a brief outline follows; see \cite{pearl2009causality} or \cite{peters2017elements} for an in-depth explanation.
 
-In a direction acyclic graph, d-separation is a relation between triples of disjoint subsets of nodes. 
+In a directed acyclic graph, d-separation is a relation between triples of disjoint subsets of nodes. 
 Informally, if a subset of nodes $A$ d-separates subsets $B$ and $C$, then $A$ blocks any information flow between $B$ and $C$. 
 Graphs exhibiting the same set of d-separations form an equivalence relation, the classes of which are known as \emph{Markov equivalence classes}.
 Subject to mild assumptions, there is a one-one correspondence between possible sets of conditional independences present in $P_X$, and Markov equivalence classes of $\mathcal{G}$. 
@@ -866,7 +879,7 @@ We can model this restricted set of interventions by $\mathcal{I}_X$, i.\,e.\ th
 
 The partial ordering of $\mathcal{I}_X$ corresponds to the ability to compose physical implementations of interventions. The fact that we can first remove light bulb $B_1$ (${\doop(B_1=0)}$) and then afterwards remove light bulb $B_2$ (resulting in the combined intervention ${\doop(B_1=0, B_2=0)}$)  is reflected in the partial ordering via the relation ${\doop(B_1=0) \leq_X \doop(B_1=0,B_2=0)}$.
 
-\subsection{Partially ordered sets of distributions}
+\subsection{Partially ordered sets of distributions}\label{subsec:partially-ordered-sets-of-dists}
 
 For each intervention $i \in \mathcal{I}_X$, the SEM $\mathcal{M}_X$ induces a distribution over the observable variables $X$ that we denote by $P_X^{\doop(i)}$.
 Throughout, we will denote the empty- or null-intervention corresponding to the unintervened setting by $\nulli\in \mathcal{I}_X$.
@@ -926,8 +939,8 @@ The following two results give elementary properties of exact transformations fo
 The identity mapping and permuting the labels of variables are both exact transformations.
 That is, if $\mathcal{M}_X$ is an SEM and $\pi:\mathbb{I}_X \to \mathbb{I}_X$ is a bijection then the transformation
 \begin{align*}
-\tau:\mathcal{X}&\to\mathcal{Y}\\
-(x_i:i\in\mathbb{I}_X) &\mapsto (x_{\pi(i)}:i\in\mathbb{I}_X)
+\tau:\mathcal{X}&\to\mathcal{Y},\\
+(x_i:i\in\mathbb{I}_X) &\mapsto (x_{\pi(i)}:i\in\mathbb{I}_X),
 \end{align*}
 naturally gives rise to an SEM $\mathcal{M}_Y$ that is an exact $\tau$-transformation of $\mathcal{M}_X$, corresponding to relabelling the variables.
 \end{lemma}
@@ -1169,6 +1182,33 @@ If we wish to reason about the effect of the intervention $\doop(X_1=0,\, X_2=0)
 $\mathcal{M}_X$ suggests that $\doop(X_1=0,\, X_2=0)$ could be implemented by performing an additional action on top of $\doop(X_2=0)$.
 In contrast, $\mathcal{M}_Y$ suggests that implementing the corresponding intervention $\doop(Y_1=0)$ would conflict with the already performed intervention $\doop(Y_1=1)$.
 The requirement that $\omega$ be order-preserving rules this pathology out. 
+
+
+\subsection{Exact transformations as marginalisations in a larger model}
+
+This section provides an alternative intuition for how to think about exact transformations. 
+Rather than thinking of them as transforming one SEM $\mathcal{M}_X$ into another $\mathcal{M}_Y$, it is possible to think of them as corresponding to marginalisation in a larger model containing both micro- and macro-variables $X$ and $Y$, with some caveats. 
+
+Start with the base micro-level SEM $\mathcal{M}_X$. 
+It is possible to add the macro-variables to this as deterministic functions of the micro-variables via the function $\tau$. 
+That is, one obtains an SEM $\mathcal{M}_{X,Y}$ over the variables $X$ and $Y$, where the structural equations for the variables $X_i$ are the same as in $\mathcal{M}_X$ and those for the variables $Y_i$ are given by $Y_i = \tau_i(X)$ (note that these structural equations are deterministic and do not have exogenous variables).
+The model $\mathcal{M}_{X,Y}$ has the same interventions as $\mathcal{M}_{X}$, which induce distributions over all of the variables $(X, Y)$. 
+
+Now, take the model $\mathcal{M}_{X,Y}$ and marginalise out the $X$ variables, yielding the model $\widehat{\mathcal{M}}_Y$. 
+Note that this may not be an SEM (hence that `hat'), and the non-trivial part of this process is that there is in general no canonical way to write down the `marginalised' structural equations---one could always simply write each $Y_i$ as a function of the $X$-level exogenous noise variables, but then the structure between the $Y_i$s would not be present.
+ 
+Each intervention in $\mathcal{M}_{X,Y}$ will induce a distribution over the variables $Y$ in the model $\widehat{\mathcal{M}}_Y$.
+This is analogous to the partially ordered set of distributions discussed in Section \ref{subsec:partially-ordered-sets-of-dists}. 
+If this set of distributions can be faithfully represented by some set of structural equations and interventions on these equations that respects the partial ordering on the original intervention set, then this model $\mathcal{M}_Y$ would be an exact transformation of $\mathcal{M}_X$.
+
+In general, one could relax the notion of perfect interventions to allow probabilistic interventions, which would make it easier for the distributions of the marginalised model $\widehat{\mathcal{M}}_Y$ to be expressible in a single SEM. 
+One could also use the framework of \cite{dawid2020decision} to include the interventions as part of the set of variables being marginalised over, to make it clearer that interventions originally made on $X$ propagate to interventions on $Y$ after marginalisation.
+
+However, the challenge would still remain that without further thought, marginalisation would result in a graph in which there are no direct arrows between the $Y$ variables, and all dependence between them is due to confounders. 
+E.g. in Theorem \ref{theorem:micro-macro} and Figure \ref{fig:micro_macro} in the next section, marginalising naively would result in no arrow $\widehat{W} \rightarrow \widehat{Z}$, but rather a confounder between the two variables. 
+Such a representation would miss the point of the whole exercise, which is to identify structure between variables at the macro-level.
+This is not a necessary outcome of the marginalisation view; this issue is raised only to bring attention to the fact that the representation of the relationships between the remaining variables would need to be carefully considered, in much the same way that it would in the view previously discussed in this chapter.
+
 
 \section{Examples of exact transformations}\label{sec:causality-causal-examples-of-transformations}
 

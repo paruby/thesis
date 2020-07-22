@@ -71,13 +71,14 @@ latent variable model
 %\end{align}
 %
 \begin{align}
-Z &\sim p(z) = \prod_i p(z_i) \label{eqn:ica-basic-1} \\
+Z &\sim p(z) = \prod_i p(z_i), \label{eqn:ica-basic-1} \\
 %Z &\sim P_Z = \prod_i P_{Z_i}  \\
-X &= f(Z) \label{eqn:ica-basic-2}
+X &= f(Z) \label{eqn:ica-basic-2},
 %p(z) &= \prod_i p(z_i)
 \end{align}
 %
 where $Z$ is a vector of independent \emph{sources}, $X$ is a vector of \emph{observations} or \emph{mixtures} and $f$ is the vector of \emph{mixing functions} expressing how each coordinate of $X$ depends on all of the coordinates of $Z$. 
+Crucially, $f$ is assumed to be invertible and thus $X$ and $Z$ are of the same dimension.
 Given a dataset of observations of $X$, the goal of ICA is to recover the corresponding unknown values of $Z$ by learning to invert the unknown $f$.
 In the general case, no assumptions are made about $p(z)$ other than that it factorises.
 The latent variable model in this setting should thus be thought of as a true descriptive model for the world, 
@@ -128,27 +129,36 @@ Such assumptions may be made either on the mixing functions or on the distributi
 		\caption{}\label{fig:ica-model:b}
 	\end{subfigure}
 	%
-	\caption[Graphical model depictions of ICA and multi-view ICA]{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work. $Z$ is a vector of unobserved latent sources and the $X_i$ are observed mixtures of the components of $Z$.}
+	\caption[Graphical model depictions of ICA and multi-view ICA]{Graphical models depicting (a) the usual single-view ICA setting; (2) the multi-view setting considered in this work. $Z$ is a vector of unobserved latent sources and the $X_i$ are observed mixtures of the components of $Z$. In both settings, all variables are of the same dimension.}
 \end{figure}
 
+
+\subsection{Summary of results}
 
 The central contribution of the work presented in this chapter is the derivation of identifiability results in a novel \emph{multi-view} setting, in which multiple observations of the same underlying sources through different mixing functions are given (see Figure \ref{fig:ica-model:b}):
 %
 \begin{align*}
-Z &\sim \prod_i p(z_i) \\
-X_1 &= f_1(Z) \\
-X_2 &= f_2(Z)
+Z &\sim \prod_i p(z_i), \\
+X_1 &= f_1(Z), \\
+X_2 &= f_2(Z),
 \end{align*}
 %
+where again each $f_i$ is invertible and $X_1$, $X_2$ and $Z$ are of the same dimension. 
 In this setting, identifiability holds subject to much weaker assumptions than are required for the single-view setting.
 These results are of practical importance for applications in which multiple data modalities may be simultaneously available.
+
+In particular, variants on the model above are considered in which noise processes occur at the source level in one or both views. 
+Subject to certain assumptions holding, formalised in the \emph{Sufficiently Distinct Views} assumption (see Definition \ref{suff_dist_assumption}), model identifiability is proved, meaning that it is in principle possible to recover the sources up to the noisy corruptions (Theorems \ref{thm:noiseless1}--\ref{thm:two-noisy-views} and Corollary \ref{crl:noiseless1}).
+Although some infinitesimally small amount of noise is required for the results to hold, the low-noise limiting case is also analysed (Corollary \ref{crl:lownoise}). 
+Finally, one might hope that even in the presence of large amounts of noise, having access to a larger number of views should be beneficial. 
+First results in this direction are given in in Theorem \ref{thm:lastthm}.
+
 
 For a high-level intuition of the results, consider the perception of 3D structure through eyesight.
 Each of our eyes only sees a 2D projection of the true state of the 3D world.
 With only a single eye available, it may be possible to infer the 3D structure present in a scene by exploiting known cues, such as the objects in the scene being familiar to the viewer or the presence of shadows.
 But with two eyes together, a human can perceive 3D structure immediately, even without such cues. 
 Analogously, the results presented in this work show that inference of latent structure can be performed under much weaker assumptions when more than a single view is available.
-
 
 The remainder of this chapter is structured as follows.
 Section \ref{sec:ica-literature-overview} provides an introduction to ICA and the literature surrounding it, as well as literature from other areas that is relevant to the setting considered in this work.
@@ -190,8 +200,8 @@ Linear ICA refers to the setting in which the vector of mixing functions $f$ is 
 in which case the ICA model can be written
 %
 \begin{align*}
-Z &\sim \prod_i p(z_i) \\
-X &= AZ
+Z &\sim \prod_i p(z_i), \\
+X &= AZ,
 \end{align*}
 %
 where $A$ is a square matrix.
@@ -211,7 +221,7 @@ This, however, corresponds to a `trivial' indeterminacy of the linear ICA proble
 
 The non-Gaussianity assumption is exploited by linear ICA algorithms by seeking linear maps $W$ such that the transformed data ${W}X$ have maximally non-Gaussian components.
 Intuition for why such an approach works can be seen in the Central Limit Theorem which, informally, states that an average of \iid~random variables becomes more Gaussian-like as the number of variables in the average increases. 
-Similarly, in sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables makes them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
+Similarly, in a sense that can be made formal \citep{hyvarinen2000independent}, linearly mixing random variables makes them more Gaussian-like, meaning that appropriate measures of Gaussianity can be used as objective functions for de-mixing.
 
 Linear ICA methods can be used for causal discovery in linear causal models, as will be discussed in Section \ref{subsubsec:causality-causal-inference-cyclic}.
 
@@ -370,12 +380,13 @@ By regressing one observation against the other, this common noise can be identi
 
 This section presents the main contribution of this chapter, in which identifiability results for variations on the following setting are given:
 \begin{align}
-Z &\sim p(z) = \prod_{i} p_i(z_i) \label{eq:firstind}\\
-X_1 &= f_1(Z) \label{eq:nonlinear-ica-1}\\
-X_2 &= f_2(Z) \label{eq:nonlinear-ica-2}
+Z &\sim p(z) = \prod_{i} p_i(z_i), \label{eq:firstind}\\
+X_1 &= f_1(Z), \label{eq:nonlinear-ica-1}\\
+X_2 &= f_2(Z), \label{eq:nonlinear-ica-2}
 \end{align}
 where $X_1, X_2, Z \in \mathbb{R}^D$ and $f_1, f_2$ are arbitrary smooth and invertible transformations of the latent variable $Z = (Z_1, \ldots, Z_D)$ with smooth inverse.
 $X_1$ and $X_2$ are referred to as different \emph{views} of the sources $Z$.
+Since each $f_i$ is invertible, $X_1$, $X_2$ and $Z$ are of the same dimension.
 Given observations of $X_1$ and $X_2$, the goal is to recover $Z$, undoing the mixing induced by the $f_i$.
 
 %the goal is to recover $\bm{s}$, undoing the mixing induced by the $\bm{f}_i$, in the case where only observations of $\bm{x}_1$ and $\bm{x}_2$ are available.
@@ -423,6 +434,10 @@ This approach
 is to classify between pairs $(X_1, X_2)$ corresponding to the same $Z$ and $(X_1, X^*_2)$ corresponding to different realisations of $Z$.
 This classification problem can only be solved by employing the information shared by the simultaneous views in order to distinguish the two classes.
 By placing constraints on the regression function used in such a classifier, it can be shown that the representation obtained by taking an intermediate layer of this classifier recovers $Z$ up to tolerable ambiguities.
+
+In contrast to the complete setting considered by \cite{hyvarinen19a}, the model considered here is undercomplete by a factor of two. 
+That is, the number of observed dimensions is twice that of the number of latent dimensions.
+As such, one may expect identifiability under more general conditions due to the increased number of constraints.
 
 For technical reasons discussed in Section
 \ref{sec:converged}, the results require some stochasticity in the relationship between $Z$ and at least one of the $X_i$.
@@ -488,7 +503,7 @@ This result is quite involved; it will first be stated, then discussed.
 	&= \log p({x}_2 | {x}_1) - \log p({x}_2) \nonumber\\
 	&= \left(\sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) + \log \det J \right) \nonumber\\
 	&\qquad - \left( \sum_i \delta_i(g_i(z_i, n_i)) + \log \det J\right) \nonumber\\
-	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i))\label{eq:logdens_noiesless_1} \,
+	&= \sum_i \alpha_i(z_{i}, g_i(z_i, n_i)) - \sum_i \delta_i(g_i(z_i, n_i)), \label{eq:logdens_noiesless_1} \,
 	\end{align}
 	where $z_i=f^{-1}_{1i}({x}_1)$, $g_i(z_i, n_i)=f^{-1}_{2i}({x}_2)$,
 	and $J$ is the Jacobian of the transformation $f^{-1}_2$ (note that the introduced Jacobians cancel\footnote{Several subsequent results in this section consider the difference between two log-probabilities.
@@ -504,7 +519,7 @@ For brevity these Jacobians are omitted henceforth.}).
 		where $({X}_{1},{X}_{2})$ correspond to the same realisation of $Z$ and $({X}_{1},{X}_{2}^{*})$ correspond to different realisations of ${Z}$.
 		\item The classifier minimises the logistic regression loss, and is constrained to use a regression function of the form
 		\begin{equation*}
-		r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2})
+		r({x}_{1},{x}_{2})=\sum_{i}\psi_{i}(h_{i}({x}_{1}),{x}_{2}),
 		\end{equation*}
 		where ${h} =(h_{1}, \ldots, h_{n})$  is invertible, smooth and has smooth inverse.
 	\end{enumerate}
@@ -529,7 +544,7 @@ Informally, it demands that the probability distribution of the corruption shoul
 	Denote by $\alpha$ the vector of functions and define
 	\begin{align}
 	\alpha'_{i}(y_i, t_i)&= \partial \alpha_{i}(y_i, t_i)/\partial y_i, \label{eq:convention1}\\
-	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2\, \label{eq:convention2}\\
+	\alpha''_{i}(y_i, t_i)&=\partial^2 \alpha_{i}(y_i, t_i)/\partial y_i^2, \label{eq:convention2}\\
 	{w}_{\alpha}({y}, {t}) &= (\alpha''_{1}, \ldots, \alpha''_{D}, \alpha'_{1}, \ldots,\alpha'_{D}).
 	\end{align}
 	${\alpha}$ satisfies the assumption of \emph{Sufficiently Distinct Views (SDV)} if for any value of ${y}$, there exist $2D$ distinct values ${t}^j$, $j=1, \ldots, 2D$ such that the vectors ${w_\alpha}({y},{t}^j)$ are linearly independent.
@@ -694,7 +709,7 @@ In the limit of the magnitude of one of the noise variables going to zero, the r
 	\end{enumerate}
 	Then, denoting by $\mathcal{E}$ the set of all component-wise, invertible functions, it holds that
 	\[
-	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0
+	 \inf_{{e}\in \mathcal{E}}  \left \|Z - {e}(h_1^{(k)}(X_1)) \right \| \xrightarrow[k \to \infty]{p} 0,
 	\]
 	where $p$ denotes convergence in probability.
 \end{corollary}
@@ -775,8 +790,8 @@ As a first step in this direction, consider the special case that each ${g}_i$ a
 \begin{align}
 \left.
 \begin{array}{ll}
-&X_{i}={f}_{i}(Z + N_{i}) \\
-&\mathbb{E}[N_i]= 0
+&X_{i}={f}_{i}(Z + N_{i}), \\
+&\mathbb{E}[N_i]= 0,
 \end{array}
 \right\rbrace \quad i \in \mathbb{N}.
 \end{align}
@@ -881,7 +896,7 @@ Furthermore, the SDV assumption is ultimately an assumption about how the corrup
 \subsection{The Sufficiently Distinct Views assumption}
 \label{appendix:sdv}
 
-Recall that the SDV assumption is a demand on how much the conditional probability distribution of the source of one view given another varies, e.g. how much $p(z_1 | z_2)$ changes as a function of $z_2$ where $z_i = f_1^{-i}(x_i)$. 
+Recall that the SDV assumption is a demand on how much the conditional probability distribution of the source of one view given another varies, e.g. how much $p(s_1 | s_2)$ changes as a function of $s_2$ where $s_i = f_i^{-1}(x_i)$. 
 To provide intuition, this section gives examples of cases in which the SDV assumption does and does not hold.
 
 The SDV assumption is closely related to the \emph{Assumption of Variability} of \cite{hyvarinen19a}, an analogous assumption that occurs in the context a different graphical model from the multi-view setting considered here; see that paper for further details.
@@ -896,12 +911,12 @@ The SDV assumption is closely related to the \emph{Assumption of Variability} of
 Suppose that the conditional distribution of one corrupted source given the other is Gaussian, so that
 
 \begin{equation}
-\log p(z_1|z_2) =  -\sum_i (z_{1i} - z_{2i})^2/(2\sigma_i^2) + C \,, \label{eq:unsatisfied}
+\log p(s_1|s_2) =  -\sum_i (s_{1i} - s_{2i})^2/(2\sigma_i^2) + C \,, \label{eq:unsatisfied}
 \end{equation}
 
 where $C$ is a constant.
 Since taking second derivatives of the log-probability with respect to $s_i$ results in constants,
-there is no way to find $2D$ vectors ${t}_j$, $j=1, \ldots, 2D$, such that the corresponding ${w}(z_1, t_j)$ in Definition \ref{suff_dist_assumption} are linearly independent.
+there is no way to find $2D$ vectors ${t}_j$, $j=1, \ldots, 2D$, such that the corresponding ${w}(s_1, t_j)$ in Definition \ref{suff_dist_assumption} are linearly independent.
 
 This rules out the case in which one or both views correspond to the source being corrupted by additive Gaussian noise.
 Note that this result is distinct from the non-identifiability result in the case of Gaussian sources for ICA.
@@ -916,14 +931,14 @@ In fact, the identifiability results presented here do not demand that the margi
 By choosing a conditional distribution  that is more complex, the SDV assumption can be satisfied. Consider
 
 \begin{equation}
-\log p(z_1|z_2) =  - \sum_i (z_i^2  s_i^2 + z_i^4 s_i^4  ) + C(z_2) \,, \label{eq:satisfied}
+\log p(s_1|s_2) =  - \sum_i (s_{1i}^2  s_{2i}^2 + s_{1i}^4 s_{2i}^4  ) + C(s_2) \,, \label{eq:satisfied}
 \end{equation}
 
-where $C(z_2)$ is a normalisation constant that depends only on $z_2$.
+where $C(s_2)$ is a normalisation constant that depends only on $s_2$.
 Proof that this conditional distribution satisfies the SDV assumption requires a few lines of computation:
 since this polynomial expression is of order strictly greater than 2, the second derivatives are not constant.
-${w}(z_1, z_2)$ can be written as the product of a matrix and vector which are functions only of $z_1$ and $z_2$ respectively.
-The columns of this matrix are linearly independent for almost all values of $z_1$ and $2D$ linearly independent vectors can be realised by different choices of $z_2$, and hence the assumption is satisfied.
+${w}(s_1, s_2)$ can be written as the product of a matrix and vector which are functions only of $s_1$ and $s_2$ respectively.
+The columns of this matrix are linearly independent for almost all values of $s_1$ and $2D$ linearly independent vectors can be realised by different choices of $s_2$, and hence the assumption is satisfied.
 
 
 \subsection{Source noise}\label{sec:converged}
@@ -978,6 +993,21 @@ In this case, the distributions $p(x_1, x_2)$ and $p(x_1)p(x_2)$ are therefore n
 
 It follows that the method of classification used in the results considered in this chapter can only be applied when the different views $X_1$ and $X_2$ are not deterministically related.
 For this technical reason, the corruptions are necessary.
+
+
+\subsubsection{Contrast with observation-level noise}
+
+A more typical noise model across the machine learning literature would involve noise at the level of the observations, e.g. $X = f(Z) + \epsilon$ where $\epsilon$ could be a Gaussian random variable. 
+The reader should be clear that the source noise model used in this work is fundamentally different to this more typical observation noise model.
+
+The assumption in the observational noise model is that the observed variables are not measured with perfect accuracy.
+In contrast, in the source noise model, the assumption is that the two views share closely related, but non-identical sources.
+This could hold, for example, when the two views correspond to the same source at slightly different times, or if the two views correspond to measurements of different subjects that have similar state, in which case the source noise may account for inter-subject variability.
+Nonetheless, Corollary~\ref{crl:lownoise} demonstrates that the results hold for even infinitesimally small amounts of noise, and therefore it is conceivable that practical methods for ICA based on the setting of this work may still function even if the source noise assumption is violated.
+
+The source noise model is in some sense orthogonal to the observation noise model, in that it is possible for both to be used simultaneously.
+The absence of observation noise in this work is unrealistic in the sense that it requires observations to be made in a truly noise-free way, something that is clearly not possible in practical settings, though it is possible that the results presented in this chapter could be extended to this setting.
+
 
 
 
